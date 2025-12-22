@@ -4,9 +4,10 @@ Open-source blockchain-based track and trace system for an agricultural commodit
 chain run. It provides transparency and creation of trust through
 digitalization of supply chains, connects every actor along the supply chain, assures quality and fair pricing.
 
-Project is composed of 3 parts:
+Project is composed of 4 parts:
 
 * [Angular frontend](https://github.com/INATrace/fe/tree/main)
+* [Mobile app](https://github.com/INATrace/mobile/tree/main)
 * [Java backend](https://github.com/INATrace/backend/tree/main)
 * [Coffee network](https://github.com/INATrace/coffee-network/tree/main)
 
