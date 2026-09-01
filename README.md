@@ -16,7 +16,8 @@ This new major release includes new functionalities, refactorings, optimizations
 * Multi-tenant system support.
 * Reorganized the content in the Product section. This section now includes only the content that is related to a product.
 * Introduced a new section "Company". This section includes all the content that is related with the company's work process within the value chain.
-* The configuration of farmers and collectors is decoupled from the product, and it's part of the Company section.
+* The configuration of farmers and collectors is dec
+* oupled from the product, and it's part of the Company section.
 * Added support for importing farmers from a provided Excel file.
 * The company customers are now decoupled from the Stakeholders in the product section and are configured as part of the Company section.
 * The configuration of facilities and processing actions is now part of the company's profile.
