@@ -44,7 +44,8 @@ export namespace ApiUserCustomerImportColumnValidationError {
     export enum ErrorTypeEnum {
         INCORRECTTYPE = 'INCORRECT_TYPE',
         REQUIRED = 'REQUIRED',
-        INVALIDVALUE = 'INVALID_VALUE'
+        INVALIDVALUE = 'INVALID_VALUE',
+        INVALIDGEODATA = 'INVALID_GEODATA'
     }
 
 

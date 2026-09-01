@@ -2731,6 +2731,7 @@
     "companyDetail.farmers.import.validationErrors.cellError.type.INCORRECT_TYPE": "El valor de la celda es de tipo incorrecto",
     "companyDetail.farmers.import.validationErrors.cellError.type.REQUIRED": "La celda no puede estar vacía",
     "companyDetail.farmers.import.validationErrors.cellError.type.INVALID_VALUE": "El valor proporcionado en la celda no es válido",
+    "companyDetail.farmers.import.validationErrors.cellError.type.INVALID_GEODATA": "Los datos geográficos no son válidos. Formatos aceptados: POLYGON((lat1 lon1, lat2 lon2, ...)) o POINT(lat lon); geoshape de ODK/Kobo «lat lon alt prec;...»; GeoJSON; o P1(...)P2(...) para varias parcelas. Un contorno necesita al menos 3 puntos distintos, con valores de latitud (-90 a 90) y longitud (-180 a 180) válidos. En la columna GeoID, el valor debe ser un GeoID del registro de la FAO.",
     "companyDetail.farmers.import.success.label": "Importación exitosa de agricultores. Por favor veriifque los datos en Empresa > Agricultores",
     "productLabelFinalProduct.title.finalProducts": "Productos finales",
     "productLabelFinalProduct.subTitle.listOfFinalProducts": "Listado de productos finales",
