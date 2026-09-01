@@ -212,7 +212,7 @@
             </div>
 
             <div class="af-form-row">
-                <div class="af-form-block--c6">
+                <div class="af-form-block--c12">
                     <h2 i18n="@@collectorDetail.section.companies">Companies</h2>
                     <div class="af-form-element">
                         <list-editor *ngIf="producersListManager"
@@ -252,34 +252,34 @@
                     </div>
                 </div>
 
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@collectorDetail.section.associations">Associations</h2>
-                    <div class="af-form-element">
-                        <div class="search-field">
-                            <textinput
-                                    label="Member of associations"
-                                    [form]="assocForm"
-                                    i18n-label="@@collectorDetail.textinput.assoc.label"
-                                    placeholder="Type association ..."
-                                    i18n-placeholder="@@collectorDetail.textinput.assoc.placeholder"
-                                    [codebookService]="codebookAssoc"
-                                    [resultFormatter]="assocResultFormatter"
-                                    [inputFormatter]="assocInputFormatter"
-                                    (itemMatching)="addAssociation($event, assocForm)">
-                            </textinput>
-                        </div>
-                        <div *ngFor="let item of farmerForm.value.associations; index as i">
-                            <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                                <div>{{item.company.name}}</div>
-                                <div (click)="deleteAssociation(item, i)">
-                                    <fa-icon
-                                            class="del-icon"
-                                            [icon]="faTimes"></fa-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="af-form-block&#45;&#45;c6">-->
+<!--                    <h2 i18n="@@collectorDetail.section.associations">Associations</h2>-->
+<!--                    <div class="af-form-element">-->
+<!--                        <div class="search-field">-->
+<!--                            <textinput-->
+<!--                                    label="Member of associations"-->
+<!--                                    [form]="assocForm"-->
+<!--                                    i18n-label="@@collectorDetail.textinput.assoc.label"-->
+<!--                                    placeholder="Type association ..."-->
+<!--                                    i18n-placeholder="@@collectorDetail.textinput.assoc.placeholder"-->
+<!--                                    [codebookService]="codebookAssoc"-->
+<!--                                    [resultFormatter]="assocResultFormatter"-->
+<!--                                    [inputFormatter]="assocInputFormatter"-->
+<!--                                    (itemMatching)="addAssociation($event, assocForm)">-->
+<!--                            </textinput>-->
+<!--                        </div>-->
+<!--                        <div *ngFor="let item of farmerForm.value.associations; index as i">-->
+<!--                            <div class="d-flex justify-content-between pl-3 pr-3 mb-1">-->
+<!--                                <div>{{item.company.name}}</div>-->
+<!--                                <div (click)="deleteAssociation(item, i)">-->
+<!--                                    <fa-icon-->
+<!--                                            class="del-icon"-->
+<!--                                            [icon]="faTimes"></fa-icon>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
 
             <div class="af-form-row">
