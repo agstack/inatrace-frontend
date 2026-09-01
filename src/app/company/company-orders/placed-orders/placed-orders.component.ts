@@ -12,6 +12,10 @@ import { SelectedUserCompanyService } from '../../../core/selected-user-company.
 import { NgbModalImproved } from '../../../core/ngb-modal-improved/ngb-modal-improved.service';
 import { PlaceQuoteOrderModalComponent } from './place-quote-order-modal/place-quote-order-modal.component';
 import { PlaceQuoteOrderModalResult } from './place-quote-order-modal/model';
+import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
+import { StockOrderControllerService } from '../../../../api/api/stockOrderController.service';
+import { FileSaverService } from 'ngx-filesaver';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-placed-orders',
@@ -21,6 +25,7 @@ import { PlaceQuoteOrderModalResult } from './place-quote-order-modal/model';
 export class PlacedOrdersComponent extends OrdersTabComponent implements OnInit {
 
   rootTab = 1;
+  allPlacedOrders = 0;
 
   // Controls for company customer dropdown selection component
   companyCustomerForm = new FormControl(null);
@@ -32,8 +37,11 @@ export class PlacedOrdersComponent extends OrdersTabComponent implements OnInit 
     protected router: Router,
     protected route: ActivatedRoute,
     protected facilityController: FacilityControllerService,
+    protected globalEventManager: GlobalEventManagerService,
     private companyControllerService: CompanyControllerService,
     protected selUserCompanyService: SelectedUserCompanyService,
+    private stockOrderControllerService: StockOrderControllerService,
+    private fileSaverService: FileSaverService,
     private modalService: NgbModalImproved
   ) {
     super(router, route, facilityController, selUserCompanyService);
@@ -72,5 +80,25 @@ export class PlacedOrdersComponent extends OrdersTabComponent implements OnInit 
     this.companyCustomerId$.next(this.companyCustomerId);
     setNavigationParameter(this.router, this.route, 'companyCustomerId', this.companyCustomerId);
   }
+
+  // Export the table in excel
+  async exportOrdersExcel(): Promise<void> {
+  
+      this.globalEventManager.showLoading(true);
+      try {
+        const res = await this.stockOrderControllerService.exportPlacedOrderByCompany(this.companyId)
+            .pipe(take(1))
+            .toPromise();
+  
+        this.fileSaverService.save(res, 'placed_orders.xlsx');
+      } finally {
+        this.globalEventManager.showLoading(false);
+      }
+    }
+
+    // Retrieve count placed orders for export button visibility management
+    onCountAllOrders(event) {
+      this.allPlacedOrders = event;
+    }
 
 }

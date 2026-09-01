@@ -51,11 +51,22 @@
           </div>
         </div>
       </div>
+     
 
       <div class="d-flex justify-content-between main-inside-top--row2">
         <div>
           <div class="sub-title-page content-element--subtitle" i18n="@@myOrders..subTitle.listOfOrders">List of orders</div>
           <div class="counting-page content-element--counting" i18n="@@myOrders..subTitle.showingOrders">Showing {{showedOrders}}/{{allOrders}}</div>
+        </div>
+
+        <div>
+          <button class="af-actions-btn" 
+                  [class.af-actions-btn--disabled]="showedOrders < 1"
+                  [disabled]="showedOrders < 1"
+                  (click)="exportOrdersExcel()">
+            <span class="af-actions-btn-label" i18n="@@productLabelPayments.button.export">Export data</span>
+          </button>
+  
         </div>
 
         <div class="d-flex align-items-top">
@@ -83,10 +94,12 @@
         </div>
       </div>
 
+     
+    
       <app-company-orders-list
           *ngIf="companyId != null"
           orderType="PLACED"
-          (countAll)="onCount($event)"
+          (countAll)="onCountAllOrders($event)"
           [facilityId$]="selectedFacilityId$"
           (showing)="onShow($event)"
           [companyId]="companyId"

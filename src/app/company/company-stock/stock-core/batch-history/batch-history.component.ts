@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ApiTransaction } from '../../../../../api/model/apiTransaction';
 import { ApiStockOrder } from '../../../../../api/model/apiStockOrder';
 import { StockOrderControllerService } from '../../../../../api/api/stockOrderController.service';
@@ -12,6 +12,7 @@ import { ApiStockOrderHistory } from '../../../../../api/model/apiStockOrderHist
 import { ApiStockOrderHistoryTimelineItem } from '../../../../../api/model/apiStockOrderHistoryTimelineItem';
 import { ApiFacility } from '../../../../../api/model/apiFacility';
 import { ApiMeasureUnitType } from '../../../../../api/model/apiMeasureUnitType';
+import { FileSaverService } from 'ngx-filesaver';
 
 interface GroupedStockOrders {
   processingDate: string;
@@ -36,11 +37,13 @@ export class BatchHistoryComponent implements OnInit {
   reloadPing$ = new BehaviorSubject<boolean>(false);
 
   productId = this.route.snapshot.params.id;
+  orderId = 0;
 
   history$: Observable<ApiStockOrderHistory> = combineLatest([this.reloadPing$, this.route.params])
     .pipe(
       tap(() => this.globalEventsManager.showLoading(true)),
       switchMap(val => {
+        this.orderId = val[1].stockOrderId;
         return this.stockOrderService.getStockOrderAggregatedHistory(val[1].stockOrderId);
       }),
       map(val => {
@@ -106,7 +109,8 @@ export class BatchHistoryComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private stockOrderService: StockOrderControllerService,
-    private globalEventsManager: GlobalEventManagerService
+    private globalEventsManager: GlobalEventManagerService,
+     private fileSaverService: FileSaverService
   ) { }
 
   getTargetStockOrders(timelineItem: ApiStockOrderHistoryTimelineItem) {
@@ -194,5 +198,22 @@ export class BatchHistoryComponent implements OnInit {
     if (tx.status === 'CANCELED') { return 'ab-edit-link canceled'; }
     return 'ab-edit-link';
   }
+
+  // Export the table in excel
+    async exportSingleCommandHistoryExcel(): Promise<void> {
+    
+        this.globalEventsManager.showLoading(true);
+        try {
+          const res = await this.stockOrderService.exportSingleCommandHistory(this.orderId)
+              .pipe(take(1))
+              .toPromise();
+    
+          this.fileSaverService.save(res, 'stock_history.xlsx');
+        } finally {
+          this.globalEventsManager.showLoading(false);
+        }
+      }
+  
+      
 
 }

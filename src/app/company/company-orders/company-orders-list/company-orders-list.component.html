@@ -82,6 +82,13 @@
                  [class.enabled-action]="true">
                 Export Geo Data
               </a>
+              <a i18n="@@productLabelPurchaseOrder.tableCol.exportWhisp"
+              *ngIf="orderType == 'PLACED'"
+              (click)="exportWhisp(order)"
+              class="company-action"
+              [class.enabled-action]="true">
+             Export Whisp
+           </a>
             </span>
         </td>
       </tr>

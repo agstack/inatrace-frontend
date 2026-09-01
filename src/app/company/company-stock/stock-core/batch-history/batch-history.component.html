@@ -7,6 +7,11 @@
           <div class="af-form-block--c12">
             <div class="title-page content-element--title d-flex justify-content-between">
               <div i18n="@@orderHistoryView.title.batchHistory">Batch history</div>
+              <button class="btn btn-solid round btn-table-new content-element--btn" 
+                    (click)="exportSingleCommandHistoryExcel()">
+              <span>Export This History</span>
+            </button>
+
               <button class="btn btn-solid round btn-table-new content-element--btn" (click)="edit(stockOrder)" i18n="@@orderHistoryView.button.edit">
                 <span>Edit</span>
               </button>
