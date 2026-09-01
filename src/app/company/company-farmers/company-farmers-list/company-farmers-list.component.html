@@ -17,7 +17,8 @@
                             i18n="@@companyDetail.farmers.importFarmers.button">
                         <span>+ Import farmers</span>
                     </button>
-                    <button class="btn btn-solid round btn-table-new content-element--btn"
+                    <button  *ngIf="isSystemOrRegionalAdmin"
+                             class="btn btn-solid round btn-table-new content-element--btn"
                             (click)="addFarmer()"
                             i18n="@@productLabelStakeholders.button.newFarmer">
                         <span>+ Add farmer</span>
