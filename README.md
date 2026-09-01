@@ -6,9 +6,9 @@ digitalization of supply chains, connects every actor along the supply chain, as
 
 Project is composed of 3 parts:
 
-* [Angular frontend](https://github.com/INATrace/fe/tree/main)
-* [Java backend](https://github.com/INATrace/backend/tree/main)
-* [Coffee network](https://github.com/INATrace/coffee-network/tree/main)
+* [Angular frontend](https://github.com/agstack/inatrace-frontend/tree/main)
+* [Java backend](https://github.com/agstack/inatrace-backend/tree/main)
+* [Coffee network](https://github.com/agstack/inatrace-coffee-network/tree/main)
 
 # INATrace 2
 This new major release includes new functionalities, refactorings, optimizations and bugfixes. The most important additions and changes are:
