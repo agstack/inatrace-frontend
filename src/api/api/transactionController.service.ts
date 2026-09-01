@@ -162,7 +162,7 @@ export namespace RejectTransaction {
 })
 export class TransactionControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

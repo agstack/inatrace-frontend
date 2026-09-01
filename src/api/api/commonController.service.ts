@@ -37,6 +37,7 @@ import { ApiResponseApiGlobalSettingsValue } from '../model/apiResponseApiGlobal
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for getCountries.
@@ -349,7 +350,7 @@ export namespace UploadImage {
 })
 export class CommonControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

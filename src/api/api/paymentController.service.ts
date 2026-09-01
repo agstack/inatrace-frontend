@@ -40,6 +40,7 @@ import { ApiResponseApiPayment } from '../model/apiResponseApiPayment';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for createBulkPayment.
@@ -664,7 +665,7 @@ export namespace ListPaymentsByPurchase {
 })
 export class PaymentControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

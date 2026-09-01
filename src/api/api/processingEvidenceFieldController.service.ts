@@ -37,6 +37,7 @@ import { ApiResponseApiProcessingEvidenceField } from '../model/apiResponseApiPr
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for createOrUpdateProcessingEvidenceField.
@@ -407,7 +408,7 @@ export namespace ListProcessingEvidenceFieldsByValueChains {
 })
 export class ProcessingEvidenceFieldControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

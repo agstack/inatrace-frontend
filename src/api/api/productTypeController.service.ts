@@ -37,6 +37,7 @@ import { ApiResponseApiProductType } from '../model/apiResponseApiProductType';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for createProductType.
@@ -187,7 +188,7 @@ export namespace UpdateProductType {
 })
 export class ProductTypeControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

@@ -19,24 +19,27 @@
 
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
+
+import { Inject, Injectable, Optional } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent }                           from '@angular/common/http';
-import { CustomHttpUrlEncodingCodec }                        from '../encoder';
+         HttpResponse, HttpEvent } from '@angular/common/http';
+import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable }                                        from 'rxjs';
-import { catchError }                                        from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { ModelAndView } from '../model/modelAndView';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+import { Configuration } from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for errorHtmlUsingDELETE.
  */
+
 export namespace ErrorHtmlUsingDELETE {
     /**
      * Parameter map for errorHtmlUsingDELETE.
@@ -209,7 +212,7 @@ export namespace ErrorHtmlUsingPUT {
 })
 export class BasicErrorControllerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 

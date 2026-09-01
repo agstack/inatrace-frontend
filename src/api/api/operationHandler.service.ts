@@ -32,6 +32,7 @@ import { catchError }                                        from 'rxjs/operator
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import {environment} from '../../environments/environment';
 
 /**
  * Namespace for handle.
@@ -108,7 +109,7 @@ export namespace HandleUsingGET {
 })
 export class OperationHandlerService {
 
-    protected basePath = 'http://localhost:8080';
+    protected basePath = environment.basePath;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
 
