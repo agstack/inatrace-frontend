@@ -57,6 +57,12 @@ This new major release includes new functionalities, refactorings, optimizations
 
 4. Generate API client from Java backend by running `npm run generate-api`
 
+   Also generate `src/assets/env.js`, which is gitignored because it carries per-environment
+   secrets — copy `src/assets/env.template.js` to it and fill in the values, or run
+   `envsubst < src/assets/env.template.js > src/assets/env.js` with the variables exported.
+   The app loads this file before the bundle and reads `window['env']` immediately, so it will
+   fail to start if the file is missing. `./deploy.sh frontend` generates it automatically.
+
 5. Add development environment as `environment.dev.ts` by copying `environment.ts` and adding default values for configuration keys besides window environment (e.g. `environmentName: window['env']['environmentName'] || 'DEV'`)
    1. `environmentName`: `'DEV'`
    2. `appBaseUrl`: `'http://localhost:4200'`

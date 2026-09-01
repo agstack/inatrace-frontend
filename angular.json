@@ -42,6 +42,10 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "lodash","file-saver",  "chart.js", "rxjs",
+              "batch-processor"
+            ],
             "assets": [
               "src/assets",
               {

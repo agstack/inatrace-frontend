@@ -4,17 +4,17 @@
 
 export const environment = {
     production: true,
-    environmentName: window['env']['environmentName'] || '',
-    basePath: '',
+    environmentName: window['env']['environmentName'] || 'PROD',
+    basePath: window['env']['basePath'] || '',
     appBaseUrl: window['env']['appBaseUrl'] || '',
     qrCodeBasePath: window['env']['qrCodeBasePath'] || '',
-    chainRelativeFileUploadUrl: '',
-    chainRelativeFileDownloadUrl: '',
-    relativeFileUploadUrl: window['env']['relativeFileUploadUrl'] || '',
-    relativeFileUploadUrlManualType: window['env']['relativeFileUploadUrlManualType'] || '',
-    relativeImageUploadUrl: window['env']['relativeImageUploadUrl'] || '',
-    relativeImageUploadUrlAllSizes: window['env']['relativeImageUploadUrlAllSizes'] || '',
-    version: '2.39.0-SNAPSHOT',
+    chainRelativeFileUploadUrl: '/api/common/document',
+    chainRelativeFileDownloadUrl: '/api/common/document',
+    relativeFileUploadUrl: '/api/common/document',
+    relativeFileUploadUrlManualType: '/api/common/document',
+    relativeImageUploadUrl: '/api/common/image',
+    relativeImageUploadUrlAllSizes: '/api/common/image',
+    version: '2.40',
 
     googleMapsApiKey: window['env']['googleMapsApiKey'] || '',
     googleAnalyticsId: '',
@@ -28,7 +28,8 @@ export const environment = {
     reloadDelay: 500,
     harcodedLabelForPrivacyOnRegisterPage: '',
     beycoAuthURL: window['env']['beycoAuthURL'] || '',
-    beycoClientId: window['env']['beycoClientId'] || ''
+    beycoClientId: window['env']['beycoClientId'] || '',
+    whispApiKey: 'a7ba19c9-6d7b-44d2-b8ca-598d2b5127d3'
 };
 
 /*

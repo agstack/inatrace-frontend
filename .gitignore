@@ -2,6 +2,7 @@
 
 # Env files
 /src/environments/environment.dev.ts
+/src/assets/env.js
 
 # compiled output
 /dist
