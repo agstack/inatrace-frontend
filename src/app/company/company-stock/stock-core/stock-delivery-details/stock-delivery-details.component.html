@@ -441,8 +441,14 @@
                   </div>
                 </list-editor-items>
               </list-editor>
+               <!-- Ajouter ce message d'erreur -->
+              <div *ngIf="submitted && additionalProofsForm?.invalid" class="sc-invalid-feedback">
+                <div *ngIf="additionalProofsForm.errors?.requiredFile" i18n="@@additionalProofs.error.noFileSelected">
+                  At least one file must be selected
+                </div>
+              </div>
             </div>
-
+            
           </div>
         </div>
       </ng-container>

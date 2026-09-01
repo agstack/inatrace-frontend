@@ -89,31 +89,29 @@ export class StockProcessingFacilityListComponent implements OnInit {
   arrangeFacilities(facilities: ApiFacility[]) {
 
     for (const facility of facilities) {
-      switch (facility.facilityType.code) {
-        case 'WASHING_STATION':
-        case 'DRYING_BED':
-        case 'BENEFICIO_HUMEDO':
-          this.categoryOne.push(facility);
-          break;
-
-        case 'STORAGE':
-        case 'ALMACEN':
-          this.categoryTwo.push(facility);
-          break;
-
-        case 'HULLING_STATION':
-        case 'MAQUILADO_CAFE':
-        case 'BENEFICIO_SECO':
-          this.categoryThree.push(facility);
-          break;
-
-        case 'GREEN_COFFEE_STORAGE':
-        case 'ALMACEN_CAFE_ORO':
+      const code = facility.facilityType.code.toUpperCase(); // Normalisation en majuscules
+      if (['WASHING_STATION', 'DRYING_BED', 'BENEFICIO_HUMEDO'].includes(code)) {
+        this.categoryOne.push(facility);
+      }
+      else if (code === 'ALMACEN' || code.includes('STORAGE')) {
+        // Vérifier les exceptions de stockage spécialisées
+        if (code === 'GREEN_COFFEE_STORAGE') {
           this.categoryFour.push(facility);
-          break;
-        case 'ROASTED_COFFEE_STORAGE':
+        }
+        else if (code === 'ROASTED_COFFEE_STORAGE') {
           this.categoryFive.push(facility);
-          break;
+        }
+        // Cas général STORAGE et ALMACEN
+        else {
+          this.categoryTwo.push(facility);
+        }
+      }
+      else if (['HULLING_STATION', 'MAQUILADO_CAFE', 'BENEFICIO_SECO'].includes(code)) {
+        this.categoryThree.push(facility);
+      }
+      else{
+        this.categoryThree.push(facility);
+
       }
     }
   }

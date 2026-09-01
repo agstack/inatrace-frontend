@@ -438,6 +438,11 @@
                                         <img src="../../../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
                                         <span>DE</span>
                                     </div>
+                                    <div (click)="selectLanguage('FR')"
+                                         [ngClass]="selectedLanguage === 'FR' ? 'af-translation-language--selected' : ''">
+                                        <img src="../../../../../assets/icons/icon-flag--french.svg" alt="Select FR lang">
+                                        <span>FR</span>
+                                    </div>
                                     <div (click)="selectLanguage('RW')"
                                          [ngClass]="selectedLanguage === 'RW' ? 'af-translation-language--selected' : ''">
                                         <img src="../../../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">

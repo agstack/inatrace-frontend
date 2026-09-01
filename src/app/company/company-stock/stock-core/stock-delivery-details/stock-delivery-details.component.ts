@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors  } from '@angular/forms';
 import { StockOrderType } from '../../../../../shared/types';
 import { ActivatedRoute } from '@angular/router';
 import { EnumSifrant } from '../../../../shared-services/enum-sifrant';
@@ -29,6 +29,7 @@ import { SelectedUserCompanyService } from '../../../../core/selected-user-compa
 import { ApiUserGet } from '../../../../../api/model/apiUserGet';
 import { Subscription } from 'rxjs';
 import { ApiCompanyGet } from '../../../../../api/model/apiCompanyGet';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-stock-delivery-details',
@@ -98,7 +99,8 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     private semiProductControllerService: SemiProductControllerService,
     private codebookTranslations: CodebookTranslations,
     private authService: AuthService,
-    private selUserCompanyService: SelectedUserCompanyService
+    private selUserCompanyService: SelectedUserCompanyService,
+    private toastr: ToastrService
   ) { }
 
   // Additional proof item factory methods (used when creating ListEditorManger)
@@ -216,6 +218,15 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     return this.stockOrderForm.get('activityProofs') as FormArray;
   }
 
+  // get additionalProofsForm(): FormArray {
+  //   const formArray = this.stockOrderForm.get('activityProofs') as FormArray;
+    
+  //   // Applique le validateur personnalisé
+  //   formArray.setValidators([this.validateAtLeastOneFileSelected()]);    
+    
+  //   return formArray;
+  // }
+
   private get womenCoffeeList() {
     const obj = {};
     obj['YES'] = $localize`:@@productLabelStockPurchaseOrdersModal.womensCoffeeList.yes:Yes`;
@@ -230,6 +241,7 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     return obj;
   }
 
+ 
   async ngOnInit() {
 
     this.userProfileSubs = this.authService.userProfile$
@@ -365,8 +377,9 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
       StockDeliveryDetailsComponent.AdditionalProofItemEmptyObjectFormFactory(),
       ApiActivityProofValidationScheme
     );
-
-    // TODO: initialize payments list manager
+  
+    // Appliquer le validateur
+    // this.additionalProofsForm.setValidators([this.validateAtLeastOneFile()]);
   }
 
   private newStockOrder() {
@@ -451,6 +464,18 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     this.globalEventsManager.showLoading(true);
     this.submitted = true;
 
+    // Forcer la validation des preuves supplémentaires
+  // this.additionalProofsForm.updateValueAndValidity();
+
+  // Vérifier si des fichiers sont requis mais manquants
+  const orderTyp = this.stockOrderForm?.get('orderType')?.value;
+ 
+  if (this.additionalProofsForm.value==0 && orderTyp !== 'PURCHASE_ORDER') {
+    this.toastr.error($localize`:@@additionalProofs.error.noFileSelected:At least one file must be selected for additional proof`);
+    this.globalEventsManager.showLoading(false);
+    this.updatePOInProgress = false;
+    return;
+  }
     // Set the user ID that creates the purchase order
     this.stockOrderForm.get('creatorId').setValue(this.employeeForm.value);
 
@@ -471,9 +496,11 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
     const data: ApiStockOrder = _.cloneDeep(this.stockOrderForm.value);
 
-    // Remove keys that are not set
+    
+      // Remove keys that are not set
     Object.keys(data).forEach((key) => (data[key] == null) && delete data[key]);
-
+    console.log("Data affter removing empty keys");
+    console.log(data);
     // Create the purchase order
     try {
 
@@ -832,5 +859,32 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
     this.stockOrderForm.get('pricePerUnit').updateValueAndValidity();
   }
+
+  // Permet de valider si le composant a au moins 1 fichier passe
+validateAtLeastOneFileSelected(): ValidatorFn {
+  return (control): { [key: string]: boolean } | null => {
+    const formArray = control as FormArray;
+    const hasFile = formArray.controls.some(ctrl => {
+      const value = ctrl.value;
+      
+      // Cas 1: Fichier direct
+      if (value instanceof File) return true;
+      
+      // Cas 2: Objet avec propriétés de fichier
+      if (value && typeof value === 'object') {
+        return value.fileName && value.fileSize;
+      }
+      
+      // Cas 3: Base64 ou autre représentation
+      if (typeof value === 'string') {
+        return value.startsWith('data:') || value.length > 100;
+      }
+      
+      return false;
+    });
+    
+    return hasFile ? null : { 'requiredFile': true };
+  };
+}
 
 }
