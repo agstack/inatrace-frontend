@@ -4,6 +4,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import localeRw from '@angular/common/locales/rw';
 import localeEs from '@angular/common/locales/es';
+import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -84,6 +85,7 @@ export class HammerConfig extends HammerGestureConfig {
 registerLocaleData(localeDe);
 registerLocaleData(localeRw);
 registerLocaleData(localeEs);
+registerLocaleData(localeFr);
 
 export function getConfiguration(): Configuration {
   return new Configuration({

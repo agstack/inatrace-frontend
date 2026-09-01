@@ -57,6 +57,7 @@ export class LanguageForLabelModalComponent implements OnInit {
     obj['DE'] = $localize`:@@languageForLabelModal.languageCodes.de:DE`;
     obj['ES'] = $localize`:@@languageForLabelModal.languageCodes.es:ES`;
     obj['RW'] = $localize`:@@languageForLabelModal.languageCodes.rw:RW`;
+    obj['FR'] = $localize`:@@languageForLabelModal.languageCodes.fr:FR`;
     return obj;
   }
 

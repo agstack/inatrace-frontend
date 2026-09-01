@@ -85,8 +85,9 @@
                     <div class="af-translation-language--selected">
                       <img *ngIf="this.userProfileForm.get('language').value === 'EN'" src="../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
                       <img *ngIf="this.userProfileForm.get('language').value === 'DE'" src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
-                      <img *ngIf="this.userProfileForm.get('language').value === 'RW'" src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
                       <img *ngIf="this.userProfileForm.get('language').value === 'ES'" src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
+                      <img *ngIf="this.userProfileForm.get('language').value === 'FR'" src="../../../assets/icons/icon-flag--french.svg" alt="Select FR lang">
+                        <img *ngIf="this.userProfileForm.get('language').value === 'RW'" src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
                       <span>{{this.userProfileForm.get('language').value}}</span>
                     </div>
                   </div>
@@ -107,6 +108,10 @@
                       <img src="../../../assets/icons/icon-flag--germany.svg">
                       <span>DE</span>
                     </div>
+                      <div (click)="selectLanguage('FR')" *ngIf="this.userProfileForm.get('language').value != 'FR'">
+                          <img src="../../../assets/icons/icon-flag--french.svg">
+                          <span>FR</span>
+                      </div>
                     <div (click)="selectLanguage('RW')" *ngIf="this.userProfileForm.get('language').value != 'RW'">
                       <img src="../../../assets/icons/icon-flag--rwanda.svg">
                       <span>RW</span>

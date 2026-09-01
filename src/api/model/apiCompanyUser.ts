@@ -127,6 +127,7 @@ export namespace ApiCompanyUser {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

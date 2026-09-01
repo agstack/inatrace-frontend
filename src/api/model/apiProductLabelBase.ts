@@ -97,6 +97,7 @@ export namespace ApiProductLabelBase {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

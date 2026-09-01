@@ -2177,6 +2177,7 @@
     "languageForLabelModal.languageCodes.de": "DE",
     "languageForLabelModal.languageCodes.es": "ES",
     "languageForLabelModal.languageCodes.rw": "RW",
+    "languageForLabelModal.languageCodes.fr": "FR",
     "productLabel.labelSelectorCard.tryMeLabel": "TRY ME!",
     "productLabel.labelSelectorCard.addTitle": "{$START_TAG_FA_ICON}{$CLOSE_TAG_FA_ICON}ADD TITLE",
     "productLabel.labelSelector.addLabel": "Add {$INTERPOLATION} label",

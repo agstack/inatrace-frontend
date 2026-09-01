@@ -119,6 +119,7 @@ export namespace ApiUserBase {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

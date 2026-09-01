@@ -81,6 +81,7 @@ export namespace ApiCreateUserRequest {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

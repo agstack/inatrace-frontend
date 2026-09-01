@@ -65,6 +65,7 @@ export namespace ApiUserUpdate {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

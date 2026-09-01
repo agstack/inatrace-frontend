@@ -59,6 +59,7 @@ export namespace ApiFacilityTranslation {
     export enum LanguageEnum {
         EN = 'EN',
         DE = 'DE',
+        FR = 'FR',
         RW = 'RW',
         ES = 'ES'
     }

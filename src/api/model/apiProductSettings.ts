@@ -103,6 +103,7 @@ export namespace ApiProductSettings {
         EN = 'EN',
         DE = 'DE',
         RW = 'RW',
+        FR = 'FR',
         ES = 'ES'
     }
 

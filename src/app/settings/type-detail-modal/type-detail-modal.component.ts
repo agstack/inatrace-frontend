@@ -57,7 +57,7 @@ export class TypeDetailModalComponent implements OnInit {
   codebookProcessingEvidenceTypeType = EnumSifrant.fromObject(this.processingEvidenceTypeType);
   codebookProcessingEvidenceFieldType = EnumSifrant.fromObject(this.processingEvidenceFieldType);
 
-  languages = [LanguageEnum.EN, LanguageEnum.DE, LanguageEnum.RW, LanguageEnum.ES];
+  languages = [LanguageEnum.EN, LanguageEnum.DE, LanguageEnum.RW, LanguageEnum.FR, LanguageEnum.ES];
   selectedLanguage = LanguageEnum.EN;
 
   isRegionalAdmin = false;

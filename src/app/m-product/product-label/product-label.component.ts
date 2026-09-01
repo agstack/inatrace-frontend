@@ -150,6 +150,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     const obj = {};
     obj['EN'] = $localize`:@@productLabel.languageCodes.en:EN`;
     obj['DE'] = $localize`:@@productLabel.languageCodes.de:DE`;
+    obj['FR'] = $localize`:@@productLabel.languageCodes.fr:FR`;
     return obj;
   }
 

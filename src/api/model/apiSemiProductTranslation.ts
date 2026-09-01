@@ -72,6 +72,7 @@ export namespace ApiSemiProductTranslation {
     export enum LanguageEnum {
         EN = 'EN',
         DE = 'DE',
+        FR = 'FR',
         RW = 'RW',
         ES = 'ES'
     }
