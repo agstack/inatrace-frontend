@@ -43,6 +43,7 @@
                              [initialLat]="initialLat"
                              [initialLng]="initialLng"
                              [editMode]="true">
+                             
                     </app-map>
                 </div>
 
@@ -82,6 +83,24 @@
                             </div>
                         </ng-container>
                     </single-choice>
+                    <textinput
+                            *ngIf="plotType == 'single_point'"
+                            [form]="$any(this.form.get('centerLatitude'))"
+                            label="Center Latitude"
+                            style="width: 100%"
+                            placeholder="Enter Center Latitude"
+                            i18n-label="@@collectorDetail.textinput.centerLatitude.label"
+                            i18n-placeholder="@@collectorDetail.textinput.centerLatitude.placeholder">
+                    </textinput>
+                    <textinput
+                            *ngIf="plotType == 'single_point'"
+                            [form]="$any(this.form.get('centerLongitude'))"
+                            label="Center Longitude"
+                            style="width: 100%"
+                            placeholder="Enter Center Longitude"
+                            i18n-label="@@collectorDetail.textinput.centerLongitude.label"
+                            i18n-placeholder="@@collectorDetail.textinput.centerLongitude.placeholder">
+                    </textinput>
                     <textinput
                             [form]="$any(this.form.get('numberOfPlants'))"
                             label="Number of plants"

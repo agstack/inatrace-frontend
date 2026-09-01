@@ -1,22 +1,26 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as mapboxgl from 'mapbox-gl';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { ApiPlotCoordinate } from '../../../api/model/apiPlotCoordinate';
 import { PlotCoordinatesManagerService } from '../../shared-services/plot-coordinates-manager.service';
 import { PlotActionWrapper, PlotCoordinateAction } from '../../shared-services/plot-coordinate-action-enum';
 import { ApiPlot } from '../../../api/model/apiPlot';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
-import { Subject } from 'rxjs/internal/Subject';
+// import { Subject } from 'rxjs/internal/Subject';
 import { CompanyControllerService } from '../../../api/api/companyController.service';
 import { FormControl } from '@angular/forms';
 
+// @ts-ignore
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
+// declare var mapboxgl: any;
+
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
+
 
   private map: mapboxgl.Map;
   private MAPBOX_STYLE_BASE_PATH = 'mapbox://styles/mapbox/';
@@ -70,6 +74,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   editable: boolean;
+
+  // Ajout event de click map
+  @Output() mapClick = new EventEmitter<{ longitude: number, latitude: number }>();
   
   subscriptions: Subscription = new Subscription();
   markers: Array<mapboxgl.Marker> = [];
@@ -236,6 +243,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.map.setStyle(`${this.MAPBOX_STYLE_BASE_PATH}${value}`);
       })
     );
+
+    this.map.on('click', (e) => {
+      this.onMapClick(e);
+    });
   }
 
   flyToCurrentPosition(): void {
@@ -609,6 +620,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     latCenter = latCenter / plotCoordinates.length;
 
     this.placeMarkerOnMap(latCenter, lonCenter, plot);
+  }
+
+  // pour gerer click sur Map
+  private onMapClick(event: mapboxgl.MapMouseEvent) {
+    const coordinates = event.lngLat;
+    
+    // Émet les coordonnées via l'Output
+    this.mapClick.emit({
+      longitude: coordinates.lng,
+      latitude: coordinates.lat
+    });
   }
 
 }

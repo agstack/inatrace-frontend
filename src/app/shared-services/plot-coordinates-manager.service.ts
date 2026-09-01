@@ -1,5 +1,6 @@
 import {PlotActionWrapper, PlotCoordinateAction} from './plot-coordinate-action-enum';
-import {Subject} from 'rxjs/internal/Subject';
+import {Subject} from 'rxjs';
+// import {Subject} from 'rxjs/internal/Subject';
 
 export class PlotCoordinatesManagerService {
 

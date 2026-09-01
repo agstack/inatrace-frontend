@@ -7,13 +7,14 @@ import {PlotCoordinatesManagerService} from '../../../shared-services/plot-coord
 import {ApiPlot} from '../../../../api/model/apiPlot';
 import {ListEditorManager} from '../../../shared/list-editor/list-editor-manager';
 import {defaultEmptyObject} from '../../../../shared/utils';
-import {Subject} from 'rxjs/internal/Subject';
+// import {Subject} from 'rxjs/internal/Subject';
 import {ApiPlotValidationScheme} from './validation';
 import {NgbModalImproved} from '../../../core/ngb-modal-improved/ngb-modal-improved.service';
 import {
   OpenPlotDetailsExternallyModalComponent
 } from '../../company-farmers/open-plot-details-externally-modal/open-plot-details-externally-modal.component';
-import { MapComponent } from "../../../shared/map/map.component";
+import { MapComponent } from '../../../shared/map/map.component';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-plots-form',

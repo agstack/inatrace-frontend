@@ -68,6 +68,13 @@ export interface ApiPlot {
      * Date of last update
      */
     farmerId?: number;
+
+    /**
+     * Center plot coordinate
+     */
+    centerLatitude?: number;
+    centerLongitude?: number;
+
 }
 
 /**
@@ -118,7 +125,9 @@ export namespace ApiPlot {
         /**
          * Date of last update
          */
-        farmerId = 'farmerId'
+        farmerId = 'farmerId',
+        centerLatitude = 'centerLatitude',
+        centerLongitude = 'centerLongitude'
     }
 
 
@@ -250,6 +259,28 @@ export namespace ApiPlot {
                     isListContainer: false,
                     complexType: ''
                 },
+                {
+                    isReadOnly: false,
+                    isEnum: false,
+                    required: false,
+                    name: 'centerLongitude',
+                    classname: 'ApiPlot',
+                    dataType: 'number',
+                    isPrimitiveType: true,
+                    isListContainer: false,
+                    complexType: ''
+                },
+                {
+                    isReadOnly: false,
+                    isEnum: false,
+                    required: false,
+                    name: 'centerLatitude',
+                    classname: 'ApiPlot',
+                    dataType: 'number',
+                    isPrimitiveType: true,
+                    isListContainer: false,
+                    complexType: ''
+                },
             ],
             validators: {
                 id: [
@@ -273,6 +304,10 @@ export namespace ApiPlot {
                 lastUpdated: [
                 ],
                 farmerId: [
+                ],
+                centerLatitude: [
+                ],
+                centerLongitude: [
                 ],
             }
         }

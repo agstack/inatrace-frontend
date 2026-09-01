@@ -5,7 +5,7 @@ import { generateFormFromMetadata } from 'src/shared/utils';
 import { FormArray, FormGroup } from '@angular/forms';
 import { GenericEditableItemComponent } from 'src/app/shared/generic-editable-item/generic-editable-item.component';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
-import { Subject } from 'rxjs/internal/Subject';
+// import { Subject } from 'rxjs/internal/Subject';
 import { PlotCoordinatesManagerService } from '../../../shared-services/plot-coordinates-manager.service';
 import { ApiPlotCoordinate } from '../../../../api/model/apiPlotCoordinate';
 import { PlotCoordinateAction } from '../../../shared-services/plot-coordinate-action-enum';
@@ -14,6 +14,7 @@ import { CompanyProductTypesService } from '../../../shared-services/company-pro
 import { Feature, Polygon } from '@turf/turf';
 import { ApiPlotValidationScheme } from '../plots-form/validation';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-plots-item',
@@ -50,6 +51,9 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
   existingPlotCoordinatesSubject = new Subject<ApiPlotCoordinate[]>();
   tagOpened = false;
   mapEditable = true;
+  
+  centerLatitude!: number;
+  centerLongitude!: number;
 
   plotType: 'boundaries' | 'single_point' = 'boundaries';
   selectPlotType = true;
@@ -106,6 +110,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
         returnStr += ' ' + unit;
        }
 
+       console.log(returnStr);
        return returnStr;
     }
   }
@@ -206,4 +211,21 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
       buttonTitles: { ok: $localize`:@@map.modal.eudr.warning.ok:Yes, add single pin.`, cancel: $localize`:@@map.modal.eudr.warning.cancel:No, add polygon instead.` }
     });
   }
+
+  onMapClick(event: { longitude: number, latitude: number }) {
+    this.centerLongitude = event.longitude;
+    this.centerLatitude = event.latitude;
+ 
+    // Optionnel: mettez à jour le formulaire si nécessaire
+    this.updateFormWithCenterCoordinates();
+  }
+
+  private updateFormWithCenterCoordinates() {
+    // Si vous voulez stocker les coordonnées dans le formulaire
+    this.form.patchValue({
+      centerLongitude: this.centerLongitude,
+      centerLatitude: this.centerLatitude
+    });
+  }
+
 }
