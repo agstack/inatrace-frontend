@@ -3188,6 +3188,11 @@
     "map.view.default": "Standardansicht",
     "map.view.satellite": "Satellitenansicht",
     "productLabelPurchaseOrder.tableCol.exportGeoData": "Export Geo Data",
-    "orderList.export.geojson.noDataAvailable": "Für diese Bestellung sind keine Geodaten verfügbar"
+    "orderList.export.geojson.noDataAvailable": "Für diese Bestellung sind keine Geodaten verfügbar",
+
+    "content.short_description": "Rendre les chaînes d'approvisionnement agricoles transparentes et équitables avec INATRACE",
+    "content.short.description.home": "INATRACE: Rend les chaînes d'approvisionnement agricoles transparentes et équitables",
+    "content.description.home": "INATrace est une solution numérique open-source qui met l'accent sur les personnes. Elle est conçue pour les chaînes d'approvisionnement agricoles mondiales transparentes afin d'améliorer les conditions économiques des petits exploitants, INATrace offre une traçabilité de bout en bout qui garantit un paiement équitable.",
+    "content.readmore": "Lire la suite"
   }
 }
