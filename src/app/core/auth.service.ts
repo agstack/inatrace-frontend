@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, ReplaySubject } from 'rxjs';
-import { catchError, take } from 'rxjs/operators';
+import {from, of, ReplaySubject} from 'rxjs';
+import {catchError, filter, switchMap, take} from 'rxjs/operators';
 import { UserControllerService } from 'src/api/api/userController.service';
 import { ApiUserGet } from 'src/api/model/apiUserGet';
 import { LanguageCodeHelper } from '../language-code-helper';
@@ -78,6 +78,35 @@ export class AuthService {
       });
     });
   }
+
+  // login(username: string, password: string, redirect: string | string[] | null = null) {
+  //   this.userController.login({ username, password }) // 1️⃣ Appel de l'API de login
+  //       .pipe(
+  //           catchError((error) => {
+  //             console.error('Erreur lors de la connexion :', error);
+  //             return of(null); // Retourne un observable `null` pour éviter la rupture du flux
+  //           }),
+  //           filter(response => !!response), // 2️⃣ Vérifie que la connexion a réussi avant de continuer
+  //           switchMap(() => {
+  //             console.log('Connexion réussie, mise à jour du profil...');
+  //             return from(this.refreshUserProfile()); // 3️⃣ Attend la fin de `refreshUserProfile()`
+  //           })
+  //       )
+  //       .subscribe({
+  //         next: () => {
+  //           console.log('Profil mis à jour avec succès.');
+  //           if (redirect) {
+  //             console.log(`Redirection vers : ${redirect}`);
+  //             this.router.navigate(Array.isArray(redirect) ? redirect : [redirect]); // 4️⃣ Redirection après la mise à jour
+  //           }
+  //         },
+  //         error: (err) => {
+  //           console.error('Une erreur est survenue :', err);
+  //         }
+  //       });
+  // }
+
+
 
   async logout() {
 
