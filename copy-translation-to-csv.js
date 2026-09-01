@@ -7,9 +7,11 @@ const readline = require('readline');
 const enLocaleFile = './src/assets/locale/en.json';
 const deLocaleFile = './src/assets/locale/de.json';
 const rwLocaleFile = './src/assets/locale/rw.json';
+const frLocaleFile = './src/assets/locale/fr.json';
 var enJSON = JSON.parse(fs.readFileSync(enLocaleFile));
 var deJSON = JSON.parse(fs.readFileSync(deLocaleFile));
 var rwJSON = JSON.parse(fs.readFileSync(rwLocaleFile));
+var frJSON = JSON.parse(fs.readFileSync(frLocaleFile));
 const csvFile = './src/assets/locale/translations-Table.txt'; //copy from google sheets to semicolon separated file and remove header
 
 const readTranslations = readline.createInterface({
@@ -53,12 +55,13 @@ let changed = {};
 
 
 
-csvString = "ID;English;German;Kinyarwanda" + "\n";
+csvString = "ID;English;German;Kinyarwanda;french" + "\n";
 for (let key of keys) {
   csvString += key + ";"
   csvString += enJSON.translations[key] + ";"
   csvString += deJSON.translations[key] + ";"
-  csvString += rwJSON.translations[key] + "\n"
+  csvString += rwJSON.translations[key] + ";"
+  csvString += frJSON.translations[key] + "\n"
 }
 
 var today = new Date();
