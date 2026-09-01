@@ -25,11 +25,12 @@ import { ListEditorManager } from '../../../shared/list-editor/list-editor-manag
 import { ApiUserCustomerCooperative } from '../../../../api/model/apiUserCustomerCooperative';
 import UserCustomerTypeEnum = ApiUserCustomerCooperative.UserCustomerTypeEnum;
 import { ApiStockOrder } from '../../../../api/model/apiStockOrder';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+// import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ApiCertification } from '../../../../api/model/apiCertification';
 import { ApiCertificationValidationScheme } from '../../../m-product/product-label/validation';
 import { ApiPayment } from '../../../../api/model/apiPayment';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-company-collectors-details',

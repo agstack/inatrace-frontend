@@ -13,8 +13,8 @@ import {
 import { faHandMiddleFinger, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { ClosableComponent } from '../closable/closable.component';
-import { Subscription } from 'rxjs';
-import { Subject } from 'rxjs/internal/Subject';
+import { Subscription, Subject } from 'rxjs';
+// import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
     selector: 'list-editor',

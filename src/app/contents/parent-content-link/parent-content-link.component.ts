@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, HostBinding, Host } from '@angular/core';
-import { Subject } from 'rxjs/internal/Subject';
+// import { Subject } from 'rxjs/internal/Subject';
 import { ContentsDirective } from '../contents.directive';
 import { takeUntil } from 'rxjs/operators';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: '[parent-content-link]',

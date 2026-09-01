@@ -14,10 +14,11 @@ import PreferredWayOfPaymentEnum = ApiStockOrder.PreferredWayOfPaymentEnum;
 import PaymentPurposeTypeEnum = ApiPayment.PaymentPurposeTypeEnum;
 import PaymentStatusEnum = ApiPayment.PaymentStatusEnum;
 import ReceiptDocumentTypeEnum = ApiPayment.ReceiptDocumentTypeEnum;
-import { Subject } from 'rxjs/internal/Subject';
+// import { Subject } from 'rxjs/internal/Subject';
 import { ConnectedCompaniesForCompanyService } from '../../../../shared-services/connected-companies-for-company.service';
 import { CurrencyCodesService } from '../../../../shared-services/currency-codes.service';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
+import {Subject} from 'rxjs';
 
 export enum ModeEnum {
   PURCHASE = 'PURCHASE',

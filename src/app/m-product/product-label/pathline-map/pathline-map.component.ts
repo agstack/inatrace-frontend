@@ -2,9 +2,9 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChil
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
-import { Subject } from 'rxjs/internal/Subject';
+// import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-pathline-map',
