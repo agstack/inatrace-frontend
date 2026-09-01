@@ -1553,6 +1553,40 @@ export class StockOrderControllerService {
     }
 
 
+
+  /**
+   * Export placed orders  for the provided company ID by map.
+   * 
+   * @param map parameters map to set partial amount of parameters easily
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public exportPlacedOrderByCompanyByMap(
+    map: exportPlacedOrderByCompany.PartialParamMap,
+    observe?: 'body',
+    reportProgress?: boolean): Observable<Blob>;
+  public exportPlacedOrderByCompanyByMap(
+    map: exportPlacedOrderByCompany.PartialParamMap,
+    observe?: 'response',
+    reportProgress?: boolean): Observable<HttpResponse<Blob>>;
+  public exportPlacedOrderByCompanyByMap(
+    map: exportPlacedOrderByCompany.PartialParamMap,
+    observe?: 'events',
+    reportProgress?: boolean): Observable<HttpEvent<Blob>>;
+  public exportPlacedOrderByCompanyByMap(
+    map: exportPlacedOrderByCompany.PartialParamMap,
+    observe: any = 'body',
+    reportProgress: boolean = false): Observable<any> {
+    return this.exportPlacedOrderByCompany(
+      map.companyId,
+      map.language,
+      observe,
+      reportProgress
+    );
+  }
+
+    
+    
   /**
    * Generate a geoJSON file with a list of polygons. by map.
    * 

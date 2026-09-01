@@ -1405,18 +1405,23 @@ export class UserControllerService {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
+            
+
 
         const handle = this.httpClient.get<ApiResponseApiUserGet>(`${this.configuration.basePath}/api/user/profile`,
             {
-                withCredentials: this.configuration.withCredentials,
+                withCredentials: true,
                 headers: headers,
                 observe: observe,
                 reportProgress: reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+
+        
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'getProfileForUser')));
         }
+        console.log(`la config headerr ${this.configuration}`);
         return handle;
     }
 

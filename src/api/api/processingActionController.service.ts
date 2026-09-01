@@ -112,7 +112,7 @@ export namespace GetProcessingAction {
        * ProcessingAction ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES';
     }
 
     /**
@@ -151,7 +151,7 @@ export namespace GetProcessingActionDetail {
        * ProcessingAction ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES';
     }
 
     /**
@@ -198,7 +198,7 @@ export namespace ListProcessingActionsByCompany {
        * Only final product actions
        */
       onlyFinalProducts?: boolean;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES';
       /**
        * Only count, only fetch, or return both values (if null)
        */
@@ -375,7 +375,7 @@ export class ProcessingActionControllerService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
+        const httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -392,8 +392,8 @@ export class ProcessingActionControllerService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-            if (additionalHeaders) {
-                for(let pair of additionalHeaders) {
+        if (additionalHeaders) {
+                for (const pair of additionalHeaders) {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
@@ -402,12 +402,12 @@ export class ProcessingActionControllerService {
             ApiProcessingAction,
             {
                 withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
+                headers,
+                observe,
+                reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'createOrUpdateProcessingAction')));
         }
         return handle;
@@ -416,7 +416,7 @@ export class ProcessingActionControllerService {
 
   /**
    * Deletes a processing action with the provided ID. by map.
-   * 
+   *
    * @param map parameters map to set partial amount of parameters easily
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -447,7 +447,7 @@ export class ProcessingActionControllerService {
 
     /**
      * Deletes a processing action with the provided ID.
-     * 
+     *
      * @param id ProcessingAction ID
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -463,7 +463,7 @@ export class ProcessingActionControllerService {
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
+        const httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -475,8 +475,8 @@ export class ProcessingActionControllerService {
         const consumes: string[] = [
         ];
 
-            if (additionalHeaders) {
-                for(let pair of additionalHeaders) {
+        if (additionalHeaders) {
+                for (const pair of additionalHeaders) {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
@@ -484,12 +484,12 @@ export class ProcessingActionControllerService {
         const handle = this.httpClient.delete<ApiDefaultResponse>(`${this.configuration.basePath}/api/chain/processing-action/${encodeURIComponent(String(id))}`,
             {
                 withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
+                headers,
+                observe,
+                reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'deleteProcessingAction')));
         }
         return handle;
@@ -498,7 +498,7 @@ export class ProcessingActionControllerService {
 
   /**
    * Get a single processing action with the provided ID. by map.
-   * 
+   *
    * @param map parameters map to set partial amount of parameters easily
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -530,16 +530,16 @@ export class ProcessingActionControllerService {
 
     /**
      * Get a single processing action with the provided ID.
-     * 
+     *
      * @param id ProcessingAction ID
-     * @param language 
+     * @param language
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingAction>;
-    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingAction>>;
-    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingAction>>;
-    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingAction>;
+    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingAction>>;
+    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingAction>>;
+    public getProcessingAction(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getProcessingAction.');
         }
@@ -550,7 +550,7 @@ export class ProcessingActionControllerService {
         }
 
         // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
+        const httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -562,8 +562,8 @@ export class ProcessingActionControllerService {
         const consumes: string[] = [
         ];
 
-            if (additionalHeaders) {
-                for(let pair of additionalHeaders) {
+        if (additionalHeaders) {
+                for (const pair of additionalHeaders) {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
@@ -571,12 +571,12 @@ export class ProcessingActionControllerService {
         const handle = this.httpClient.get<ApiResponseApiProcessingAction>(`${this.configuration.basePath}/api/chain/processing-action/${encodeURIComponent(String(id))}`,
             {
                 withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
+                headers,
+                observe,
+                reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'getProcessingAction')));
         }
         return handle;
@@ -585,7 +585,7 @@ export class ProcessingActionControllerService {
 
   /**
    * Get a single processing action by the provided ID with all translations. by map.
-   * 
+   *
    * @param map parameters map to set partial amount of parameters easily
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -617,16 +617,16 @@ export class ProcessingActionControllerService {
 
     /**
      * Get a single processing action by the provided ID with all translations.
-     * 
+     *
      * @param id ProcessingAction ID
-     * @param language 
+     * @param language
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingAction>;
-    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingAction>>;
-    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingAction>>;
-    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingAction>;
+    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingAction>>;
+    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingAction>>;
+    public getProcessingActionDetail(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getProcessingActionDetail.');
         }
@@ -637,7 +637,7 @@ export class ProcessingActionControllerService {
         }
 
         // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
+        const httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -649,8 +649,8 @@ export class ProcessingActionControllerService {
         const consumes: string[] = [
         ];
 
-            if (additionalHeaders) {
-                for(let pair of additionalHeaders) {
+        if (additionalHeaders) {
+                for (const pair of additionalHeaders) {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
@@ -658,12 +658,12 @@ export class ProcessingActionControllerService {
         const handle = this.httpClient.get<ApiResponseApiProcessingAction>(`${this.configuration.basePath}/api/chain/processing-action/${encodeURIComponent(String(id))}/detail`,
             {
                 withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
+                headers,
+                observe,
+                reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'getProcessingActionDetail')));
         }
         return handle;
@@ -672,7 +672,7 @@ export class ProcessingActionControllerService {
 
   /**
    * Get a list of processing actions by company ID. by map.
-   * 
+   *
    * @param map parameters map to set partial amount of parameters easily
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -711,11 +711,11 @@ export class ProcessingActionControllerService {
 
     /**
      * Get a list of processing actions by company ID.
-     * 
+     *
      * @param id Company ID
      * @param actionType Processing action type
      * @param onlyFinalProducts Only final product actions
-     * @param language 
+     * @param language
      * @param requestType Only count, only fetch, or return both values (if null)
      * @param limit Number of records to return. Min: 1, default: 100
      * @param offset Number of records to skip before returning. Default: 0, min: 0
@@ -724,35 +724,35 @@ export class ProcessingActionControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingAction>;
-    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingAction>>;
-    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingAction>>;
-    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingAction>;
+    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingAction>>;
+    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingAction>>;
+    public listProcessingActionsByCompany(id: number, actionType?: 'PROCESSING' | 'FINAL_PROCESSING' | 'SHIPMENT' | 'TRANSFER' | 'GENERATE_QR_CODE', onlyFinalProducts?: boolean, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listProcessingActionsByCompany.');
         }
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (actionType !== undefined && actionType !== null) {
-            queryParameters = queryParameters.set('actionType', <any>actionType);
+            queryParameters = queryParameters.set('actionType', actionType as any);
         }
         if (onlyFinalProducts !== undefined && onlyFinalProducts !== null) {
-            queryParameters = queryParameters.set('onlyFinalProducts', <any>onlyFinalProducts);
+            queryParameters = queryParameters.set('onlyFinalProducts', onlyFinalProducts as any);
         }
         if (requestType !== undefined && requestType !== null) {
-            queryParameters = queryParameters.set('requestType', <any>requestType);
+            queryParameters = queryParameters.set('requestType', requestType as any);
         }
         if (limit !== undefined && limit !== null) {
-            queryParameters = queryParameters.set('limit', <any>limit);
+            queryParameters = queryParameters.set('limit', limit as any);
         }
         if (offset !== undefined && offset !== null) {
-            queryParameters = queryParameters.set('offset', <any>offset);
+            queryParameters = queryParameters.set('offset', offset as any);
         }
         if (sortBy !== undefined && sortBy !== null) {
-            queryParameters = queryParameters.set('sortBy', <any>sortBy);
+            queryParameters = queryParameters.set('sortBy', sortBy as any);
         }
         if (sort !== undefined && sort !== null) {
-            queryParameters = queryParameters.set('sort', <any>sort);
+            queryParameters = queryParameters.set('sort', sort as any);
         }
 
         let headers = this.defaultHeaders;
@@ -761,7 +761,7 @@ export class ProcessingActionControllerService {
         }
 
         // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
+        const httpHeaderAccepts: string[] = [
             'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
@@ -773,8 +773,8 @@ export class ProcessingActionControllerService {
         const consumes: string[] = [
         ];
 
-            if (additionalHeaders) {
-                for(let pair of additionalHeaders) {
+        if (additionalHeaders) {
+                for (const pair of additionalHeaders) {
                     headers = headers.set(pair[0], pair[1]);
                 }
             }
@@ -783,12 +783,12 @@ export class ProcessingActionControllerService {
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
+                headers,
+                observe,
+                reportProgress
             }
         );
-        if(typeof this.configuration.errorHandler === 'function') {
+        if (typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'listProcessingActionsByCompany')));
         }
         return handle;

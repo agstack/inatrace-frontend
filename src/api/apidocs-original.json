@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080/"
+      "url": "https://foda.inatrace.cm/"
     }
   ],
   "paths": {
@@ -360,7 +360,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -1186,7 +1186,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1313,7 +1313,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1420,7 +1420,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1517,7 +1517,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1685,7 +1685,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1800,7 +1800,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -1935,7 +1935,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -2258,7 +2258,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -2308,7 +2308,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -2890,7 +2890,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -3028,7 +3028,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW","FR",
                 "ES"
               ],
               "type": "string"
@@ -3077,7 +3077,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3206,7 +3206,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3317,7 +3317,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3424,7 +3424,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3505,7 +3505,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3634,7 +3634,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3745,7 +3745,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3852,7 +3852,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3933,7 +3933,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -3972,7 +3972,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4063,7 +4063,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4102,7 +4102,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4162,7 +4162,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4291,7 +4291,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4402,7 +4402,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4482,7 +4482,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4531,7 +4531,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4644,7 +4644,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -4879,7 +4879,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5015,7 +5015,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5151,7 +5151,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5350,7 +5350,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5524,7 +5524,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5613,7 +5613,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5662,7 +5662,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5711,7 +5711,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5761,7 +5761,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5810,7 +5810,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5859,7 +5859,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -5908,7 +5908,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -6144,7 +6144,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -6653,7 +6653,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7167,7 +7167,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7380,7 +7380,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7430,7 +7430,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7492,7 +7492,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7541,7 +7541,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7591,7 +7591,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7653,7 +7653,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7809,7 +7809,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7892,7 +7892,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -7962,7 +7962,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -8146,7 +8146,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -8603,7 +8603,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -8667,7 +8667,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -8801,7 +8801,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -8925,7 +8925,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -10069,7 +10069,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -11051,7 +11051,7 @@
               "enum": [
                 "EN",
                 "DE",
-                "RW",
+                "RW", "FR",
                 "ES"
               ],
               "type": "string"
@@ -12186,7 +12186,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -13392,7 +13392,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -13472,7 +13472,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -13540,7 +13540,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -13838,7 +13838,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -16410,7 +16410,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -16574,7 +16574,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -16651,7 +16651,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -16738,7 +16738,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17081,7 +17081,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17200,7 +17200,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17503,7 +17503,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17551,7 +17551,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17608,7 +17608,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17772,7 +17772,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -17845,7 +17845,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -20211,7 +20211,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -20814,7 +20814,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -20865,7 +20865,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -21183,7 +21183,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"
@@ -21244,7 +21244,7 @@
             "enum": [
               "EN",
               "DE",
-              "RW",
+              "RW", "FR",
               "ES"
             ],
             "type": "string"

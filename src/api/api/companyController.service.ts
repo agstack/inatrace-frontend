@@ -303,7 +303,7 @@ export namespace ExportFarmerDataByCompany {
        * Company ID
        */
       companyId: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' | 'FR' |  'ES';
     }
 
     /**
@@ -686,7 +686,7 @@ export namespace GetCompanyProductTypes {
        * Company ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
       /**
        * Only count, only fetch, or return both values (if null)
        */
@@ -986,7 +986,7 @@ export namespace GetUserCustomer {
        * User customer ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
     }
 
     /**
@@ -1029,7 +1029,7 @@ export namespace GetUserCustomersForCompanyAndType {
        * Type of user customer (collector, farmer)
        */
       type: 'COLLECTOR' | 'FARMER';
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
       /**
        * Name or surname
        */
@@ -1147,7 +1147,7 @@ export namespace GetUserCustomersPlotsForCompany {
        * Company ID
        */
       companyId: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
     }
 
     /**
@@ -1190,7 +1190,7 @@ export namespace ImportFarmersSpreadsheet {
        * Document ID
        */
       documentId: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
     }
 
     /**
@@ -1235,7 +1235,7 @@ export namespace ListCompanies {
       /**
        * Language
        */
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
       /**
        * Company status, sortable
        */
@@ -1341,7 +1341,7 @@ export namespace ListCompaniesAdmin {
       /**
        * Language
        */
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
       /**
        * Company status, sortable
        */
@@ -1452,7 +1452,7 @@ export namespace RefreshGeoIDForUserCustomerPlot {
        * Plot ID
        */
       plotId: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' |  'ES';
     }
 
     /**
@@ -1958,10 +1958,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiPlot>;
-    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiPlot>>;
-    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiPlot>>;
-    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiPlot>;
+    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiPlot>>;
+    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiPlot>>;
+    public createUserCustomerPlot(id: number, ApiPlot: ApiPlot, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling createUserCustomerPlot.');
         }
@@ -2311,10 +2311,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<Blob>;
-    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<Blob>>;
-    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<Blob>>;
-    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<Blob>;
+    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<Blob>>;
+    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<Blob>>;
+    public exportFarmerDataByCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (companyId === null || companyId === undefined) {
             throw new Error('Required parameter companyId was null or undefined when calling exportFarmerDataByCompany.');
         }
@@ -2976,10 +2976,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProductType>;
-    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProductType>>;
-    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProductType>>;
-    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProductType>;
+    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProductType>>;
+    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProductType>>;
+    public getCompanyProductTypes(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getCompanyProductTypes.');
         }
@@ -3383,10 +3383,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiUserCustomer>;
-    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiUserCustomer>>;
-    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiUserCustomer>>;
-    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiUserCustomer>;
+    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiUserCustomer>>;
+    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiUserCustomer>>;
+    public getUserCustomer(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getUserCustomer.');
         }
@@ -3486,10 +3486,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiUserCustomer>;
-    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiUserCustomer>>;
-    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiUserCustomer>>;
-    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiUserCustomer>;
+    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiUserCustomer>>;
+    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiUserCustomer>>;
+    public getUserCustomersForCompanyAndType(companyId: number, type: 'COLLECTOR' | 'FARMER', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', query?: string, searchBy?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (companyId === null || companyId === undefined) {
             throw new Error('Required parameter companyId was null or undefined when calling getUserCustomersForCompanyAndType.');
         }
@@ -3600,10 +3600,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseListApiPlot>;
-    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseListApiPlot>>;
-    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseListApiPlot>>;
-    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseListApiPlot>;
+    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseListApiPlot>>;
+    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseListApiPlot>>;
+    public getUserCustomersPlotsForCompany(companyId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (companyId === null || companyId === undefined) {
             throw new Error('Required parameter companyId was null or undefined when calling getUserCustomersPlotsForCompany.');
         }
@@ -3689,10 +3689,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiUserCustomerImportResponse>;
-    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiUserCustomerImportResponse>>;
-    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiUserCustomerImportResponse>>;
-    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiUserCustomerImportResponse>;
+    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiUserCustomerImportResponse>>;
+    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiUserCustomerImportResponse>>;
+    public importFarmersSpreadsheet(companyId: number, documentId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (companyId === null || companyId === undefined) {
             throw new Error('Required parameter companyId was null or undefined when calling importFarmersSpreadsheet.');
         }
@@ -3792,10 +3792,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiCompanyListResponse>;
-    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiCompanyListResponse>>;
-    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiCompanyListResponse>>;
-    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiCompanyListResponse>;
+    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiCompanyListResponse>>;
+    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiCompanyListResponse>>;
+    public listCompanies(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (language !== undefined && language !== null) {
@@ -3912,10 +3912,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiCompanyListResponse>;
-    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiCompanyListResponse>>;
-    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiCompanyListResponse>>;
-    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiCompanyListResponse>;
+    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiCompanyListResponse>>;
+    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiCompanyListResponse>>;
+    public listCompaniesAdmin(language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', status?: 'REGISTERED' | 'ACTIVE' | 'DEACTIVATED', name?: string, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (language !== undefined && language !== null) {
@@ -4022,10 +4022,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiPlot>;
-    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiPlot>>;
-    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiPlot>>;
-    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiPlot>;
+    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiPlot>>;
+    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiPlot>>;
+    public refreshGeoIDForUserCustomerPlot(id: number, plotId: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling refreshGeoIDForUserCustomerPlot.');
         }
@@ -4289,10 +4289,10 @@ export class CompanyControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiUserCustomer>;
-    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiUserCustomer>>;
-    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiUserCustomer>>;
-    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiUserCustomer>;
+    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiUserCustomer>>;
+    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiUserCustomer>>;
+    public updateUserCustomer(ApiUserCustomer: ApiUserCustomer, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (ApiUserCustomer === null || ApiUserCustomer === undefined) {
             throw new Error('Required parameter ApiUserCustomer was null or undefined when calling updateUserCustomer.');
         }

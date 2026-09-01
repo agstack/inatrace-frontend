@@ -112,7 +112,7 @@ export namespace GetProcessingEvidenceField {
        * ProcessingEvidenceField ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES';
     }
 
     /**
@@ -167,7 +167,7 @@ export namespace GetProcessingEvidenceFieldList {
        * Direction of sorting (ASC or DESC). Default DESC.
        */
       sort?: 'ASC' | 'DESC';
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES';
     }
 
     /**
@@ -251,7 +251,7 @@ export namespace ListProcessingEvidenceFieldsByValueChain {
        * Direction of sorting (ASC or DESC). Default DESC.
        */
       sort?: 'ASC' | 'DESC';
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES';
     }
 
     /**
@@ -342,7 +342,7 @@ export namespace ListProcessingEvidenceFieldsByValueChains {
        * Direction of sorting (ASC or DESC). Default DESC.
        */
       sort?: 'ASC' | 'DESC';
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES';
     }
 
     /**
@@ -648,10 +648,10 @@ export class ProcessingEvidenceFieldControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingEvidenceField>;
-    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingEvidenceField>>;
-    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingEvidenceField>>;
-    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiProcessingEvidenceField>;
+    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiProcessingEvidenceField>>;
+    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiProcessingEvidenceField>>;
+    public getProcessingEvidenceField(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getProcessingEvidenceField.');
         }
@@ -743,10 +743,10 @@ export class ProcessingEvidenceFieldControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
-    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
+    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public getProcessingEvidenceFieldList(requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (requestType !== undefined && requestType !== null) {
@@ -855,10 +855,10 @@ export class ProcessingEvidenceFieldControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
-    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
+    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'FR' |'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public listProcessingEvidenceFieldsByValueChain(id: number, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listProcessingEvidenceFieldsByValueChain.');
         }
@@ -970,10 +970,10 @@ export class ProcessingEvidenceFieldControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
-    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
-    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProcessingEvidenceField>;
+    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProcessingEvidenceField>>;
+    public listProcessingEvidenceFieldsByValueChains(valueChainIds: Array<number>, requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (valueChainIds === null || valueChainIds === undefined) {
             throw new Error('Required parameter valueChainIds was null or undefined when calling listProcessingEvidenceFieldsByValueChains.');
         }

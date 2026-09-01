@@ -182,7 +182,7 @@ export namespace GetValueChain {
        * Value chain ID
        */
       id: number;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES';
     }
 
     /**
@@ -728,10 +728,10 @@ export class ValueChainControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiValueChain>;
-    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiValueChain>>;
-    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiValueChain>>;
-    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiResponseApiValueChain>;
+    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiResponseApiValueChain>>;
+    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiResponseApiValueChain>>;
+    public getValueChain(id: number, language?: 'EN' | 'DE' | 'RW' |'FR' | 'ES', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getValueChain.');
         }

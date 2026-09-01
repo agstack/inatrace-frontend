@@ -19,22 +19,24 @@
 
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent }                           from '@angular/common/http';
-import { CustomHttpUrlEncodingCodec }                        from '../encoder';
+         HttpResponse, HttpEvent } from '@angular/common/http';
+import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable }                                        from 'rxjs';
-import { catchError }                                        from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { ApiDefaultResponse } from '../model/apiDefaultResponse';
 import { ApiPaginatedResponseApiTransaction } from '../model/apiPaginatedResponseApiTransaction';
 import { ApiTransaction } from '../model/apiTransaction';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+import { Configuration } from '../configuration';
+import { environment } from '../../environments/environment';
+
 
 /**
  * Namespace for approveTransaction.

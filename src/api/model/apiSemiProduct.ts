@@ -35,9 +35,9 @@ export interface ApiSemiProduct {
     description?: string;
     measurementUnitType?: ApiMeasureUnitType;
     translations?: Array<ApiSemiProductTranslation>;
-    skuendCustomer?: boolean;
-    sku?: boolean;
     buyable?: boolean;
+    sku?: boolean;
+    skuendCustomer?: boolean;
 }
 
 /**
@@ -56,9 +56,9 @@ export namespace ApiSemiProduct {
         description = 'description',
         measurementUnitType = 'measurementUnitType',
         translations = 'translations',
-        skuendCustomer = 'skuendCustomer',
+        buyable = 'buyable',
         sku = 'sku',
-        buyable = 'buyable'
+        skuendCustomer = 'skuendCustomer'
     }
 
 
@@ -128,7 +128,7 @@ export namespace ApiSemiProduct {
                     isReadOnly: false,
                     isEnum: false,
                     required: false,
-                    name: 'skuendCustomer',
+                    name: 'buyable',
                     classname: 'ApiSemiProduct',
                     dataType: 'boolean',
                     isPrimitiveType: true,
@@ -150,7 +150,7 @@ export namespace ApiSemiProduct {
                     isReadOnly: false,
                     isEnum: false,
                     required: false,
-                    name: 'buyable',
+                    name: 'skuendCustomer',
                     classname: 'ApiSemiProduct',
                     dataType: 'boolean',
                     isPrimitiveType: true,
@@ -169,11 +169,11 @@ export namespace ApiSemiProduct {
                 ],
                 translations: [
                 ],
-                skuendCustomer: [
+                buyable: [
                 ],
                 sku: [
                 ],
-                buyable: [
+                skuendCustomer: [
                 ],
             }
         }
@@ -197,13 +197,13 @@ export namespace ApiSemiProduct {
   //               translations: {
   //                   validators: []
   //               },
-  //               skuendCustomer: {
+  //               buyable: {
   //                   validators: []
   //               },
   //               sku: {
   //                   validators: []
   //               },
-  //               buyable: {
+  //               skuendCustomer: {
   //                   validators: []
   //               },
   //     }

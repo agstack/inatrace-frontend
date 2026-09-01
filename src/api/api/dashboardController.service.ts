@@ -223,7 +223,7 @@ export namespace ExportProcessingPerformanceData {
      */
     export interface PartialParamMap {
       ApiProcessingPerformanceRequest: ApiProcessingPerformanceRequest;
-      language?: 'EN' | 'DE' | 'RW' | 'ES';
+      language?: 'EN' | 'DE' | 'RW' | 'FR' |  'ES';
     }
 
     /**
