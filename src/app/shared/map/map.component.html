@@ -1,21 +1,28 @@
 <div id="map-container" class="mt-2">
-    <div class="map" id="{{ mapId }}"></div>
-    <div class="map-style-menu">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input"
-                   type="radio"
-                   [formControl]="mapStyle"
-                   id="satelliteStyle"
-                   value="satellite-streets-v12">
-            <label class="form-check-label" for="satelliteStyle" i18n="@@map.view.satellite">Satellite view</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input"
-                   type="radio"
-                   [formControl]="mapStyle"
-                   id="defaultStyle"
-                   value="outdoors-v12">
-            <label class="form-check-label" for="defaultStyle" i18n="@@map.view.default">Default view</label>
+    <div *ngIf="mapUnavailable" class="map map-unavailable">
+        <div class="map-unavailable-message" i18n="@@map.unavailable.message">
+            The map is unavailable. Plot locations are still saved and can be exported.
         </div>
     </div>
+    <ng-container *ngIf="!mapUnavailable">
+        <div class="map" id="{{ mapId }}"></div>
+        <div class="map-style-menu">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="radio"
+                       [formControl]="mapStyle"
+                       id="satelliteStyle"
+                       value="satellite-streets-v12">
+                <label class="form-check-label" for="satelliteStyle" i18n="@@map.view.satellite">Satellite view</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="radio"
+                       [formControl]="mapStyle"
+                       id="defaultStyle"
+                       value="outdoors-v12">
+                <label class="form-check-label" for="defaultStyle" i18n="@@map.view.default">Default view</label>
+            </div>
+        </div>
+    </ng-container>
 </div>
