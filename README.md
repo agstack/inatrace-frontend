@@ -41,9 +41,12 @@ For detailed technical documentation, please refer to [TECHNICAL_DOCUMENTATION.m
 ## Installing / Getting started
 
 #### Requirements
-* Node 14
-* Angular 10
-* Docker
+* Node 14.x. Later majors do not work: the Angular 10 development server stops at startup with
+  `An unhandled exception occurred: No such module: http_parser`. Node 14 is past end of life, so
+  install it next to your usual version with a version manager (nvm, asdf, volta) rather than
+  system-wide.
+* Angular 10 comes from `npm install`; there is nothing to install separately, and the commands
+  below use the project's own CLI.
 * WebStorm or VS Code (recommended)
 * VS Code pluggins:
   * Debugger for Chrome
@@ -54,14 +57,12 @@ For detailed technical documentation, please refer to [TECHNICAL_DOCUMENTATION.m
 
 #### How to run
 1. Clone the repository
-	
+
 2. Run ```npm install```
 
 3. Open the project in IDE of choice
 
-4. Generate API client from Java backend by running `npm run generate-api`
-
-5. Add development environment as `environment.dev.ts` by copying `environment.ts` and adding default values for configuration keys besides window environment (e.g. `environmentName: window['env']['environmentName'] || 'DEV'`)
+4. Add development environment as `environment.dev.ts` by copying `environment.ts` and adding default values for configuration keys besides window environment (e.g. `environmentName: window['env']['environmentName'] || 'DEV'`). The file is gitignored, so every checkout needs its own.
    1. `environmentName`: `'DEV'`
    2. `appBaseUrl`: `'http://localhost:4200'`
    3. `qrCodeBasePath`: `'q-cd'`
@@ -70,12 +71,29 @@ For detailed technical documentation, please refer to [TECHNICAL_DOCUMENTATION.m
    6. `relativeImageUploadUrl`: `'/api/common/image'`
    7. `relativeImageUploadUrlAllSizes`: `'/api/common/image'`
    8. `googleMapsApiKey`: have to obtain a key yourself
+   9. `mapboxAccessToken`: have to obtain a key yourself; the plot map does not draw without it
 
-6. If using Beybo integration, add the following configuration keys in `environment.ts` (the values should be obtained from Beyco):
+5. If using Beyco integration, add the following configuration keys in `environment.ts` (the values should be obtained from Beyco):
    1. `beycoAuthURL`: `url`
    2. `beycoClientId`: `clientId`
 
-7. Run Angular server with `npm run dev`
+6. Run Angular server with `npm run dev`
+
+#### Ports
+
+The development server listens on **4200**: [http://localhost:4200/](http://localhost:4200/), which
+redirects to `/en/`. It proxies `/api` to the backend on **8080** (see
+`proxy.INATrace-local.conf.json`), so the browser only ever talks to 4200.
+
+The landing page and login screen render without a backend. Everything that calls the API answers
+504 until a backend is listening on 8080.
+
+#### Regenerating the API client
+
+`src/api` is generated from the backend's OpenAPI document and is committed, so a normal run does
+not need this step. To refresh it after the backend's API changes, start the backend and run
+`npm run generate-api`, which reads `http://localhost:8080/v3/api-docs` and fails if nothing is
+serving it.
 
 ## How it works
 
