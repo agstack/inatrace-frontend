@@ -13,7 +13,6 @@
     "e2e": "ng e2e",
     "generate-api": "node generate-api.js",
     "generate-chain-api": "node generate-chain-api.js",
-    "update-version": "node update-version.js",
     "extract-i18n-generate-translations": "node generate-translations.js",
     "dev": "ng serve --configuration=dev --aot --host 0.0.0.0 --proxy-config proxy.INATrace-local.conf.json",
     "dev-poll": "ng serve --configuration=dev --aot --host 0.0.0.0 --proxy-config proxy.INATrace-local.conf.json --poll 2000"

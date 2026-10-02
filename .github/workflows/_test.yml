@@ -1,0 +1,48 @@
+# Reusable: runs every test. Called by ci.yml (phases 1 and 2) and release.yml (phase 3).
+name: "Reusable: test"
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Commit to test (defaults to the triggering commit)
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+# Explicit bash runs steps with -eo pipefail (the implicit default has no pipefail).
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Release script tests
+        run: python3 -m unittest discover -s .github/scripts
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      # Enable once `npm run lint` passes; it reports about 7,000 issues today, mostly
+      # formatting that `npx ng lint --fix` corrects.
+      # - name: Lint
+      #   run: npm run lint
+
+      - name: Unit tests
+        # Karma in headless Chrome, which the runner provides.
+        run: npm run test:ci

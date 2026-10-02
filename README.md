@@ -40,7 +40,7 @@ npm run dev               # http://localhost:4200
 | [Company operations](docs/companies.md) | Deliveries, processing, payments, farmers and collectors |
 | [Dashboard](docs/dashboard.md) | Delivery and processing-performance reporting |
 | [System settings](docs/settings.md) | Companies, users, types, value chains, currencies |
-| [Building](docs/building.md) | Building and tagging a Docker image |
+| [Building](docs/building.md) | Production build, the Docker image and its runtime settings |
 
 These pages are written to be read on GitHub, and are also published at
 <https://docs.agstack.org/> — which imports this `docs/` directory directly, so
