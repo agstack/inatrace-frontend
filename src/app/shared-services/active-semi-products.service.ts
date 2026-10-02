@@ -35,13 +35,19 @@ export class ActiveSemiProductsService extends GeneralSifrantService<ApiSemiProd
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiSemiProduct>> {
     const limit = params && params.limit ? params.limit : this.limit();
+    const lkey = key ? key.toLocaleLowerCase() : null;
+
     return this.codebookService.getSemiProductListByMap(this.requestParams).pipe(
       map((res: ApiPaginatedResponseApiSemiProduct) => {
+        const results = res.data.items.filter((item: ApiSemiProduct) =>
+          lkey == null || this.textRepresentation(item).toLocaleLowerCase().indexOf(lkey) >= 0
+        );
+
         return {
-          results: res.data.items,
+          results,
           offset: 0,
           limit,
-          totalCount: res.data.count,
+          totalCount: results.length,
         };
       })
     );
@@ -52,4 +58,3 @@ export class ActiveSemiProductsService extends GeneralSifrantService<ApiSemiProd
   }
 
 }
-

@@ -9,6 +9,8 @@ import {
 
 declare const require: any;
 
+window['env'] = window['env'] || {};
+
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
