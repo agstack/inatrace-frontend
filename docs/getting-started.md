@@ -6,7 +6,8 @@ Running the INATrace web frontend against a local backend.
 * Node 14.x. Later majors do not work: the Angular 10 development server stops at startup with
   `An unhandled exception occurred: No such module: http_parser`. Node 14 is past end of life, so
   install it next to your usual version with a version manager (nvm, asdf, volta) rather than
-  system-wide.
+  system-wide. `.nvmrc` pins it, so `nvm use` in the project picks it.
+* Chrome or Chromium, for the unit tests.
 * Angular 10 comes from `npm install`; there is nothing to install separately, and the commands
   below use the project's own CLI.
 * WebStorm or VS Code (recommended)
@@ -40,6 +41,18 @@ Running the INATrace web frontend against a local backend.
    2. `beycoClientId`: `clientId`
 
 6. Run Angular server with `npm run dev`
+
+## Running the tests
+
+The unit tests run with Karma in Chrome:
+
+```
+npm run test:ci   # once, in headless Chrome, as CI runs them
+npm test          # watch mode in a Chrome window, re-running on every change
+```
+
+Karma finds Chrome in its usual install locations. Otherwise, point `CHROME_BIN` at a
+Chrome or Chromium binary.
 
 ## Ports
 
