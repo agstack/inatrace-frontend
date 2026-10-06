@@ -35,6 +35,7 @@ export class ActiveFacilityTypeService extends GeneralSifrantService<ApiFacility
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiFacilityType>> {
     const limit = params && params.limit ? params.limit : this.limit();
+    const lkey = key ? key.toLocaleLowerCase() : null;
 
     const reqPars = {
       ...this.requestParams
@@ -42,11 +43,15 @@ export class ActiveFacilityTypeService extends GeneralSifrantService<ApiFacility
 
     return this.codebookService.getFacilityTypeListByMap(reqPars).pipe(
         map((res: ApiPaginatedResponseApiFacilityType) => {
+          const results = res.data.items.filter((item: ApiFacilityType) =>
+            lkey == null || this.textRepresentation(item).toLocaleLowerCase().indexOf(lkey) >= 0
+          );
+
           return {
-            results: res.data.items,
+            results,
             offset: 0,
             limit,
-            totalCount: res.data.count
+            totalCount: results.length
           };
         })
     );
@@ -57,4 +62,3 @@ export class ActiveFacilityTypeService extends GeneralSifrantService<ApiFacility
   }
 
 }
-
