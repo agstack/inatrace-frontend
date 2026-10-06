@@ -7,7 +7,7 @@ import { AvailableSellingFacilitiesForCompany } from '../../../../../shared-serv
 import { ProcessingActionType } from '../../../../../../shared/types';
 import { GetAvailableStockForStockUnitInFacility, StockOrderControllerService } from '../../../../../../api/api/stockOrderController.service';
 import { dateISOString } from '../../../../../../shared/utils';
-import { debounceTime, map, take } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { ApiStockOrder } from '../../../../../../api/model/apiStockOrder';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import { ApiStockOrderSelectable } from '../stock-processing-order-details.model';
@@ -22,6 +22,11 @@ import { ApiSemiProduct } from '../../../../../../api/model/apiSemiProduct';
 import { ApiFinalProduct } from '../../../../../../api/model/apiFinalProduct';
 import StatusEnum = ApiTransaction.StatusEnum;
 import OrderTypeEnum = ApiStockOrder.OrderTypeEnum;
+
+interface AvailableStockOrdersResult {
+  stockOrders: ApiStockOrderSelectable[];
+  failed: boolean;
+}
 
 @Component({
   selector: 'app-processing-order-input',
@@ -54,6 +59,9 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
   // Input stock orders properties and controls
   availableInputStockOrders: ApiStockOrderSelectable[] = [];
   selectedInputStockOrders: ApiStockOrderSelectable[] = [];
+  availableStockOrdersLoading = false;
+  availableStockOrdersError = false;
+  private availableStockRequestId = 0;
 
   // List for holding references to observable subscriptions
   subscriptions: Subscription[] = [];
@@ -220,7 +228,16 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
     }
 
     // Get the available stock in the provided facility for the provided semi-product
-    this.availableInputStockOrders = await this.fetchAvailableStockOrders(requestParams);
+    const result = await this.fetchAvailableStockOrders(requestParams);
+    if (!result) {
+      return;
+    }
+    this.availableInputStockOrders = result.stockOrders;
+
+    if (result.failed) {
+      this.clearAvailableStockOrderSelection();
+      return;
+    }
 
     // Reinitialize selections
     const tmpSelected = [];
@@ -257,53 +274,58 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
     );
   }
 
-  private async fetchAvailableStockOrders(params: GetAvailableStockForStockUnitInFacility.PartialParamMap): Promise<ApiStockOrder[]> {
+  private async fetchAvailableStockOrders(params: GetAvailableStockForStockUnitInFacility.PartialParamMap): Promise<AvailableStockOrdersResult | null> {
+
+    const requestId = ++this.availableStockRequestId;
+    this.availableStockOrdersLoading = true;
+    this.availableStockOrdersError = false;
 
     // Final product is defined for 'FINAL_PROCESSING' and Quote or Transfer for a final product
     const finalProduct = this.selectedProcAction.outputFinalProduct;
 
-    return this.stockOrderController
-      .getAvailableStockForStockUnitInFacilityByMap(params)
-      .pipe(
-        take(1),
-        map(res => {
-          if (res && res.status === 'OK' && res.data) {
+    try {
+      const res = await this.stockOrderController
+        .getAvailableStockForStockUnitInFacilityByMap(params)
+        .pipe(take(1))
+        .toPromise();
 
-            // If we are editing existing order, filter the stock orders that are already present in the proc. order
-            if (this.editing) {
-              const availableStockOrders = res.data.items;
-              this.targetStockOrdersArray.value.forEach(tso => {
-                const soIndex = availableStockOrders.findIndex(aso => aso.id === tso.id);
-                if (soIndex !== -1) {
-                  availableStockOrders.splice(soIndex, 1);
-                }
-              });
+      if (requestId !== this.availableStockRequestId) {
+        return null;
+      }
 
-              return availableStockOrders;
-            }
+      if (!res || res.status !== 'OK' || !res.data || !Array.isArray(res.data.items)) {
+        this.availableStockOrdersError = true;
+        return { stockOrders: [], failed: true };
+      }
 
-            return res.data.items;
-          } else {
-            return [];
-          }
-        }),
-        map(availableStockOrders => {
+      let stockOrders = res.data.items || [];
 
-          // If generating QR code, filter all the stock orders that have already generated QR code tag
-          if (this.selectedProcAction.type === 'GENERATE_QR_CODE') {
-            return availableStockOrders.filter(apiStockOrder => !apiStockOrder.qrCodeTag);
-          } else if (finalProduct) {
+      // If we are editing an existing order, do not offer its existing output orders as new input.
+      if (this.editing) {
+        stockOrders = stockOrders.filter(stockOrder => !this.targetStockOrdersArray.value.some(target => target.id === stockOrder.id));
+      }
 
-            // If final product action (final processing of Quote or Transfer order for a final product)
-            // filter the stock orders that have QR code tag for different final products than the selected one (from the Proc. action)
-            return availableStockOrders.filter(apiStockOrder => !apiStockOrder.qrCodeTag || apiStockOrder.qrCodeTagFinalProduct.id === finalProduct.id);
+      // If generating QR code, filter all stock orders that already have a generated QR code tag.
+      if (this.selectedProcAction.type === 'GENERATE_QR_CODE') {
+        stockOrders = stockOrders.filter(stockOrder => !stockOrder.qrCodeTag);
+      } else if (finalProduct) {
+        // A final-product action can only use a matching QR code tag.
+        stockOrders = stockOrders.filter(stockOrder => !stockOrder.qrCodeTag || stockOrder.qrCodeTagFinalProduct.id === finalProduct.id);
+      }
 
-          } else {
-            return availableStockOrders;
-          }
-        })
-      )
-      .toPromise();
+      return { stockOrders, failed: false };
+    } catch (error) {
+      if (requestId !== this.availableStockRequestId) {
+        return null;
+      }
+
+      this.availableStockOrdersError = true;
+      return { stockOrders: [], failed: true };
+    } finally {
+      if (requestId === this.availableStockRequestId) {
+        this.availableStockOrdersLoading = false;
+      }
+    }
   }
 
   async setInputFacility(facility: ApiFacility) {
@@ -321,7 +343,10 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
         finalProductId: this.selectedProcAction.inputFinalProduct?.id
       };
 
-      this.availableInputStockOrders = await this.fetchAvailableStockOrders(requestParams);
+      const result = await this.fetchAvailableStockOrders(requestParams);
+      if (result) {
+        this.availableInputStockOrders = result.stockOrders;
+      }
     } else {
       this.clearInputFacility();
     }
@@ -540,6 +565,10 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
 
   clearInputPropsAndControls() {
 
+    this.availableStockRequestId++;
+    this.availableStockOrdersLoading = false;
+    this.availableStockOrdersError = false;
+
     this.dateFromFilterControl.setValue(null);
     this.dateToFilterControl.setValue(null);
     this.internalLotNameSearchControl.setValue(null, { emitEvent: false });
@@ -556,6 +585,14 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
 
     this.totalInputQuantityControl.reset();
     this.remainingQuantityControl.reset();
+  }
+
+  private clearAvailableStockOrderSelection() {
+    this.availableInputStockOrders = [];
+    this.selectedInputStockOrders = [];
+    this.cbSelectAllControl.setValue(false);
+    this.calcInputQuantity(true);
+    this.setOrganicAndWomenOnly();
   }
 
   clearInputFacility() {

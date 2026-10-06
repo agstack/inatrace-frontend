@@ -172,7 +172,17 @@
                         </checkbox-input>
                     </div>
                 </div>
-                <div class="af-row" *ngIf="inputFacilityControl.value && availableInputStockOrders.length === 0">
+                <div class="af-row" *ngIf="inputFacilityControl.value && availableStockOrdersLoading">
+                    <label class="ml-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.loadingStock">Loading available stock…</label>
+                </div>
+                <div class="af-row" *ngIf="inputFacilityControl.value && availableStockOrdersError">
+                    <div class="ml-1 mt-2">
+                        <span i18n="@@productLabelStockProcessingOrderDetail.stockLoadError">Available stock could not be loaded. Please try again.</span>
+                        <button type="button" class="btn btn-link p-0 ml-1" (click)="dateSearch()"
+                                i18n="@@productLabelStockProcessingOrderDetail.stockLoadRetry">Try again</button>
+                    </div>
+                </div>
+                <div class="af-row" *ngIf="inputFacilityControl.value && !availableStockOrdersLoading && !availableStockOrdersError && availableInputStockOrders.length === 0">
                     <label class="ml-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.noStock">No relevant stock to add transactions in facility</label>
                 </div>
 
