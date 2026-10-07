@@ -427,11 +427,19 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
         .createOrUpdateProcessingOrder(processingOrder).pipe(take(1)).toPromise();
 
       if (!res || res.status !== 'OK') {
-        throw Error('Error while creating processing order for order type: ' + this.actionType);
+        // TokenInterceptor presents HTTP failures as values so existing consumers can keep
+        // their observable contract. It has already shown the user-facing notification.
+        // A non-HTTP response still needs a local fallback and must never navigate away.
+        if (!this.isInterceptedHttpFailure(res)) {
+          this.showSaveFailure();
+        }
       } else {
         this.dismiss();
       }
 
+    } catch (error) {
+      // This covers callers and tests that do not use TokenInterceptor.
+      this.showSaveFailure();
     } finally {
       this.saveInProgress = false;
       this.globalEventsManager.showLoading(false);
@@ -440,6 +448,18 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   dismiss() {
     this.location.back();
+  }
+
+  private isInterceptedHttpFailure(response: any): boolean {
+    return response && response.ok === false && typeof response.status === 'number';
+  }
+
+  private showSaveFailure() {
+    this.globalEventsManager.push({
+      notificationType: 'error',
+      title: $localize`:@@processingOrder.saveError.title:Processing order could not be saved`,
+      message: $localize`:@@processingOrder.saveError.message:Your entries were kept. Please correct any highlighted fields or try again.`
+    });
   }
 
   private async initializeData() {

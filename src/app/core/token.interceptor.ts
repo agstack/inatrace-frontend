@@ -50,7 +50,9 @@ export class TokenInterceptor implements HttpInterceptor {
               const title = $localize`:@@tokenInterceptor.403.title:Error`;
               this.toasterService.error(message, title);
             } else if (err.status === 400) {
-              const message = err.error.errorMessage;
+              const message = err.error && err.error.errorMessage
+                ? err.error.errorMessage
+                : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;
               const title = $localize`:@@tokenInterceptor.400.title:Communication error!`;
               this.toasterService.error(message, title);
             } else {
