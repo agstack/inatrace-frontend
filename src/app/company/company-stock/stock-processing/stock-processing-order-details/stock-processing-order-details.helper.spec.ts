@@ -18,6 +18,10 @@ describe('StockProcessingOrderDetailsHelper', () => {
     expect(StockProcessingOrderDetailsHelper.integerValidator(new FormControl(7.5))).toEqual({integer: true});
   });
 
+  it('does not throw when an older processing order has no evidence form group', () => {
+    expect(StockProcessingOrderDetailsHelper.prepareRequiredEvidenceFieldValues(null, action)).toEqual([]);
+  });
+
   it('converts browser string values to numericValue without losing decimal or zero values', () => {
     const values = StockProcessingOrderDetailsHelper.prepareRequiredEvidenceFieldValues({
       moisture: '11.75',

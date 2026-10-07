@@ -87,6 +87,12 @@ export class StockProcessingOrderDetailsHelper {
 
     const evidenceFieldsValues: ApiStockOrderEvidenceFieldValue[] = [];
 
+    // Legacy processing orders, or an order opened before the action definition
+    // has finished loading, may not have the injected evidence form group.
+    if (!stockOrderEvidenceFields || !selectedProcAction?.requiredEvidenceFields) {
+      return evidenceFieldsValues;
+    }
+
     // Create stock order evidence field instances (values) for every form control
     Object.keys(stockOrderEvidenceFields).forEach(key => {
 

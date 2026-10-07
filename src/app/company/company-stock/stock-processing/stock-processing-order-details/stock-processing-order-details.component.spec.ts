@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { ApiProcessingAction } from '../../../../../api/model/apiProcessingAction';
+import { ApiProcessingEvidenceField } from '../../../../../api/model/apiProcessingEvidenceField';
 import { ProcessingOrderControllerService } from '../../../../../api/api/processingOrderController.service';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { StockProcessingOrderDetailsComponent } from './stock-processing-order-details.component';
@@ -26,6 +27,7 @@ describe('StockProcessingOrderDetailsComponent save failures', () => {
       globalEventsManager,
       null,
       processingOrderController,
+      null,
       null,
       null,
       null,
@@ -99,5 +101,33 @@ describe('StockProcessingOrderDetailsComponent save failures', () => {
     expect(payloads[1].targetStockOrders).toEqual(payloads[0].targetStockOrders);
     expect(component.inputTransactionsArray.value).toEqual([{ id: 100 }]);
     expect(location.back).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('StockProcessingOrderDetailsComponent', () => {
+  it('loads the complete action definition, including evidence fields, before rebuilding an order', async () => {
+    const completeAction = {
+      id: 17,
+      name: 'Mock drying',
+      requiredEvidenceFields: [{
+        id: 5,
+        fieldName: 'MOCK_MOISTURE_CONTENT',
+        type: ApiProcessingEvidenceField.TypeEnum.NUMBER
+      }]
+    } as ApiProcessingAction;
+    const processingActionController = {
+      getProcessingActionDetail: jasmine.createSpy('getProcessingActionDetail').and.returnValue(of({status: 'OK', data: completeAction}))
+    };
+    const changeDetectorRef = {
+      detectChanges: jasmine.createSpy('detectChanges')
+    };
+    const component = new StockProcessingOrderDetailsComponent(
+      null, null, null, null, null, processingActionController as any, null, null, null, changeDetectorRef as any
+    );
+
+    const action = await (component as any).loadCompleteProcessingAction(17);
+
+    expect(processingActionController.getProcessingActionDetail).toHaveBeenCalledWith(17);
+    expect(action.requiredEvidenceFields).toEqual(completeAction.requiredEvidenceFields);
   });
 });
