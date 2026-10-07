@@ -918,6 +918,8 @@
     "locationForm.textinput.country.label": "Igihugu",
     "locationForm.textinput.visible.label": "Ese ahantu haragaragarira abantu bose ku ikarita?",
     "locationForm.origin.helpText": "Kanda inshuro ebyiri ku ikarita kugirango ushyireho akamenyetso ndetse werekane n'ahantu. Kanda iburyo ku kamenyetso kugirango ugakureho.",
+    "locationForm.mapPin.label": "Akamenyetso ku ikarita",
+    "locationForm.mapPin.error": "Akamenyetso ku ikarita karasabwa iyo ahantu hagaragara ku bantu bose.",
     "locationForm.publiclyVisible.yes": "YEGO",
     "locationForm.publiclyVisible.no": "OYA",
     "collectorDetail.section.basicInfo": "Amakuru yibanze",

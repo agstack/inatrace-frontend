@@ -122,11 +122,16 @@
 
     <div class="af-c6" style="padding-top: 25px;">
 
+        <div class="location-map-label" [class.location-map-label--required]="isMapPinRequired">
+            <span i18n="@@locationForm.mapPin.label">Map pin</span><span *ngIf="isMapPinRequired" aria-hidden="true">*</span>
+        </div>
+
         <google-map
                 *ngIf="isGoogleMapsLoaded"
                 height="250px"
                 width="100%"
                 [options]="{disableDoubleClickZoom: true}"
+                [class.location-map--invalid]="submitted && hasInvalidMapPin"
                 (mapDblclick)="dblClick($event)">
             <map-marker
                 #gMarker="mapMarker"
@@ -141,6 +146,9 @@
         <small i18n="@@locationForm.origin.helpText" style="margin-top: 0.5rem;">
             Double click on the map to drop a pin and mark the locations. Right click on marker to remove it.
         </small>
+        <div *ngIf="submitted && hasInvalidMapPin" class="sc-invalid-feedback" i18n="@@locationForm.mapPin.error">
+            A map pin is required when the location is publicly visible.
+        </div>
 
     </div>
 </div>
