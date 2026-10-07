@@ -3,6 +3,8 @@
   "translations": {
     "organization.input.placehoder": "Select organization",
     "additionalProofItem.datepicker.date.label": "Date",
+    "processingOrder.evidenceField.integer.error": "Field must be a whole number",
+    "processingOrder.evidenceField.required.error": "Field is required",
     "additionalProofItem.label.type": "Type",
     "additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage": "Upload only file types: PNG, JPG and JPEG.",
     "additionalProofItem.attachment-uploader.label": "Document (JPG, PNG, PDF)",

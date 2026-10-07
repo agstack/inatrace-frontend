@@ -18,6 +18,25 @@
       </ng-container>
     </textinput>
 
+    <textinput *ngIf="fieldInfo.type === 'NUMBER' || fieldInfo.type === 'INTEGER'"
+               type="number"
+               [step]="fieldInfo.type === 'INTEGER' ? 1 : 'any'"
+               [form]="$any(formGroup.get(fieldInfo.fieldName))"
+               [label]="fieldInfo.label"
+               style="width: 100%"
+               [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+      <ng-container *ngIf="submitted">
+        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
+          <div *ngIf="errors.required" i18n="@@processingOrder.evidenceField.required.error">
+            Field is required
+          </div>
+          <div *ngIf="errors.integer" i18n="@@processingOrder.evidenceField.integer.error">
+            Field must be a whole number
+          </div>
+        </div>
+      </ng-container>
+    </textinput>
+
     <textinput *ngIf="fieldInfo.type === 'STRING'"
                [form]="$any(formGroup.get(fieldInfo.fieldName))"
                [label]="fieldInfo.label"

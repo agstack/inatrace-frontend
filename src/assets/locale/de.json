@@ -1044,6 +1044,8 @@
     "productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.label": "Liste der zusätzlichen Nachweise",
     "productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.addText": "Dokument hinzufügen",
     "additionalProofItem.datepicker.date.label": "Datum",
+    "processingOrder.evidenceField.integer.error": "Das Feld muss eine ganze Zahl sein",
+    "processingOrder.evidenceField.required.error": "Das Feld ist erforderlich",
     "additionalProofItem.label.type": "Art",
     "additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage": "Laden Sie nur diese Dateiformate hoch: PNG, JPG und JPEG.",
     "additionalProofItem.attachment-uploader.label": "Dokument (JPG, PNG, PDF)",
