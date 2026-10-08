@@ -990,6 +990,8 @@
     "productLabelStockPurchaseOrdersModal.singleChoice.semiProduct": "Semiproducto",
     "productLabelSupply.title.supply": "Suministro",
     "additionalProofItem.datepicker.date.label": "Fecha",
+    "processingOrder.evidenceField.integer.error": "El campo debe ser un número entero",
+    "processingOrder.evidenceField.required.error": "El campo es obligatorio",
     "additionalProofItem.label.type": "Tipo",
     "additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage": "Tipos de archivos compatibles: PNG, JPG y JPEG.",
     "additionalProofItem.attachment-uploader.label": "Documento (JPG, PNG, PDF)",

@@ -1046,6 +1046,8 @@
     "productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.label": "Urutonde rw'ibihamya by'inyongera",
     "productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.addText": "Kongeraho ibishyashya",
     "additionalProofItem.datepicker.date.label": "Itariki",
+    "processingOrder.evidenceField.integer.error": "Umwanya ugomba kuba umubare wuzuye",
+    "processingOrder.evidenceField.required.error": "Umwanya urakenewe",
     "additionalProofItem.label.type": "Ubwoko",
     "additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage": "Shyiraho gusa idosiye z'ubwoko bwa: PNG, JPG na JPEG.",
     "additionalProofItem.attachment-uploader.label": "Idosiye (JPG, PNG, PDF)",

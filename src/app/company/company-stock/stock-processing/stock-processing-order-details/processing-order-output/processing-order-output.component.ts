@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import { ProcessingActionType } from '../../../../../../shared/types';
 import { ApiFinalProduct } from '../../../../../../api/model/apiFinalProduct';
@@ -345,11 +345,15 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
         }
       }
 
+      const validators: ValidatorFn[] = [];
       if (field.mandatory) {
-        requiredProcEvidenceFieldGroup.addControl(field.fieldName, new FormControl(value, Validators.required));
-      } else {
-        requiredProcEvidenceFieldGroup.addControl(field.fieldName, new FormControl(value));
+        validators.push(Validators.required);
       }
+      if (field.type === ProcessingEvidenceField.INTEGER) {
+        validators.push(StockProcessingOrderDetailsHelper.integerValidator);
+      }
+
+      requiredProcEvidenceFieldGroup.addControl(field.fieldName, new FormControl(value, validators));
     });
 
     tsoGroup.setControl('requiredProcEvidenceFieldGroup', requiredProcEvidenceFieldGroup);

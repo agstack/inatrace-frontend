@@ -1,4 +1,4 @@
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ApiStockOrderEvidenceFieldValue } from '../../../../../api/model/apiStockOrderEvidenceFieldValue';
 import { ApiProcessingAction } from '../../../../../api/model/apiProcessingAction';
 import { ApiStockOrderEvidenceTypeValue } from '../../../../../api/model/apiStockOrderEvidenceTypeValue';
@@ -11,6 +11,17 @@ import { ApiActivityProofValidationScheme } from '../../stock-core/additional-pr
 import { ApiDocument } from '../../../../../api/model/apiDocument';
 
 export class StockProcessingOrderDetailsHelper {
+
+  public static integerValidator(control: AbstractControl): ValidationErrors | null {
+
+    const value = control.value;
+    if (value === null || value === undefined || value === '' || (typeof value === 'string' && value.trim() === '')) {
+      return null;
+    }
+
+    const numericValue = typeof value === 'number' ? value : Number(value);
+    return Number.isInteger(numericValue) ? null : {integer: true};
+  }
 
   public static setFormControlValidators(formGroup: FormGroup, formControlName: string, validators: ValidatorFn[]) {
     formGroup.get(formControlName).setValidators(validators);
@@ -76,6 +87,12 @@ export class StockProcessingOrderDetailsHelper {
 
     const evidenceFieldsValues: ApiStockOrderEvidenceFieldValue[] = [];
 
+    // Legacy processing orders, or an order opened before the action definition
+    // has finished loading, may not have the injected evidence form group.
+    if (!stockOrderEvidenceFields || !selectedProcAction?.requiredEvidenceFields) {
+      return evidenceFieldsValues;
+    }
+
     // Create stock order evidence field instances (values) for every form control
     Object.keys(stockOrderEvidenceFields).forEach(key => {
 
@@ -91,7 +108,7 @@ export class StockProcessingOrderDetailsHelper {
         case ProcessingEvidenceFieldType.INTEGER:
         case ProcessingEvidenceFieldType.EXCHANGERATE:
         case ProcessingEvidenceFieldType.PRICE:
-          evidenceFieldValue.numericValue = stockOrderEvidenceFields[key];
+          evidenceFieldValue.numericValue = StockProcessingOrderDetailsHelper.toNumericValue(stockOrderEvidenceFields[key]);
           break;
         case ProcessingEvidenceFieldType.DATE:
         case ProcessingEvidenceFieldType.TIMESTAMP:
@@ -109,6 +126,14 @@ export class StockProcessingOrderDetailsHelper {
     });
 
     return evidenceFieldsValues;
+  }
+
+  private static toNumericValue(value: any): number | null {
+    if (value === null || value === undefined || value === '' || (typeof value === 'string' && value.trim() === '')) {
+      return null;
+    }
+
+    return Number(value);
   }
 
   public static loadExistingOtherEvidenceDocuments(firstTSO: FormGroup, otherProcessingEvidenceArray: FormArray) {

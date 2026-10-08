@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -124,7 +124,8 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     private procActionController: ProcessingActionControllerService,
     private facilityController: FacilityControllerService,
     private authService: AuthService,
-    private selUserCompanyService: SelectedUserCompanyService
+    private selUserCompanyService: SelectedUserCompanyService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   get selectedProcAction(): ApiProcessingAction {
@@ -187,7 +188,8 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   get expectedOutputQuantityHelpText() {
 
-    if (this.actionType !== 'PROCESSING' || !this.selectedProcAction?.estimatedOutputQuantityPerUnit) {
+    if (this.actionType !== 'PROCESSING' || !this.selectedProcAction?.estimatedOutputQuantityPerUnit ||
+        !this.currentInputStockUnit?.measurementUnitType) {
       return null;
     }
 
@@ -535,14 +537,24 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   private async loadProcessingAction(procActionId: number) {
 
-    const respProcAction = await this.procActionController.getProcessingAction(procActionId)
-      .pipe(take(1)).toPromise();
-    if (respProcAction && respProcAction.status === 'OK' && respProcAction.data) {
-      this.procOrderGroup.get('processingAction').setValue(respProcAction.data);
+    const procAction = await this.loadCompleteProcessingAction(procActionId);
+    if (procAction) {
+      this.procOrderGroup.get('processingAction').setValue(procAction);
 
       // Execute Proc. action updated in separate cycle
-      setTimeout(() => this.processingActionUpdated(respProcAction.data));
+      setTimeout(() => this.processingActionUpdated(procAction));
     }
+  }
+
+  private async loadCompleteProcessingAction(procActionId: number): Promise<ApiProcessingAction> {
+
+    const respProcAction = await this.procActionController.getProcessingActionDetail(procActionId)
+      .pipe(take(1)).toPromise();
+    if (!respProcAction || respProcAction.status !== 'OK' || !respProcAction.data) {
+      throw new Error('Cannot retrieve the processing action!');
+    }
+
+    return respProcAction.data;
   }
 
   private async loadProcessingOrder() {
@@ -561,25 +573,32 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
       throw new Error('Processing order does not contain any target Stock orders!');
     }
 
+    // The nested action returned with a Processing order does not include its
+    // required evidence fields. Load the complete action before rebuilding the
+    // output form so evidence values remain visible when the order is reopened.
+    const processingAction = await this.loadCompleteProcessingAction(respProcessingOrder.data.processingAction.id);
+
     // Initialize the Processing order group using the fetched data
     this.prepareEditingProcOrderGroup(respProcessingOrder.data);
+    this.procOrderGroup.get('processingAction').setValue(processingAction);
 
-    // Execute the rest part in separate cycle
-    setTimeout(async () => {
-      await this.processingActionUpdated(respProcessingOrder.data.processingAction);
+    // Creating the form above makes the input and output components available only
+    // after a change-detection pass.  Run it before rebuilding the edit form so
+    // processingActionUpdated can configure the output evidence controls.
+    this.changeDetectorRef.detectChanges();
+    await this.processingActionUpdated(processingAction);
 
-      // After Processing order and Processing action are loaded and initialized, set the existing evidence documents
-      const firstTSO = this.targetStockOrdersArray.at(0) as FormGroup;
-      StockProcessingOrderDetailsHelper.loadExistingOtherEvidenceDocuments(firstTSO, this.otherProcessingEvidenceArray);
-      StockProcessingOrderDetailsHelper.loadExistingRequiredEvidenceDocuments(firstTSO, this.requiredProcessingEvidenceArray);
+    // After Processing order and Processing action are loaded and initialized, set the existing evidence documents
+    const firstTSO = this.targetStockOrdersArray.at(0) as FormGroup;
+    StockProcessingOrderDetailsHelper.loadExistingOtherEvidenceDocuments(firstTSO, this.otherProcessingEvidenceArray);
+    StockProcessingOrderDetailsHelper.loadExistingRequiredEvidenceDocuments(firstTSO, this.requiredProcessingEvidenceArray);
 
-      // Calculate and set the total output and total input quantity
-      this.calcTotalOutputQuantity();
-      this.input.calcInputQuantity(true);
+    // Calculate and set the total output and total input quantity
+    this.calcTotalOutputQuantity();
+    this.input.calcInputQuantity(true);
 
-      // Set required fields for every target Stock order
-      this.targetStockOrdersArray.controls.forEach(tso => this.output.setRequiredFieldsAndListenersForTSO(tso as FormGroup));
-    });
+    // Set required fields for every target Stock order
+    this.targetStockOrdersArray.controls.forEach(tso => this.output.setRequiredFieldsAndListenersForTSO(tso as FormGroup));
   }
 
   private async loadFacilities() {
