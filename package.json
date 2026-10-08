@@ -8,6 +8,7 @@
     "build:test": "ng build --configuration=test --aot=true --buildOptimizer=true --optimization=true",
     "build:prod": "ng build --prod=true --aot=true --buildOptimizer=true --optimization=true",
     "test": "ng test",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "generate-api": "node generate-api.js",

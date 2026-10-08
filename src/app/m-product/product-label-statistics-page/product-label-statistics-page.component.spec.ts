@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductLabelStatisticsPageComponent } from './product-label-statistics-page.component';
+import { TESTING_IMPORTS, TESTING_PROVIDERS } from '../../../testing/shared-testing';
 
 describe('ProductLabelStatisticsPageComponent', () => {
   let component: ProductLabelStatisticsPageComponent;
@@ -8,6 +9,8 @@ describe('ProductLabelStatisticsPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: TESTING_IMPORTS,
+      providers: TESTING_PROVIDERS,
       declarations: [ ProductLabelStatisticsPageComponent ]
     })
     .compileComponents();

@@ -144,7 +144,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": ["src/assets/env.template.js"]
           }
         },
         "lint": {

@@ -20,6 +20,7 @@ manage farmers.
 ## Quick start
 
 ```bash
+nvm use                   # Node 14, from .nvmrc
 npm install
 npm run generate-api      # generates the API client from the Java backend
 npm run dev               # http://localhost:4200
@@ -33,7 +34,7 @@ npm run dev               # http://localhost:4200
 
 | Page | What it covers |
 |---|---|
-| [Getting started](docs/getting-started.md) | Requirements, running locally, ports, regenerating the API client |
+| [Getting started](docs/getting-started.md) | Requirements, running locally, tests, ports, regenerating the API client |
 | [Using INATrace](docs/user-interface.md) | Welcome page, registration, the home screen |
 | [Products](docs/products.md) | Product settings, QR labels, stakeholders, final products, B2C page |
 | [Company operations](docs/companies.md) | Deliveries, processing, payments, farmers and collectors |
