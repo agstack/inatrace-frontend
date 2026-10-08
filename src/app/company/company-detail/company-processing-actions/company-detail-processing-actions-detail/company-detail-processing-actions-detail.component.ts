@@ -256,13 +256,15 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     this.form.addControl('translations', new FormArray([]));
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
+      const validators = lang === 'EN' ? [Validators.required] : [];
       (this.form.get('translations') as FormArray).push(new FormGroup({
         language: new FormControl(lang),
-        name: new FormControl(translation ? translation.name : ''),
-        description: new FormControl(translation ? translation.description : '')
+        name: new FormControl(translation ? translation.name : '', validators),
+        description: new FormControl(translation ? translation.description : '', validators)
       }));
     }
 
+    this.form.updateValueAndValidity();
     this.prepared = true;
     this.globalEventsManager.showLoading(false);
   }
@@ -606,6 +608,12 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
 
   async saveProcessingAction() {
     this.submitted = true;
+
+    const englishTranslation = (this.form.get('translations') as FormArray).controls
+      .find(translation => translation.get('language').value === 'EN');
+    if (englishTranslation?.invalid) {
+      this.selectedLanguage = 'EN';
+    }
 
     if (this.form.invalid) {
       return;

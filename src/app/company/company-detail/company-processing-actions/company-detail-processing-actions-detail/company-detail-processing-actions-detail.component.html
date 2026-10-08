@@ -464,12 +464,12 @@
                                         i18n-label="@@companyDetailProcessingActions.textInput.name.label"
                                         i18n-placeholder="@@companyDetailProcessingActions.textInput.name.helpText"
                                         [form]="$any(this.form.get('translations.' + i + '.name'))"
-                                        [isInvalid]="translation.value.language === 'EN' && submitted && !this.form.get('translations.' + i + '.name').value"
+                                        [isInvalid]="submitted && this.form.get('translations.' + i + '.name').invalid"
                                         style="width: 100%">
-                                    <ng-container *ngIf="submitted && translation.value.language === 'EN' && !this.form.get('translations.' + i + '.name').value">
-                                        <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
+                                    <ng-container *ngIf="submitted">
+                                        <div *ngIf="this.form.get('translations.' + i + '.name').errors as errors" class="sc-invalid-feedback">
                                             <div *ngIf="errors.required"
-                                                 i18n-label="@@companyDetailProcessingActions.textInput.name.error">
+                                                 i18n="@@companyDetailProcessingActions.textInput.name.error">
                                                 <span>
                                                   Name of process is required
                                                 </span>
@@ -486,12 +486,12 @@
                                         i18n-helpText="@@companyDetailProcessingActions.textInput.description.helpText"
                                         [form]="$any(this.form.get('translations.' + i + '.description'))"
                                         [textarea]="true"
-                                        [isInvalid]="translation.value.language === 'EN' && submitted && !this.form.get('translations.' + i + '.description').value"
+                                        [isInvalid]="submitted && this.form.get('translations.' + i + '.description').invalid"
                                         style="width: 100%">
-                                    <ng-container *ngIf="submitted && translation.value.language === 'EN' && !this.form.get('translations.' + i + '.description').value">
-                                        <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
+                                    <ng-container *ngIf="submitted">
+                                        <div *ngIf="this.form.get('translations.' + i + '.description').errors as errors" class="sc-invalid-feedback">
                                             <div *ngIf="errors.required"
-                                                 i18n-label="@@companyDetailProcessingActions.textInput.description.error">
+                                                 i18n="@@companyDetailProcessingActions.textInput.description.error">
                                                 <span>
                                                   Description is required
                                                 </span>
