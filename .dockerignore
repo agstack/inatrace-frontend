@@ -1,2 +1,11 @@
-dist
+# Not needed to build the image.
+.git
+.github
 node_modules
+dist
+tmp
+docs
+e2e
+*.md
+# Local configuration, never in an image.
+src/environments/environment.dev.ts
