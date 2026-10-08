@@ -1,17 +1,19 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CountryService } from '../../shared-services/countries.service';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import _ from 'lodash-es';
 import { EnumSifrant } from '../../shared-services/enum-sifrant';
 import { GoogleMap } from '@angular/google-maps';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-location-form-new',
   templateUrl: './location-form-new.component.html',
   styleUrls: ['./location-form-new.component.scss']
 })
-export class LocationFormNewComponent implements OnInit {
+export class LocationFormNewComponent implements OnInit, OnDestroy {
 
   @Input()
   form: FormGroup;
@@ -34,6 +36,8 @@ export class LocationFormNewComponent implements OnInit {
   };
   defaultZoom = 3;
 
+  private destroy$ = new Subject<void>();
+
   codebookStatus = EnumSifrant.fromObject(this.publiclyVisible);
 
   constructor(
@@ -42,12 +46,32 @@ export class LocationFormNewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(loaded => {
+    this.updateCoordinateValidators(this.publiclyVisibleControl.value);
+    this.publiclyVisibleControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(value => this.updateCoordinateValidators(value));
+
+    this.globalEventsManager.loadedGoogleMapsEmitter
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(loaded => {
       if (loaded) {
         this.isGoogleMapsLoaded = true;
         this.initializeMarker();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  get isMapPinRequired(): boolean {
+    return this.isPubliclyVisible(this.publiclyVisibleControl.value);
+  }
+
+  get hasInvalidMapPin(): boolean {
+    return this.isMapPinRequired && (this.latitudeControl.invalid || this.longitudeControl.invalid);
   }
 
   initializeMarker() {
@@ -94,6 +118,7 @@ export class LocationFormNewComponent implements OnInit {
 
   removeMarker() {
     this.marker = null;
+    this.updateLatLng();
   }
 
   updateLatLng() {
@@ -137,6 +162,31 @@ export class LocationFormNewComponent implements OnInit {
     );
     const minBounds = new google.maps.LatLngBounds(southWest, northEast);
     this.gMap.fitBounds(this.bounds.union(minBounds));
+  }
+
+  private get publiclyVisibleControl() {
+    return this.form.get('facilityLocation.publiclyVisible');
+  }
+
+  private get latitudeControl() {
+    return this.form.get('facilityLocation.latitude');
+  }
+
+  private get longitudeControl() {
+    return this.form.get('facilityLocation.longitude');
+  }
+
+  private updateCoordinateValidators(publiclyVisible: string | boolean): void {
+    const validators = this.isPubliclyVisible(publiclyVisible) ? [Validators.required] : [];
+
+    [this.latitudeControl, this.longitudeControl].forEach(control => {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    });
+  }
+
+  private isPubliclyVisible(value: string | boolean): boolean {
+    return value === true || value === 'true';
   }
 
 }

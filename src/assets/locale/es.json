@@ -1118,6 +1118,8 @@
     "locationForm.textinput.country.label": "País",
     "locationForm.textinput.visible.label": "¿Es la ubicación públicamente visible en el mapa?",
     "locationForm.origin.helpText": "Haciendo doble clic en el mapa, coloque el pin para marcar las ubicaciones. Anúlalo haciendo clic derecho en el mismo pin.",
+    "locationForm.mapPin.label": "Marcador de mapa",
+    "locationForm.mapPin.error": "Se requiere un marcador de mapa cuando la ubicación es visible públicamente.",
     "locationForm.textinput.country.error": "Se requiere país.",
     "locationForm.textinput.village.label": "Aldea",
     "locationForm.textinput.village.placeholder": "Introduzca la aldea",

@@ -152,6 +152,8 @@
     "locationForm.textinput.country.label": "Country",
     "locationForm.textinput.visible.label": "Is location publicly visible on a map?",
     "locationForm.origin.helpText": "Double click on the map to drop a pin and mark the locations. Right click on marker to remove it.",
+    "locationForm.mapPin.label": "Map pin",
+    "locationForm.mapPin.error": "A map pin is required when the location is publicly visible.",
     "locationForm.textinput.country.error": "Country is required.",
     "locationForm.textinput.village.label": "Village",
     "locationForm.textinput.village.placeholder": "Enter village",

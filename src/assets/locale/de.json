@@ -920,6 +920,8 @@
     "locationForm.textinput.country.label": "Land",
     "locationForm.textinput.visible.label": "Ist der Standort auf einer Karte öffentlich sichtbar?",
     "locationForm.origin.helpText": "Machen Sie einen Doppelklick auf die Karte um die Stecknadel zu setzen und die Stelle zu markieren. Klicken Sie mit der rechten Maustaste auf die Markierung um diese wieder zu entfernen.",
+    "locationForm.mapPin.label": "Kartenmarkierung",
+    "locationForm.mapPin.error": "Für öffentlich sichtbare Standorte ist eine Kartenmarkierung erforderlich.",
     "locationForm.publiclyVisible.yes": "JA",
     "locationForm.publiclyVisible.no": "NEIN",
     "collectorDetail.section.basicInfo": "Allgemeine Information",

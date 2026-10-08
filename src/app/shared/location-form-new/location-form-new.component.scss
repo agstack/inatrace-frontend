@@ -1,0 +1,12 @@
+.location-map-label {
+  margin-bottom: 0.5rem;
+}
+
+.location-map-label--required {
+  color: #dc3545;
+}
+
+.location-map--invalid {
+  border: 1px solid #dc3545;
+  border-radius: 0.25rem;
+}
