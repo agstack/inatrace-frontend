@@ -162,10 +162,15 @@ export class B2cJourneyComponent implements OnInit {
       // Get the aggregated history for the QR code tag
       const qrData = this.b2cPage.qrProductLabel;
       if (qrData) {
-        this.historyItems = qrData.historyTimeline.items.map(item => this.addIconStyleForIconType(item));
+
+        // A label can resolve without a history timeline - an unknown QR tag, or a batch that has
+        // not been through any processing yet. The rest of the journey still renders in that case.
+        const timelineItems = qrData.historyTimeline?.items ?? [];
+
+        this.historyItems = timelineItems.map(item => this.addIconStyleForIconType(item));
         this.producerName = qrData.producerName;
 
-        qrData.historyTimeline.items.map(historyItem => {
+        timelineItems.forEach(historyItem => {
           if (historyItem.longitude && historyItem.latitude) {
             this.markers.push({
               position: {

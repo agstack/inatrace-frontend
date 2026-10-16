@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import { Observable, Subscription } from 'rxjs';
@@ -75,15 +75,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   markers: Array<mapboxgl.Marker> = [];
 
   mapStyle: FormControl = new FormControl('satellite-streets-v12');
-  
+
+  // True when Mapbox cannot be initialised - no access token, or the SDK threw while starting up.
+  // The template then shows a short explanation instead of an empty map frame.
+  mapUnavailable = false;
+
   constructor(private globalEventsManager: GlobalEventManagerService,
-              private companyControllerService: CompanyControllerService) {
+              private companyControllerService: CompanyControllerService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
+    // Decided before the view is built, so the map container is only rendered when it can be used.
+    this.mapUnavailable = !environment.mapboxAccessToken;
   }
 
   ngAfterViewInit() {
+    if (this.mapUnavailable) {
+      return;
+    }
     this.initializeMap();
   }
 
@@ -228,11 +238,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.flyToCurrentPosition();
       }
     }
-    this.buildMap();
+    if (!this.buildMap()) {
+      this.mapUnavailable = true;
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
 
     // Subscribe to Map style radio group changes
     this.subscriptions.add(
       this.mapStyle.valueChanges.subscribe(value => {
+        if (!this.map) {
+          return;
+        }
         this.map.setStyle(`${this.MAPBOX_STYLE_BASE_PATH}${value}`);
       })
     );
@@ -240,21 +257,34 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   flyToCurrentPosition(): void {
     navigator.geolocation.getCurrentPosition( position => {
+      // The position arrives asynchronously, by which time the map may have failed or been torn down.
+      if (!this.map) {
+        return;
+      }
       this.map.flyTo({
         center: [position.coords.longitude, position.coords.latitude]
       });
     });
   }
-  
-  buildMap(): void {
-    this.map = new mapboxgl.Map({
-      accessToken: environment.mapboxAccessToken,
-      container: this.mapId, // id of div that holds the map
-      style: `${this.MAPBOX_STYLE_BASE_PATH}${this.mapStyle.value}`,
-      zoom: 10,
-      center: [this.initialLng ?? 14.995463, this.initialLat ?? 46.151241],
-      cooperativeGestures: true
-    });
+
+  // Returns false when the map could not be created, so the caller can fall back rather than
+  // letting the failure escape ngAfterViewInit and abort the rest of the view's initialisation.
+  buildMap(): boolean {
+
+    try {
+      this.map = new mapboxgl.Map({
+        accessToken: environment.mapboxAccessToken,
+        container: this.mapId, // id of div that holds the map
+        style: `${this.MAPBOX_STYLE_BASE_PATH}${this.mapStyle.value}`,
+        zoom: 10,
+        center: [this.initialLng ?? 14.995463, this.initialLat ?? 46.151241],
+        cooperativeGestures: true
+      });
+    } catch (error) {
+      console.error('Map could not be initialised:', error);
+      this.map = null;
+      return false;
+    }
 
     // disable map rotation using right click + drag
     this.map.dragRotate.disable();
@@ -264,6 +294,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.map.on('click', e => this.mapClicked(e));
     this.map.on('load', () => this.mapLoaded());
+
+    return true;
   }
 
   placeMarkerOnMap(lat: number, lng: number, plot?: ApiPlot, isPin?: boolean) {
