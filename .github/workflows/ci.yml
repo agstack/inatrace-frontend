@@ -1,0 +1,53 @@
+# Phase 1 (pull request) and phase 2 (merge to main). See RELEASE.md.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A newer push to a pull request supersedes its running checks. Runs on main are never
+# cancelled, so every merged commit gets its image.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+# Explicit bash runs steps with -eo pipefail (the implicit default has no pipefail).
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test.yml
+
+  # Pull requests: the image is only built, so it does not wait for the tests.
+  image-check:
+    if: github.event_name == 'pull_request'
+    # Must grant what the reusable workflow declares; nothing is pushed here, and pull
+    # requests from forks get a read-only token anyway.
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    uses: ./.github/workflows/_image.yml
+
+  # Main: the image is published only after the tests pass.
+  image:
+    if: github.event_name == 'push'
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    uses: ./.github/workflows/_image.yml
+    with:
+      push: true

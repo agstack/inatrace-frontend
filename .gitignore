@@ -48,3 +48,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
+
+# Python bytecode (release scripts)
+__pycache__/
