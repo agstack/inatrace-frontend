@@ -36,6 +36,7 @@ import { ApiKnowledgeBlog } from '../model/apiKnowledgeBlog';
 import { ApiPaginatedResponseApiFinalProduct } from '../model/apiPaginatedResponseApiFinalProduct';
 import { ApiPaginatedResponseApiKnowledgeBlogBase } from '../model/apiPaginatedResponseApiKnowledgeBlogBase';
 import { ApiPaginatedResponseApiProductLabelBatch } from '../model/apiPaginatedResponseApiProductLabelBatch';
+import { ApiPaginatedResponseApiProductLabelFeedback } from '../model/apiPaginatedResponseApiProductLabelFeedback';
 import { ApiPaginatedResponseApiProductListResponse } from '../model/apiPaginatedResponseApiProductListResponse';
 import { ApiProduct } from '../model/apiProduct';
 import { ApiProductLabel } from '../model/apiProductLabel';
@@ -324,6 +325,45 @@ export namespace DeleteProductLabel {
               ['required', Validators.required],
       ],
     };
+}
+
+/**
+ * Namespace for listProductLabelFeedbacksForLabel.
+ */
+export namespace ListProductLabelFeedbacksForLabel {
+    /**
+     * Parameter map for listProductLabelFeedbacksForLabel.
+     */
+    export interface PartialParamMap {
+      /**
+       * Label id
+       */
+      id: number;
+      /**
+       * feedback type
+       */
+      type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT';
+      /**
+       * Only count, only fetch, or return both values (if null)
+       */
+      requestType?: 'COUNT' | 'FETCH';
+      /**
+       * Number of records to return. Min: 1, default: 100
+       */
+      limit?: number;
+      /**
+       * Number of records to skip before returning. Default: 0, min: 0
+       */
+      offset?: number;
+      /**
+       * Column name to be sorted by, varies for each endpoint, default is id
+       */
+      sortBy?: string;
+      /**
+       * Direction of sorting (ASC or DESC). Default DESC.
+       */
+      sort?: 'ASC' | 'DESC';
+    }
 }
 
 /**
@@ -4723,6 +4763,100 @@ export class ProductControllerService {
         );
         if(typeof this.configuration.errorHandler === 'function') {
           return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'updateProductLabelValues')));
+        }
+        return handle;
+    }
+
+
+  /**
+   * List feedback for a product label, with the details given by consumers by map.
+   *
+   * @param map parameters map to set partial amount of parameters easily
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public listProductLabelFeedbacksForLabelByMap(
+    map: ListProductLabelFeedbacksForLabel.PartialParamMap,
+    observe?: 'body',
+    reportProgress?: boolean): Observable<ApiPaginatedResponseApiProductLabelFeedback>;
+  public listProductLabelFeedbacksForLabelByMap(
+    map: ListProductLabelFeedbacksForLabel.PartialParamMap,
+    observe: any = 'body',
+    reportProgress: boolean = false): Observable<any> {
+    return this.listProductLabelFeedbacksForLabel(
+      map.id,
+      map.type,
+      map.requestType,
+      map.limit,
+      map.offset,
+      map.sortBy,
+      map.sort,
+      observe,
+      reportProgress
+    );
+  }
+
+    /**
+     * List feedback for a product label, with the details given by consumers
+     *
+     * @param id Label id
+     * @param type feedback type
+     * @param requestType Only count, only fetch, or return both values (if null)
+     * @param limit Number of records to return. Min: 1, default: 100
+     * @param offset Number of records to skip before returning. Default: 0, min: 0
+     * @param sortBy Column name to be sorted by, varies for each endpoint, default is id
+     * @param sort Direction of sorting (ASC or DESC). Default DESC.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProductLabelFeedback>;
+    public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling listProductLabelFeedbacksForLabel.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (type !== undefined && type !== null) {
+            queryParameters = queryParameters.set('type', <any>type);
+        }
+        if (requestType !== undefined && requestType !== null) {
+            queryParameters = queryParameters.set('requestType', <any>requestType);
+        }
+        if (limit !== undefined && limit !== null) {
+            queryParameters = queryParameters.set('limit', <any>limit);
+        }
+        if (offset !== undefined && offset !== null) {
+            queryParameters = queryParameters.set('offset', <any>offset);
+        }
+        if (sortBy !== undefined && sortBy !== null) {
+            queryParameters = queryParameters.set('sortBy', <any>sortBy);
+        }
+        if (sort !== undefined && sort !== null) {
+            queryParameters = queryParameters.set('sort', <any>sort);
+        }
+
+        let headers = this.defaultHeaders;
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(['application/json']);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+        if (additionalHeaders) {
+            for (let pair of additionalHeaders) {
+                headers = headers.set(pair[0], pair[1]);
+            }
+        }
+
+        const handle = this.httpClient.get<ApiPaginatedResponseApiProductLabelFeedback>(`${this.configuration.basePath}/api/product/label/${encodeURIComponent(String(id))}/feedback/list`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+        if(typeof this.configuration.errorHandler === 'function') {
+          return handle.pipe(catchError(err => this.configuration.errorHandler(err, 'listProductLabelFeedbacksForLabel')));
         }
         return handle;
     }

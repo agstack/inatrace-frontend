@@ -52,6 +52,9 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   page = 0;
   pageSize = 10;
   labelId = '';
+  // Numeric label id: the feedback list with the consumers' details is read through the
+  // authenticated product route; the public list (by label UID) omits them.
+  private readonly productLabelId = Number(this.route.snapshot.params.labelId);
 
   allFeedbacks = 0;
   showedFeedbacks = 0;
@@ -66,7 +69,7 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   }
 
   async setAllFeedbacks() {
-    const res = await this.publicController.listProductLabelFeedbacks(this.labelId, null, 'COUNT').pipe(take(1)).toPromise();
+    const res = await this.productController.listProductLabelFeedbacksForLabel(this.productLabelId, null, 'COUNT').pipe(take(1)).toPromise();
     if (res && res.status === 'OK' && res.data && res.data.count >= 0) {
       this.allFeedbacks = res.data.count;
     }
@@ -127,9 +130,8 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
     }).pipe(
       tap(val => this.globalEventsManager.showLoading(true)),
       switchMap(params => {
-        const labelUid = this.labelId;
-        const newParams = { labelUid, ...params };
-        return this.publicController.listProductLabelFeedbacksByMap(newParams);
+        const newParams = { id: this.productLabelId, ...params };
+        return this.productController.listProductLabelFeedbacksForLabelByMap(newParams);
       }),
       map((resp: ApiPaginatedResponseApiProductLabelFeedback) => {
         if (resp) {
@@ -216,7 +218,7 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
 
   async downloadFeedbacks() {
 
-    let res = await this.publicController.listProductLabelFeedbacks(this.labelId, null, null, null, null, "DESC").pipe(take(1)).toPromise();
+    let res = await this.productController.listProductLabelFeedbacksForLabel(this.productLabelId, null, null, null, null, null, "DESC").pipe(take(1)).toPromise();
     if (res && res.status === 'OK' && res.data && res.data.items) {
 
       let csv = "Email" + ',' + '\n';
