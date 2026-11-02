@@ -15,6 +15,7 @@ import {BeycoTokenService} from '../../../../shared-services/beyco-token.service
 import {Subscription} from 'rxjs';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
 import { switchMap } from 'rxjs/operators';
+import { getBeycoOfferErrorMessage } from './beyco-offer-error';
 
 @Component({
   selector: 'app-beyco-offer-list',
@@ -140,7 +141,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
                 action: 'error',
                 notificationType: 'error',
                 title: $localize`:@@beycoOrderList.notification.unsuccessfulOrder.title:Beyco order unsuccessful`,
-                message: error.error ?? $localize`:@@beycoOrderList.notification.unsuccessfulOrder.message:There was an error when creating Beyco order! Please, try again!`
+                message: getBeycoOfferErrorMessage(error.error)
               });
             },
             () => this.globalEventManager.showLoading(false)

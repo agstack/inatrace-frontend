@@ -7,7 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { GlobalEventManagerService } from './global-event-manager.service';
@@ -28,9 +28,13 @@ export class TokenInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((err: any) => {
+        const beycoProviderFailure = err instanceof HttpErrorResponse && err.status === 503 &&
+            /\/chain\/beyco-order\/company\//.test(request.url);
         if (err instanceof HttpErrorResponse) {
           try {
-            if (err.status === 401) {
+            if (beycoProviderFailure) {
+              // The Beyco caller displays the provider error in its own context.
+            } else if (err.status === 401) {
               if (err.url.endsWith('/login')) {
                 const message = $localize`:@@tokenInterceptor.login.message:Wrong username or password`;
                 const title = $localize`:@@tokenInterceptor.login.title:Error`;
@@ -67,6 +71,11 @@ export class TokenInterceptor implements HttpInterceptor {
           } finally {
             this.globalEventsManager.showLoading(false);
           }
+        }
+        // Beyco provider failures must reach the offer's error callback. Treating
+        // them as a successful emission would report an offer as created.
+        if (beycoProviderFailure) {
+          return throwError(err);
         }
         return of(err);
       })
