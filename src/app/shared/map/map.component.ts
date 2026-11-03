@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import { Observable, Subscription } from 'rxjs';
@@ -75,20 +75,35 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   markers: Array<mapboxgl.Marker> = [];
 
   mapStyle: FormControl = new FormControl('satellite-streets-v12');
-  
+
+  // True when Mapbox cannot run - no access token, the SDK threw while starting up, or it reported an
+  // authentication or style-load failure. The template then shows a short explanation instead of an
+  // empty map frame.
+  mapUnavailable = false;
+
+  // Set once the style has loaded. Before that, an error means the map could not start at all.
+  private styleLoaded = false;
+
   constructor(private globalEventsManager: GlobalEventManagerService,
-              private companyControllerService: CompanyControllerService) {
+              private companyControllerService: CompanyControllerService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
+    // Decided before the view is built, so the map container is only rendered when it can be used.
+    this.mapUnavailable = !environment.mapboxAccessToken;
   }
 
   ngAfterViewInit() {
+    if (this.mapUnavailable) {
+      return;
+    }
     this.initializeMap();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.releaseMap();
   }
 
   handlePlotCoordinateEvent(actionWrapper: PlotActionWrapper) {
@@ -228,11 +243,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.flyToCurrentPosition();
       }
     }
-    this.buildMap();
+    if (!this.buildMap()) {
+      this.mapUnavailable = true;
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
 
     // Subscribe to Map style radio group changes
     this.subscriptions.add(
       this.mapStyle.valueChanges.subscribe(value => {
+        if (!this.map) {
+          return;
+        }
         this.map.setStyle(`${this.MAPBOX_STYLE_BASE_PATH}${value}`);
       })
     );
@@ -240,21 +262,34 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   flyToCurrentPosition(): void {
     navigator.geolocation.getCurrentPosition( position => {
+      // The position arrives asynchronously, by which time the map may have failed or been torn down.
+      if (!this.map) {
+        return;
+      }
       this.map.flyTo({
         center: [position.coords.longitude, position.coords.latitude]
       });
     });
   }
-  
-  buildMap(): void {
-    this.map = new mapboxgl.Map({
-      accessToken: environment.mapboxAccessToken,
-      container: this.mapId, // id of div that holds the map
-      style: `${this.MAPBOX_STYLE_BASE_PATH}${this.mapStyle.value}`,
-      zoom: 10,
-      center: [this.initialLng ?? 14.995463, this.initialLat ?? 46.151241],
-      cooperativeGestures: true
-    });
+
+  // Returns false when the map could not be created, so the caller can fall back rather than
+  // letting the failure escape ngAfterViewInit and abort the rest of the view's initialisation.
+  buildMap(): boolean {
+
+    try {
+      this.map = this.createMap({
+        accessToken: environment.mapboxAccessToken,
+        container: this.mapId, // id of div that holds the map
+        style: `${this.MAPBOX_STYLE_BASE_PATH}${this.mapStyle.value}`,
+        zoom: 10,
+        center: [this.initialLng ?? 14.995463, this.initialLat ?? 46.151241],
+        cooperativeGestures: true
+      });
+    } catch (error) {
+      console.error('Map could not be initialised:', error);
+      this.map = null;
+      return false;
+    }
 
     // disable map rotation using right click + drag
     this.map.dragRotate.disable();
@@ -264,6 +299,53 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.map.on('click', e => this.mapClicked(e));
     this.map.on('load', () => this.mapLoaded());
+    this.map.on('style.load', () => this.styleLoaded = true);
+    this.map.on('error', event => this.mapError(event));
+
+    return true;
+  }
+
+  // The one place that talks to the SDK constructor, so tests can stand in a fake map.
+  createMap(options: mapboxgl.MapboxOptions): mapboxgl.Map {
+    return new mapboxgl.Map(options);
+  }
+
+  // Mapbox reports most failures asynchronously, through 'error' events: the constructor does not
+  // throw for an invalid or expired token. Give up on the map when the token is refused or the style
+  // itself cannot be loaded; a tile or sprite that fails to load is logged, as the SDK would, and the
+  // map stays up.
+  mapError(event: { error?: any, sourceId?: string, tile?: any }): void {
+
+    const error = event?.error;
+    if (!this.map) {
+      return;
+    }
+
+    const message: string = error?.message ?? '';
+    const tokenRefused = error?.status === 401 || /access[ _]token/i.test(message);
+    const styleFailed = !this.styleLoaded && !event?.sourceId && !event?.tile;
+
+    if (!tokenRefused && !styleFailed) {
+      console.error(error);
+      return;
+    }
+
+    console.error('Map could not be started:', error);
+    this.releaseMap();
+    this.mapUnavailable = true;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  // Frees the WebGL context and the SDK's listeners, and clears the reference so that callbacks
+  // arriving later (geolocation, style changes) find no map and return.
+  private releaseMap(): void {
+    if (!this.map) {
+      return;
+    }
+    const map = this.map;
+    this.map = null;
+    this.markers = [];
+    map.remove();
   }
 
   placeMarkerOnMap(lat: number, lng: number, plot?: ApiPlot, isPin?: boolean) {
