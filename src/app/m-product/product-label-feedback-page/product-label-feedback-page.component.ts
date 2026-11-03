@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription, BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { Subscription, BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { NavigationEnd, Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { PublicControllerService } from 'src/api/api/publicController.service';
 import { FormControl } from '@angular/forms';
-import { startWith, debounceTime, tap, switchMap, map, shareReplay, filter, take } from 'rxjs/operators';
+import { startWith, debounceTime, tap, switchMap, map, shareReplay, filter, take, catchError } from 'rxjs/operators';
 import { ApiPaginatedResponseApiProductLabelFeedback } from 'src/api/model/apiPaginatedResponseApiProductLabelFeedback';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -52,6 +52,9 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   page = 0;
   pageSize = 10;
   labelId = '';
+  // Numeric label id: the feedback list with the consumers' details is read through the
+  // authenticated product route; the public list (by label UID) omits them.
+  private readonly productLabelId = Number(this.route.snapshot.params.labelId);
 
   allFeedbacks = 0;
   showedFeedbacks = 0;
@@ -66,7 +69,7 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   }
 
   async setAllFeedbacks() {
-    const res = await this.publicController.listProductLabelFeedbacks(this.labelId, null, 'COUNT').pipe(take(1)).toPromise();
+    const res = await this.productController.listProductLabelFeedbacksForLabel(this.productLabelId, null, 'COUNT').pipe(take(1)).toPromise();
     if (res && res.status === 'OK' && res.data && res.data.count >= 0) {
       this.allFeedbacks = res.data.count;
     }
@@ -127,9 +130,15 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
     }).pipe(
       tap(val => this.globalEventsManager.showLoading(true)),
       switchMap(params => {
-        const labelUid = this.labelId;
-        const newParams = { labelUid, ...params };
-        return this.publicController.listProductLabelFeedbacksByMap(newParams);
+        const newParams = { id: this.productLabelId, ...params };
+        // The authenticated route can fail (expired session, a user outside the product's
+        // companies, a backend without it); keep the list working for later searches and pages.
+        return this.productController.listProductLabelFeedbacksForLabelByMap(newParams).pipe(
+          catchError(() => {
+            this.showLoadError();
+            return of(null);
+          })
+        );
       }),
       map((resp: ApiPaginatedResponseApiProductLabelFeedback) => {
         if (resp) {
@@ -214,29 +223,53 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
     return null;
   }
 
+  private showLoadError() {
+    this.globalEventsManager.showLoading(false);
+    this.globalEventsManager.push({
+      action: 'error',
+      notificationType: 'error',
+      title: $localize`:@@productLabelFeedback.loadError.title:Error`,
+      message: $localize`:@@productLabelFeedback.loadError.message:The feedback could not be loaded.`
+    });
+  }
+
   async downloadFeedbacks() {
 
-    let res = await this.publicController.listProductLabelFeedbacks(this.labelId, null, null, null, null, "DESC").pipe(take(1)).toPromise();
-    if (res && res.status === 'OK' && res.data && res.data.items) {
-
-      let csv = "Email" + ',' + '\n';
-      for (let item of res.data.items) {
-        if (item.email) {
-          csv += item.email + ',' + '\n';
+    // Page through all of them: one request returns at most `limit` feedbacks (100 by default).
+    const pageSize = 100;
+    const feedbacks = [];
+    try {
+      for (let offset = 0; ; offset += pageSize) {
+        const page = await this.productController.listProductLabelFeedbacksForLabel(this.productLabelId, null, null, pageSize, offset, null, 'DESC').pipe(take(1)).toPromise();
+        if (!page || page.status !== 'OK' || !page.data || !page.data.items) {
+          return;
+        }
+        feedbacks.push(...page.data.items);
+        if (page.data.items.length < pageSize || feedbacks.length >= page.data.count) {
+          break;
         }
       }
-
-      const a = document.createElement('a');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-
-      a.href = url;
-      a.download = 'feedback-emails.csv';
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
+    } catch (e) {
+      this.showLoadError();
+      return;
     }
 
+    let csv = "Email" + ',' + '\n';
+    for (let item of feedbacks) {
+      if (item.email) {
+        csv += item.email + ',' + '\n';
+      }
+    }
+
+    const a = document.createElement('a');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = 'feedback-emails.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
   }
 
 }
