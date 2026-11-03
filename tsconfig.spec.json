@@ -2,6 +2,11 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    // The JIT test build downlevels constructor parameters into a lazy `ctorParameters`, which is
+    // all Angular needs for DI. TypeScript's own `design:paramtypes` metadata would instead reference
+    // the parameter classes eagerly, at module load, and that breaks on circular imports such as the
+    // B2C page component and the tab components that inject it.
+    "emitDecoratorMetadata": false,
     "types": [
       "jasmine",
       "node"
