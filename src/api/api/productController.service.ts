@@ -364,6 +364,64 @@ export namespace ListProductLabelFeedbacksForLabel {
        */
       sort?: 'ASC' | 'DESC';
     }
+
+    /**
+     * Enumeration of all parameters for listProductLabelFeedbacksForLabel.
+     */
+    export enum Parameters {
+      /**
+       * Label id
+       */
+      id = 'id',
+      /**
+       * feedback type
+       */
+      type = 'type',
+      /**
+       * Only count, only fetch, or return both values (if null)
+       */
+      requestType = 'requestType',
+      /**
+       * Number of records to return. Min: 1, default: 100
+       */
+      limit = 'limit',
+      /**
+       * Number of records to skip before returning. Default: 0, min: 0
+       */
+      offset = 'offset',
+      /**
+       * Column name to be sorted by, varies for each endpoint, default is id
+       */
+      sortBy = 'sortBy',
+      /**
+       * Direction of sorting (ASC or DESC). Default DESC.
+       */
+      sort = 'sort'
+    }
+
+    /**
+     * A map of tuples with error name and `ValidatorFn` for each parameter of listProductLabelFeedbacksForLabel
+     * that does not have an own model.
+     */
+    export const ParamValidators: {[K in keyof ListProductLabelFeedbacksForLabel.PartialParamMap]?: [string, ValidatorFn][]} = {
+      id: [
+              ['required', Validators.required],
+      ],
+      type: [
+      ],
+      requestType: [
+      ],
+      limit: [
+              ['min', Validators.min(1)],
+      ],
+      offset: [
+              ['min', Validators.min(0)],
+      ],
+      sortBy: [
+      ],
+      sort: [
+      ],
+    };
 }
 
 /**
@@ -4770,7 +4828,7 @@ export class ProductControllerService {
 
   /**
    * List feedback for a product label, with the details given by consumers by map.
-   *
+   * 
    * @param map parameters map to set partial amount of parameters easily
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -4779,6 +4837,14 @@ export class ProductControllerService {
     map: ListProductLabelFeedbacksForLabel.PartialParamMap,
     observe?: 'body',
     reportProgress?: boolean): Observable<ApiPaginatedResponseApiProductLabelFeedback>;
+  public listProductLabelFeedbacksForLabelByMap(
+    map: ListProductLabelFeedbacksForLabel.PartialParamMap,
+    observe?: 'response',
+    reportProgress?: boolean): Observable<HttpResponse<ApiPaginatedResponseApiProductLabelFeedback>>;
+  public listProductLabelFeedbacksForLabelByMap(
+    map: ListProductLabelFeedbacksForLabel.PartialParamMap,
+    observe?: 'events',
+    reportProgress?: boolean): Observable<HttpEvent<ApiPaginatedResponseApiProductLabelFeedback>>;
   public listProductLabelFeedbacksForLabelByMap(
     map: ListProductLabelFeedbacksForLabel.PartialParamMap,
     observe: any = 'body',
@@ -4796,9 +4862,10 @@ export class ProductControllerService {
     );
   }
 
+
     /**
      * List feedback for a product label, with the details given by consumers
-     *
+     * 
      * @param id Label id
      * @param type feedback type
      * @param requestType Only count, only fetch, or return both values (if null)
@@ -4810,6 +4877,8 @@ export class ProductControllerService {
      * @param reportProgress flag to report request and response progress.
      */
     public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'body', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<ApiPaginatedResponseApiProductLabelFeedback>;
+    public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'response', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpResponse<ApiPaginatedResponseApiProductLabelFeedback>>;
+    public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe?: 'events', reportProgress?: boolean, additionalHeaders?: Array<Array<string>>): Observable<HttpEvent<ApiPaginatedResponseApiProductLabelFeedback>>;
     public listProductLabelFeedbacksForLabel(id: number, type?: 'PRAISE' | 'PROPOSAL' | 'COMPLAINT', requestType?: 'COUNT' | 'FETCH', limit?: number, offset?: number, sortBy?: string, sort?: 'ASC' | 'DESC', observe: any = 'body', reportProgress: boolean = false, additionalHeaders?: Array<Array<string>>): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling listProductLabelFeedbacksForLabel.');
@@ -4836,15 +4905,25 @@ export class ProductControllerService {
         }
 
         let headers = this.defaultHeaders;
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(['application/json']);
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
-        if (additionalHeaders) {
-            for (let pair of additionalHeaders) {
-                headers = headers.set(pair[0], pair[1]);
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+            if (additionalHeaders) {
+                for(let pair of additionalHeaders) {
+                    headers = headers.set(pair[0], pair[1]);
+                }
             }
-        }
 
         const handle = this.httpClient.get<ApiPaginatedResponseApiProductLabelFeedback>(`${this.configuration.basePath}/api/product/label/${encodeURIComponent(String(id))}/feedback/list`,
             {
@@ -4860,5 +4939,6 @@ export class ProductControllerService {
         }
         return handle;
     }
+
 
 }
