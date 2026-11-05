@@ -129,7 +129,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
   }
 
   undoLastPoint() {
-    if (this.plotCoordinates.length > 1) {
+    if (this.plotCoordinates && this.plotCoordinates.length > 0) {
       this.plotCoordinatesManager.registerEvent(PlotCoordinateAction.DELETE_LAST_COORDINATE);
     }
   }
@@ -145,7 +145,10 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
         coordinatesFormArray.push(nextPlotCoordinate);
       });
 
-      if (this.mapEditable) {
+      if (this.mapEditable && coordinates.length < 3) {
+        this.form.get('size').setValue(null);
+        this.form.get('unit').setValue(null);
+      } else if (this.mapEditable) {
         const coordinates2Darray = this.getCoordinatesArray(coordinates);
         const geoJsonA: Feature<Polygon> = {
           type: 'Feature',

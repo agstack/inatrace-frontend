@@ -23,7 +23,7 @@
                 <div class="af-c12">
                     <button *ngIf="mapEditable && plotType == 'boundaries'" class="btn mr-2" (click)="showHidePlot()" i18n="@@plotsItem.action.showHidePlotArea">Show/hide plot area</button>
 
-                    <button *ngIf="mapEditable && plotType == 'boundaries'" class="btn mr-2" (click)="undoLastPoint()" i18n="@@plotsItem.action.undoLastPoint">Undo last point</button>
+                    <button *ngIf="mapEditable && plotType == 'boundaries'" class="btn mr-2" [disabled]="!plotCoordinates?.length" (click)="undoLastPoint()" i18n="@@plotsItem.action.undoLastPoint">Undo last point</button>
 
                     <button *ngIf="mapEditable" class="btn" (click)="deletePlot()" i18n="@@plotsItem.action.deletePlot">Delete plot</button>
                 </div>

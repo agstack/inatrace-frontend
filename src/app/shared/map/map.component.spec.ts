@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { MapComponent } from './map.component';
@@ -67,6 +68,45 @@ describe('MapComponent', () => {
   function mapFrame(): HTMLElement | null {
     return fixture.nativeElement.querySelector('#map');
   }
+
+  it('undoes every coordinate and ignores another undo at zero', fakeAsync(() => {
+    const markers = [0, 1, 2].map(() => ({ remove: jasmine.createSpy('remove') }));
+    component.markers = markers.slice() as any;
+    component.plotCoordinates = [1, 2, 3].map(n => ({ latitude: n, longitude: n }));
+    component.showPlotSubject = new Subject<boolean>();
+    const emit = spyOn(component.plotCoordinatesChange, 'emit').and.callFake(() => {});
+    const show = spyOn(component, 'showPlot');
+    spyOn(component, 'hidePlot');
+    const subscription = component.showPlotSubject.subscribe(value => component.togglePlot(value));
+
+    component.undoLastPlotCoordinate();
+    expect(component.plotCoordinates.length).toBe(2);
+    component.undoLastPlotCoordinate();
+    expect(component.plotCoordinates.length).toBe(1);
+    component.undoLastPlotCoordinate();
+    component.undoLastPlotCoordinate();
+    expect(component.plotCoordinates).toEqual([]);
+    expect(emit).toHaveBeenCalledTimes(3);
+    markers.forEach(marker => expect(marker.remove).toHaveBeenCalledTimes(1));
+    tick(200);
+    expect(show).not.toHaveBeenCalled();
+    subscription.unsubscribe();
+  }));
+
+  it('does not redraw an incomplete polygon after delete while an undo is pending', fakeAsync(() => {
+    component.plotCoordinates = [1, 2, 3, 4].map(n => ({ latitude: n, longitude: n }));
+    component.markers = [1, 2, 3, 4].map(() => ({ remove: () => {} })) as any;
+    component.showPlotSubject = new Subject<boolean>();
+    const show = spyOn(component, 'showPlot');
+    spyOn(component, 'hidePlot');
+    const subscription = component.showPlotSubject.subscribe(value => component.togglePlot(value));
+    component.undoLastPlotCoordinate();
+    component.deletePlot();
+    tick(200);
+    expect(component.plotCoordinates).toEqual([]);
+    expect(show).not.toHaveBeenCalled();
+    subscription.unsubscribe();
+  }));
 
   describe('without an access token', () => {
 
