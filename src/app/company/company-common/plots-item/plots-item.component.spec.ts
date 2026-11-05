@@ -6,6 +6,7 @@ import { ApiPlotCoordinate } from '../../../../api/model/apiPlotCoordinate';
 import { CompanyControllerService } from '../../../../api/api/companyController.service';
 import { CompanyFarmersDetailsComponent } from '../../company-farmers/company-farmers-details/company-farmers-details.component';
 import { PlotsItemComponent } from './plots-item.component';
+import { PlotCoordinateAction } from '../../../shared-services/plot-coordinate-action-enum';
 
 describe('PlotsItemComponent plot area', () => {
   let component: PlotsItemComponent;
@@ -135,5 +136,28 @@ describe('PlotsItemComponent plot area', () => {
     expect(reopened.form.get('unit').value).toBe('ha');
     expect(reopened.form.get('coordinates').value.length).toBe(4);
     http.verify();
+  });
+});
+
+describe('PlotsItemComponent undo', () => {
+  let component: PlotsItemComponent;
+
+  beforeEach(() => {
+    component = new PlotsItemComponent({} as any, {} as any);
+    component.tmpFormGroup = new FormGroup({
+      coordinates: new FormArray([]),
+      size: new FormControl(2),
+      unit: new FormControl('ha')
+    });
+  });
+
+  it('allows removal of the final point and ignores undo on an empty drawing', () => {
+    const register = spyOn(component.plotCoordinatesManager, 'registerEvent');
+    component.plotCoordinates = [{ latitude: 1, longitude: 2 }];
+    component.undoLastPoint();
+    expect(register).toHaveBeenCalledWith(PlotCoordinateAction.DELETE_LAST_COORDINATE);
+    component.plotCoordinates = [];
+    component.undoLastPoint();
+    expect(register).toHaveBeenCalledTimes(1);
   });
 });

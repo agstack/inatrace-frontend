@@ -129,7 +129,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
   }
 
   undoLastPoint() {
-    if (this.plotCoordinates.length > 1) {
+    if (this.plotCoordinates && this.plotCoordinates.length > 0) {
       this.plotCoordinatesManager.registerEvent(PlotCoordinateAction.DELETE_LAST_COORDINATE);
     }
   }

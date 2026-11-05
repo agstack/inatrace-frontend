@@ -195,10 +195,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   undoLastPlotCoordinate() {
 
+    if (!this.plotCoordinates || this.plotCoordinates.length === 0) {
+      return;
+    }
+
     this.showPlotSubject.next(false);
 
     const lastMarker = this.markers.pop();
-    lastMarker.remove();
+    if (lastMarker) {
+      lastMarker.remove();
+    }
     this.plotCoordinates.pop();
     this.plotCoordinatesChange.emit(this.plotCoordinates);
 
@@ -660,7 +666,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   togglePlot(show: boolean) {
-    if (show) {
+    if (show && this.plotCoordinates && this.plotCoordinates.length >= 3) {
       this.showPlot('polygonPreview', this.getCoordinatesArray(this.plotCoordinates));
     } else {
       this.hidePlot();
