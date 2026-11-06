@@ -14,8 +14,8 @@ import { AuthService } from '../../../../core/auth.service';
 import { CompanyControllerService } from '../../../../../api/api/companyController.service';
 import { FileSaverService } from 'ngx-filesaver';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
-import { SelfOnboardingService } from "../../../../shared-services/self-onboarding.service";
-import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
+import { SelfOnboardingService } from '../../../../shared-services/self-onboarding.service';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-stock-payments-tab',
@@ -33,6 +33,8 @@ export class StockPaymentsTabComponent extends StockCoreTabComponent implements 
 
   // currency code
   currency: string;
+
+  confirmingPayments = false;
 
   reloadPaymentPingList$ = new BehaviorSubject<boolean>(false);
 
@@ -112,32 +114,54 @@ export class StockPaymentsTabComponent extends StockCoreTabComponent implements 
   }
 
   async confirmPayments(){
-    if (this.selectedPayments.length === 0) {
+    if (this.confirmingPayments || !this.selectedPayments || this.selectedPayments.length === 0) {
       return;
     }
-    const result = await this.globalEventManager.openMessageModal({
-      type: 'warning',
-      message: $localize`:@@productLabelPayments.confirmPayments.error.message:Are you sure you want to confirm payments?`,
-      options: { centered: true }
-    });
-    if (result !== 'ok') {
-      return;
-    }
+    this.confirmingPayments = true;
+    let confirmed = 0;
+    try {
+      const result = await this.globalEventManager.openMessageModal({
+        type: 'warning',
+        message: $localize`:@@productLabelPayments.confirmPayments.error.message:Are you sure you want to confirm payments?`,
+        options: { centered: true }
+      });
+      if (result !== 'ok') {
+        return;
+      }
 
-    for (const payment of this.selectedPayments) {
+      for (const payment of [...this.selectedPayments]) {
+        // A copy: the rows keep showing UNCONFIRMED until the backend accepted each one.
+        const payload: ApiPayment = { ...payment, paymentStatus: ApiPayment.PaymentStatusEnum.CONFIRMED };
+        delete (payload as any).selected;
 
-      payment.paymentStatus = ApiPayment.PaymentStatusEnum.CONFIRMED;
+        const res = await this.paymentControllerService.createOrUpdatePayment(payload)
+            .pipe(take(1))
+            .toPromise();
 
-      const res = await this.paymentControllerService.createOrUpdatePayment(payment)
-          .pipe(take(1))
-          .toPromise();
-
-      if (res && res.status === 'OK') {
+        if (!res || res.status !== 'OK') {
+          throw new Error('The payment could not be confirmed');
+        }
+        confirmed++;
+      }
+      this.reloadPage();
+      this.selectedPayments = [];
+      this.selectedIdsChanged(this.selectedPayments);
+    } catch (e) {
+      // Show what really happened: the ones already confirmed stay confirmed.
+      if (confirmed > 0) {
         this.reloadPage();
       }
+      this.selectedPayments = [];
+      this.selectedIdsChanged(this.selectedPayments);
+      this.globalEventManager.push({
+        action: 'error',
+        notificationType: 'error',
+        title: $localize`:@@frontPage.feedback.error.title:Something went wrong`,
+        message: $localize`:@@productLabelPayments.confirmPayments.partial.error.toast:Some selected payments could not be confirmed. Please check the list and try again.`
+      });
+    } finally {
+      this.confirmingPayments = false;
     }
-    this.selectedPayments = [];
-    this.selectedIdsChanged(this.selectedPayments);
   }
 
   async exportPaymentsExcel(): Promise<void> {

@@ -28,6 +28,13 @@
                            (click)="editPayment(payment)">
                             View
                         </a>
+                        <a *ngIf="!readOnly && payment.paymentStatus === paymentStatusEnum.UNCONFIRMED"
+                           class="company-action"
+                           i18n="@@productLabelPayments.tableCol.confirm"
+                           (click)="confirmPayment(payment)"
+                           [class.enabled-action]="true">
+                            Confirm
+                        </a>
                         <a *ngIf="!readOnly" class="company-action"
                            i18n="@@productLabelPayments.tableCol.delete"
                            (click)="deletePayment(payment)"

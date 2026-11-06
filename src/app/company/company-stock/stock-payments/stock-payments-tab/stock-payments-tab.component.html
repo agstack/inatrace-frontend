@@ -127,6 +127,14 @@
                         (click)="exportPaymentsExcel()">
                     <span class="af-actions-btn-label" i18n="@@productLabelPayments.button.export">Export data</span>
                 </button>
+
+                <button *ngIf="isAuthRoleToEditPayments && selectedPayments.length > 0"
+                        class="af-actions-btn" style="margin-top: 1.7rem; margin-left: .5rem"
+                        [class.af-actions-btn--disabled]="confirmingPayments"
+                        [disabled]="confirmingPayments"
+                        (click)="confirmPayments()">
+                    <span class="af-actions-btn-label" i18n="@@productLabelPayments.tableCol.confirm">Confirm</span>
+                </button>
             </div>
 
             <app-stock-payments-list
