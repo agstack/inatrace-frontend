@@ -80,6 +80,9 @@ export class StockPaymentsListComponent implements OnInit, OnDestroy {
   allSelected = false;
   payments$: Observable<ApiPaginatedListApiPayment>;
 
+  /** Ids whose confirmation is in flight, so a double click sends it once. */
+  confirmingPaymentIds = new Set<number>();
+
   constructor(
       private route: ActivatedRoute,
       private router: Router,
@@ -253,26 +256,48 @@ export class StockPaymentsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  async confirmPayment(payment) {
-    const result = await this.globalEventManager.openMessageModal({
-      type: 'warning',
-      message: $localize`:@@productLabelPayments.confirm.error.message:Are you sure you want to confirm this payment?`,
-      options: { centered: true }
-    });
-    if (result !== 'ok') {
+  async confirmPayment(payment: ApiPayment) {
+    if (this.confirmingPaymentIds.has(payment.id)) {
       return;
     }
+    this.confirmingPaymentIds.add(payment.id);
+    try {
+      const result = await this.globalEventManager.openMessageModal({
+        type: 'warning',
+        message: $localize`:@@productLabelPayments.confirm.error.message:Are you sure you want to confirm this payment?`,
+        options: { centered: true }
+      });
+      if (result !== 'ok') {
+        return;
+      }
 
-    delete payment['selected'];
-    payment.paymentStatus = ApiPayment.PaymentStatusEnum.CONFIRMED;
+      // A copy: the row keeps showing UNCONFIRMED until the backend accepted the change.
+      const payload: ApiPayment = { ...payment, paymentStatus: PaymentStatusEnum.CONFIRMED };
+      delete (payload as any).selected;
 
-    const res = await this.paymentControllerService.createOrUpdatePayment(payment)
-        .pipe(take(1))
-        .toPromise();
+      const res = await this.paymentControllerService.createOrUpdatePayment(payload)
+          .pipe(take(1))
+          .toPromise();
 
-    if (res && res.status === 'OK') {
-      this.reloadPage();
+      if (res && res.status === 'OK') {
+        this.reloadPage();
+      } else {
+        this.confirmPaymentFailed();
+      }
+    } catch (e) {
+      this.confirmPaymentFailed();
+    } finally {
+      this.confirmingPaymentIds.delete(payment.id);
     }
+  }
+
+  private confirmPaymentFailed() {
+    this.globalEventManager.push({
+      action: 'error',
+      notificationType: 'error',
+      title: $localize`:@@frontPage.feedback.error.title:Something went wrong`,
+      message: $localize`:@@productLabelPayments.confirm.error.toast:The payment could not be confirmed. Please try again.`
+    });
   }
 
   changeSort(event) {

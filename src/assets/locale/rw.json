@@ -1129,6 +1129,8 @@
     "productLabelPayments.sortOptions.paymentPurposeType.name": "Impamvu yo kwishyura",
     "productLabelPayments.sortOptions.paymentStatus.name": "Imiterere",
     "productLabelPayments.confirm.error.message": "Uzi neza ko ushaka kwemeza ubu bwishyu?",
+    "productLabelPayments.confirm.error.toast": "The payment could not be confirmed. Please try again.",
+    "productLabelPayments.confirmPayments.partial.error.toast": "Some selected payments could not be confirmed. Please check the list and try again.",
     "paymentForm.confirmedBy": "{$START_PARAGRAPH}Ubwishyu bwemejwe na: {$INTERPOLATION} {$LINE_BREAK}ku ({$INTERPOLATION_1}){$CLOSE_PARAGRAPH}",
     "breadCrumb.processing.myStock": "Ibikorwa",
     "breadCrumb.processing.order": "Igikorwa cyo gutunganya",
