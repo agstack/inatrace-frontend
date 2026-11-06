@@ -24,8 +24,9 @@ import { ApiUserCustomerImportRowValidationError } from './apiUserCustomerImport
 
 
 export interface ApiUserCustomerImportResponse { 
-    successful?: number;
     duplicates?: Array<ApiUserCustomer>;
+    successful?: number;
+    unresolvedKoboSheets?: { [key: string]: Array<string>; };
     validationErrors?: Array<ApiUserCustomerImportRowValidationError>;
 }
 
@@ -37,8 +38,9 @@ export namespace ApiUserCustomerImportResponse {
      * All properties of ApiUserCustomerImportResponse.
      */
     export enum Properties {
-        successful = 'successful',
         duplicates = 'duplicates',
+        successful = 'successful',
+        unresolvedKoboSheets = 'unresolvedKoboSheets',
         validationErrors = 'validationErrors'
     }
 
@@ -48,6 +50,18 @@ export namespace ApiUserCustomerImportResponse {
             metadata: formMetadata,
             classname: 'ApiUserCustomerImportResponse',
             vars: [
+                {
+                    metadata: ApiUserCustomer.formMetadata,
+                    isReadOnly: false,
+                    isEnum: false,
+                    required: false,
+                    name: 'duplicates',
+                    classname: 'ApiUserCustomerImportResponse',
+                    dataType: 'Array&lt;ApiUserCustomer&gt;',
+                    isPrimitiveType: false,
+                    isListContainer: true,
+                    complexType: 'ApiUserCustomer'
+                },
                 {
                     isReadOnly: false,
                     isEnum: false,
@@ -60,16 +74,15 @@ export namespace ApiUserCustomerImportResponse {
                     complexType: ''
                 },
                 {
-                    metadata: ApiUserCustomer.formMetadata,
                     isReadOnly: false,
                     isEnum: false,
                     required: false,
-                    name: 'duplicates',
+                    name: 'unresolvedKoboSheets',
                     classname: 'ApiUserCustomerImportResponse',
-                    dataType: 'Array&lt;ApiUserCustomer&gt;',
-                    isPrimitiveType: false,
-                    isListContainer: true,
-                    complexType: 'ApiUserCustomer'
+                    dataType: '{ [key: string]: Array&lt;string&gt;; }',
+                    isPrimitiveType: true,
+                    isListContainer: false,
+                    complexType: ''
                 },
                 {
                     metadata: ApiUserCustomerImportRowValidationError.formMetadata,
@@ -85,9 +98,11 @@ export namespace ApiUserCustomerImportResponse {
                 },
             ],
             validators: {
+                duplicates: [
+                ],
                 successful: [
                 ],
-                duplicates: [
+                unresolvedKoboSheets: [
                 ],
                 validationErrors: [
                 ],
@@ -98,10 +113,13 @@ export namespace ApiUserCustomerImportResponse {
   // export const ApiUserCustomerImportResponseValidationScheme = {
   //     validators: [],
   //     fields: {
+  //               duplicates: {
+  //                   validators: []
+  //               },
   //               successful: {
   //                   validators: []
   //               },
-  //               duplicates: {
+  //               unresolvedKoboSheets: {
   //                   validators: []
   //               },
   //               validationErrors: {
