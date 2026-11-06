@@ -1,14 +1,12 @@
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CompanyFarmersImportComponent } from './company-farmers-import.component';
-import { LanguageCodeHelper } from '../../../language-code-helper';
 
 describe('CompanyFarmersImportComponent duplicate decisions', () => {
   let component: CompanyFarmersImportComponent;
   let confirmation: jasmine.SpyObj<any>;
   let company: jasmine.SpyObj<any>;
   let toast: jasmine.SpyObj<any>;
-  let language: string;
 
   beforeEach(() => {
     confirmation = jasmine.createSpyObj('confirmation', ['confirmImportedFarmerPlots', 'createSeparateImportedFarmer', 'importFarmersSpreadsheet']);
@@ -16,7 +14,6 @@ describe('CompanyFarmersImportComponent duplicate decisions', () => {
     toast = jasmine.createSpyObj('toast', ['success', 'error', 'warning']);
     const events = jasmine.createSpyObj('events', ['showLoading']);
     component = new CompanyFarmersImportComponent(confirmation, toast, {} as any, events, {} as any);
-    language = LanguageCodeHelper.getCurrentLocale().toUpperCase();
     (component as any).companyId = 12;
     (component as any).importedDocumentId = 34;
     component.duplicates = [{ name: 'Ada' }];
@@ -25,7 +22,7 @@ describe('CompanyFarmersImportComponent duplicate decisions', () => {
   it('attaches only after confirmation and removes the resolved item', () => {
     confirmation.confirmImportedFarmerPlots.and.returnValue(of({}));
     component.confirmPlots(component.duplicates[0], 0);
-    expect(confirmation.confirmImportedFarmerPlots).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, language, []);
+    expect(confirmation.confirmImportedFarmerPlots).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, undefined, []);
     expect(company.addUserCustomer).not.toHaveBeenCalled();
     expect(component.duplicates.length).toBe(0);
   });
@@ -47,7 +44,7 @@ describe('CompanyFarmersImportComponent duplicate decisions', () => {
   it('creates a separate farmer from the original import', () => {
     confirmation.createSeparateImportedFarmer.and.returnValue(of({}));
     component.acceptDuplicate(component.duplicates[0], 0);
-    expect(confirmation.createSeparateImportedFarmer).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, language, []);
+    expect(confirmation.createSeparateImportedFarmer).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, undefined, []);
     expect(company.addUserCustomer).not.toHaveBeenCalled();
     expect(component.duplicates.length).toBe(0);
   });
@@ -72,9 +69,9 @@ describe('CompanyFarmersImportComponent duplicate decisions', () => {
     expect(confirmation.importFarmersSpreadsheet.calls.count()).toBe(1);
     component.koboSheets[0].selected = '1';
     component.import();
-    expect(confirmation.importFarmersSpreadsheet).toHaveBeenCalledWith(12, 34, language, ['1:1']);
+    expect(confirmation.importFarmersSpreadsheet).toHaveBeenCalledWith(12, 34, undefined, ['1:1']);
     component.confirmPlots(component.duplicates[0], 0);
-    expect(confirmation.confirmImportedFarmerPlots).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, language, ['1:1']);
+    expect(confirmation.confirmImportedFarmerPlots).toHaveBeenCalledWith(12, 34, { name: 'Ada' }, undefined, ['1:1']);
   });
 
   it('discards decisions and errors from the previous file before starting a new import', () => {

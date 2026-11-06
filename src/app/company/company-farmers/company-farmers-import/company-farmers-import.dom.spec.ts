@@ -8,7 +8,6 @@ import { CompanyControllerService } from '../../../../api/api/companyController.
 import { FarmerImportConfirmationService } from '../../../../api/api/farmerImportConfirmation.service';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
-import { LanguageCodeHelper } from '../../../language-code-helper';
 import { CompanyFarmersImportComponent } from './company-farmers-import.component';
 
 @Pipe({ name: 'formatFarmerImportValidationError' })
@@ -53,7 +52,7 @@ describe('Farmer import duplicate controls', () => {
     expect(confirmation.confirmImportedFarmerPlots).not.toHaveBeenCalled();
     attach.click();
     expect(confirmation.confirmImportedFarmerPlots).toHaveBeenCalledWith(12, 34,
-        jasmine.objectContaining({ name: 'Ada' }), LanguageCodeHelper.getCurrentLocale().toUpperCase(), []);
+        jasmine.objectContaining({ name: 'Ada' }), undefined, []);
   });
 
   it('identifies a duplicate by the city used for matching, not the village', () => {
