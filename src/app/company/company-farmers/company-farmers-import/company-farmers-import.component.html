@@ -23,6 +23,21 @@
                     </attachment-uploader>
                     <small i18n="@@companyDetail.farmers.uploadSpreadsheet.label">Upload an excel spreadsheet of farmers (xls, xlsx)</small><br>
 
+                    <div *ngIf="koboSheets.length && fileForm.value?.id === selectionDocumentId" class="mt-3">
+                        <p i18n="@@companyDetail.farmers.import.kobo.instructions">Choose the geometry column for each sheet, or explicitly skip sheets that do not contain plots. Skipped sheets will not be imported.</p>
+                        <div *ngFor="let sheet of koboSheets" class="mb-3">
+                            <label [attr.for]="'kobo-sheet-' + sheet.id">{{ sheet.name }}</label>
+                            <select class="form-control" [id]="'kobo-sheet-' + sheet.id" [value]="sheet.selected"
+                                    (change)="sheet.selected = $any($event.target).value">
+                                <option value="" i18n="@@companyDetail.farmers.import.kobo.choose">Choose an action</option>
+                                <ng-container *ngFor="let header of sheet.headers; index as column">
+                                    <option *ngIf="header && header.charAt(0) !== '_'" [value]="column">{{ header }}</option>
+                                </ng-container>
+                                <option value="-1" i18n="@@companyDetail.farmers.import.kobo.skip">Skip this sheet (do not import its data)</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <button class="btn btn-solid round btn-table-new content-element--btn mt-3"
                             i18n="@@companyDetail.farmers.import.button"
                             [disabled]="importInProgress || !fileForm.value"
@@ -35,14 +50,20 @@
                     <ng-container *ngIf="duplicates && duplicates.length > 0">
                         <h4 i18n="@@companyDetail.farmers.import.duplicates.label">Duplicates</h4>
                         <div class="d-flex justify-content-between mb-3" *ngFor="let duplicate of duplicates; index as i">
-                            <p class="m-0">{{ duplicate.name }} {{ duplicate.surname }}, {{ duplicate.location.address.village}}</p>
+                            <p class="m-0">{{ duplicate.name }} {{ duplicate.surname }}, {{ duplicate.location?.address?.city || duplicate.location?.address?.village }}</p>
                             <div class="d-flex justify-content-end">
+                                <button class="btn btn-solid round btn-table-new content-element--btn mr-3"
+                                        i18n="@@companyDetail.farmers.import.attachPlots"
+                                        [disabled]="duplicateInProgress"
+                                        (click)="confirmPlots(duplicate, i)">Add plots to existing farmer</button>
                                 <button class="btn btn-solid round btn-table-new content-element--btn"
-                                        i18n="@@companyDetail.farmers.import.accept"
-                                        (click)="acceptDuplicate(duplicate, i)">Accept</button>
+                                        i18n="@@companyDetail.farmers.import.createSeparate"
+                                        [disabled]="duplicateInProgress"
+                                        (click)="acceptDuplicate(duplicate, i)">Create separate farmer</button>
                                 <button class="btn btn-solid round btn-table-new content-element--btn ml-4"
-                                        i18n="@@companyDetail.farmers.import.reject"
-                                        (click)="rejectDuplicate(duplicate, i)">Reject</button>
+                                        i18n="@@companyDetail.farmers.import.skip"
+                                        [disabled]="duplicateInProgress"
+                                        (click)="rejectDuplicate(duplicate, i)">Skip</button>
                             </div>
                         </div>
                     </ng-container>
