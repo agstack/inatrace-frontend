@@ -98,7 +98,7 @@ export class CompanyFarmersImportComponent implements OnInit {
         }
         this.koboSelections = this.koboSheets.map(sheet => sheet.id + ':' + sheet.selected);
       }
-      this.confirmationService.importFarmersSpreadsheet(this.companyId, documentId, this.currentLanguage(), this.koboSelections)
+      this.confirmationService.importFarmersSpreadsheet(this.companyId, documentId, undefined, this.koboSelections)
           .pipe(
               take(1),
               finalize(() => {
@@ -152,18 +152,10 @@ export class CompanyFarmersImportComponent implements OnInit {
     }
   }
 
-  /**
-   * Backend `language` header. Sending it keeps server-side text (product type names, for
-   * example) in the same locale as the interface; the backend defaults to English when absent.
-   */
-  private currentLanguage(): 'EN' | 'DE' | 'RW' | 'ES' {
-    return LanguageCodeHelper.getCurrentLocale().toUpperCase() as 'EN' | 'DE' | 'RW' | 'ES';
-  }
-
   acceptDuplicate(user: ApiUserCustomer, index: number) {
     if (this.duplicateInProgress) { return; }
     this.duplicateInProgress = true;
-    this.confirmationService.createSeparateImportedFarmer(this.companyId, this.importedDocumentId, user, this.currentLanguage(), this.koboSelections)
+    this.confirmationService.createSeparateImportedFarmer(this.companyId, this.importedDocumentId, user, undefined, this.koboSelections)
         .pipe(take(1), finalize(() => this.duplicateInProgress = false))
         .subscribe(() => this.toastService.success($localize`:@@companyDetail.farmers.import.success.single: Farmer successfully imported`),
                 () => this.toastService.error($localize`:@@companyDetail.farmers.import.request.error:Could not import the file. Check the data and try again.`),
@@ -173,7 +165,7 @@ export class CompanyFarmersImportComponent implements OnInit {
   confirmPlots(user: ApiUserCustomer, index: number) {
     if (this.duplicateInProgress) { return; }
     this.duplicateInProgress = true;
-    this.confirmationService.confirmImportedFarmerPlots(this.companyId, this.importedDocumentId, user, this.currentLanguage(), this.koboSelections)
+    this.confirmationService.confirmImportedFarmerPlots(this.companyId, this.importedDocumentId, user, undefined, this.koboSelections)
         .pipe(take(1), finalize(() => this.duplicateInProgress = false))
         .subscribe(() => {
           this.toastService.success($localize`:@@companyDetail.farmers.import.plots.success:Plots added to the existing farmer.`);
