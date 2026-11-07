@@ -48,6 +48,15 @@
       </div>
     </div>
 
+    <div class="row" style="margin-top: 30px;" *ngIf="categoryOther.length > 0">
+      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryOther; index as i">
+        <app-facility-card [facility]="facility"
+                           [indexInList]="i"
+                           [companyId]="companyId"
+                           [actions]="processingActions"></app-facility-card>
+      </div>
+    </div>
+
   </div>
 
   <div *ngIf="facilities && facilities.items && facilities.items.length == 0"
