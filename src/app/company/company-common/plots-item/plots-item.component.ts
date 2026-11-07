@@ -135,17 +135,16 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
   }
 
   updateFormCoordinates(coordinates: Array<ApiPlotCoordinate>) {
+    const coordinatesFormArray = this.form.get('coordinates') as FormArray;
+    coordinatesFormArray.clear();
+
     if (coordinates) {
-
-      const coordinatesFormArray = this.form.get('coordinates') as FormArray;
-      coordinatesFormArray.clear();
-
       coordinates.forEach(c => {
         const nextPlotCoordinate = generateFormFromMetadata(ApiPlotCoordinate.formMetadata(), c, null);
         coordinatesFormArray.push(nextPlotCoordinate);
       });
 
-      if (this.mapEditable) {
+      if (this.mapEditable && coordinates.length >= 3) {
         const coordinates2Darray = this.getCoordinatesArray(coordinates);
         const geoJsonA: Feature<Polygon> = {
           type: 'Feature',
@@ -158,13 +157,15 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
           properties: null,
         };
 
-        const calculatedArea = (turf.area(geoJsonA) / 1000).toFixed(2);
+        const calculatedArea = (turf.area(geoJsonA) / 10000).toFixed(2);
         this.form.get('size').setValue(calculatedArea);
         this.form.get('unit').setValue('ha');
       }
 
-    } else {
-      this.form.get('coordinates').setValue(null);
+    }
+    if (this.mapEditable && (!coordinates || coordinates.length < 3)) {
+      this.form.get('size').setValue(null);
+      this.form.get('unit').setValue(null);
     }
     this.form.get('coordinates').markAsDirty();
   }
