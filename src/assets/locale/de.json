@@ -1128,6 +1128,8 @@
     "productLabelPayments.sortOptions.paymentPurposeType.name": "Zahlungszweck",
     "productLabelPayments.sortOptions.paymentStatus.name": "Status",
     "productLabelPayments.confirm.error.message": "Sind Sie sicher, dass Sie die Zahlung bestätigen möchten?",
+    "productLabelPayments.confirm.error.toast": "Die Zahlung konnte nicht bestätigt werden. Bitte versuchen Sie es erneut.",
+    "productLabelPayments.confirmPayments.partial.error.toast": "Einige ausgewählte Zahlungen konnten nicht bestätigt werden. Bitte prüfen Sie die Liste und versuchen Sie es erneut.",
     "paymentForm.confirmedBy": "{$START_PARAGRAPH}Bezahlung wurde bestätigt von: {$INTERPOLATION} {$LINE_BREAK}bei ({$INTERPOLATION_1}){$CLOSE_PARAGRAPH}",
     "breadCrumb.processing.myStock": "Mein Bestand",
     "breadCrumb.processing.order": "Verarbeitungsvorgang",

@@ -738,6 +738,8 @@
     "productLabelPayments.sortOptions.actions.name": "Acciones",
     "productLabelPayments.delete.error.message": "¿Está seguro que desea eliminar este pago?",
     "productLabelPayments.confirm.error.message": "¿Está seguro que desea confirmar este pago?",
+    "productLabelPayments.confirm.error.toast": "No se pudo confirmar el pago. Inténtalo de nuevo.",
+    "productLabelPayments.confirmPayments.partial.error.toast": "No se pudieron confirmar algunos pagos seleccionados. Revisa la lista e inténtalo de nuevo.",
     "productLabelPayments.confirmPayments.error.message": "¿Está seguro que desea confirmar los pagos?",
     "productLabelPayments.confirmPaymentsCsv.success.message": "El archivo CSV de pagos fue generado correctamente en descargas.",
     "productLabelStock.confirmPurchasesCsv.success.message": "El archivo CSV de compras fue generado correctamente en descargas.",

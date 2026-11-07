@@ -2470,6 +2470,8 @@
     "productLabelPayments.noPayments": "No payments found",
     "productLabelPayments.delete.error.message": "Are you sure you want to delete this payment?",
     "productLabelPayments.confirm.error.message": "Are you sure you want to confirm this payment?",
+    "productLabelPayments.confirm.error.toast": "The payment could not be confirmed. Please try again.",
+    "productLabelPayments.confirmPayments.partial.error.toast": "Some selected payments could not be confirmed. Please check the list and try again.",
     "productLabelPayments.confirmPayments.error.message": "Are you sure you want to confirm payments?",
     "productLabelPayments.confirmPaymentsCsv.success.message": "Payments CSV was generated correctly under downloads.",
     "productLabelStock.confirmPurchasesCsv.success.message": "Purchases CSV was generated correctly under downloads.",
