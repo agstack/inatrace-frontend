@@ -39,6 +39,7 @@ export class StockProcessingFacilityListComponent implements OnInit {
   categoryThree = [];
   categoryFour = [];
   categoryFive = [];
+  categoryOther = [];
 
   processingActions: ApiProcessingAction[] = [];
 
@@ -88,8 +89,15 @@ export class StockProcessingFacilityListComponent implements OnInit {
 
   arrangeFacilities(facilities: ApiFacility[]) {
 
+    this.categoryOne = [];
+    this.categoryTwo = [];
+    this.categoryThree = [];
+    this.categoryFour = [];
+    this.categoryFive = [];
+    this.categoryOther = [];
+
     for (const facility of facilities) {
-      switch (facility.facilityType.code) {
+      switch (facility.facilityType?.code) {
         case 'WASHING_STATION':
         case 'DRYING_BED':
         case 'BENEFICIO_HUMEDO':
@@ -113,6 +121,10 @@ export class StockProcessingFacilityListComponent implements OnInit {
           break;
         case 'ROASTED_COFFEE_STORAGE':
           this.categoryFive.push(facility);
+          break;
+        default:
+          // Custom facility types (for example cocoa) must remain reachable.
+          this.categoryOther.push(facility);
           break;
       }
     }
