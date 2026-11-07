@@ -35,7 +35,6 @@
               [nonClosable]="true">
               <textinput [form]="$any(companyDetailForm.get('name'))" label="Company name"
                 style="width: 100%"
-                hideAsterisk="true"
                 placeholder="Enter company name"
                 i18n-label="@@companyDetail.textinput.companyName.label"
                 i18n-placeholder="@@companyDetail.textinput.companyName.placeholder"
@@ -115,7 +114,6 @@
                     placeholder="Enter street address"
                     i18n-label="@@companyDetail.textinput.companyAddress.label"
                     i18n-placeholder="@@companyDetail.textinput.companyAddress.placeholder"
-                    hideAsterisk="true"
                     [isInvalid]="submitted && companyDetailForm.get('headquarters.address').invalid">
                     <ng-container *ngIf="submitted">
                       <div *ngIf="companyDetailForm.get('headquarters.address').errors as errors" class="sc-invalid-feedback">
@@ -180,7 +178,6 @@
               [nonClosable]="true">
               <textinput [form]="$any(companyDetailForm.get('about'))" label="About company"
                 style="width: 100%" [textarea]="true"
-                hideAsterisk="true"
                 helpText="Briefly describe your company and its history. Include the company mission and vision as well as core values. (max 2000 characters)"
                 i18n-label="@@companyDetail.textinput.companyAbout.label"
                 i18n-helpText="@@companyDetail.textinput.companyAbout.helpText"
@@ -213,7 +210,6 @@
               [openOnValueChange]="openOnStart">
               <textinput [form]="$any(companyDetailForm.get('email'))" label="Contact E-mail"
                 style="width: 100%"
-                hideAsterisk="true"
                 placeholder="Enter contact e-mail"
                 i18n-label="@@companyDetail.textinput.companyEmail.label"
                 i18n-placeholder="@@companyDetail.textinput.companyEmail.placeholder"
@@ -236,7 +232,6 @@
               [openOnValueChange]="openOnStart">
               <textinput [form]="$any(companyDetailForm.get('phone'))" label="Contact phone number"
                 style="width: 100%"
-                hideAsterisk="true"
                 placeholder="Enter phone number"
                 i18n-label="@@companyDetail.textinput.companyPhone.label"
                 i18n-placeholder="@@companyDetail.textinput.companyPhone.placeholder">
