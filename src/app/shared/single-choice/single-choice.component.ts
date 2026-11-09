@@ -16,6 +16,8 @@ export class SingleChoiceComponent implements OnInit {
     @Input()
     label: string;
 
+    @Input() supplierFeedback = false;
+
     @Input()
     forceAllInLowercase: boolean = false;
 
@@ -34,11 +36,22 @@ export class SingleChoiceComponent implements OnInit {
         return this._formControl;
     }
 
+    private initialized = false;
+
     private _codebookService: CodebookHelperService<any>;
     @Input() set codebookService(value: CodebookHelperService<any>) {
+      const changed = value !== this._codebookService;
+      if (changed && this.supplierFeedback) {
+        this.options = [];
+      }
       this._codebookService = value;
       if (value) {
         this.resubscribe()
+        // The emission must happen after resubscribe(), otherwise it either reaches the previous
+        // subscription or is lost because the new one is not installed yet.
+        if (changed && this.initialized && this.supplierFeedback) {
+          this.typeahead$.next(null);
+        }
       }
     }
 
@@ -87,6 +100,23 @@ export class SingleChoiceComponent implements OnInit {
 
     @Input()
     showPagingInFooter: boolean = false
+
+    get supplierState$(): Observable<string> {
+        return this.supplierFeedback && this.codebookService
+            ? (this.codebookService as any).supplierState$ : null;
+    }
+
+    get supplierNotFoundText(): string {
+        const state = this.supplierFeedback && this.codebookService && (this.codebookService as any).supplierState$;
+        if (state && state.value !== 'ready') { return ''; }
+        return $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
+    }
+
+    retrySupplierQuery() {
+        this.options = [];
+        this.resubscribeCodebook();
+        this.typeahead$.next(null);
+    }
 
     _value = null;
     @Input() set value(val: any) {
@@ -362,6 +392,10 @@ export class SingleChoiceComponent implements OnInit {
 
     ngOnInit() {
         this.resubscribe()
+        this.initialized = true;
+        if (this.supplierFeedback && this.codebookService) {
+            this.typeahead$.next(null);
+        }
     }
 
     formatter(item: any) {

@@ -1,6 +1,11 @@
 {
   "locale": "en",
   "translations": {
+    "supplierFacility.loading": "Loading supplier facilities…",
+    "supplierFacility.empty": "No eligible supplier facilities are available. Ask your administrator to check company roles, partners and whether supplier facilities are public, active and support the selected product.",
+    "supplierFacility.error": "Supplier facilities could not be loaded.",
+    "supplierFacility.retry": "Try again",
+    "supplierFacility.forbidden": "You do not have permission to view supplier facilities.",
     "organization.input.placehoder": "Select organization",
     "additionalProofItem.datepicker.date.label": "Date",
     "processingOrder.evidenceField.integer.error": "Field must be a whole number",

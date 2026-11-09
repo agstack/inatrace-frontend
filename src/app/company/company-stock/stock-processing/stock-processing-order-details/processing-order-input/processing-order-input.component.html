@@ -21,6 +21,7 @@
                         i18n-label="@@productLabelStockProcessingOrderDetail.inputFacilityForm.label"
                         [formControlInput]="inputFacilityControl"
                         [codebookService]="inputFacilitiesCodebook"
+                        [supplierFeedback]="actionType === 'SHIPMENT'"
                         style="min-width: 150px;"
                         (onChange)="setInputFacility($event)"
                         [isInvalidChoice]="submitted && inputFacilityControl.invalid">

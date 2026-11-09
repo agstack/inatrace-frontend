@@ -45,6 +45,7 @@
                     i18n-label="@@stockOrderItem.inputFacilityForm.label"
                     [formControlInput]="$any(form.get('quoteFacility'))"
                     [codebookService]="inputFacilitiesCodebook"
+                    [supplierFeedback]="true"
                     style="min-width: 150px;"
                     [isInvalidChoice]="submitted && form.get('quoteFacility').invalid">
               <ng-container *ngIf="submitted">

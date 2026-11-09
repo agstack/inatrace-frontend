@@ -1,6 +1,11 @@
 {
   "locale": "rw",
   "translations": {
+    "supplierFacility.loading": "Ibigo by’abatanga ibicuruzwa birimo gutwarwa…",
+    "supplierFacility.empty": "Nta bigo by’abatanga ibicuruzwa byujuje ibisabwa bihari. Saba umuyobozi kugenzura inshingano z’ibigo, abafatanyabikorwa n’uko ibigo bigaragara, bikora kandi byakira igicuruzwa cyatoranyijwe.",
+    "supplierFacility.error": "Ntibyashobotse kuzana ibigo by’abatanga ibicuruzwa.",
+    "supplierFacility.retry": "Ongera ugerageze",
+    "supplierFacility.forbidden": "Nta burenganzira ufite bwo kubona ibigo by’abatanga ibicuruzwa.",
     "ngb.alert.close": "Funga",
     "ngb.carousel.previous": "Ibyabanje",
     "ngb.carousel.next": "Ibikurikira",
