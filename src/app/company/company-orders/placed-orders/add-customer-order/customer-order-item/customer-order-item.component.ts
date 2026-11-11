@@ -182,6 +182,7 @@ export class CustomerOrderItemComponent extends GenericEditableItemComponent<Api
   }
 
   setProcessingAction(event: ApiProcessingAction) {
+    this.form.get('quoteFacility').setValue(null);
     if (event) {
       this.inputFacilitiesCodebook = new AvailableSellingFacilitiesForCompany(this.facilityController, this.companyId, null, event.inputFinalProduct.id);
     } else {

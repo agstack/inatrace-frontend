@@ -30,6 +30,10 @@ export class TokenInterceptor implements HttpInterceptor {
       catchError((err: any) => {
         const beycoProviderFailure = err instanceof HttpErrorResponse && err.status === 503 &&
             /\/chain\/beyco-order\/company\//.test(request.url);
+        // Supplier facility lookups report failures inside the selector that owns the query, so the
+        // global toast must not duplicate that message (except for expired sessions, handled below).
+        const supplierFacilitiesFailure = err instanceof HttpErrorResponse &&
+            /\/chain\/facility\/list\/company\/\d+\/available-selling/.test(request.url);
         if (err instanceof HttpErrorResponse) {
           try {
             if (beycoProviderFailure) {
@@ -50,19 +54,25 @@ export class TokenInterceptor implements HttpInterceptor {
                 this.toasterService.error(message, title);
               }
             } else if (err.status === 403) {
-              const message = $localize`:@@tokenInterceptor.403.message:Unauthorized access`;
-              const title = $localize`:@@tokenInterceptor.403.title:Error`;
-              this.toasterService.error(message, title);
+              if (!supplierFacilitiesFailure) {
+                const message = $localize`:@@tokenInterceptor.403.message:Unauthorized access`;
+                const title = $localize`:@@tokenInterceptor.403.title:Error`;
+                this.toasterService.error(message, title);
+              }
             } else if (err.status === 400) {
-              const message = err.error && err.error.errorMessage
-                ? err.error.errorMessage
-                : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;
-              const title = $localize`:@@tokenInterceptor.400.title:Communication error!`;
-              this.toasterService.error(message, title);
+              if (!supplierFacilitiesFailure) {
+                const message = err.error && err.error.errorMessage
+                    ? err.error.errorMessage
+                    : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;
+                const title = $localize`:@@tokenInterceptor.400.title:Communication error!`;
+                this.toasterService.error(message, title);
+              }
             } else {
-              const message = $localize`:@@tokenInterceptor.other.message:Please reload the page.`;
-              const title = $localize`:@@tokenInterceptor.other.title:Communication error!`;
-              this.toasterService.error(message, title);
+              if (!supplierFacilitiesFailure) {
+                const message = $localize`:@@tokenInterceptor.other.message:Please reload the page.`;
+                const title = $localize`:@@tokenInterceptor.other.title:Communication error!`;
+                this.toasterService.error(message, title);
+              }
             }
           } catch (e) {
             const message = $localize`:@@tokenInterceptor.catch.message:Please reload the page.`;

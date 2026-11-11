@@ -1,6 +1,11 @@
 {
   "locale": "de",
   "translations": {
+    "supplierFacility.loading": "Lieferantenstandorte werden geladen…",
+    "supplierFacility.empty": "Keine geeigneten Lieferantenstandorte verfügbar. Bitten Sie Ihre Administration, Unternehmensrollen, Partner und die öffentliche, aktive Freigabe für das gewählte Produkt zu prüfen.",
+    "supplierFacility.error": "Lieferantenstandorte konnten nicht geladen werden.",
+    "supplierFacility.retry": "Erneut versuchen",
+    "supplierFacility.forbidden": "Sie haben keine Berechtigung, Lieferantenstandorte anzuzeigen.",
     "ngb.alert.close": "Schließen",
     "ngb.carousel.previous": "Vorheriger",
     "ngb.carousel.next": "Nächster",

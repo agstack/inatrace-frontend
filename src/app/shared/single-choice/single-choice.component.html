@@ -17,8 +17,7 @@
         [class.ng-invalid]="isInvalidChoice"
         [class.ng-dirty]="isInvalidChoice"
         [class.ng-touched]="isInvalidChoice"
-        notFoundText="Nothing found"
-        i18-notFoundText="single choice ni izbir text|@@ui.singleChoice.niIzbir.text"
+        [notFoundText]="supplierNotFoundText"
         i18-typeToSearchText="@@ui.singleChoice.enterSearchTerm"
         typeToSearchText="Enter search term"
         [disabled]="isDisabled()"
@@ -59,5 +58,14 @@
             </ng-template>
         </ng-container>
     </ng-select>
+    <ng-container *ngIf="supplierState$ | async as supplierState">
+        <div *ngIf="supplierState === 'loading'" i18n="@@supplierFacility.loading">Loading supplier facilities…</div>
+        <div *ngIf="supplierState === 'empty'" i18n="@@supplierFacility.empty">No eligible supplier facilities are available. Ask your administrator to check company roles, partners and whether supplier facilities are public, active and support the selected product.</div>
+        <div *ngIf="supplierState === 'error'">
+            <span i18n="@@supplierFacility.error">Supplier facilities could not be loaded.</span>
+            <button type="button" class="btn btn-link p-0 ml-1" (click)="retrySupplierQuery()" i18n="@@supplierFacility.retry">Try again</button>
+        </div>
+        <div *ngIf="supplierState === 'forbidden'" i18n="@@supplierFacility.forbidden">You do not have permission to view supplier facilities.</div>
+    </ng-container>
     <ng-content></ng-content>
 </div>

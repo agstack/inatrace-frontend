@@ -1,6 +1,11 @@
 {
   "locale": "es",
   "translations": {
+    "supplierFacility.loading": "Cargando instalaciones proveedoras…",
+    "supplierFacility.empty": "No hay instalaciones proveedoras elegibles. Solicite a su administrador que revise los roles, los socios y que las instalaciones sean públicas, estén activas y admitan el producto seleccionado.",
+    "supplierFacility.error": "No se pudieron cargar las instalaciones proveedoras.",
+    "supplierFacility.retry": "Intentar de nuevo",
+    "supplierFacility.forbidden": "No tiene permiso para ver las instalaciones proveedoras.",
     "organization.input.placehoder": "Seleccione organización",
     "activeCollectingFacility.input.placehoder": "Seleccione área",
     "activeFacility.input.placehoder": "Seleccione área",
