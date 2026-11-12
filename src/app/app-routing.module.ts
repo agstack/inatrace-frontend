@@ -14,6 +14,7 @@ import { LandingPageLayoutComponent } from './layout/landing-page/landing-page-l
 import { ProductLabelFrontLayoutComponent } from './layout/product-label-front/product-label-front-layout/product-label-front-layout.component';
 import { LoginComponent } from './user/login/login.component';
 import { QrCodeRedirectComponent } from './components/qr-code-redirect/qr-code-redirect.component';
+import { PageNotFoundComponent } from './core/page-not-found.component';
 import { RegisterActivationComponent } from './user/register-activation/register-activation.component';
 import { RegisterComponent } from './user/register/register.component';
 import { ResetPasswordRequestComponent } from './user/reset-password-request/reset-password-request.component';
@@ -459,6 +460,15 @@ const routes: Routes = [
     path: 'q-cd/:uuid/:qrTag',
     component: QrCodeRedirectComponent,
     pathMatch: 'full'
+  },
+  {
+    path: 'p/:uuid',
+    component: QrCodeRedirectComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
 ];
 

@@ -12,6 +12,8 @@ import { ApiLogRequest } from 'src/api/model/apiLogRequest';
 })
 export class QrCodeRedirectComponent implements OnInit {
 
+  private static readonly EMPTY_QR_TAG = 'EMPTY';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -27,8 +29,8 @@ export class QrCodeRedirectComponent implements OnInit {
         const qrTag = this.route.snapshot.paramMap.get('qrTag');
         this.router.navigate(['p-cd', labelId, qrTag], { replaceUrl: true }).then();
       }
-      if (urlA[1] === 'q') {
-        this.router.navigate(['p', labelId], { replaceUrl: true }).then();
+      if (urlA[1] === 'q' || urlA[1] === 'p') {
+        this.router.navigate(['p-cd', labelId, QrCodeRedirectComponent.EMPTY_QR_TAG], { replaceUrl: true }).then();
       }
     }
 

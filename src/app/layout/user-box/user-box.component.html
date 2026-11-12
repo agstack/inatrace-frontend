@@ -21,9 +21,6 @@
         <button class="subMenu" ngbDropdownItem (click)="goTo('stakeholders')" i18n="@@productLabel.sideTitle.stakeholders">Stakeholders</button>
         <ng-container *ngIf="this.showProductStakeholdersTabs">
           <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/value-chain')" i18n="@@productLabelStakeholders.tab0.title">Value chain</button>
-          <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/collectors')" i18n="@@productLabelStakeholders.tab1.title">Collectors</button>
-          <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/farmers')" i18n="@@productLabelStakeholders.tab2.title">Farmers</button>
-          <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/customers')" i18n="@@productLabelStakeholders.tab3.title">Customers</button>
         </ng-container>
         <button *ngIf="isAdmin" class="subMenu" ngbDropdownItem (click)="deleteCurrentProduct()" i18n="@@productLabel.sideTitle.archiveProduct">Archive product</button>
       </div>
@@ -37,7 +34,6 @@
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('users')" i18n="@@companyDetailTab.tab2.title">Users</button>
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('facilities')" i18n="@@companyDetailTab.tab3.title">Facilities</button>
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('processingActions')" i18n="@@companyDetailTab.tab4.title">Processing actions</button>
-            <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('translate')" i18n="@@companyDetailTab.tab1.title">Translations</button>
           </ng-container>
           <button class="subMenu" ngbDropdownItem routerLink="/users" i18n="@@systemLeftPanel.sideTitle.users">Users</button>
           <button class="subMenu" ngbDropdownItem routerLink="/settings" i18n="@@systemLeftPanel.sideTitle.settings">Settings</button>
@@ -56,7 +52,6 @@
         <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('users')" i18n="@@companyDetailTab.tab2.title">Users</button>
         <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('facilities')" i18n="@@companyDetailTab.tab3.title">Facilities</button>
         <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('processingActions')" i18n="@@companyDetailTab.tab4.title">Processing actions</button>
-        <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('translate')" i18n="@@companyDetailTab.tab1.title">Translations</button>
       </div>
       <button ngbDropdownItem (click)="logout()" i18n="@@userBox.dropdown.logout">Logout</button>
       <div class="line"></div>
