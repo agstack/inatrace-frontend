@@ -48,7 +48,7 @@ editing them here updates the site.
 
 ## Contribution
 
-Project INATrace welcomes contribution from everyone. See CONTRIBUTING.md for help to get started.
+Project INATrace welcomes contribution from everyone. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the people who have built it.
 
 ## License
 
