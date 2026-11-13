@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
       this.globalEventsManager.loadedGoogleMaps(true);
     };
     const gmScript = document.createElement('script');
-    gmScript.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&loading=async&callback=initMap`;
+    gmScript.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&v=weekly&loading=async&callback=initMap`;
     gmScript.defer = true;
     gmScript.async = true;
     gmScript.onerror = () => {
