@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ListEditorManager } from '../../../../shared/list-editor/list-editor-manager';
 import { ApiActivityProof } from '../../../../../api/model/apiActivityProof';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ApiActivityProofValidationScheme } from '../additional-proof-item/validation';
 import {
   dateISOString,
@@ -37,9 +37,11 @@ import { ApiCompanyGet } from '../../../../../api/model/apiCompanyGet';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-stock-bulk-delivery-details',
-  templateUrl: './stock-bulk-delivery-details.component.html',
-  styleUrls: ['./stock-bulk-delivery-details.component.scss']
+    selector: 'app-stock-bulk-delivery-details',
+    templateUrl: './stock-bulk-delivery-details.component.html',
+    styleUrls: ['./stock-bulk-delivery-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
 
@@ -48,18 +50,18 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   title: string = null;
 
-  purchaseOrderBulkForm: FormGroup;
+  purchaseOrderBulkForm: UntypedFormGroup;
 
   codebookPreferredWayOfPayment: EnumSifrant;
 
-  searchCollectors = new FormControl(null);
+  searchCollectors = new UntypedFormControl(null);
   farmersCodebook: CompanyUserCustomersByRoleService;
   collectorsCodebook: CompanyUserCustomersByRoleService;
 
-  employeeForm = new FormControl(null, Validators.required);
+  employeeForm = new UntypedFormControl(null, Validators.required);
   codebookUsers: EnumSifrant;
 
-  facilityNameForm = new FormControl(null);
+  facilityNameForm = new UntypedFormControl(null);
 
   options: ApiSemiProduct[] = [];
 
@@ -84,16 +86,16 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   emptyFarmersFormArray = null;
 
-  searchWomenCoffeeForm: FormControl[] = [new FormControl(null, Validators.required)];
-  netWeightFormArray: FormControl[] = [new FormControl(null)];
-  finalPriceFormArray: FormControl[] = [new FormControl(null)];
+  searchWomenCoffeeForm: UntypedFormControl[] = [new UntypedFormControl(null, Validators.required)];
+  netWeightFormArray: UntypedFormControl[] = [new UntypedFormControl(null)];
+  finalPriceFormArray: UntypedFormControl[] = [new UntypedFormControl(null)];
 
   private userProfileSubs: Subscription;
 
   constructor(
       private route: ActivatedRoute,
       private location: Location,
-      private fb: FormBuilder,
+      private fb: UntypedFormBuilder,
       private globalEventsManager: GlobalEventManagerService,
       private facilityControllerService: FacilityControllerService,
       private companyControllerService: CompanyControllerService,
@@ -110,9 +112,9 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
     return defaultEmptyObject(object) as ApiActivityProof;
   }
 
-  static AdditionalProofItemEmptyObjectFormFactory(): () => FormControl {
+  static AdditionalProofItemEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(StockBulkDeliveryDetailsComponent.AdditionalProofItemCreateEmptyObject(),
+      return new UntypedFormControl(StockBulkDeliveryDetailsComponent.AdditionalProofItemCreateEmptyObject(),
           ApiActivityProofValidationScheme.validators);
     };
   }
@@ -184,8 +186,8 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
     return $localize`:@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.label: Deduction` + ` (${this.measureUnitArray[idx]})`;
   }
 
-  get additionalProofsForm(): FormArray {
-    return this.purchaseOrderBulkForm.get('activityProofs') as FormArray;
+  get additionalProofsForm(): UntypedFormArray {
+    return this.purchaseOrderBulkForm.get('activityProofs') as UntypedFormArray;
   }
 
   private get womenCoffeeList() {
@@ -285,7 +287,7 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
   private initializeListManager() {
 
     this.additionalProofsListManager = new ListEditorManager<ApiActivityProof>(
-        this.additionalProofsForm as FormArray,
+        this.additionalProofsForm as UntypedFormArray,
         StockBulkDeliveryDetailsComponent.AdditionalProofItemEmptyObjectFormFactory(),
         ApiActivityProofValidationScheme
     );
@@ -729,13 +731,13 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
       this.measureUnitArray.push('-');
     }
 
-    this.netWeightFormArray.push(new FormControl(null));
-    this.finalPriceFormArray.push(new FormControl(null));
-    this.searchWomenCoffeeForm.push(new FormControl(null, Validators.required));
+    this.netWeightFormArray.push(new UntypedFormControl(null));
+    this.finalPriceFormArray.push(new UntypedFormControl(null));
+    this.searchWomenCoffeeForm.push(new UntypedFormControl(null, Validators.required));
 
     // add new fields to form, and init semiProduct if only one available
     const emptyFarmersFormArrayNewItem = _.cloneDeep(this.emptyFarmersFormArray);
-    (emptyFarmersFormArrayNewItem as FormGroup).get('semiProduct').setValue(semiProductControlValue);
+    (emptyFarmersFormArrayNewItem as UntypedFormGroup).get('semiProduct').setValue(semiProductControlValue);
     this.farmersFormArray.push(
       emptyFarmersFormArrayNewItem
     );
@@ -750,7 +752,7 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   // get farmers form array
   get farmersFormArray() {
-    return (this.purchaseOrderBulkForm.get('farmers') as FormArray);
+    return (this.purchaseOrderBulkForm.get('farmers') as UntypedFormArray);
   }
 
   checkRemoveFarmerIconShow(idx: number) {

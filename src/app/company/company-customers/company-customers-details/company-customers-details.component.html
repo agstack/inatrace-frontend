@@ -1,216 +1,223 @@
 <app-authorised-layout>
-    <div *ngIf="customerForm" class="af-layout--authorised">
-        <div class="af-form-wrapper">
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="title-page content-element--title">{{title}}</div>
-                </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@customerDetail.section.basicInfo">Basic information</h2>
-                    <div class="af-form-element">
-                        <textinput
-                                [hideAsterisk]="false"
-                                [form]="customerForm.get('name')"
-                                label="Company name"
-                                style="width: 100%"
-                                placeholder="Enter company name"
-                                i18n-label="@@customerDetail.textinput.name.label"
-                                i18n-placeholder="@@customerDetail.textinput.name.placeholder"
-                                [isInvalid]="submitted && customerForm.get('name').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('name').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@customerDetail.textinput.name.error">
+  @if (customerForm) {
+    <div class="af-layout--authorised">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">{{title}}</div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@customerDetail.section.basicInfo">Basic information</h2>
+            <div class="af-form-element">
+              <textinput
+                [hideAsterisk]="false"
+                [form]="customerForm.get('name')"
+                label="Company name"
+                style="width: 100%"
+                placeholder="Enter company name"
+                i18n-label="@@customerDetail.textinput.name.label"
+                i18n-placeholder="@@customerDetail.textinput.name.placeholder"
+                [isInvalid]="submitted && customerForm.get('name').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('name').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@customerDetail.textinput.name.error">
                                         Company name is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                                [hideAsterisk]="true"
-                                [form]="customerForm.get('officialCompanyName')"
-                                label="Official company name"
-                                style="width: 100%"
-                                placeholder="Enter official company name"
-                                i18n-label="@@customerDetail.textinput.officialCompanyName.label"
-                                i18n-placeholder="@@customerDetail.textinput.officialCompanyName.placeholder"
-                                [isInvalid]="submitted && customerForm.get('officialCompanyName').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('officialCompanyName').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@customerDetail.textinput.name.error">
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput
+                [hideAsterisk]="true"
+                [form]="customerForm.get('officialCompanyName')"
+                label="Official company name"
+                style="width: 100%"
+                placeholder="Enter official company name"
+                i18n-label="@@customerDetail.textinput.officialCompanyName.label"
+                i18n-placeholder="@@customerDetail.textinput.officialCompanyName.placeholder"
+                [isInvalid]="submitted && customerForm.get('officialCompanyName').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('officialCompanyName').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@customerDetail.textinput.name.error">
                                         Official company name is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                                [hideAsterisk]="true"
-                                [form]="customerForm.get('vatId')"
-                                label="Company VAT"
-                                style="width: 100%"
-                                placeholder="Enter company VAT"
-                                i18n-label="@@customerDetail.textinput.vatId.label"
-                                i18n-placeholder="@@customerDetail.textinput.vatId.placeholder"
-                                [isInvalid]="submitted && customerForm.get('vatId').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('vatId').errors as errors" class="sc-invalid-feedback">
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                                [hideAsterisk]="true"
-                                [form]="customerForm.get('contact')"
-                                label="Contact"
-                                style="width: 100%"
-                                placeholder="Enter contact"
-                                i18n-label="@@customerDetail.textinput.contact.label"
-                                i18n-placeholder="@@customerDetail.textinput.contact.placeholder"
-                                [isInvalid]="submitted && customerForm.get('contact').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('contact').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required">
-                                        Contact is required
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                                [hideAsterisk]="true"
-                                [form]="customerForm.get('email')"
-                                label="E-mail"
-                                style="width: 100%"
-                                placeholder="Enter e-mail address"
-                                i18n-label="@@customerDetail.textinput.email.label"
-                                i18n-placeholder="@@customerDetail.textinput.email.placeholder"
-                                [isInvalid]="submitted && customerForm.get('email').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('email').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.wrongEmail" i18n="@@customerDetail.textinput.email.error">
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput
+                [hideAsterisk]="true"
+                [form]="customerForm.get('vatId')"
+                label="Company VAT"
+                style="width: 100%"
+                placeholder="Enter company VAT"
+                i18n-label="@@customerDetail.textinput.vatId.label"
+                i18n-placeholder="@@customerDetail.textinput.vatId.placeholder"
+                [isInvalid]="submitted && customerForm.get('vatId').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('vatId').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput
+                [hideAsterisk]="true"
+                [form]="customerForm.get('contact')"
+                label="Contact"
+                style="width: 100%"
+                placeholder="Enter contact"
+                i18n-label="@@customerDetail.textinput.contact.label"
+                i18n-placeholder="@@customerDetail.textinput.contact.placeholder"
+                [isInvalid]="submitted && customerForm.get('contact').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('contact').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div>
+                          Contact is required
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput
+                [hideAsterisk]="true"
+                [form]="customerForm.get('email')"
+                label="E-mail"
+                style="width: 100%"
+                placeholder="Enter e-mail address"
+                i18n-label="@@customerDetail.textinput.email.label"
+                i18n-placeholder="@@customerDetail.textinput.email.placeholder"
+                [isInvalid]="submitted && customerForm.get('email').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('email').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.wrongEmail) {
+                        <div i18n="@@customerDetail.textinput.email.error">
                     <span>
                       E-mail is in the wrong format
                     </span>
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                                [hideAsterisk]="true"
-                                [form]="customerForm.get('phone')"
-                                label="Phone number"
-                                style="width: 100%"
-                                placeholder="Enter phone number"
-                                i18n-label="@@customerDetail.textinput.phone.label"
-                                i18n-placeholder="@@customerDetail.textinput.phone.placeholder"
-                                [isInvalid]="submitted && customerForm.get('phone').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="customerForm.get('phone').errors as errors" class="sc-invalid-feedback">
-
-                                </div>
-                            </ng-container>
-                        </textinput>
+                      }
                     </div>
-                </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <h2 i18n="@@customerDetail.section.location">Location</h2>
-                    <div class="af-form-element">
-                        <app-geoaddress-form
-                            [form]="customerForm.get('location')"
-                            [submitted]="submitted"></app-geoaddress-form>
+                  }
+                }
+              </textinput>
+              <textinput
+                [hideAsterisk]="true"
+                [form]="customerForm.get('phone')"
+                label="Phone number"
+                style="width: 100%"
+                placeholder="Enter phone number"
+                i18n-label="@@customerDetail.textinput.phone.label"
+                i18n-placeholder="@@customerDetail.textinput.phone.placeholder"
+                [isInvalid]="submitted && customerForm.get('phone').invalid">
+                @if (submitted) {
+                  @if (customerForm.get('phone').errors; as errors) {
+                    <div class="sc-invalid-feedback">
                     </div>
-                </div>
+                  }
+                }
+              </textinput>
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@customerDetail.section.skuPrices">SKU prices</h2>
-                    <div class="af-form-element">
-                        <ng-container *ngFor="let item of this.semiProductWithPrices.controls; index as idx">
-                            <div class="af-row">
-                                <div class="af-c10">
-                                    {{item.get('name').value}}
-                                </div>
-                                <div class="af-c2">
-                                    <button class="btn btn-solid round" (click)="addPrice(item)" i18n="@@customerDetail.button.skuPrices.add">
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@customerDetail.section.location">Location</h2>
+            <div class="af-form-element">
+              <app-geoaddress-form
+                [form]="customerForm.get('location')"
+              [submitted]="submitted"></app-geoaddress-form>
+            </div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@customerDetail.section.skuPrices">SKU prices</h2>
+            <div class="af-form-element">
+              @for (item of this.semiProductWithPrices.controls; track item; let idx = $index) {
+                <div class="af-row">
+                  <div class="af-c10">
+                    {{item.get('name').value}}
+                  </div>
+                  <div class="af-c2">
+                    <button class="btn btn-solid round" (click)="addPrice(item)" i18n="@@customerDetail.button.skuPrices.add">
                                         <span>+</span>
                                     </button>
-                                </div>
-                            </div>
-
-                            <ng-container *ngFor="let price of item.get('prices').controls; index as i">
-                                <div class="af-row">
-                                    <div class="af-c3">
-                                        <app-datepicker
-                                                label="From"
-                                                i18n-label="@@customerDetail.textinput.skuPrices.from"
-                                                [form]="price.get('from')">
-                                        </app-datepicker>
-                                    </div>
-
-                                    <div class="af-c3">
-                                        <app-datepicker
-                                                label="To"
-                                                i18n-label="@@customerDetail.textinput.skuPrices.to"
-                                                [form]="price.get('to')">
-                                        </app-datepicker>
-                                    </div>
-
-                                    <div class="af-c3">
-                                        <textinput
-                                                type="number"
-                                                min="0"
-                                                step="0.01"
-                                                [form]="price.get('price')"
-                                                label="Price"
-                                                style="width: 100%"
-                                                placeholder="Enter price"
-                                                i18n-label="@@customerDetail.textinput.skuPrices.price.label"
-                                                i18n-placeholder="@@customerDetail.textinput.skuPrices.price.placeholder">
-                                        </textinput>
-                                    </div>
-
-                                    <div class="af-c2">
-                                        <single-choice
-                                                label="Currency"
-                                                i18n-label="@@customerDetail.textinput.skuPrices.currency.label"
-                                                [formControlInput]="price.get('currency')"
-                                                [codebookService]="codebookCurrencyCodes">
-                                        </single-choice>
-                                    </div>
-
-                                    <div class="af-c1">
-                                        <div style="margin-top: 1.75rem; cursor: pointer" (click)="removePriceAtIdx(item, i)">
-                                            <fa-icon
-                                                    class="del-icon"
-                                                    [icon]="faTrashAlt">
-                                            </fa-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <div style="height: 1rem;"></div>
-                        </ng-container>
-                    </div>
+                  </div>
                 </div>
+                @for (price of item.get('prices').controls; track price; let i = $index) {
+                  <div class="af-row">
+                    <div class="af-c3">
+                      <app-datepicker
+                        label="From"
+                        i18n-label="@@customerDetail.textinput.skuPrices.from"
+                        [form]="price.get('from')">
+                      </app-datepicker>
+                    </div>
+                    <div class="af-c3">
+                      <app-datepicker
+                        label="To"
+                        i18n-label="@@customerDetail.textinput.skuPrices.to"
+                        [form]="price.get('to')">
+                      </app-datepicker>
+                    </div>
+                    <div class="af-c3">
+                      <textinput
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        [form]="price.get('price')"
+                        label="Price"
+                        style="width: 100%"
+                        placeholder="Enter price"
+                        i18n-label="@@customerDetail.textinput.skuPrices.price.label"
+                        i18n-placeholder="@@customerDetail.textinput.skuPrices.price.placeholder">
+                      </textinput>
+                    </div>
+                    <div class="af-c2">
+                      <single-choice
+                        label="Currency"
+                        i18n-label="@@customerDetail.textinput.skuPrices.currency.label"
+                        [formControlInput]="price.get('currency')"
+                        [codebookService]="codebookCurrencyCodes">
+                      </single-choice>
+                    </div>
+                    <div class="af-c1">
+                      <div style="margin-top: 1.75rem; cursor: pointer" (click)="removePriceAtIdx(item, i)">
+                        <fa-icon
+                          class="del-icon"
+                          [icon]="faTrashAlt">
+                        </fa-icon>
+                      </div>
+                    </div>
+                  </div>
+                }
+                <div style="height: 1rem;"></div>
+              }
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="af-bottom-buttons" i18n="@@customerDetail.modal.footer.buttons">
-                        <button class="btn btn-outlined mr-2" data-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons" i18n="@@customerDetail.modal.footer.buttons">
+                        <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
                         <button class="btn" type="button" (click)="save();"><span>Save</span></button>
                     </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  }
 </app-authorised-layout>

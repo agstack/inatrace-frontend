@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  ValidatorFn, FormArray, FormGroup } from '@angular/forms';
+import {  ValidatorFn, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { combineLatest, Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, map, tap, filter, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { isEqual } from 'lodash';
@@ -17,7 +17,7 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   }
 
   insertNullPrefixResultIfNonEmpty = false
-  public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => FormGroup { //: (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl {
+  public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => UntypedFormGroup { //: (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl {
     throw new Error("Method not implemented.");
   }
 
@@ -127,10 +127,10 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   public formatter(): (x: T) => string {
     return ((x: T) => this.textRepresentation(x));
   }
-  public addElement(arr: FormArray, el: T): void {
+  public addElement(arr: UntypedFormArray, el: T): void {
     throw new Error("Method not implemented.");
   }
-  public removeElement(arr: FormArray, index: number): void {
+  public removeElement(arr: UntypedFormArray, index: number): void {
     arr.removeAt(index);
     arr.markAsDirty()
     arr.updateValueAndValidity()

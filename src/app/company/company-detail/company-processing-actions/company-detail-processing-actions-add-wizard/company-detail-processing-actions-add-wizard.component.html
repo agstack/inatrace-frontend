@@ -1,294 +1,287 @@
 <div class="modal-container company-detail-processing-action-add-wizard">
 
-    <!-- STEP 1 - Proc action type -->
-    <ng-container *ngIf="currentStep === 1">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title"
-                i18n="@@selfOnboarding.addProcActionModal.procActionTypeStep.header">What kind of processing action do you want to add?</h2>
+  <!-- STEP 1 - Proc action type -->
+  @if (currentStep === 1) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title"
+      i18n="@@selfOnboarding.addProcActionModal.procActionTypeStep.header">What kind of processing action do you want to add?</h2>
+    </div>
+    <div class="modal-body">
+      @for (procActionType of processingActionTypes; track procActionType) {
+        <div>
+          <button type="button" class="btn proc-action-type-button"
+            (click)="setSelectedProcActionType(procActionType.id)">
+            <span>{{ procActionType.name }}</span>
+          </button>
         </div>
-        <div class="modal-body">
-            <div *ngFor="let procActionType of processingActionTypes">
-                <button type="button" class="btn proc-action-type-button"
-                        (click)="setSelectedProcActionType(procActionType.id)">
-                    <span>{{ procActionType.name }}</span>
-                </button>
-            </div>
-        </div>
-    </ng-container>
+      }
+    </div>
+  }
 
-    <!-- STEP 2 - Proc action name -->
-    <ng-container *ngIf="currentStep === 2">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title"
-                i18n="@@selfOnboarding.addProcActionModal.procActionNameStep.header">Please add a name for this process:</h2>
-        </div>
-
-        <div class="modal-body">
-            <textinput
-                    label="Name of process"
-                    placeholder="Enter name"
-                    i18n-label="@@companyDetailProcessingActions.textInput.name.label"
-                    i18n-placeholder="@@companyDetailProcessingActions.textInput.name.helpText"
-                    [form]="procActionNameControl"
-                    [isInvalid]="procActionNameControl.dirty && procActionNameControl.invalid"
-                    style="width: 100%">
-                <ng-container *ngIf="procActionNameControl.dirty && procActionNameControl.invalid">
-                    <div i18n="@@companyDetailProcessingActions.textInput.name.error" class="sc-invalid-feedback">
+  <!-- STEP 2 - Proc action name -->
+  @if (currentStep === 2) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title"
+      i18n="@@selfOnboarding.addProcActionModal.procActionNameStep.header">Please add a name for this process:</h2>
+    </div>
+    <div class="modal-body">
+      <textinput
+        label="Name of process"
+        placeholder="Enter name"
+        i18n-label="@@companyDetailProcessingActions.textInput.name.label"
+        i18n-placeholder="@@companyDetailProcessingActions.textInput.name.helpText"
+        [form]="procActionNameControl"
+        [isInvalid]="procActionNameControl.dirty && procActionNameControl.invalid"
+        style="width: 100%">
+        @if (procActionNameControl.dirty && procActionNameControl.invalid) {
+          <div i18n="@@companyDetailProcessingActions.textInput.name.error" class="sc-invalid-feedback">
                         <span>NName of process is required</span>
                     </div>
-                </ng-container>
-            </textinput>
-        </div>
+        }
+      </textinput>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setSelectedProcActionName()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionNameStep.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setSelectedProcActionName()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionNameStep.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 3 - Proc action internal LOT name -->
-    <ng-container *ngIf="currentStep === 3">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title"
-                i18n="@@selfOnboarding.addProcActionModal.procActionLOTNameStep.header">Please add internal LOT name prefix for this process:</h2>
-        </div>
-
-        <div class="modal-body">
-            <textinput
-                    label="Internal lot name prefix"
-                    placeholder="Enter prefix"
-                    i18n-label="@@companyDetailProcessingActions.textInput.prefix.label"
-                    i18n-placeholder="@@companyDetailProcessingActions.textInput.prefix.helpText"
-                    [form]="procActionLOTNameControl"
-                    [isInvalid]="procActionLOTNameControl.dirty && procActionLOTNameControl.invalid"
-                    style="width: 100%">
-                <ng-container *ngIf="procActionLOTNameControl.dirty && procActionLOTNameControl.invalid">
-                    <div i18n="@@companyDetailProcessingActions.textInput.prefix.error" class="sc-invalid-feedback">
+  <!-- STEP 3 - Proc action internal LOT name -->
+  @if (currentStep === 3) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title"
+      i18n="@@selfOnboarding.addProcActionModal.procActionLOTNameStep.header">Please add internal LOT name prefix for this process:</h2>
+    </div>
+    <div class="modal-body">
+      <textinput
+        label="Internal lot name prefix"
+        placeholder="Enter prefix"
+        i18n-label="@@companyDetailProcessingActions.textInput.prefix.label"
+        i18n-placeholder="@@companyDetailProcessingActions.textInput.prefix.helpText"
+        [form]="procActionLOTNameControl"
+        [isInvalid]="procActionLOTNameControl.dirty && procActionLOTNameControl.invalid"
+        style="width: 100%">
+        @if (procActionLOTNameControl.dirty && procActionLOTNameControl.invalid) {
+          <div i18n="@@companyDetailProcessingActions.textInput.prefix.error" class="sc-invalid-feedback">
                         <span>Alias for the process is required</span>
                     </div>
-                </ng-container>
-            </textinput>
-        </div>
+        }
+      </textinput>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setSelectedProcActionLOTName()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionLOTNameStep.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setSelectedProcActionLOTName()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionLOTNameStep.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 4 - Proc action value chain -->
-    <ng-container *ngIf="currentStep === 4">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addProcActionModal.procActionValueChainStep.header">
+  <!-- STEP 4 - Proc action value chain -->
+  @if (currentStep === 4) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addProcActionModal.procActionValueChainStep.header">
                 Please select the value chain for {{ procActionNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body">
-            <div class="search-field">
-                <single-choice
-                        [formControlInput]="valueChainsForm"
-                        [codebookService]="companyValueChainsCodebook"
-                        (onChange)="addSelectedValueChain($event)">
-                    <div *ngIf="selectedCompanyValueChainsControl.dirty && selectedCompanyValueChainsControl.errors as errors"
-                         class="sc-invalid-feedback">
-                        <div i18n="@@companyDetailProcessingActions.singleChoice.valueChains.error"
-                             class="sc-invalid-feedback">
+    </div>
+    <div class="modal-body">
+      <div class="search-field">
+        <single-choice
+          [formControlInput]="valueChainsForm"
+          [codebookService]="companyValueChainsCodebook"
+          (onChange)="addSelectedValueChain($event)">
+          @if (selectedCompanyValueChainsControl.dirty && selectedCompanyValueChainsControl.errors; as errors) {
+            <div
+              class="sc-invalid-feedback">
+              <div i18n="@@companyDetailProcessingActions.singleChoice.valueChains.error"
+                class="sc-invalid-feedback">
                             <span>At least one value chain is required</span>
                         </div>
-                    </div>
-                </single-choice>
             </div>
-            <div *ngFor="let sp of this.valueChains; index as idx" class="selected-values-list">
-                <div class="d-flex justify-content-between">
-                    <div>{{ sp.name }}</div>
-                    <div (click)="deleteValueChain(idx)" class="cursor-pointer">
-                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                    </div>
-                </div>
+          }
+        </single-choice>
+      </div>
+      @for (sp of this.valueChains; track sp; let idx = $index) {
+        <div class="selected-values-list">
+          <div class="d-flex justify-content-between">
+            <div>{{ sp.name }}</div>
+            <div (click)="deleteValueChain(idx)" class="cursor-pointer">
+              <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
             </div>
+          </div>
         </div>
+      }
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setProcActionValueChains()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionValueChains.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setProcActionValueChains()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionValueChains.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 5 - Proc action input semi-product -->
-    <ng-container *ngIf="currentStep === 5">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addProcActionModal.procActionInputSemiProduct.header">
+  <!-- STEP 5 - Proc action input semi-product -->
+  @if (currentStep === 5) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addProcActionModal.procActionInputSemiProduct.header">
                 Please select the input product for {{ procActionNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body">
-            <div class="search-field">
-                <single-choice
-                        label="Select input semi-product"
-                        i18n-label="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.label"
-                        [formControlInput]="selectedInputSemiProductControl"
-                        [codebookService]="semiProductsForValueChainsService"
-                        [isInvalidChoice]="selectedInputSemiProductControl.dirty && selectedInputSemiProductControl.invalid">
-                    <ng-container *ngIf="selectedInputSemiProductControl.dirty && selectedInputSemiProductControl.invalid">
-                        <div i18n="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.error.required" class="sc-invalid-feedback">
+    </div>
+    <div class="modal-body">
+      <div class="search-field">
+        <single-choice
+          label="Select input semi-product"
+          i18n-label="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.label"
+          [formControlInput]="selectedInputSemiProductControl"
+          [codebookService]="semiProductsForValueChainsService"
+          [isInvalidChoice]="selectedInputSemiProductControl.dirty && selectedInputSemiProductControl.invalid">
+          @if (selectedInputSemiProductControl.dirty && selectedInputSemiProductControl.invalid) {
+            <div i18n="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.error.required" class="sc-invalid-feedback">
                             Input semi-product is required
                         </div>
-                    </ng-container>
-                </single-choice>
-            </div>
-        </div>
+          }
+        </single-choice>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setProcActionInputSemiProduct()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionInputSemiProduct.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setProcActionInputSemiProduct()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionInputSemiProduct.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 6 - Proc action output semi-products or output final product -->
-    <ng-container *ngIf="currentStep === 6">
-        <ng-container *ngIf="selectedProcActionType == 'PROCESSING'">
-            <div class="modal-header justify-content-center">
-                <h2 class="modal-title text-center"
-                    i18n="@@selfOnboarding.addProcActionModal.procActionOutputSemiProducts.header">
+  <!-- STEP 6 - Proc action output semi-products or output final product -->
+  @if (currentStep === 6) {
+    @if (selectedProcActionType == 'PROCESSING') {
+      <div class="modal-header justify-content-center">
+        <h2 class="modal-title text-center"
+          i18n="@@selfOnboarding.addProcActionModal.procActionOutputSemiProducts.header">
                     Please select the output product(s) for {{ procActionNameControl.value }}:
                 </h2>
-            </div>
-
-            <div class="modal-body">
-                <div class="search-field">
-                    <single-choice
-                            [formControlInput]="outputSemiProductControl"
-                            [codebookService]="semiProductsForValueChainsService"
-                            (onChange)="addSelectedOutputSemiProduct($event)">
-                        <div *ngIf="selectedOutputSemiProductsControl.dirty && selectedOutputSemiProductsControl.errors as errors"
-                             class="sc-invalid-feedback">
-                            <div i18n="@@companyDetailProcessingActions.outputSemiProducts.error.atLeastOneIsRequired" class="sc-invalid-feedback">
+      </div>
+      <div class="modal-body">
+        <div class="search-field">
+          <single-choice
+            [formControlInput]="outputSemiProductControl"
+            [codebookService]="semiProductsForValueChainsService"
+            (onChange)="addSelectedOutputSemiProduct($event)">
+            @if (selectedOutputSemiProductsControl.dirty && selectedOutputSemiProductsControl.errors; as errors) {
+              <div
+                class="sc-invalid-feedback">
+                <div i18n="@@companyDetailProcessingActions.outputSemiProducts.error.atLeastOneIsRequired" class="sc-invalid-feedback">
                                 At least one output semi-product is required
                             </div>
-                        </div>
-                    </single-choice>
-                </div>
-                <div *ngFor="let sp of this.outputSemiProducts; index as idx" class="selected-values-list">
-                    <div class="d-flex justify-content-between">
-                        <div>{{ sp.name }}</div>
-                        <div (click)="deleteOutputSemiProduct(idx)" class="cursor-pointer">
-                            <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                        </div>
-                    </div>
-                </div>
+              </div>
+            }
+          </single-choice>
+        </div>
+        @for (sp of this.outputSemiProducts; track sp; let idx = $index) {
+          <div class="selected-values-list">
+            <div class="d-flex justify-content-between">
+              <div>{{ sp.name }}</div>
+              <div (click)="deleteOutputSemiProduct(idx)" class="cursor-pointer">
+                <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+              </div>
             </div>
-
-            <div class="modal-footer justify-content-around pt-4 pb-4">
-                <button type="button" class="btn"
-                        (click)="setProcActionOutputSemiProducts()">
-                    <span i18n="@@selfOnboarding.addProcActionModal.procActionOutputSemiProducts.doneButton">Done</span>
-                </button>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="selectedProcActionType == 'FINAL_PROCESSING'">
-            <div class="modal-header justify-content-center">
-                <h2 class="modal-title text-center"
-                    i18n="@@selfOnboarding.addProcActionModal.procActionOutputFinalProduct.header">
+          </div>
+        }
+      </div>
+      <div class="modal-footer justify-content-around pt-4 pb-4">
+        <button type="button" class="btn"
+          (click)="setProcActionOutputSemiProducts()">
+          <span i18n="@@selfOnboarding.addProcActionModal.procActionOutputSemiProducts.doneButton">Done</span>
+        </button>
+      </div>
+    }
+    @if (selectedProcActionType == 'FINAL_PROCESSING') {
+      <div class="modal-header justify-content-center">
+        <h2 class="modal-title text-center"
+          i18n="@@selfOnboarding.addProcActionModal.procActionOutputFinalProduct.header">
                     Please select the output final product for {{ procActionNameControl.value }}:
                 </h2>
-            </div>
-
-            <div class="modal-body">
-                <div class="search-field">
-                    <single-choice
-                            label="Select output final product"
-                            i18n-label="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.label"
-                            [formControlInput]="selectedOutputFinalProductControl"
-                            [codebookService]="finalProductsForCompanyCodebook"
-                            [isInvalidChoice]="selectedOutputFinalProductControl.dirty && selectedOutputFinalProductControl.invalid">
-                        <ng-container *ngIf="selectedOutputFinalProductControl.dirty && selectedOutputFinalProductControl.invalid">
-                            <div i18n="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.error.required" class="sc-invalid-feedback">
+      </div>
+      <div class="modal-body">
+        <div class="search-field">
+          <single-choice
+            label="Select output final product"
+            i18n-label="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.label"
+            [formControlInput]="selectedOutputFinalProductControl"
+            [codebookService]="finalProductsForCompanyCodebook"
+            [isInvalidChoice]="selectedOutputFinalProductControl.dirty && selectedOutputFinalProductControl.invalid">
+            @if (selectedOutputFinalProductControl.dirty && selectedOutputFinalProductControl.invalid) {
+              <div i18n="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.error.required" class="sc-invalid-feedback">
                                 Output final product is required
                             </div>
-                        </ng-container>
-                    </single-choice>
-                </div>
-            </div>
+            }
+          </single-choice>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-around pt-4 pb-4">
+        <button type="button" class="btn"
+          (click)="setProcActionOutputFinalProduct()">
+          <span i18n="@@selfOnboarding.addProcActionModal.procActionOutputFinalProduct.doneButton">Done</span>
+        </button>
+      </div>
+    }
+  }
 
-            <div class="modal-footer justify-content-around pt-4 pb-4">
-                <button type="button" class="btn"
-                        (click)="setProcActionOutputFinalProduct()">
-                    <span i18n="@@selfOnboarding.addProcActionModal.procActionOutputFinalProduct.doneButton">Done</span>
-                </button>
-            </div>
-        </ng-container>
-    </ng-container>
-
-    <!-- STEP 7 - Proc action final product for QR code generation (in case of GENERATE_QR_CODE) -->
-    <ng-container *ngIf="currentStep === 7 && selectedProcActionType == 'GENERATE_QR_CODE'">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addProcActionModal.procActionFinalProdForQRCode.header">
+  <!-- STEP 7 - Proc action final product for QR code generation (in case of GENERATE_QR_CODE) -->
+  @if (currentStep === 7 && selectedProcActionType == 'GENERATE_QR_CODE') {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addProcActionModal.procActionFinalProdForQRCode.header">
                 Please select the final product for which the QR code will be generated:
             </h2>
-        </div>
-
-        <div class="modal-body">
-            <div class="search-field">
-                <single-choice
-                        label="QR code for final product"
-                        i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"
-                        [formControlInput]="qrCodeForFinalProductControl"
-                        [codebookService]="finalProductsForCompanyCodebook"
-                        [isInvalidChoice]="qrCodeForFinalProductControl.dirty && qrCodeForFinalProductControl.invalid">
-                    <ng-container *ngIf="qrCodeForFinalProductControl.dirty && qrCodeForFinalProductControl.invalid">
-                        <div i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required" class="sc-invalid-feedback">
+    </div>
+    <div class="modal-body">
+      <div class="search-field">
+        <single-choice
+          label="QR code for final product"
+          i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"
+          [formControlInput]="qrCodeForFinalProductControl"
+          [codebookService]="finalProductsForCompanyCodebook"
+          [isInvalidChoice]="qrCodeForFinalProductControl.dirty && qrCodeForFinalProductControl.invalid">
+          @if (qrCodeForFinalProductControl.dirty && qrCodeForFinalProductControl.invalid) {
+            <div i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required" class="sc-invalid-feedback">
                             QR code for final product is required
                         </div>
-                    </ng-container>
-                </single-choice>
-            </div>
-        </div>
+          }
+        </single-choice>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setProcActionFinalProdQRCode()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionFinalProdForQRCode.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setProcActionFinalProdQRCode()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionFinalProdForQRCode.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 8 - Proc action facilities -->
-    <ng-container *ngIf="currentStep === 8">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addProcActionModal.procActionFacilities.header">
+  <!-- STEP 8 - Proc action facilities -->
+  @if (currentStep === 8) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addProcActionModal.procActionFacilities.header">
                 Select all facilities where {{ procActionNameControl.value }} can take place or start:
             </h2>
-        </div>
-
-        <div class="modal-body checkbox-group">
-            <ng-container *ngFor="let facility of facilities">
-                <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectProcActionFacility(facility)">
-                    <checkbox-input-rich-label>{{ facility.name }}</checkbox-input-rich-label>
-                </checkbox-input>
-            </ng-container>
-        </div>
-
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setProcActionFacilities()">
-                <span i18n="@@selfOnboarding.addProcActionModal.procActionFacilities.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
+    </div>
+    <div class="modal-body checkbox-group">
+      @for (facility of facilities; track facility) {
+        <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectProcActionFacility(facility)">
+          <checkbox-input-rich-label>{{ facility.name }}</checkbox-input-rich-label>
+        </checkbox-input>
+      }
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setProcActionFacilities()">
+        <span i18n="@@selfOnboarding.addProcActionModal.procActionFacilities.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
 </div>

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { StockOrderType } from '../../../../../shared/types';
 import { ActivatedRoute } from '@angular/router';
 import { EnumSifrant } from '../../../../shared-services/enum-sifrant';
@@ -31,9 +31,11 @@ import { Subscription } from 'rxjs';
 import { ApiCompanyGet } from '../../../../../api/model/apiCompanyGet';
 
 @Component({
-  selector: 'app-stock-delivery-details',
-  templateUrl: './stock-delivery-details.component.html',
-  styleUrls: ['./stock-delivery-details.component.scss']
+    selector: 'app-stock-delivery-details',
+    templateUrl: './stock-delivery-details.component.html',
+    styleUrls: ['./stock-delivery-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
@@ -41,9 +43,9 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   update = true;
 
-  stockOrderForm: FormGroup;
+  stockOrderForm: UntypedFormGroup;
   order: ApiStockOrder;
-  orderTypeForm = new FormControl(null);
+  orderTypeForm = new UntypedFormControl(null);
   orderTypeCodebook = EnumSifrant.fromObject(this.orderTypeOptions);
 
   userLastChanged = null;
@@ -52,15 +54,15 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   codebookPreferredWayOfPayment: EnumSifrant;
 
-  searchFarmers = new FormControl(null, Validators.required);
-  searchCollectors = new FormControl(null);
+  searchFarmers = new UntypedFormControl(null, Validators.required);
+  searchCollectors = new UntypedFormControl(null);
   farmersCodebook: CompanyUserCustomersByRoleService;
   collectorsCodebook: CompanyUserCustomersByRoleService;
 
-  employeeForm = new FormControl(null, Validators.required);
+  employeeForm = new UntypedFormControl(null, Validators.required);
   codebookUsers: EnumSifrant;
 
-  facilityNameForm = new FormControl(null);
+  facilityNameForm = new UntypedFormControl(null);
 
   options: ApiSemiProduct[] = [];
   modelChoice = null;
@@ -68,12 +70,12 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
   measureUnit = '-';
   selectedCurrency = '-';
 
-  searchWomenCoffeeForm = new FormControl(null, Validators.required);
+  searchWomenCoffeeForm = new UntypedFormControl(null, Validators.required);
   codebookWomenCoffee = EnumSifrant.fromObject(this.womenCoffeeList);
   codebookOrganic = EnumSifrant.fromObject(this.yesNo);
 
-  netWeightForm = new FormControl(null);
-  finalPriceForm = new FormControl(null);
+  netWeightForm = new UntypedFormControl(null);
+  finalPriceForm = new UntypedFormControl(null);
 
   updatePOInProgress = false;
 
@@ -107,9 +109,9 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     return defaultEmptyObject(object) as ApiActivityProof;
   }
 
-  static AdditionalProofItemEmptyObjectFormFactory(): () => FormControl {
+  static AdditionalProofItemEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(StockDeliveryDetailsComponent.AdditionalProofItemCreateEmptyObject(),
+      return new UntypedFormControl(StockDeliveryDetailsComponent.AdditionalProofItemCreateEmptyObject(),
         ApiActivityProofValidationScheme.validators);
     };
   }
@@ -212,8 +214,8 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     return $localize`:@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.label: Deduction` + ` (${this.measureUnit})`;
   }
 
-  get additionalProofsForm(): FormArray {
-    return this.stockOrderForm.get('activityProofs') as FormArray;
+  get additionalProofsForm(): UntypedFormArray {
+    return this.stockOrderForm.get('activityProofs') as UntypedFormArray;
   }
 
   private get womenCoffeeList() {
@@ -361,7 +363,7 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
   private initializeListManager() {
 
     this.additionalProofsListManager = new ListEditorManager<ApiActivityProof>(
-      this.additionalProofsForm as FormArray,
+      this.additionalProofsForm as UntypedFormArray,
       StockDeliveryDetailsComponent.AdditionalProofItemEmptyObjectFormFactory(),
       ApiActivityProofValidationScheme
     );

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef, ViewChildren } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import {
   trigger,
@@ -8,92 +8,72 @@ import {
   transition,
   keyframes,
 } from '@angular/animations';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'smart-tag',
-  templateUrl: './smart-tag.component.html',
-  styleUrls: ['./smart-tag.component.scss'],
-  animations: [
-    trigger('expandCollapse', [
-      state('closed', style({
-        height: '0',
-        overflow: 'hidden',
-        opacity: '0',
-        margin: '0',
-        padding: '0'
-      })),
-      state('open', style({
-        opacity: '1'
-      })),
-      transition(
-        'closed=>open',
-        animate("200ms")
-      ),
-      transition(
-        'open=>closed',
-        animate('200ms ease-out')
-      )
-    ]),
-    trigger('expandCollapse2', [
-      state('closed', style({
-        height: '0',
-        overflow: 'hidden',
-        opacity: '0',
-        margin: '0',
-        padding: '0',
-      })),
-      state('open', style({
-        opacity: '1',
-        display: 'block'
-      })),
-      transition(
-        'closed=>open',
-        animate("200ms")
-      ),
-      transition(
-        'open=>closed',
-        animate('200ms ease-out')
-      )
-    ]),
-    trigger('expandCollapse3', [
-      state('closed', style({
-        height: '0',
-        overflow: 'hidden',
-        opacity: '0',
-        margin: '0',
-        padding: '0'
-      })),
-      state('open', style({
-        opacity: '1'
-      })),
-      transition(
-        'closed=>open',
-        animate("200ms")
-      ),
-      transition(
-        'open=>closed',
-        animate('200ms ease-out')
-      )
-    ]),
-    trigger('deleteAnimate', [
-      state('active', style({
-      })),
-      state('deleted', style({
-        opacity: '0',
-        height: '0',
-        minHeight: '0',
-        paddingTop: '0',
-        paddingBottom: '0',
-        marginBottom: '0',
-        marginTop: '0'
-      })),
-      transition(
-        'active=>deleted',
-        animate("300ms")
-      )
-    ])
-  ]
+    selector: 'smart-tag',
+    templateUrl: './smart-tag.component.html',
+    styleUrls: ['./smart-tag.component.scss'],
+    animations: [
+        trigger('expandCollapse', [
+            state('closed', style({
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0'
+            })),
+            state('open', style({
+                opacity: '1'
+            })),
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
+        ]),
+        trigger('expandCollapse2', [
+            state('closed', style({
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0',
+            })),
+            state('open', style({
+                opacity: '1',
+                display: 'block'
+            })),
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
+        ]),
+        trigger('expandCollapse3', [
+            state('closed', style({
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0'
+            })),
+            state('open', style({
+                opacity: '1'
+            })),
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
+        ]),
+        trigger('deleteAnimate', [
+            state('active', style({})),
+            state('deleted', style({
+                opacity: '0',
+                height: '0',
+                minHeight: '0',
+                paddingTop: '0',
+                paddingBottom: '0',
+                marginBottom: '0',
+                marginTop: '0'
+            })),
+            transition('active=>deleted', animate("300ms"))
+        ])
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SmartTagComponent implements OnInit {
 
@@ -118,7 +98,7 @@ export class SmartTagComponent implements OnInit {
   }
 
   @Input()
-  formControlInput?: FormControl;
+  formControlInput?: UntypedFormControl;
 
   @Input()
   disableEdit: boolean = false

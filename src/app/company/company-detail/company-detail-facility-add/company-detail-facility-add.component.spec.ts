@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { LocationFormNewComponent } from '../../../shared/location-form-new/location-form-new.component';
 import { CompanyDetailFacilityAddComponent } from './company-detail-facility-add.component';
@@ -70,7 +70,7 @@ describe('CompanyDetailFacilityAddComponent location submission', () => {
     expect(location.back).toHaveBeenCalled();
   });
 
-  function initializeMapValidation(form: FormGroup): void {
+  function initializeMapValidation(form: UntypedFormGroup): void {
     mapForm = new LocationFormNewComponent(null, {
       loadedGoogleMapsEmitter: new Subject<boolean>()
     } as any);
@@ -79,13 +79,13 @@ describe('CompanyDetailFacilityAddComponent location submission', () => {
   }
 });
 
-function createFacilityForm(publiclyVisible: string | boolean, latitude: number = null, longitude: number = null): FormGroup {
-  return new FormGroup({
-    company: new FormGroup({id: new FormControl(null)}),
-    facilityLocation: new FormGroup({
-      publiclyVisible: new FormControl(publiclyVisible),
-      latitude: new FormControl(latitude),
-      longitude: new FormControl(longitude)
+function createFacilityForm(publiclyVisible: string | boolean, latitude: number = null, longitude: number = null): UntypedFormGroup {
+  return new UntypedFormGroup({
+    company: new UntypedFormGroup({id: new UntypedFormControl(null)}),
+    facilityLocation: new UntypedFormGroup({
+      publiclyVisible: new UntypedFormControl(publiclyVisible),
+      latitude: new UntypedFormControl(latitude),
+      longitude: new UntypedFormControl(longitude)
     })
   });
 }

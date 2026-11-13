@@ -1,18 +1,18 @@
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { cloneDeep } from 'lodash';
 
 
 // reusable validation function
 
-export function notIsNaNValidator(control: FormControl): ValidationErrors | null {
+export function notIsNaNValidator(control: UntypedFormControl): ValidationErrors | null {
     return isNaN(control.value) ? {'NaN': true} : null;
 }
 
-export function isNonNegative(control: FormControl): ValidationErrors | null {
+export function isNonNegative(control: UntypedFormControl): ValidationErrors | null {
     return !isNaN(control.value) && control.value >= 0 ? null : {negative: true} ;
 }
 
-export function percentValidator(control: FormControl): ValidationErrors | null {
+export function percentValidator(control: UntypedFormControl): ValidationErrors | null {
     let val = control.value
     if(!val) return
     if(isNaN(val)) return null
@@ -20,7 +20,7 @@ export function percentValidator(control: FormControl): ValidationErrors | null 
     return null
 }
 
-export function javaLongOverflow(control: FormControl): ValidationErrors | null {
+export function javaLongOverflow(control: UntypedFormControl): ValidationErrors | null {
     return control.value < -2147483648 || control.value > 2147483647 ? {'longIntOverflow': true} : null;
 }
 
@@ -59,7 +59,7 @@ export function MinLengthArrayValidator(min: number): ValidatorFn {
 }
 
 export function minLengthArrayValidatorForField(field: string, min: number): ValidatorFn {
-    return (c: FormGroup): {[key: string]: any} => {
+    return (c: UntypedFormGroup): {[key: string]: any} => {
         if (!c.get(field)) return null  // silent fail
         let value = c.get(field).value
         if (value.length >= min)
@@ -73,7 +73,7 @@ export function MinLengthArrayValidatorForField(field: string, min: number): Val
 }
 
 export function minLengthArrayValidatorForFieldIfField2IsChecked(field: string, field2: string, min: number): ValidatorFn {
-    return (c: FormGroup): {[key: string]: any} => {
+    return (c: UntypedFormGroup): {[key: string]: any} => {
         if (!c.get(field2)) return null // silent fail
         if (!c.get(field2).value) return null
         if (!c.get(field)) return null  // silent fail
@@ -98,8 +98,8 @@ export function MaxLengthArrayValidator(max: number): ValidatorFn {
 }
 
 export function maxActiveArrayControls(max: number): ValidatorFn {
-    return (control: FormArray): ValidationErrors | null => {
-        const active = control.controls.filter((value: FormGroup) => value.get('active').value).length;
+    return (control: UntypedFormArray): ValidationErrors | null => {
+        const active = control.controls.filter((value: UntypedFormGroup) => value.get('active').value).length;
         return active <= max ? null : {
             maxActive: {
                 expected: max,
@@ -163,9 +163,9 @@ function mergeErrors(control: AbstractControl, parentErrors: any, allParentError
  * Must be attached to the form group, but sets errors on the control(s).
  */
 
-export type FormGroupValidator = (fg: FormGroup) => ValidationErrors | null;
+export type FormGroupValidator = (fg: UntypedFormGroup) => ValidationErrors | null;
 
-export function performMultiFieldValidation(fg: FormGroup, controlNames: string[], validator: FormGroupValidator, allValidatorErrorKeys: string[]): null {
+export function performMultiFieldValidation(fg: UntypedFormGroup, controlNames: string[], validator: FormGroupValidator, allValidatorErrorKeys: string[]): null {
     if (fg == null) return null;
     let errors = validator(fg);
     for (let cn of controlNames) {
@@ -179,7 +179,7 @@ export function performMultiFieldValidation(fg: FormGroup, controlNames: string[
 
 export function multiFieldValidator(controlNames: string[], validator: FormGroupValidator, allValidatorErrorKeys: string[]): ValidatorFn {
     return (control: AbstractControl) => {
-        return performMultiFieldValidation(control as FormGroup, controlNames, validator, allValidatorErrorKeys);
+        return performMultiFieldValidation(control as UntypedFormGroup, controlNames, validator, allValidatorErrorKeys);
     }
 }
 
@@ -246,7 +246,7 @@ export function DateNotInPast(): ValidatorFn {
     }
 }
 
-function functionDatesInOrder(group: FormGroup, startControlName, endControlName) {
+function functionDatesInOrder(group: UntypedFormGroup, startControlName, endControlName) {
     let start = group.get(startControlName) && group.get(startControlName).value as string
     let end = group.get(endControlName) && group.get(endControlName).value as string
     if (!start || !end) {
@@ -262,13 +262,13 @@ function functionDatesInOrder(group: FormGroup, startControlName, endControlName
 }
 
 export function ListNotEmptyValidator(): ValidatorFn {
-    return (control: FormControl): ValidationErrors | null => {
+    return (control: UntypedFormControl): ValidationErrors | null => {
         return (control.value && control.value.length > 0) ? null : {'required': true};
     }
 }
 
 export function DatesInOrder(startControlName, endControlName): ValidatorFn {
-    return multiFieldValidator([startControlName, endControlName], (group: FormGroup) => functionDatesInOrder(group, startControlName, endControlName), ['startLaterThanEnd'])
+    return multiFieldValidator([startControlName, endControlName], (group: UntypedFormGroup) => functionDatesInOrder(group, startControlName, endControlName), ['startLaterThanEnd'])
 }
 
 export function mustBeChecked(control: AbstractControl): ValidationErrors | null {
@@ -287,7 +287,7 @@ export function MinLengthHTMLStripped(minLen: number): ValidatorFn {
     }
 }
 
-export function requiredFieldIfOtherFieldHasValue(control: FormGroup, field: string, otherField: string, otherFieldValue: any): ValidationErrors | null {
+export function requiredFieldIfOtherFieldHasValue(control: UntypedFormGroup, field: string, otherField: string, otherFieldValue: any): ValidationErrors | null {
   if(!control || !control.value) return null;
   let tip = control.value[otherField]
   if(!tip || tip !== otherFieldValue) return null;

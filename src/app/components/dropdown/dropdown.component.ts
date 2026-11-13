@@ -1,11 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fancyNavigate } from 'src/shared/utils';
 
 @Component({
     selector: 'app-dropdown',
     templateUrl: './dropdown.component.html',
-    styleUrls: ['./dropdown.component.scss']
+    styleUrls: ['./dropdown.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DropdownComponent implements OnInit {
     @Input() links = []

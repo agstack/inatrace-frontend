@@ -1,4 +1,4 @@
-import { Component, Host, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, Host, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ContentsSectionDirective } from '../contents-section.directive';
@@ -12,7 +12,9 @@ import { constants } from 'buffer';
 @Component({
     selector: '[content-section]',
     templateUrl: './content-section.component.html',
-    styleUrls: ['./content-section.component.scss']
+    styleUrls: ['./content-section.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ContentSectionComponent implements OnInit, OnDestroy {
     @Input() title = ""

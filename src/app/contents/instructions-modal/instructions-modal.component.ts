@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-instructions-modal',
-  templateUrl: './instructions-modal.component.html',
-  styleUrls: ['./instructions-modal.component.scss']
+    selector: 'app-instructions-modal',
+    templateUrl: './instructions-modal.component.html',
+    styleUrls: ['./instructions-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InstructionsModalComponent implements OnInit {
 

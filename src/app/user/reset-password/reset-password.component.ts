@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, ValidationErrors, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, ValidationErrors, UntypedFormControl, Validators } from '@angular/forms';
 import { multiFieldValidator } from 'src/shared/validation';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserControllerService } from 'src/api/api/userController.service';
@@ -7,13 +7,15 @@ import { BehaviorSubject } from 'rxjs';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 
 @Component({
-  selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+    selector: 'app-reset-password',
+    templateUrl: './reset-password.component.html',
+    styleUrls: ['./reset-password.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ResetPasswordComponent implements OnInit {
 
-  passwordsDoNotMatch(group: FormGroup): ValidationErrors | null {
+  passwordsDoNotMatch(group: UntypedFormGroup): ValidationErrors | null {
     const password = group && group.value && group.value.password
     const confirmPassword = group && group.value && group.value.confirmPassword
     if (!password && !confirmPassword) return null
@@ -22,9 +24,9 @@ export class ResetPasswordComponent implements OnInit {
       : { doNotMatch: true }
   }
 
-  form = new FormGroup({
-    password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)])
+  form = new UntypedFormGroup({
+    password: new UntypedFormControl(null, [Validators.required, Validators.minLength(8)]),
+    confirmPassword: new UntypedFormControl(null, [Validators.required, Validators.minLength(8)])
   }, [multiFieldValidator(['confirmPassword'], this.passwordsDoNotMatch.bind(this), ['doNotMatch'])])
 
   submitted: boolean = false;

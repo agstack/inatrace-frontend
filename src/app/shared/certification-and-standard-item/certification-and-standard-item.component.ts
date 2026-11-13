@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GenericEditableItemComponent } from 'src/app/shared/generic-editable-item/generic-editable-item.component';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 import { defaultEmptyObject, generateFormFromMetadata } from 'src/shared/utils';
@@ -19,9 +19,11 @@ enum CertificationTypes {
 }
 
 @Component({
-  selector: 'app-certification-and-standard-item',
-  templateUrl: './certification-and-standard-item.component.html',
-  styleUrls: ['./certification-and-standard-item.component.scss']
+    selector: 'app-certification-and-standard-item',
+    templateUrl: './certification-and-standard-item.component.html',
+    styleUrls: ['./certification-and-standard-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CertificationAndStandardItemComponent extends GenericEditableItemComponent<ApiCertification> implements OnInit {
 
@@ -58,9 +60,9 @@ export class CertificationAndStandardItemComponent extends GenericEditableItemCo
     return defaultEmptyObject(market) as ApiCertification;
   }
 
-  static emptyObjectFormFactory(): () => FormControl {
+  static emptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CertificationAndStandardItemComponent.createEmptyObject(), ApiCertificationValidationScheme.validators);
+      return new UntypedFormControl(CertificationAndStandardItemComponent.createEmptyObject(), ApiCertificationValidationScheme.validators);
     };
   }
 
@@ -71,7 +73,7 @@ export class CertificationAndStandardItemComponent extends GenericEditableItemCo
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiCertification.formMetadata(), value, ApiCertificationValidationScheme);
   }
 

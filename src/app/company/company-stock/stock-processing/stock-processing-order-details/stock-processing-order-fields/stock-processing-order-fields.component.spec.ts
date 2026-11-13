@@ -1,26 +1,34 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, NO_ERRORS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ApiProcessingEvidenceField } from '../../../../../../api/model/apiProcessingEvidenceField';
 import { StockProcessingOrderDetailsHelper } from '../stock-processing-order-details.helper';
 import { StockProcessingOrderFieldsComponent } from './stock-processing-order-fields.component';
 
 // tslint:disable:component-selector
-@Component({selector: 'textinput', template: '<ng-content></ng-content>'})
+@Component({
+    selector: 'textinput', template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class TextinputStubComponent {
   @Input() type: string;
   @Input() step: string | number;
   @Input() min: string | number;
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
   @Input() label: string;
   @Input() isInvalid: boolean;
   @Input() textarea: boolean;
 }
 
-@Component({selector: 'app-datepicker', template: '<ng-content></ng-content>'})
+@Component({
+    selector: 'app-datepicker', template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class DatepickerStubComponent {
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
   @Input() label: string;
   @Input() invalid: boolean;
 }
@@ -32,6 +40,7 @@ describe('StockProcessingOrderFieldsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [ReactiveFormsModule],
       declarations: [StockProcessingOrderFieldsComponent, TextinputStubComponent, DatepickerStubComponent]
     }).compileComponents();
@@ -42,16 +51,16 @@ describe('StockProcessingOrderFieldsComponent', () => {
   });
 
   function render(type: ApiProcessingEvidenceField.TypeEnum, value: any = null, errors = null): void {
-    component.fieldInfo = {
+    fixture.componentRef.setInput('fieldInfo', {
       id: 1,
       fieldName: 'evidence',
       label: 'Evidence field',
       type
-    };
-    component.formGroup = new FormGroup({
-      evidence: new FormControl(value, errors)
     });
-    component.submitted = true;
+    fixture.componentRef.setInput('formGroup', new UntypedFormGroup({
+      evidence: new UntypedFormControl(value, errors)
+    }));
+    fixture.componentRef.setInput('submitted', true);
     fixture.detectChanges();
 
   }

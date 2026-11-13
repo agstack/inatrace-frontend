@@ -1,299 +1,283 @@
 <div class="modal-container company-detail-facility-add-wizard">
 
-    <!-- STEP 1 - Facility type -->
-    <ng-container *ngIf="currentStep === 1">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title"
-                i18n="@@selfOnboarding.addFacilityModal.facilityTypeStep.header">What kind of facility do you want to
+  <!-- STEP 1 - Facility type -->
+  @if (currentStep === 1) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title"
+        i18n="@@selfOnboarding.addFacilityModal.facilityTypeStep.header">What kind of facility do you want to
                 add?</h2>
+    </div>
+    <div class="modal-body">
+      @for (facilityType of facilityTypes; track facilityType) {
+        <div>
+          <button type="button" class="btn facility-type-button"
+            (click)="setSelectedFacilityType(facilityType)">
+            <span>{{ facilityType.label }}</span>
+          </button>
         </div>
+      }
+    </div>
+  }
 
-        <div class="modal-body">
-            <div *ngFor="let facilityType of facilityTypes">
-                <button type="button" class="btn facility-type-button"
-                        (click)="setSelectedFacilityType(facilityType)">
-                    <span>{{ facilityType.label }}</span>
-                </button>
-            </div>
-        </div>
-    </ng-container>
-
-    <!-- STEP 2 - Facility name -->
-    <ng-container *ngIf="currentStep === 2">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title"
-                i18n="@@selfOnboarding.addFacilityModal.facilityNameStep.header">Please add a unique name for this facility (e.g. Washing station 1)</h2>
-        </div>
-
-        <div class="modal-body">
-            <textinput
-                    label="Name of facility"
-                    placeholder="Enter name"
-                    i18n-label="@@companyDetailFacilities.textInput.name.label"
-                    i18n-placeholder="@@companyDetailFacilities.textInput.name.placeholder"
-                    [form]="facilityNameControl"
-                    [isInvalid]="facilityNameControl.dirty && facilityNameControl.invalid"
-                    style="width: 100%">
-                <ng-container *ngIf="facilityNameControl.dirty && facilityNameControl.invalid">
-                    <div i18n="@@companyDetailFacilities.textInput.name.error" class="sc-invalid-feedback">
+  <!-- STEP 2 - Facility name -->
+  @if (currentStep === 2) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title"
+      i18n="@@selfOnboarding.addFacilityModal.facilityNameStep.header">Please add a unique name for this facility (e.g. Washing station 1)</h2>
+    </div>
+    <div class="modal-body">
+      <textinput
+        label="Name of facility"
+        placeholder="Enter name"
+        i18n-label="@@companyDetailFacilities.textInput.name.label"
+        i18n-placeholder="@@companyDetailFacilities.textInput.name.placeholder"
+        [form]="facilityNameControl"
+        [isInvalid]="facilityNameControl.dirty && facilityNameControl.invalid"
+        style="width: 100%">
+        @if (facilityNameControl.dirty && facilityNameControl.invalid) {
+          <div i18n="@@companyDetailFacilities.textInput.name.error" class="sc-invalid-feedback">
                         <span>Name of facility is required</span>
                     </div>
-                </ng-container>
-            </textinput>
-        </div>
+        }
+      </textinput>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setSelectedFacilityName()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityNameStep.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setSelectedFacilityName()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityNameStep.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 3 - Collection facility -->
-    <ng-container *ngIf="currentStep === 3">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.header">
+  <!-- STEP 3 - Collection facility -->
+  @if (currentStep === 3) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.header">
                 Is {{ facilityNameControl.value }} a collection facility? (Does this facility receive deliveries of raw
                 material or semi-processed products - either from farmers or collectors?)
             </h2>
-        </div>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn is-collection-facility-button"
+        (click)="setCollectionFacility(true)">
+        <span i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.yesButton">YES</span>
+      </button>
+      <button type="button" class="btn btn-outlined is-collection-facility-button"
+        (click)="setCollectionFacility(false)">
+        <span i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.noButton">NO</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn is-collection-facility-button"
-                    (click)="setCollectionFacility(true)">
-                <span i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.yesButton">YES</span>
-            </button>
-            <button type="button" class="btn btn-outlined is-collection-facility-button"
-                    (click)="setCollectionFacility(false)">
-                <span i18n="@@selfOnboarding.addFacilityModal.collectionFacilityStep.noButton">NO</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 4 - Facility configuration - if this facility is collection facility -->
-    <ng-container *ngIf="currentStep === 4 && collectionFacility">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.header">
+  <!-- STEP 4 - Facility configuration - if this facility is collection facility -->
+  @if (currentStep === 4 && collectionFacility) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.header">
                 Please check and adjust the configuration for {{ facilityNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body checkbox-group">
-            <checkbox-input [form]="mayInvolveCollectors" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayInvolveCollectors.label">
+    </div>
+    <div class="modal-body checkbox-group">
+      <checkbox-input [form]="mayInvolveCollectors" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayInvolveCollectors.label">
                     Some or all deliveries involve collectors / intermediaries.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="mayContainOrganic" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayContainOrganic.label">
+      </checkbox-input>
+      <checkbox-input [form]="mayContainOrganic" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayContainOrganic.label">
                     Some or all deliveries contain organic products.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="mayContainWomenOnly" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayContainWomenOnly.label">
+      </checkbox-input>
+      <checkbox-input [form]="mayContainWomenOnly" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.mayContainWomenOnly.label">
                     I want to document if products stem from women-owned farms or not.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="ableToDocumentTare" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.ableToDocumentTare.label">
+      </checkbox-input>
+      <checkbox-input [form]="ableToDocumentTare" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.ableToDocumentTare.label">
                     I want to be able to document the Tare of deliveries (weight of packaging).
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="priceDeductionDamage" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.priceDeductionDamage.label">
+      </checkbox-input>
+      <checkbox-input [form]="priceDeductionDamage" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.priceDeductionDamage.label">
                     At this facility a price deduction might be applied for damaged produce delivered.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="weightDeductionDamage" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.weightDeductionDamage.label">
+      </checkbox-input>
+      <checkbox-input [form]="weightDeductionDamage" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.weightDeductionDamage.label">
                     At this facility, a weight deduction might be applied for damaged produce delivered.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="priceDeterminedLater" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.priceDeterminedLater.label">
+      </checkbox-input>
+      <checkbox-input [form]="priceDeterminedLater" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.priceDeterminedLater.label">
                     At this facility, the price for delivery might be determined later (deliver taken into commission).
                 </checkbox-input-rich-label>
-            </checkbox-input>
-
-            <checkbox-input [form]="isPublic" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.isPublic.label">
+      </checkbox-input>
+      <checkbox-input [form]="isPublic" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.isPublic.label">
                     From this facility, we send products (semi-products or final products) directly to our buyers.
                 </checkbox-input-rich-label>
-            </checkbox-input>
-        </div>
+      </checkbox-input>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilityConfiguration()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilityConfiguration()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 4 - Facility configuration - if this facility is NOT collection facility -->
-    <ng-container *ngIf="currentStep === 4 && !collectionFacility">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.header">
+  <!-- STEP 4 - Facility configuration - if this facility is NOT collection facility -->
+  @if (currentStep === 4 && !collectionFacility) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.header">
                 Please check and adjust the configuration for {{ facilityNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body checkbox-group">
-            <checkbox-input [form]="isPublic" class="checkbox-no-bottom-margin">
-                <checkbox-input-rich-label
-                        i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.sellableProducts.label">
+    </div>
+    <div class="modal-body checkbox-group">
+      <checkbox-input [form]="isPublic" class="checkbox-no-bottom-margin">
+        <checkbox-input-rich-label
+          i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.sellableProducts.label">
                     This facility contains sellable products (either semi-products or final products).
                 </checkbox-input-rich-label>
-            </checkbox-input>
-        </div>
+      </checkbox-input>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilityConfiguration()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilityConfiguration()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityConfiguration.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 5 - Facility value chain selection -->
-    <ng-container *ngIf="currentStep === 5">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilityValueChain.header">
+  <!-- STEP 5 - Facility value chain selection -->
+  @if (currentStep === 5) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilityValueChain.header">
                 Please select the value chain for {{ facilityNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body">
-            <div class="search-field">
-                <single-choice
-                        [formControlInput]="valueChainsForm"
-                        [codebookService]="companyValueChainsCodebook"
-                        (onChange)="addSelectedValueChain($event)">
-                    <div *ngIf="selectedCompanyValueChainsControl.dirty && selectedCompanyValueChainsControl.errors as errors"
-                         class="sc-invalid-feedback">
-                        <div *ngIf="errors.required"
-                             i18n="@@productLabelStockFacilityModal.singleChoice.valueChains.error">
+    </div>
+    <div class="modal-body">
+      <div class="search-field">
+        <single-choice
+          [formControlInput]="valueChainsForm"
+          [codebookService]="companyValueChainsCodebook"
+          (onChange)="addSelectedValueChain($event)">
+          @if (selectedCompanyValueChainsControl.dirty && selectedCompanyValueChainsControl.errors; as errors) {
+            <div
+              class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div
+                  i18n="@@productLabelStockFacilityModal.singleChoice.valueChains.error">
                             <span>At least one value chain is required</span>
                         </div>
-                    </div>
-                </single-choice>
+              }
             </div>
-            <div *ngFor="let sp of this.valueChains; index as idx" class="selected-values-list">
-                <div class="d-flex justify-content-between">
-                    <div>{{ sp.name }}</div>
-                    <div (click)="deleteValueChain(idx)" class="cursor-pointer">
-                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                    </div>
-                </div>
+          }
+        </single-choice>
+      </div>
+      @for (sp of this.valueChains; track sp; let idx = $index) {
+        <div class="selected-values-list">
+          <div class="d-flex justify-content-between">
+            <div>{{ sp.name }}</div>
+            <div (click)="deleteValueChain(idx)" class="cursor-pointer">
+              <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
             </div>
+          </div>
         </div>
+      }
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilityValueChain()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityValueChain.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilityValueChain()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityValueChain.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 6 - Facility semi-products -->
-    <ng-container *ngIf="currentStep === 6">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilitySemiProducts.header">
+  <!-- STEP 6 - Facility semi-products -->
+  @if (currentStep === 6) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilitySemiProducts.header">
                 Please select ALL raw materials and semi-processed products that might be processed or stored
                 at {{ facilityNameControl.value }}:
             </h2>
-        </div>
+    </div>
+    <div class="modal-body checkbox-group">
+      @for (semiProduct of semiProducts; track semiProduct) {
+        <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectSemiProduct(semiProduct)">
+          <checkbox-input-rich-label>{{ semiProduct.name }}</checkbox-input-rich-label>
+        </checkbox-input>
+      }
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilitySemiProducts()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilitySemiProducts.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-body checkbox-group">
-            <ng-container *ngFor="let semiProduct of semiProducts">
-                <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectSemiProduct(semiProduct)">
-                    <checkbox-input-rich-label>{{ semiProduct.name }}</checkbox-input-rich-label>
-                </checkbox-input>
-            </ng-container>
-        </div>
-
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilitySemiProducts()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilitySemiProducts.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 7 - Facility final products -->
-    <ng-container *ngIf="currentStep === 7">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.header">
+  <!-- STEP 7 - Facility final products -->
+  @if (currentStep === 7) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.header">
                 Please select ALL final products that might be processed or stored at {{ facilityNameControl.value }} (if any):
             </h2>
-        </div>
+    </div>
+    <div class="modal-body checkbox-group">
+      @if (finalProducts.length > 0) {
+        @for (finalProduct of finalProducts; track finalProduct) {
+          <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectFinalProduct(finalProduct)">
+            <checkbox-input-rich-label>{{ finalProduct.name }}</checkbox-input-rich-label>
+          </checkbox-input>
+        }
+      } @else {
+        <div class="w-100 d-flex justify-content-center font-italic"
+        i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.noFinalProducts.message">There are no final products available</div>
+      }
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilityFinalProducts()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
-        <div class="modal-body checkbox-group">
-            <ng-container *ngIf="finalProducts.length > 0; else noFinalProducts">
-                <ng-container *ngFor="let finalProduct of finalProducts">
-                    <checkbox-input class="checkbox-no-bottom-margin" (onClick)="selectFinalProduct(finalProduct)">
-                        <checkbox-input-rich-label>{{ finalProduct.name }}</checkbox-input-rich-label>
-                    </checkbox-input>
-                </ng-container>
-            </ng-container>
-            <ng-template #noFinalProducts>
-                <div class="w-100 d-flex justify-content-center font-italic"
-                     i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.noFinalProducts.message">There are no final products available</div>
-            </ng-template>
-        </div>
-
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilityFinalProducts()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityFinalProducts.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
-
-    <!-- STEP 8 - Facility location -->
-    <ng-container *ngIf="currentStep === 8">
-        <div class="modal-header justify-content-center">
-            <h2 class="modal-title text-center"
-                i18n="@@selfOnboarding.addFacilityModal.facilityLocation.header">
+  <!-- STEP 8 - Facility location -->
+  @if (currentStep === 8) {
+    <div class="modal-header justify-content-center">
+      <h2 class="modal-title text-center"
+        i18n="@@selfOnboarding.addFacilityModal.facilityLocation.header">
                 Almost done! Please add the location for {{ facilityNameControl.value }}:
             </h2>
-        </div>
-
-        <div class="modal-body">
-            <app-location-form-new
-                    [form]="facilityLocationParentForm"
-                    [submitted]="submittedFacilityLocationForm">
-            </app-location-form-new>
-        </div>
-
-        <div class="modal-footer justify-content-around pt-4 pb-4">
-            <button type="button" class="btn"
-                    (click)="setFacilityLocation()">
-                <span i18n="@@selfOnboarding.addFacilityModal.facilityLocation.doneButton">Done</span>
-            </button>
-        </div>
-    </ng-container>
+    </div>
+    <div class="modal-body">
+      <app-location-form-new
+        [form]="facilityLocationParentForm"
+        [submitted]="submittedFacilityLocationForm">
+      </app-location-form-new>
+    </div>
+    <div class="modal-footer justify-content-around pt-4 pb-4">
+      <button type="button" class="btn"
+        (click)="setFacilityLocation()">
+        <span i18n="@@selfOnboarding.addFacilityModal.facilityLocation.doneButton">Done</span>
+      </button>
+    </div>
+  }
 
 </div>

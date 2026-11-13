@@ -1,11 +1,11 @@
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { ApiProductLabelBatch } from 'src/api/model/apiProductLabelBatch';
-import { Validators, FormGroup, ValidationErrors } from '@angular/forms';
+import { Validators, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { multiFieldValidator } from 'src/shared/validation';
 import {dateISOString} from '../../../../shared/utils';
 
 
-function expiryDateBeforeProductionDate(control: FormGroup): ValidationErrors | null {
+function expiryDateBeforeProductionDate(control: UntypedFormGroup): ValidationErrors | null {
   let productionDate = control.value && control.value['productionDate'];
   if (!productionDate) return null
   let expiryDate = control.value && control.value['expiryDate'];
@@ -17,7 +17,7 @@ function expiryDateBeforeProductionDate(control: FormGroup): ValidationErrors | 
       : null
 }
 
-function atLeastOneDate(control: FormGroup): ValidationErrors | null {
+function atLeastOneDate(control: UntypedFormGroup): ValidationErrors | null {
   if (control.value && (control.value['checkAuthenticity'] == null || !control.value['checkAuthenticity'])) return null;
   let productionDate = control.value && control.value['productionDate'];
   let expiryDate = control.value && control.value['expiryDate'];

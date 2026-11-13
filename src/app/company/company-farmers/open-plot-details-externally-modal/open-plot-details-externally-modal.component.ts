@@ -1,11 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-open-plot-details-externally-modal',
-  templateUrl: './open-plot-details-externally-modal.component.html',
-  styleUrls: ['./open-plot-details-externally-modal.component.scss']
+    selector: 'app-open-plot-details-externally-modal',
+    templateUrl: './open-plot-details-externally-modal.component.html',
+    styleUrls: ['./open-plot-details-externally-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class OpenPlotDetailsExternallyModalComponent implements OnInit {
 

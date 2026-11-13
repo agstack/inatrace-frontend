@@ -5,6 +5,7 @@ import { documentOffset, getAbsoluteHeight } from './html-utils';
 @Directive({
     selector: '[contentsTable]',
     exportAs: 'contentsTable',
+    standalone: false
 })
 export class ContentsTableDirective implements OnInit, OnChanges, OnDestroy {
     @Input() scrollingView: HTMLElement;

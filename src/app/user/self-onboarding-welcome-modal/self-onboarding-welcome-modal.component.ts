@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiUserGet } from '../../../api/model/apiUserGet';
 import { NgbModalImproved } from '../../core/ngb-modal-improved/ngb-modal-improved.service';
@@ -8,9 +8,11 @@ import {
 import { ApiCompanyOnboardingState } from "../../../api/model/apiCompanyOnboardingState";
 
 @Component({
-  selector: 'app-self-onboarding-welcome-modal',
-  templateUrl: './self-onboarding-welcome-modal.component.html',
-  styleUrls: ['./self-onboarding-welcome-modal.component.scss']
+    selector: 'app-self-onboarding-welcome-modal',
+    templateUrl: './self-onboarding-welcome-modal.component.html',
+    styleUrls: ['./self-onboarding-welcome-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelfOnboardingWelcomeModalComponent implements OnInit {
 

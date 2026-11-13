@@ -2,33 +2,35 @@
   <div class="modal-header">
     <h4 class="modal-title sp-faq-modal-title">{{title}}</h4>
   </div>
-  <ng-container *ngIf="codebookMyCompanies">
+  @if (codebookMyCompanies) {
     <div class="modal-body">
-      <ng-container *ngIf="userHasCompanies; else userHasNoCompaniesLabel">
-        <div *ngIf="instructionsHtml" [innerHTML]="instructionsHtml"></div>
+      @if (userHasCompanies) {
+        @if (instructionsHtml) {
+          <div [innerHTML]="instructionsHtml"></div>
+        }
         <single-choice [label]="null"
-                       [formControlInput]="companyForm"
-                       [codebookService]="codebookMyCompanies">
+          [formControlInput]="companyForm"
+          [codebookService]="codebookMyCompanies">
         </single-choice>
-      </ng-container>
-      <ng-template #userHasNoCompaniesLabel>
+      } @else {
         <div i18n="@@selectUserCompany.modal.userHasNoCompanies.message">Currently you have no companies assigned. Contact your administrator.</div>
-      </ng-template>
+      }
     </div>
     <div class="modal-footer">
-      <button *ngIf="userHasCompanies; else userHasNoCompaniesLogoutButton"
-              type="button"
-              class="btn"
-              [class.disabled]="!companyForm.value"
-              (click)="onConfirm()" i18n="@@selectUserCompany.modal.button.confirm">
+      @if (userHasCompanies) {
+        <button
+          type="button"
+          class="btn"
+          [class.disabled]="!companyForm.value"
+          (click)="onConfirm()" i18n="@@selectUserCompany.modal.button.confirm">
         <span>Confirm</span>
       </button>
-      <ng-template #userHasNoCompaniesLogoutButton>
+      } @else {
         <button type="button"
-                class="btn"
-                (click)="logout()"
-                i18n="@@selectUserCompany.modal.button.logout">Logout</button>
-      </ng-template>
+          class="btn"
+          (click)="logout()"
+        i18n="@@selectUserCompany.modal.button.logout">Logout</button>
+      }
     </div>
-  </ng-container>
+  }
 </div>

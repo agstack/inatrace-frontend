@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-label-redirect-to-product-page',
-  templateUrl: './label-redirect-to-product-page.component.html',
-  styleUrls: ['./label-redirect-to-product-page.component.scss']
+    selector: 'app-label-redirect-to-product-page',
+    templateUrl: './label-redirect-to-product-page.component.html',
+    styleUrls: ['./label-redirect-to-product-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LabelRedirectToProductPageComponent implements OnInit {
 

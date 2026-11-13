@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, forkJoin, Subscription } from 'rxjs';
@@ -32,9 +32,11 @@ import { ValueChainControllerService } from '../../../api/api/valueChainControll
 import { ListNotEmptyValidator } from '../../../shared/validation';
 
 @Component({
-  selector: 'app-company-detail',
-  templateUrl: './company-detail.component.html',
-  styleUrls: ['./company-detail.component.scss']
+    selector: 'app-company-detail',
+    templateUrl: './company-detail.component.html',
+    styleUrls: ['./company-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailComponent extends CompanyDetailTabManagerComponent implements OnInit, OnDestroy {
 
@@ -45,10 +47,10 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   };
 
   _companyErrorStatus$: BehaviorSubject<string>;
-  companyDetailForm: FormGroup;
+  companyDetailForm: UntypedFormGroup;
   countries: any = [];
-  socialMediaForm: FormGroup;
-  socialMediaDEForm: FormGroup;
+  socialMediaForm: UntypedFormGroup;
+  socialMediaDEForm: UntypedFormGroup;
   _hideWebPageField$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   _hideFacebookField$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   _hideInstagramField$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -65,10 +67,10 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
 
   sub: Subscription;
   valueChainsCodebook: ActiveValueChainService;
-  valueChainsForm = new FormControl(null);
+  valueChainsForm = new UntypedFormControl(null);
 
   valueChains: Array<ApiValueChain> = [];
-  selectedCompanyValueChainsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   certificationListManager = null;
   videosListManager = null;
@@ -111,12 +113,12 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   }
 
   static generateSocialMediaForm() {
-    return new FormGroup({
-      facebook: new FormControl(null),
-      instagram: new FormControl(null),
-      twitter: new FormControl(null),
-      youtube: new FormControl(null),
-      other: new FormControl(null),
+    return new UntypedFormGroup({
+      facebook: new UntypedFormControl(null),
+      instagram: new UntypedFormControl(null),
+      twitter: new UntypedFormControl(null),
+      youtube: new UntypedFormControl(null),
+      other: new UntypedFormControl(null),
     });
   }
 
@@ -125,9 +127,9 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
     return defaultEmptyObject(obj) as ApiCertification;
   }
 
-  static ApiCertificationEmptyObjectFormFactory(): () => FormControl {
+  static ApiCertificationEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyDetailComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
+      return new UntypedFormControl(CompanyDetailComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
     };
   }
 
@@ -136,9 +138,9 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
     return defaultEmptyObject(obj) as ApiCompanyDocument;
   }
 
-  static ApiCompanyDocumentEmptyObjectFormFactory(): () => FormControl {
+  static ApiCompanyDocumentEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyDetailComponent.ApiCompanyDocumentCreateEmptyObject(), ApiCompanyDocumentValidationScheme.validators);
+      return new UntypedFormControl(CompanyDetailComponent.ApiCompanyDocumentCreateEmptyObject(), ApiCompanyDocumentValidationScheme.validators);
     };
   }
 
@@ -234,8 +236,8 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
 
         this.companyDetailForm = generateFormFromMetadata(ApiCompanyGet.formMetadata(), company.data, ApiCompanyGetValidationScheme);
         this.socialMediaForm = CompanyDetailComponent.generateSocialMediaForm();
-        (this.companyDetailForm as FormGroup).setControl('mediaLinks', this.socialMediaForm);
-        (this.companyDetailForm as FormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
+        (this.companyDetailForm as UntypedFormGroup).setControl('mediaLinks', this.socialMediaForm);
+        (this.companyDetailForm as UntypedFormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
         this.companyDetailForm.updateValueAndValidity();
 
         this.fillWebPageAndSocialMediaForm();
@@ -271,8 +273,8 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   newCompany() {
     this.companyDetailForm = generateFormFromMetadata(ApiCompanyGet.formMetadata(), this.emptyObject(), ApiCompanyGetValidationScheme);
     this.socialMediaForm = CompanyDetailComponent.generateSocialMediaForm();
-    (this.companyDetailForm as FormGroup).setControl('mediaLinks', this.socialMediaForm);
-    (this.companyDetailForm as FormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
+    (this.companyDetailForm as UntypedFormGroup).setControl('mediaLinks', this.socialMediaForm);
+    (this.companyDetailForm as UntypedFormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
     this.companyDetailForm.updateValueAndValidity();
     this.initializeListManagers();
   }
@@ -377,22 +379,22 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   initializeListManagers() {
 
     this.certificationListManager = new ListEditorManager<ApiCertification>(
-      (this.companyDetailForm.get('certifications')) as FormArray,
+      (this.companyDetailForm.get('certifications')) as UntypedFormArray,
       CompanyDetailComponent.ApiCertificationEmptyObjectFormFactory(),
       ApiCertificationValidationScheme
     );
     this.videosListManager = new ListEditorManager<ApiCompanyDocument>(
-      (this.companyDetailForm.get('documents')) as FormArray,
+      (this.companyDetailForm.get('documents')) as UntypedFormArray,
       CompanyDetailComponent.ApiCompanyDocumentEmptyObjectFormFactory(),
       ApiCompanyDocumentValidationScheme
     );
     this.productionRecordListManager = new ListEditorManager<ApiCompanyDocument>(
-      (this.companyDetailForm.get('documents')) as FormArray,
+      (this.companyDetailForm.get('documents')) as UntypedFormArray,
       CompanyDetailComponent.ApiCompanyDocumentEmptyObjectFormFactory(),
       ApiCompanyDocumentValidationScheme
     );
     this.meetTheFarmerListManager = new ListEditorManager<ApiCompanyDocument>(
-      (this.companyDetailForm.get('documents')) as FormArray,
+      (this.companyDetailForm.get('documents')) as UntypedFormArray,
       CompanyDetailComponent.ApiCompanyDocumentEmptyObjectFormFactory(),
       ApiCompanyDocumentValidationScheme
     );

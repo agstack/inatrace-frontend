@@ -1,40 +1,48 @@
-<label *ngIf="!noLabel" class="sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">
-    <label *ngIf="label && !htmlLabel">{{ label }}</label>
-    <label *ngIf="!label && htmlLabel" [innerHTML]="htmlLabel" routeTransformer></label>
-</label>
+@if (!noLabel) {
+  <label class="sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">
+    @if (label && !htmlLabel) {
+      <label>{{ label }}</label>
+    }
+    @if (!label && htmlLabel) {
+      <label [innerHTML]="htmlLabel" routeTransformer></label>
+    }
+  </label>
+}
 
 <ng-content></ng-content>
-<div
-  *ngIf="(useForm || formArray) && choiceArray && choiceArray.length > 0"
-  class="checkbox-multicolumn"
-  >
-  <div class=""
-  style="break-inside: avoid-column;"
-      *ngFor="let checkbox of checkboxes; index as i">
-    <div class="checkbox-container bg-white d-flex align-items-center"
-    style="margin-top: 0.25rem; margin-bottom: 0.25rem; margin-right: 2rem;"
-
+@if ((useForm || formArray) && choiceArray && choiceArray.length > 0) {
+  <div
+    class="checkbox-multicolumn"
     >
-      <!-- <input
-      type="checkbox"
-      [id]="'checkbox' + i"
-      class="checkbox"
-      (input)="onKey($event, i, checkbox.selection)"
-      [checked]="checkbox.selected"
-      /> -->
-      <checkbox-input
-        [id]="'checkbox' + tmpUUID + i"
-        (onClick)="onKey($event, i, checkbox.selection)"
-        [checked]="checkbox.selected"
-        [labelSpacer]="false"
-        [label]="checkbox.title"
-        [disabled]="isDisabled()"
-      ></checkbox-input>
-      <!-- <label class="text dark label" [for]="'checkbox' + i" style="margin-bottom: 0px;">{{checkbox.title}}</label> -->
-    </div>
-    <!-- <p class="sp-subscribe-description">{{checkbox.description}}</p> -->
+    @for (checkbox of checkboxes; track checkbox; let i = $index) {
+      <div class=""
+        style="break-inside: avoid-column;"
+        >
+        <div class="checkbox-container bg-white d-flex align-items-center"
+          style="margin-top: 0.25rem; margin-bottom: 0.25rem; margin-right: 2rem;"
+          >
+          <!-- <input
+          type="checkbox"
+          [id]="'checkbox' + i"
+          class="checkbox"
+          (input)="onKey($event, i, checkbox.selection)"
+          [checked]="checkbox.selected"
+          /> -->
+          <checkbox-input
+            [id]="'checkbox' + tmpUUID + i"
+            (onClick)="onKey($event, i, checkbox.selection)"
+            [checked]="checkbox.selected"
+            [labelSpacer]="false"
+            [label]="checkbox.title"
+            [disabled]="isDisabled()"
+          ></checkbox-input>
+          <!-- <label class="text dark label" [for]="'checkbox' + i" style="margin-bottom: 0px;">{{checkbox.title}}</label> -->
+        </div>
+        <!-- <p class="sp-subscribe-description">{{checkbox.description}}</p> -->
+      </div>
+    }
   </div>
-</div>
+}
 
 
 <!-- [class.grid-x]="this.horizontal"

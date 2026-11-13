@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { StockCoreTabComponent } from '../../stock-core/stock-core-tab/stock-core-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
@@ -6,7 +6,7 @@ import { FacilityControllerService } from '../../../../../api/api/facilityContro
 import { AuthService } from '../../../../core/auth.service';
 import { CompanyControllerService } from '../../../../../api/api/companyController.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FacilitySemiProductsCodebookService } from '../../../../shared-services/facility-semi-products-codebook.service';
 import { CodebookTranslations } from '../../../../shared-services/codebook-translations';
 import { map, startWith, take } from 'rxjs/operators';
@@ -16,9 +16,11 @@ import { SelfOnboardingService } from "../../../../shared-services/self-onboardi
 import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-stock-all-stock-tab',
-  templateUrl: './stock-all-stock-tab.component.html',
-  styleUrls: ['./stock-all-stock-tab.component.scss']
+    selector: 'app-stock-all-stock-tab',
+    templateUrl: './stock-all-stock-tab.component.html',
+    styleUrls: ['./stock-all-stock-tab.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockAllStockTabComponent extends StockCoreTabComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -39,7 +41,7 @@ export class StockAllStockTabComponent extends StockCoreTabComponent implements 
   availableOnly = true;
   availableOnly$ = new BehaviorSubject<boolean>(this.availableOnly);
 
-  semiProductFrom = new FormControl(null);
+  semiProductFrom = new UntypedFormControl(null);
 
   facilitySemiProducts: FacilitySemiProductsCodebookService = null;
 
@@ -102,14 +104,14 @@ export class StockAllStockTabComponent extends StockCoreTabComponent implements 
         this.selfOnboardingService.guidedTourStep$.subscribe(step => {
 
           setTimeout(() => {
-            this.allStockTitleTooltip.close();
-            this.allStockSelectFacilityTooltip.close();
+            this.allStockTitleTooltip?.close();
+            this.allStockSelectFacilityTooltip?.close();
           }, 50);
 
           if (step === 10) {
-            setTimeout(() => this.allStockTitleTooltip.open(), 50);
+            setTimeout(() => this.allStockTitleTooltip?.open(), 50);
           } else if (step === 11) {
-            setTimeout(() => this.allStockSelectFacilityTooltip.open(), 50);
+            setTimeout(() => this.allStockSelectFacilityTooltip?.open(), 50);
           }
         })
     );

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
@@ -13,9 +13,11 @@ import { SelfOnboardingService } from '../../../shared-services/self-onboarding.
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-company-left-panel',
-  templateUrl: './company-left-panel.component.html',
-  styleUrls: ['./company-left-panel.component.scss']
+    selector: 'app-company-left-panel',
+    templateUrl: './company-left-panel.component.html',
+    styleUrls: ['./company-left-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyLeftPanelComponent implements OnInit, OnDestroy {
 
@@ -59,7 +61,7 @@ export class CompanyLeftPanelComponent implements OnInit, OnDestroy {
 
             this.companyId = companyProfile.id;
             this.companyTitle = companyProfile.name;
-            this.imgStorageKey = companyProfile.logo.storageKey;
+            this.imgStorageKey = companyProfile.logo?.storageKey;
 
             if (user.role === ApiUserGet.RoleEnum.SYSTEMADMIN || user.role === RoleEnum.REGIONALADMIN) {
               this.isSystemOrRegionalAdmin = true;
@@ -82,9 +84,9 @@ export class CompanyLeftPanelComponent implements OnInit, OnDestroy {
                   this.selfOnboardingService.addProcessingActionCurrentStep$
                 ]).subscribe(([addFacilityStep, addProcActionStep]) => {
                   if (addFacilityStep === 2 || addProcActionStep === 2) {
-                    setTimeout(() => this.companyProfileButtonTooltip.open());
+                    setTimeout(() => this.companyProfileButtonTooltip?.open());
                   } else {
-                    setTimeout(() => this.companyProfileButtonTooltip.close());
+                    setTimeout(() => this.companyProfileButtonTooltip?.close());
                   }
                 })
             );

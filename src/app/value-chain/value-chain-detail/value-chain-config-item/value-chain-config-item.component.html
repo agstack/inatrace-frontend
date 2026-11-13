@@ -1,128 +1,153 @@
 <smart-tag [isOpen]="isOpen && !rawObjectData"
-           [readOnly]="rawObjectData"
-           [formControlInput]="originalFormControl"
-           [viewOnly]="readOnly"
-           (onDelete)="delete()">
+  [readOnly]="rawObjectData"
+  [formControlInput]="originalFormControl"
+  [viewOnly]="readOnly"
+  (onDelete)="delete()">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <span *ngIf="configItemType !== 'semi-products' && configItemType !== 'processing-evidence-fields'">{{ contentObject.code }} - {{ contentObject.label }}</span>
-        <span *ngIf="configItemType === 'semi-products'">{{ contentObject.name }} ({{ contentObject.measurementUnitType?.label }})</span>
-        <span *ngIf="configItemType === 'processing-evidence-fields'">{{ contentObject.fieldName }} - {{ contentObject.label }}</span>
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (configItemType !== 'semi-products' && configItemType !== 'processing-evidence-fields') {
+            <span>{{ contentObject.code }} - {{ contentObject.label }}</span>
+          }
+          @if (configItemType === 'semi-products') {
+            <span>{{ contentObject.name }} ({{ contentObject.measurementUnitType?.label }})</span>
+          }
+          @if (configItemType === 'processing-evidence-fields') {
+            <span>{{ contentObject.fieldName }} - {{ contentObject.label }}</span>
+          }
+        </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
     <subform-layout>
       <subform-form>
         <h4 class="sp-subform-title">{{ title }}</h4>
 
-        <ng-container *ngIf="configItemType === 'facility-types'">
+        @if (configItemType === 'facility-types') {
           <single-choice
-                  label="Facility type"
-                  i18n-label="@@valueChainDetail.section.facilityTypes.add.label"
-                  [formControlInput]="configItemForm"
-                  [codebookService]="facilityTypesCodebook"
-                  [isInvalidChoice]="submitted && configItemForm.invalid"
-                  [readonly]="readOnly"
-                  (onChange)="setSelectedValue($event)">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="configItemForm.errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@valueChainDetail.section.facilityTypes.add.error">
+            label="Facility type"
+            i18n-label="@@valueChainDetail.section.facilityTypes.add.label"
+            [formControlInput]="configItemForm"
+            [codebookService]="facilityTypesCodebook"
+            [isInvalidChoice]="submitted && configItemForm.invalid"
+            [readonly]="readOnly"
+            (onChange)="setSelectedValue($event)">
+            @if (submitted) {
+              @if (configItemForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@valueChainDetail.section.facilityTypes.add.error">
                   Facility type is required
                 </div>
-              </div>
-            </ng-container>
-
+                  }
+                </div>
+              }
+            }
           </single-choice>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="configItemType === 'measure-unit-types'">
+        @if (configItemType === 'measure-unit-types') {
           <single-choice
-                  label="Measure unit type"
-                  i18n-label="@@valueChainDetail.section.measureUnitTypes.add.label"
-                  [formControlInput]="configItemForm"
-                  [codebookService]="measureUnitTypesCodebook"
-                  [isInvalidChoice]="submitted && configItemForm.invalid"
-                  [readonly]="readOnly"
-                  (onChange)="setSelectedValue($event)">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="configItemForm.errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@valueChainDetail.section.measureUnitTypes.add.error">
+            label="Measure unit type"
+            i18n-label="@@valueChainDetail.section.measureUnitTypes.add.label"
+            [formControlInput]="configItemForm"
+            [codebookService]="measureUnitTypesCodebook"
+            [isInvalidChoice]="submitted && configItemForm.invalid"
+            [readonly]="readOnly"
+            (onChange)="setSelectedValue($event)">
+            @if (submitted) {
+              @if (configItemForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@valueChainDetail.section.measureUnitTypes.add.error">
                   Measure unit type is required
                 </div>
-              </div>
-            </ng-container>
-
+                  }
+                </div>
+              }
+            }
           </single-choice>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="configItemType === 'processing-evidence-types'">
+        @if (configItemType === 'processing-evidence-types') {
           <single-choice
-                  label="Processing evidence type"
-                  i18n-label="@@valueChainDetail.section.processingEvidenceTypes.add.label"
-                  [formControlInput]="configItemForm"
-                  [codebookService]="procEvidenceTypesCodebook"
-                  [isInvalidChoice]="submitted && configItemForm.invalid"
-                  [readonly]="readOnly"
-                  (onChange)="setSelectedValue($event)">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="configItemForm.errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@valueChainDetail.section.processingEvidenceTypes.add.error">
+            label="Processing evidence type"
+            i18n-label="@@valueChainDetail.section.processingEvidenceTypes.add.label"
+            [formControlInput]="configItemForm"
+            [codebookService]="procEvidenceTypesCodebook"
+            [isInvalidChoice]="submitted && configItemForm.invalid"
+            [readonly]="readOnly"
+            (onChange)="setSelectedValue($event)">
+            @if (submitted) {
+              @if (configItemForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@valueChainDetail.section.processingEvidenceTypes.add.error">
                   Processing evidence type is required
                 </div>
-              </div>
-            </ng-container>
+                  }
+                </div>
+              }
+            }
           </single-choice>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="configItemType === 'processing-evidence-fields'">
+        @if (configItemType === 'processing-evidence-fields') {
           <single-choice
-                  label="Processing evidence field"
-                  i18n-label="@@valueChainDetail.section.processingEvidenceFields.add.label"
-                  [formControlInput]="configItemForm"
-                  [codebookService]="procEvidenceFieldsCodebook"
-                  [isInvalidChoice]="submitted && configItemForm.invalid"
-                  [readonly]="readOnly"
-                  (onChange)="setSelectedValue($event)">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="configItemForm.errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@valueChainDetail.section.processingEvidenceFields.add.error">
+            label="Processing evidence field"
+            i18n-label="@@valueChainDetail.section.processingEvidenceFields.add.label"
+            [formControlInput]="configItemForm"
+            [codebookService]="procEvidenceFieldsCodebook"
+            [isInvalidChoice]="submitted && configItemForm.invalid"
+            [readonly]="readOnly"
+            (onChange)="setSelectedValue($event)">
+            @if (submitted) {
+              @if (configItemForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@valueChainDetail.section.processingEvidenceFields.add.error">
                   Processing evidence field is required
                 </div>
-              </div>
-            </ng-container>
+                  }
+                </div>
+              }
+            }
           </single-choice>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="configItemType === 'semi-products'">
+        @if (configItemType === 'semi-products') {
           <single-choice
-                  label="Semi-product"
-                  i18n-label="@@valueChainDetail.section.semiProducts.add.label"
-                  [formControlInput]="configItemForm"
-                  [codebookService]="semiProductsCodebook"
-                  [isInvalidChoice]="submitted && configItemForm.invalid"
-                  [readonly]="readOnly"
-                  (onChange)="setSelectedValue($event)">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="configItemForm.errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@valueChainDetail.section.semiProducts.add.error">
+            label="Semi-product"
+            i18n-label="@@valueChainDetail.section.semiProducts.add.label"
+            [formControlInput]="configItemForm"
+            [codebookService]="semiProductsCodebook"
+            [isInvalidChoice]="submitted && configItemForm.invalid"
+            [readonly]="readOnly"
+            (onChange)="setSelectedValue($event)">
+            @if (submitted) {
+              @if (configItemForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@valueChainDetail.section.semiProducts.add.error">
                   Semi-product is required
                 </div>
-              </div>
-            </ng-container>
-
+                  }
+                </div>
+              }
+            }
           </single-choice>
-        </ng-container>
+        }
 
       </subform-form>
 
       <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
         <mini-buttons
-                (onSave)="save()"
-                (onCancel)="cancel()"
-                [error]="submitted && form.invalid"
-                [cancelButtonOnly]="readOnly">
+          (onSave)="save()"
+          (onCancel)="cancel()"
+          [error]="submitted && form.invalid"
+          [cancelButtonOnly]="readOnly">
         </mini-buttons>
       </subform-mini-buttons>
     </subform-layout>

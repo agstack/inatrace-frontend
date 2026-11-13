@@ -1,12 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiBusinessToCustomerSettings } from '../../../api/model/apiBusinessToCustomerSettings';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-b2c-tabs',
-  templateUrl: './b2c-tabs.component.html',
-  styleUrls: ['./b2c-tabs.component.scss']
+    selector: 'app-b2c-tabs',
+    templateUrl: './b2c-tabs.component.html',
+    styleUrls: ['./b2c-tabs.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cTabsComponent implements OnInit {
 

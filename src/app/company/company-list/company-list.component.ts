@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
@@ -14,9 +14,11 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SortOption } from '../../shared/result-sorter/result-sorter-types';
 
 @Component({
-  selector: 'app-company-list',
-  templateUrl: './company-list.component.html',
-  styleUrls: ['./company-list.component.scss']
+    selector: 'app-company-list',
+    templateUrl: './company-list.component.html',
+    styleUrls: ['./company-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyListComponent implements OnInit, OnDestroy {
 
@@ -25,9 +27,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   companies = [];
   listErrorStatus$: BehaviorSubject<string>;
 
-  searchName = new FormControl(null);
-  searchStatus = new FormControl('');
-  myCompanies = new FormControl(true);
+  searchName = new UntypedFormControl(null);
+  searchStatus = new UntypedFormControl('');
+  myCompanies = new UntypedFormControl(true);
 
   reloadPing$ = new BehaviorSubject<boolean>(false);
   sortingParams$ = new BehaviorSubject({ sortBy: 'name', sort: 'ASC' });
@@ -265,7 +267,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.myCompanies.setValue(my);
   }
 
-  clearValue(form: FormControl, myCompanies: boolean = false) {
+  clearValue(form: UntypedFormControl, myCompanies: boolean = false) {
     if (myCompanies) { form.setValue(false); }
     else { form.setValue(''); }
   }

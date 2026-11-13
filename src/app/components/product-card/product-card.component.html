@@ -1,19 +1,20 @@
-<div *ngIf="product" class="card-elevation card-box">
-  <a routerLink="/product-labels/{{ product.id }}/product">
-    <img *ngIf="product.photoStorageId; else showImagePlaceholder"
-    src="/api/common/image/{{ product.photoStorageId }}/SMALL"
-    default="/api/common/image/{{ product.photoStorageId }}"
-    class="card-img-top" alt="Product image">
-
-    <ng-template #showImagePlaceholder>
-      <img src="/src/assets/product-label-card/product-card-placeholder.png"
-           class="card-img-top" alt="Product image placeholder">
-    </ng-template>
-
-    <div class="card-body">
-      <div class="card-text">
-        <h4>{{ product.name }}</h4>
+@if (product) {
+  <div class="card-elevation card-box">
+    <a routerLink="/product-labels/{{ product.id }}/product">
+      @if (product.photoStorageId) {
+        <img
+          src="/api/common/image/{{ product.photoStorageId }}/SMALL"
+          default="/api/common/image/{{ product.photoStorageId }}"
+          class="card-img-top" alt="Product image">
+      } @else {
+        <img src="/src/assets/product-label-card/product-card-placeholder.png"
+          class="card-img-top" alt="Product image placeholder">
+      }
+      <div class="card-body">
+        <div class="card-text">
+          <h4>{{ product.name }}</h4>
+        </div>
       </div>
-    </div>
-  </a>
-</div>
+    </a>
+  </div>
+}

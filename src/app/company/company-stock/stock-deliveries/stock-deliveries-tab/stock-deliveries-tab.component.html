@@ -2,190 +2,183 @@
 
   <app-company-left-panel></app-company-left-panel>
 
-  <div class="main" *ngIf="companyId != null">
-
-    <!-- PURCHASE ORDERS -->
-    <div class="main-inside-top content-element">
-
-      <div class="d-flex justify-content-between content-element--row1">
-        <div class="title-page content-element--title"
-             i18n="@@productLabelStock.title.purchaseOrders"
-             [ngbTooltip]="deliveriesTitleTooltipTemplate"
-             [autoClose]="false"
-             placement="bottom"
-             triggers="manual"
-             tooltipClass="self-onboarding-tooltip-class"
-             #deliveriesTitleTooltip="ngbTooltip">Deliveries</div>
+  @if (companyId != null) {
+    <div class="main">
+      <!-- PURCHASE ORDERS -->
+      <div class="main-inside-top content-element">
+        <div class="d-flex justify-content-between content-element--row1">
+          <div class="title-page content-element--title"
+            i18n="@@productLabelStock.title.purchaseOrders"
+            [ngbTooltip]="deliveriesTitleTooltipTemplate"
+            [autoClose]="false"
+            placement="bottom"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+          #deliveriesTitleTooltip="ngbTooltip">Deliveries</div>
           <ng-template #deliveriesTitleTooltipTemplate>
-              <div>
-                  <div i18n="@@guidedTour.deliveriesSection.title" class="section-title">DELIVERIES</div>
-                  <div class="sub-title" i18n="@@guidedTour.deliveriesSection.deliveriesSubmenu">This is the submenu for deliveries received from farmers or collectors.</div>
-                  <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(3)"
-                          i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
-              </div>
-          </ng-template>
-      </div>
-
-      <div class="af-form-row af-form-row--nomargin">
-        <div class="af-form-block--c8">
-          <div class="af-form-element">
-            <div class="row">
-              <div class="col-12">
-                <single-choice *ngIf="facilityCodebook"
-                               label="Select facility"
-                               i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.facilityForStockOrder"
-                               [formControlInput]="facilityForStockOrderForm"
-                               [codebookService]="facilityCodebook"
-                               (onChange)="whenFacilityForStockOrderChanged($event)"
-                               style="min-width: 150px;">
-                </single-choice>
-              </div>
+            <div>
+              <div i18n="@@guidedTour.deliveriesSection.title" class="section-title">DELIVERIES</div>
+              <div class="sub-title" i18n="@@guidedTour.deliveriesSection.deliveriesSubmenu">This is the submenu for deliveries received from farmers or collectors.</div>
+              <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(3)"
+              i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
             </div>
-            <div class="row">
-              <div class="col-12 col-xl-6 mb-2 mb-xl-0">
-                <button class="btn btn-solid round btn-table-new content-element--btn w-100"
-                        i18n="@@productLabelStock.button.newPurchaseOrders"
-                        (click)="newPurchaseOrder()"
-                        [disabled]="selectedFacilityId == null"
-                        [ngbTooltip]="addDeliveryButtonTooltipTemplate"
-                        [autoClose]="false"
-                        placement="bottom"
-                        triggers="manual"
-                        tooltipClass="self-onboarding-tooltip-class"
-                        #addDeliveryButtonTooltip="ngbTooltip">
+          </ng-template>
+        </div>
+        <div class="af-form-row af-form-row--nomargin">
+          <div class="af-form-block--c8">
+            <div class="af-form-element">
+              <div class="row">
+                <div class="col-12">
+                  @if (facilityCodebook) {
+                    <single-choice
+                      label="Select facility"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.facilityForStockOrder"
+                      [formControlInput]="facilityForStockOrderForm"
+                      [codebookService]="facilityCodebook"
+                      (onChange)="whenFacilityForStockOrderChanged($event)"
+                      style="min-width: 150px;">
+                    </single-choice>
+                  }
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-xl-6 mb-2 mb-xl-0">
+                  <button class="btn btn-solid round btn-table-new content-element--btn w-100"
+                    i18n="@@productLabelStock.button.newPurchaseOrders"
+                    (click)="newPurchaseOrder()"
+                    [disabled]="selectedFacilityId == null"
+                    [ngbTooltip]="addDeliveryButtonTooltipTemplate"
+                    [autoClose]="false"
+                    placement="bottom"
+                    triggers="manual"
+                    tooltipClass="self-onboarding-tooltip-class"
+                    #addDeliveryButtonTooltip="ngbTooltip">
                   <span>+ Add purchase</span>
                 </button>
                   <ng-template #addDeliveryButtonTooltipTemplate>
-                      <div>
-                          <div i18n="@@guidedTour.deliveriesSection.title" class="section-title">DELIVERIES</div>
-                          <div class="sub-title" i18n="@@guidedTour.deliveriesSection.addDeliveryButton">To document a delivery, you select a facility and click '+Add delivery.</div>
-                          <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(4)"
-                                  i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
-                      </div>
+                    <div>
+                      <div i18n="@@guidedTour.deliveriesSection.title" class="section-title">DELIVERIES</div>
+                      <div class="sub-title" i18n="@@guidedTour.deliveriesSection.addDeliveryButton">To document a delivery, you select a facility and click '+Add delivery.</div>
+                      <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(4)"
+                      i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
+                    </div>
                   </ng-template>
-              </div>
-              <div class="col-12 col-xl-6">
-                <button class="btn btn-solid round btn-table-new content-element--btn w-100"
-                        i18n="@@productLabelStock.button.newPurchaseOrdersBulk"
-                        (click)="newPurchaseOrderBulk()"
-                        [disabled]="selectedFacilityId == null">
+                </div>
+                <div class="col-12 col-xl-6">
+                  <button class="btn btn-solid round btn-table-new content-element--btn w-100"
+                    i18n="@@productLabelStock.button.newPurchaseOrdersBulk"
+                    (click)="newPurchaseOrderBulk()"
+                    [disabled]="selectedFacilityId == null">
                   <span>+ Add bulk purchase</span>
                 </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="d-flex justify-content-between main-inside-top--row2">
-
-        <div>
-          <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfPurchaseOrders">List of purchase orders</div>
-          <div class="counting-page content-element--counting" i18n="@@productLabelStock.subTitle.showingPurchaseOrders">Showing {{ showedPurchaseOrders }}/{{ allPurchaseOrders }}</div>
-        </div>
-
-        <div class="d-flex align-items-top">
-          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-
-            <div *ngIf="openBalanceOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.openBalanceOnly.filter">Open balance
+        <div class="d-flex justify-content-between main-inside-top--row2">
+          <div>
+            <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfPurchaseOrders">List of purchase orders</div>
+            <div class="counting-page content-element--counting" i18n="@@productLabelStock.subTitle.showingPurchaseOrders">Showing {{ showedPurchaseOrders }}/{{ allPurchaseOrders }}</div>
+          </div>
+          <div class="d-flex align-items-top">
+            <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+              @if (openBalanceOnly) {
+                <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.openBalanceOnly.filter">Open balance
               <div style="margin-left: 0.5rem;" (click)="setOpenBalanceOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                 </fa-icon>
               </div>
             </div>
-
-            <div *ngIf="filterWayOfPayment && filterWayOfPayment?.value.length > 0"
-                 class="d-flex filter-text"
-                 style="margin-left: 0.75rem"
-                 i18n="@@productLabelStock.filter.wayOfPayment.wayOfPayment">{{ filterWayOfPayment.value | formatWayOfPayment }}
+              }
+              @if (filterWayOfPayment && filterWayOfPayment?.value.length > 0) {
+                <div
+                  class="d-flex filter-text"
+                  style="margin-left: 0.75rem"
+                  i18n="@@productLabelStock.filter.wayOfPayment.wayOfPayment">{{ filterWayOfPayment.value | formatWayOfPayment }}
               <div (click)="setWayOfPayment('')" style="margin-left: 0.5rem;">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                 </fa-icon>
               </div>
             </div>
-
-            <div *ngIf="filterWomenOnly.value != null" class="d-flex filter-text" style="margin-left: 1rem"> {{ womenOnlyStatusValue }}
-              <div (click)="setWomenOnly(null)" style="margin-left: 0.5rem;">
-                <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
-                </fa-icon>
+              }
+              @if (filterWomenOnly.value != null) {
+                <div class="d-flex filter-text" style="margin-left: 1rem"> {{ womenOnlyStatusValue }}
+                  <div (click)="setWomenOnly(null)" style="margin-left: 0.5rem;">
+                    <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
+                    </fa-icon>
+                  </div>
+                </div>
+              }
+              <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
+                <div class="button-icon">
+                  <span class="button-icon-shape button-icon-shape--filter"></span>
+                </div>
+                <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
+              </button>
+              <div class="dropdown-menu" ngbDropdownMenu>
+                @if (!openBalanceOnly) {
+                  <button ngbDropdownItem (click)="setOpenBalanceOnly(true)" i18n="@@productLabelStock.filter.openBalanceOnly.button">Open balance</button>
+                }
+                @if (!openBalanceOnly) {
+                  <div class="line"></div>
+                }
+                <button ngbDropdownItem (click)="setWayOfPayment('CASH')" i18n="@@productLabelStock.filter.wayOfPayment.cash">Cash</button>
+                <button ngbDropdownItem (click)="setWayOfPayment('CASH_VIA_COLLECTOR')" i18n="@@productLabelStock.filter.wayOfPayment.cashViaCollector">Cash via collector</button>
+                <button ngbDropdownItem (click)="setWayOfPayment('BANK_TRANSFER')" i18n="@@productLabelStock.filter.wayOfPayment.bankTransfer">Bank transfer</button>
+                <button ngbDropdownItem (click)="setWayOfPayment('CHEQUE')" i18n="@@preferredWayOfPayment.cheque">Cheque</button>
+                <button ngbDropdownItem (click)="setWayOfPayment('OFFSETTING')" i18n="@@preferredWayOfPayment.offsetting">Offsetting</button>
+                <button ngbDropdownItem (click)="setWayOfPayment('UNKNOWN')" i18n="@@productLabelStock.filter.wayOfPayment.unknown">Unknown</button>
+                <div class="line"></div>
+                <button ngbDropdownItem (click)="setWomenOnly(true)" i18n="@@productLabelStock.filter.womensOnly.yes">Womens only coffee</button>
+                <button ngbDropdownItem (click)="setWomenOnly(false)" i18n="@@productLabelStock.filter.womensOnly.no">Non-womens only coffee</button>
               </div>
-            </div>
-
-            <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
-              <div class="button-icon">
-                <span class="button-icon-shape button-icon-shape--filter"></span>
-              </div>
-              <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
-            </button>
-
-            <div class="dropdown-menu" ngbDropdownMenu>
-              <button *ngIf="!openBalanceOnly" ngbDropdownItem (click)="setOpenBalanceOnly(true)" i18n="@@productLabelStock.filter.openBalanceOnly.button">Open balance</button>
-              <div *ngIf="!openBalanceOnly" class="line"></div>
-              <button ngbDropdownItem (click)="setWayOfPayment('CASH')" i18n="@@productLabelStock.filter.wayOfPayment.cash">Cash</button>
-              <button ngbDropdownItem (click)="setWayOfPayment('CASH_VIA_COLLECTOR')" i18n="@@productLabelStock.filter.wayOfPayment.cashViaCollector">Cash via collector</button>
-              <button ngbDropdownItem (click)="setWayOfPayment('BANK_TRANSFER')" i18n="@@productLabelStock.filter.wayOfPayment.bankTransfer">Bank transfer</button>
-              <button ngbDropdownItem (click)="setWayOfPayment('CHEQUE')" i18n="@@preferredWayOfPayment.cheque">Cheque</button>
-              <button ngbDropdownItem (click)="setWayOfPayment('OFFSETTING')" i18n="@@preferredWayOfPayment.offsetting">Offsetting</button>
-              <button ngbDropdownItem (click)="setWayOfPayment('UNKNOWN')" i18n="@@productLabelStock.filter.wayOfPayment.unknown">Unknown</button>
-              <div class="line"></div>
-              <button ngbDropdownItem (click)="setWomenOnly(true)" i18n="@@productLabelStock.filter.womensOnly.yes">Womens only coffee</button>
-              <button ngbDropdownItem (click)="setWomenOnly(false)" i18n="@@productLabelStock.filter.womensOnly.no">Non-womens only coffee</button>
-            </div>
-
-            <app-search-textinput
-                    [form]="searchFarmerNameAndSurname"
-                    (valueChange)="searchPurchaseInput($event)">
-            </app-search-textinput>
-
-            <div class="ml-2">
-              <single-choice
+              <app-search-textinput
+                [form]="searchFarmerNameAndSurname"
+                (valueChange)="searchPurchaseInput($event)">
+              </app-search-textinput>
+              <div class="ms-2">
+                <single-choice
                   [noMargin]="true"
                   i18n-label="@@productLabelStockPurchaseOrdersModal.semiProduct.label"
                   [formControlInput]="semiProductFrom"
                   [codebookService]="facilitySemiProducts">
-              </single-choice>
+                </single-choice>
+              </div>
             </div>
-
           </div>
         </div>
-      </div>
-
-      <div class="d-flex">
-        <app-datepicker
-                label="From"
-                i18n-label="@@common.filter.from.label"
-                [form]="fromFilterDate"
-                [invalid]="fromFilterDate.invalid"
-                (onChange)="onFilterDateRangeChange()"
-                style="width: 130px; margin-right: 1rem;">
-        </app-datepicker>
-
-        <app-datepicker
-                label="To"
-                i18n-label="@@common.filter.to.label"
-                [form]="toFilterDate"
-                [invalid]="toFilterDate.invalid"
-                (onChange)="onFilterDateRangeChange()"
-                style="width: 130px">
-        </app-datepicker>
-
-        <button class="af-actions-btn" style="margin-top: 1.7rem"
-                [class.af-actions-btn--disabled]="allPurchaseOrders < 1"
-                [disabled]="allPurchaseOrders < 1"
-                (click)="exportDeliveriesExcel()">
-          <span class="af-actions-btn-label" i18n="@@productLabelPayments.button.export">Export data</span>
-        </button>
-
-        <button class="af-actions-btn" style="margin-top: 1.7rem"
-                [class.af-actions-btn--disabled]="selectedOrders.length === 0"
-                [disabled]="selectedOrders.length === 0"
-                (click)="selectedOrders.length > 0 && clickAddPaymentsPing$.next(true)">
-          <span class="af-actions-btn-label" i18n="@@productLabelStock.button.bulkPayments">Add payments</span>
-        </button>
-
-      </div>
-
-      <app-stock-unit-list
+        <div class="d-flex">
+          <app-datepicker
+            label="From"
+            i18n-label="@@common.filter.from.label"
+            [form]="fromFilterDate"
+            [invalid]="fromFilterDate.invalid"
+            (onChange)="onFilterDateRangeChange()"
+            style="width: 130px; margin-right: 1rem;">
+          </app-datepicker>
+          <app-datepicker
+            label="To"
+            i18n-label="@@common.filter.to.label"
+            [form]="toFilterDate"
+            [invalid]="toFilterDate.invalid"
+            (onChange)="onFilterDateRangeChange()"
+            style="width: 130px">
+          </app-datepicker>
+          <button class="af-actions-btn" style="margin-top: 1.7rem"
+            [class.af-actions-btn--disabled]="allPurchaseOrders < 1"
+            [disabled]="allPurchaseOrders < 1"
+            (click)="exportDeliveriesExcel()">
+            <span class="af-actions-btn-label" i18n="@@productLabelPayments.button.export">Export data</span>
+          </button>
+          <button class="af-actions-btn" style="margin-top: 1.7rem"
+            [class.af-actions-btn--disabled]="selectedOrders.length === 0"
+            [disabled]="selectedOrders.length === 0"
+            (click)="selectedOrders.length > 0 && clickAddPaymentsPing$.next(true)">
+            <span class="af-actions-btn-label" i18n="@@productLabelStock.button.bulkPayments">Add payments</span>
+          </button>
+        </div>
+        <app-stock-unit-list
           [reloadPingList$]="reloadPurchaseOrdersPing$"
           (countAll)="onCountAllPO($event)"
           [facilityId$]="facilityIdPing$"
@@ -200,9 +193,9 @@
           [deliveryDatesPing$]="deliveryDatesPing$"
           [semiProductId$]="$any(semiProductId$)"
           [searchFarmerNameSurnamePing$]="searchFarmerNameSurnamePing$">
-      </app-stock-unit-list>
-
+        </app-stock-unit-list>
+      </div>
     </div>
-  </div>
+  }
 
 </app-authorised-layout>

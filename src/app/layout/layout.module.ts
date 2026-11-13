@@ -11,7 +11,6 @@ import {
     NgbTimepickerModule,
     NgbTooltipModule
 } from '@ng-bootstrap/ng-bootstrap';
-import { QRCodeModule } from 'angular2-qrcode';
 import { EllipsisModule } from 'ngx-ellipsis';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { ComponentsModule } from '../components/components.module';
@@ -63,7 +62,6 @@ import { UserBoxComponent } from './user-box/user-box.component';
         NgxPageScrollModule,
         ContentsModule,
         EllipsisModule,
-        QRCodeModule,
         NgbTimepickerModule,
         NgbDropdownModule,
         NgbPaginationModule,

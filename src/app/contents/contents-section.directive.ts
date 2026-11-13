@@ -9,6 +9,7 @@ import { AbstractControl } from '@angular/forms';
 @Directive({
     selector: '[contentsSection]',
     exportAs: 'contentsSection',
+    standalone: false
 })
 export class ContentsSectionDirective implements OnInit, OnDestroy {
     ngUnsubscribe: Subject<void> = new Subject<void>();

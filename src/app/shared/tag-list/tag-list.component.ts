@@ -1,9 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormArray, FormGroup, AbstractControl } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild, ChangeDetectionStrategy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, of, Subject, merge, fromEvent, combineLatest, BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, filter, switchMap, tap, shareReplay } from 'rxjs/operators';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { formattedError } from '@angular/compiler';
 import {
     trigger,
     state,
@@ -27,32 +26,34 @@ import { CodebookHelperService } from 'src/interfaces/CodebookHelperService';
         ]),
         trigger('expandCollapse', [
             state('closed', style({
-              height:'0',
-              overflow:'hidden',
-              opacity:'0',
-              margin:'0',
-              padding: '0'
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0'
             })),
             state('open', style({
-              opacity:'1'
+                opacity: '1'
             })),
-            transition('closed=>open', animate('300ms')),  // uskladi trajanje s setTimeoutom za focus!
+            transition('closed=>open', animate('300ms')), // uskladi trajanje s setTimeoutom za focus!
             transition('open=>closed', animate('300ms'))
-          ]),
-  ]
+        ]),
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TagListComponent implements OnInit {
     @Input()
     label: string;
 
-    private _formArray: FormArray;
+    private _formArray: UntypedFormArray;
 
-    @Input() set formArray(value: FormArray) {
+    @Input() set formArray(value: UntypedFormArray) {
         this._formArray = value;
         this.resubscribe()
     }
 
-    get formArray(): FormArray {
+    get formArray(): UntypedFormArray {
         return this._formArray;
     }
 

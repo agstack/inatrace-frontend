@@ -1,169 +1,179 @@
 <app-authorised-layout>
-  <app-system-left-panel
-    *ngIf="this.mode === 'adminUserProfileView'"
-    [isAdmin]="this.mode === 'adminUserProfileView'"
-    i18n="@@userDetail.navTitle"
-    title="System">
+  @if (this.mode === 'adminUserProfileView') {
+    <app-system-left-panel
+      [isAdmin]="this.mode === 'adminUserProfileView'"
+      i18n="@@userDetail.navTitle"
+      title="System">
   </app-system-left-panel>
+  }
 
-  <div *ngIf="userProfileForm" [class.main]="this.mode != 'userProfileView'" [class.user-profile-view]="this.mode === 'userProfileView'">
-
-    <div class="af-form-wrapper">
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="title-page content-element--title">{{title}}</div>
+  @if (userProfileForm) {
+    <div [class.main]="this.mode != 'userProfileView'" [class.user-profile-view]="this.mode === 'userProfileView'">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">{{title}}</div>
+          </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-
-        <div class="af-form-block--c6">
-          <h2 i18n="@@userDetail.section.basicInfo">Basic information</h2>
-          <div class="af-form-element">
-
-            <textinput [form]="$any(userProfileForm.get('name'))" label="First name"
-              i18n-label="@@userDetail.textinput.firstname.label"
-              i18n-placeholder="@@userDetail.textinput.firstname.placeholder"
-              style="width: 100%" placeholder="Enter your first name"
-              [isInvalid]="submitted && userProfileForm.get('name').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="userProfileForm.get('name').errors as errors"
-                  class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@userDetail.textinput.firstname.error">
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@userDetail.section.basicInfo">Basic information</h2>
+            <div class="af-form-element">
+              <textinput [form]="$any(userProfileForm.get('name'))" label="First name"
+                i18n-label="@@userDetail.textinput.firstname.label"
+                i18n-placeholder="@@userDetail.textinput.firstname.placeholder"
+                style="width: 100%" placeholder="Enter your first name"
+                [isInvalid]="submitted && userProfileForm.get('name').invalid">
+                @if (submitted) {
+                  @if (userProfileForm.get('name').errors; as errors) {
+                    <div
+                      class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@userDetail.textinput.firstname.error">
                     First name is required
                   </div>
-                </div>
-              </ng-container>
-            </textinput>
-
-            <textinput [form]="$any(userProfileForm.get('surname'))" label="Last name"
-              i18n-label="@@userDetail.textinput.lastname.label"
-              i18n-placeholder="@@userDetail.textinput.lastname.placeholder"
-              style="width: 100%" placeholder="Enter your last name"
-              [isInvalid]="submitted && userProfileForm.get('surname').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="userProfileForm.get('surname').errors as errors"
-                  class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@userDetail.textinput.lastname.error">
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput [form]="$any(userProfileForm.get('surname'))" label="Last name"
+                i18n-label="@@userDetail.textinput.lastname.label"
+                i18n-placeholder="@@userDetail.textinput.lastname.placeholder"
+                style="width: 100%" placeholder="Enter your last name"
+                [isInvalid]="submitted && userProfileForm.get('surname').invalid">
+                @if (submitted) {
+                  @if (userProfileForm.get('surname').errors; as errors) {
+                    <div
+                      class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@userDetail.textinput.lastname.error">
                     Last name is required
                   </div>
-                </div>
-              </ng-container>
-            </textinput>
-
-            <textinput [form]="$any(userProfileForm.get('email'))" label="Username"
-              i18n-label="@@userDetail.textinput.username.label"
-              style="width: 100%"
-              [readOnly]=true>
-            </textinput>
-
-            <div class="d-flex flex-column">
-              <button class="btn btn-outlined" (click)="showPassReqSentModal()" style="margin-bottom: 0.25rem; width: 220px;">
-                <span style="padding-top: 0.25rem; padding-bottom: 0.25rem; padding-left: 0.75rem; padding-right: 0.75rem;" i18n="@@userDetail.button.reset">Reset password</span>
-              </button>
-              <button class="btn btn-outlined" (click)="confirmEmail()" *ngIf="unconfirmedUser" style="width: 220px;">
-                <span style="padding-top: 0.25rem; padding-bottom: 0.25rem; padding-left: 0.75rem; padding-right: 0.75rem;" i18n="@@userDetail.button.confirmUserEmail">Confirm user email</span>
-              </button>
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <textinput [form]="$any(userProfileForm.get('email'))" label="Username"
+                i18n-label="@@userDetail.textinput.username.label"
+                style="width: 100%"
+                [readOnly]=true>
+              </textinput>
+              <div class="d-flex flex-column">
+                <button class="btn btn-outlined" (click)="showPassReqSentModal()" style="margin-bottom: 0.25rem; width: 220px;">
+                  <span style="padding-top: 0.25rem; padding-bottom: 0.25rem; padding-left: 0.75rem; padding-right: 0.75rem;" i18n="@@userDetail.button.reset">Reset password</span>
+                </button>
+                @if (unconfirmedUser) {
+                  <button class="btn btn-outlined" (click)="confirmEmail()" style="width: 220px;">
+                    <span style="padding-top: 0.25rem; padding-bottom: 0.25rem; padding-left: 0.75rem; padding-right: 0.75rem;" i18n="@@userDetail.button.confirmUserEmail">Confirm user email</span>
+                  </button>
+                }
+              </div>
             </div>
-
           </div>
-        </div>
-
-        <div class="af-form-block--c6">
-          <h2 i18n="@@userDetail.section.userLanguage">User language</h2>
-          <div class="af-form-element">
-
-            <div class="af-row">
-              <div class="af-c6">
-
-                <div>
-                  <label i18n="@@userDetail.textinput.userSelectedLanguage.label">Selected</label>
-                  <div class="d-flex af-translation-language">
-
-                    <!-- <img> -->
-                    <div class="af-translation-language--selected">
-                      <img *ngIf="this.userProfileForm.get('language').value === 'EN'" src="../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
-                      <img *ngIf="this.userProfileForm.get('language').value === 'DE'" src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
-                      <img *ngIf="this.userProfileForm.get('language').value === 'RW'" src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
-                      <img *ngIf="this.userProfileForm.get('language').value === 'ES'" src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
-                      <span>{{this.userProfileForm.get('language').value}}</span>
+          <div class="af-form-block--c6">
+            <h2 i18n="@@userDetail.section.userLanguage">User language</h2>
+            <div class="af-form-element">
+              <div class="af-row">
+                <div class="af-c6">
+                  <div>
+                    <label i18n="@@userDetail.textinput.userSelectedLanguage.label">Selected</label>
+                    <div class="d-flex af-translation-language">
+                      <!-- <img> -->
+                      <div class="af-translation-language--selected">
+                        @if (this.userProfileForm.get('language').value === 'EN') {
+                          <img src="../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
+                        }
+                        @if (this.userProfileForm.get('language').value === 'DE') {
+                          <img src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
+                        }
+                        @if (this.userProfileForm.get('language').value === 'RW') {
+                          <img src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
+                        }
+                        @if (this.userProfileForm.get('language').value === 'ES') {
+                          <img src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
+                        }
+                        <span>{{this.userProfileForm.get('language').value}}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-              </div>
-              <div class="af-c6">
-
-                <div>
-                  <label i18n="@@userDetail.textinput.userAvailableLanguage.label">Available</label>
-                  <div class="d-flex af-translation-language">
-
-                    <div (click)="selectLanguage('EN')" *ngIf="this.userProfileForm.get('language').value != 'EN'">
-                      <img src="../../../assets/icons/icon-flag--united-kingdom.svg">
-                      <span>EN</span>
-                    </div>
-                    <div (click)="selectLanguage('DE')" *ngIf="this.userProfileForm.get('language').value != 'DE'">
-                      <img src="../../../assets/icons/icon-flag--germany.svg">
-                      <span>DE</span>
-                    </div>
-                    <div (click)="selectLanguage('RW')" *ngIf="this.userProfileForm.get('language').value != 'RW'">
-                      <img src="../../../assets/icons/icon-flag--rwanda.svg">
-                      <span>RW</span>
-                    </div>
-                    <div (click)="selectLanguage('ES')" *ngIf="this.userProfileForm.get('language').value != 'ES'">
-                      <img src="../../../assets/icons/icon-flag--spain.svg">
-                      <span>ES</span>
+                <div class="af-c6">
+                  <div>
+                    <label i18n="@@userDetail.textinput.userAvailableLanguage.label">Available</label>
+                    <div class="d-flex af-translation-language">
+                      @if (this.userProfileForm.get('language').value != 'EN') {
+                        <div (click)="selectLanguage('EN')">
+                          <img src="../../../assets/icons/icon-flag--united-kingdom.svg">
+                          <span>EN</span>
+                        </div>
+                      }
+                      @if (this.userProfileForm.get('language').value != 'DE') {
+                        <div (click)="selectLanguage('DE')">
+                          <img src="../../../assets/icons/icon-flag--germany.svg">
+                          <span>DE</span>
+                        </div>
+                      }
+                      @if (this.userProfileForm.get('language').value != 'RW') {
+                        <div (click)="selectLanguage('RW')">
+                          <img src="../../../assets/icons/icon-flag--rwanda.svg">
+                          <span>RW</span>
+                        </div>
+                      }
+                      @if (this.userProfileForm.get('language').value != 'ES') {
+                        <div (click)="selectLanguage('ES')">
+                          <img src="../../../assets/icons/icon-flag--spain.svg">
+                          <span>ES</span>
+                        </div>
+                      }
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-      </div>
-      <div class="af-form-row">
-        <div class="af-form-block--c6">
-
-          <h2 *ngIf="mode === 'userProfileView'; else adminViewCompanyListTitle" i18n="@@userDetail.myCompanies.label">My companies</h2>
-          <ng-template #adminViewCompanyListTitle>
-            <h2 i18n="@@userDetail.adminView.companies.label">User companies</h2>
-          </ng-template>
-          <div class="af-form-element">
-
-            <ng-container *ngIf="!loadingUserCompanies; else loadingUserCompaniesTemplate">
-              <div *ngFor="let c of myCompanies index as i">
-                <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                  <div (click)="setSelectedUserCompany(c)" [class.show-pointer]="this.mode === 'userProfileView'">{{c.companyName}}</div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            @if (mode === 'userProfileView') {
+              <h2 i18n="@@userDetail.myCompanies.label">My companies</h2>
+            } @else {
+              <h2 i18n="@@userDetail.adminView.companies.label">User companies</h2>
+            }
+            <div class="af-form-element">
+              @if (!loadingUserCompanies) {
+                <div *ngFor="let c of myCompanies index as i">
+                  <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+                    <div (click)="setSelectedUserCompany(c)" [class.show-pointer]="this.mode === 'userProfileView'">{{c.companyName}}</div>
+                  </div>
                 </div>
-              </div>
-              <div *ngIf="myCompanies && myCompanies.length == 0" class="d-flex justify-content-between pl-3 pr-3 mb-1" i18n="@@userDetail.myCompanies.noCompanies">
+                @if (myCompanies && myCompanies.length == 0) {
+                  <div class="d-flex justify-content-between ps-3 pe-3 mb-1" i18n="@@userDetail.myCompanies.noCompanies">
                 <div>No companies</div>
               </div>
-            </ng-container>
-            <ng-template #loadingUserCompaniesTemplate>
-              <div class="d-flex justify-content-center">
-                <div class="spinner-border text-primary my-2"></div>
-              </div>
-            </ng-template>
-
+                }
+              } @else {
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary my-2"></div>
+                </div>
+              }
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="af-bottom-buttons">
-            <button class="btn btn-outlined mr-2" (click)="goBack()" i18n="@@userDetail.button.back">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons">
+              <button class="btn btn-outlined me-2" (click)="goBack()" i18n="@@userDetail.button.back">
               Go back
             </button>
-            <button class="btn" (click)="save()" i18n="@@userDetail.button.save">
+              <button class="btn" (click)="save()" i18n="@@userDetail.button.save">
               Save
             </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </app-authorised-layout>

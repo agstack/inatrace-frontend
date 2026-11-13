@@ -1,48 +1,40 @@
-<div class="container" *ngIf="knowledgeBlogData">
-  <div class="row">
-    <div class="col-sm-0 col-lg-3"></div>
-    <div class="col-sm-12 col-lg-6">
-      <h2 class="news-title" [innerHTML]="knowledgeBlogData.title"></h2>
-      <div class="news-title-content-divider"></div>
-
-      <ng-container *ngIf="knowledgeBlogData.summary">
-        <p class="news-summary" [innerHTML]="knowledgeBlogData.summary"></p>
+@if (knowledgeBlogData) {
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-0 col-lg-3"></div>
+      <div class="col-sm-12 col-lg-6">
+        <h2 class="news-title" [innerHTML]="knowledgeBlogData.title"></h2>
+        <div class="news-title-content-divider"></div>
+        @if (knowledgeBlogData.summary) {
+          <p class="news-summary" [innerHTML]="knowledgeBlogData.summary"></p>
+          <div class="news-content-divider"></div>
+        }
+        @if (knowledgeBlogData.content) {
+          <p class="news-content" [innerHTML]="knowledgeBlogData.content"></p>
+          <div class="news-content-divider"></div>
+        }
+        @if (knowledgeBlogData.documents) {
+          <div class="list-block">
+            @for (item of knowledgeBlogData.documents; track item) {
+              <li [ngClass]="item.contentType == 'application/pdf' ? 'back-img-pdf' : 'back-img-jpg'">
+                @if (item.storageKey) {
+                  <a class="content-text" href="/api/public/document/{{item.storageKey}}" target="_blank">{{item.name}}</a>
+                }
+              </li>
+            }
+          </div>
+          <div class="news-content-divider"></div>
+        }
+        @if (youtubeUrl) {
+          <a class="url-link" href="{{youtubeUrl}}" target="_blank">{{youtubeUrl}}</a>
+          <div class="news-content-divider"></div>
+        }
+        @if (knowledgeBlogData.date) {
+          <div class="date-style">{{knowledgeBlogData.date}}</div>
+        }
         <div class="news-content-divider"></div>
-      </ng-container>
-
-
-      <ng-container *ngIf="knowledgeBlogData.content">
-        <p class="news-content" [innerHTML]="knowledgeBlogData.content"></p>
-        <div class="news-content-divider"></div>
-      </ng-container>
-
-      <ng-container *ngIf="knowledgeBlogData.documents">
-        <div class="list-block">
-          <ng-container *ngFor="let item of knowledgeBlogData.documents">
-            <li [ngClass]="item.contentType == 'application/pdf' ? 'back-img-pdf' : 'back-img-jpg'">
-              <ng-container *ngIf="item.storageKey">
-                <a class="content-text" href="/api/public/document/{{item.storageKey}}" target="_blank">{{item.name}}</a>
-              </ng-container>
-            </li>
-          </ng-container>
-        </div>
-        <div class="news-content-divider"></div>
-      </ng-container>
-
-      <ng-container *ngIf="youtubeUrl">
-        <a class="url-link" href="{{youtubeUrl}}" target="_blank">{{youtubeUrl}}</a>
-        <div class="news-content-divider"></div>
-      </ng-container>
-
-      <ng-container *ngIf="knowledgeBlogData.date">
-        <div class="date-style">{{knowledgeBlogData.date}}</div>
-      </ng-container>
-
-      <div class="news-content-divider"></div>
+      </div>
+      <div class="col-sm-0 col-lg-3"></div>
     </div>
-    <div class="col-sm-0 col-lg-3"></div>
   </div>
-
-
-
-</div>
+}

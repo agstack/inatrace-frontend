@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import { Observable, Subscription } from 'rxjs';
@@ -9,12 +9,14 @@ import { ApiPlot } from '../../../api/model/apiPlot';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { CompanyControllerService } from '../../../api/api/companyController.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+    selector: 'app-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -74,7 +76,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Subscription = new Subscription();
   markers: Array<mapboxgl.Marker> = [];
 
-  mapStyle: FormControl = new FormControl('satellite-streets-v12');
+  mapStyle: UntypedFormControl = new UntypedFormControl('satellite-streets-v12');
 
   // True when Mapbox cannot run - no access token, the SDK threw while starting up, or it reported an
   // authentication or style-load failure. The template then shows a short explanation instead of an

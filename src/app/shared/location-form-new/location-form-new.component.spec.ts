@@ -1,27 +1,39 @@
 /* tslint:disable:component-selector */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, NO_ERRORS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 import { CountryService } from '../../shared-services/countries.service';
 import { LocationFormNewComponent } from './location-form-new.component';
 
-@Component({selector: 'textinput', template: ''})
+@Component({
+    selector: 'textinput', template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class TextinputStubComponent {
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
   @Input() label: string;
   @Input() placeholder: string;
 }
 
-@Component({selector: 'single-choice', template: ''})
+@Component({
+    selector: 'single-choice', template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class SingleChoiceStubComponent {
-  @Input() formControlInput: FormControl;
+  @Input() formControlInput: UntypedFormControl;
   @Input() codebookService: any;
   @Input() isInvalidChoice: boolean;
 }
 
-@Component({selector: 'google-map', template: '<ng-content></ng-content>'})
+@Component({
+    selector: 'google-map', template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class GoogleMapStubComponent {
   @Input() height: string;
   @Input() width: string;
@@ -29,7 +41,11 @@ class GoogleMapStubComponent {
   @Output() mapDblclick = new EventEmitter<any>();
 }
 
-@Component({selector: 'map-marker', template: '', exportAs: 'mapMarker'})
+@Component({
+    selector: 'map-marker', template: '', exportAs: 'mapMarker',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
 class MapMarkerStubComponent {
   @Input() position: any;
   @Input() label: any;
@@ -105,6 +121,7 @@ describe('LocationFormNewComponent map pin feedback', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       declarations: [
         LocationFormNewComponent,
         TextinputStubComponent,
@@ -152,13 +169,13 @@ describe('LocationFormNewComponent map pin feedback', () => {
   });
 });
 
-function createLocationForm(publiclyVisible: string | boolean, latitude: number = null, longitude: number = null): FormGroup {
-  return new FormGroup({
-    facilityLocation: new FormGroup({
-      publiclyVisible: new FormControl(publiclyVisible),
-      latitude: new FormControl(latitude),
-      longitude: new FormControl(longitude),
-      address: new FormGroup({country: new FormControl(null)})
+function createLocationForm(publiclyVisible: string | boolean, latitude: number = null, longitude: number = null): UntypedFormGroup {
+  return new UntypedFormGroup({
+    facilityLocation: new UntypedFormGroup({
+      publiclyVisible: new UntypedFormControl(publiclyVisible),
+      latitude: new UntypedFormControl(latitude),
+      longitude: new UntypedFormControl(longitude),
+      address: new UntypedFormGroup({country: new UntypedFormControl(null)})
     })
   });
 }

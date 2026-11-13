@@ -1,13 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiStockOrder } from '../../../../../../../api/model/apiStockOrder';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClipInputTransactionModalResult } from './model';
 
 @Component({
-  selector: 'app-clip-input-transaction-modal',
-  templateUrl: './clip-input-transaction-modal.component.html',
-  styleUrls: ['./clip-input-transaction-modal.component.scss']
+    selector: 'app-clip-input-transaction-modal',
+    templateUrl: './clip-input-transaction-modal.component.html',
+    styleUrls: ['./clip-input-transaction-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ClipInputTransactionModalComponent implements OnInit {
 
@@ -19,7 +21,7 @@ export class ClipInputTransactionModalComponent implements OnInit {
 
   submitted = false;
 
-  selectedQuantityForm: FormControl;
+  selectedQuantityForm: UntypedFormControl;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -37,7 +39,7 @@ export class ClipInputTransactionModalComponent implements OnInit {
       return;
     }
 
-    this.selectedQuantityForm = new FormControl(null, [Validators.required, Validators.max(this.stockOrder.availableQuantity)]);
+    this.selectedQuantityForm = new UntypedFormControl(null, [Validators.required, Validators.max(this.stockOrder.availableQuantity)]);
 
     if (this.currentSelectedQuantity) {
       this.selectedQuantityForm.setValue(this.currentSelectedQuantity);

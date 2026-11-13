@@ -3,99 +3,105 @@
     <div class="row">
       <div class="col">
 
-          <div class="main-inside-top content-element">
-              <div class="d-flex justify-content-between content-element--row1">
-                  <div class="title-page content-element--title" i18n="@@productList.title.companies">Products</div>
-                  <button class="btn btn-solid round btn-table-new content-element--btn"
-                          (click)="createProductForCompany()"
-                          i18n="@@productList.button.newProducts"
-                          [ngbTooltip]="newProductButtonTooltipTemplate"
-                          [autoClose]="false"
-                          placement="bottom"
-                          triggers="manual"
-                          tooltipClass="self-onboarding-tooltip-class"
-                          #newProductButtonTooltip="ngbTooltip">
+        <div class="main-inside-top content-element">
+          <div class="d-flex justify-content-between content-element--row1">
+            <div class="title-page content-element--title" i18n="@@productList.title.companies">Products</div>
+            <button class="btn btn-solid round btn-table-new content-element--btn"
+              (click)="createProductForCompany()"
+              i18n="@@productList.button.newProducts"
+              [ngbTooltip]="newProductButtonTooltipTemplate"
+              [autoClose]="false"
+              placement="bottom"
+              triggers="manual"
+              tooltipClass="self-onboarding-tooltip-class"
+              #newProductButtonTooltip="ngbTooltip">
                       <span>New product</span>
                   </button>
-                  <ng-template #newProductButtonTooltipTemplate>
-                      <div>
-                          <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step2">Click here to add a product</h2>
-                          <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/4' }}</span></div>
-                      </div>
-                  </ng-template>
-              </div>
-
-            <div class="d-flex justify-content-between content-element--row2">
+            <ng-template #newProductButtonTooltipTemplate>
               <div>
-                <div class="sub-title-page content-element--subtitle" i18n="@@productList.subTitle.listOfProducts">List of products</div>
-                <div class="counting-page content-element--counting" i18n="@@productList.subTitle.showing">Showing {{showedProducts}}/{{allProducts}}</div>
+                <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step2">Click here to add a product</h2>
+                <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/4' }}</span></div>
               </div>
+            </ng-template>
+          </div>
 
-              <div class="d-flex align-items-top">
-                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-                  <div *ngIf="searchStatus && searchStatus?.value.length>0" class="d-flex filter-text" i18n="@@productList.filter.show"> Show {{searchStatus.value | lowercase}}
+          <div class="d-flex justify-content-between content-element--row2">
+            <div>
+              <div class="sub-title-page content-element--subtitle" i18n="@@productList.subTitle.listOfProducts">List of products</div>
+              <div class="counting-page content-element--counting" i18n="@@productList.subTitle.showing">Showing {{showedProducts}}/{{allProducts}}</div>
+            </div>
+
+            <div class="d-flex align-items-top">
+              <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+                @if (searchStatus && searchStatus?.value.length>0) {
+                  <div class="d-flex filter-text" i18n="@@productList.filter.show"> Show {{searchStatus.value | lowercase}}
                     <div (click)="clearValue(searchStatus)" style="margin-left: 0.5rem;">
                       <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
-                  <div *ngIf="this.isSystemAdmin && myProducts && myProducts.value" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productList.filter.myProducts">My products
+                }
+                @if (this.isSystemAdmin && myProducts && myProducts.value) {
+                  <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productList.filter.myProducts">My products
                     <div (click)="clearValue(myProducts, true)" style="margin-left: 0.5rem;">
                       <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
+                }
 
-                  <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@userList.filter.placeholder">
-                    <div class="button-icon">
-                      <span class="button-icon-shape button-icon-shape--filter"></span>
-                    </div>
-                    <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
-                  </button>
-
-                  <div class="dropdown-menu" ngbDropdownMenu>
-                    <button ngbDropdownItem (click)="showStatus('ACTIVE')" i18n="@@productList.filter.showActive">Show active</button>
-                    <button ngbDropdownItem (click)="showStatus('DISABLED')" i18n="@@productList.filter.showDisabled">Show disabled</button>
-                    <ng-container *ngIf="this.isSystemAdmin">
-                      <div class="line"></div>
-                      <button ngbDropdownItem (click)="myProductsOnly(true)" i18n="@@productList.filter.showMyProducts">Show my products</button>
-                    </ng-container>
+                <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@userList.filter.placeholder">
+                  <div class="button-icon">
+                    <span class="button-icon-shape button-icon-shape--filter"></span>
                   </div>
+                  <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
+                </button>
 
+                <div class="dropdown-menu" ngbDropdownMenu>
+                  <button ngbDropdownItem (click)="showStatus('ACTIVE')" i18n="@@productList.filter.showActive">Show active</button>
+                  <button ngbDropdownItem (click)="showStatus('DISABLED')" i18n="@@productList.filter.showDisabled">Show disabled</button>
+                  @if (this.isSystemAdmin) {
+                    <div class="line"></div>
+                    <button ngbDropdownItem (click)="myProductsOnly(true)" i18n="@@productList.filter.showMyProducts">Show my products</button>
+                  }
                 </div>
 
-                <app-search-textinput
-                  [form]="searchName">
-                </app-search-textinput>
               </div>
+
+              <app-search-textinput
+                [form]="searchName">
+              </app-search-textinput>
             </div>
           </div>
+        </div>
 
-          <ng-container *ngIf="products$ | async as products">
-              <div class="row" style="margin-top: 30px;">
-                  <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let product of products.items">
-                      <app-product-card
-                              [product]=product>
-                      </app-product-card>
-                  </div>
+        @if (products$ | async; as products) {
+          <div class="row" style="margin-top: 30px;">
+            @for (product of products.items; track product) {
+              <div class="col-md-6 col-lg-4 col-xl-3">
+                <app-product-card
+                  [product]=product>
+                </app-product-card>
               </div>
-
-              <div *ngIf="products && products.items && products.items.length == 0" class="no-list-results"
-                   i18n="@@productList.noProducts">
+            }
+          </div>
+          @if (products && products.items && products.items.length == 0) {
+            <div class="no-list-results"
+              i18n="@@productList.noProducts">
                   No products
               </div>
-
-              <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-                  <ngb-pagination
-                          [(page)]="page"
-                          [pageSize]="pageSize"
-                          [collectionSize]="products.count"
-                          (pageChange)="onPageChange($event)"
-                          [maxSize]="7"
-                          [rotate]="true">
-                  </ngb-pagination>
-              </div>
-          </ng-container>
+          }
+          <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+            <ngb-pagination
+              [(page)]="page"
+              [pageSize]="pageSize"
+              [collectionSize]="products.count"
+              (pageChange)="onPageChange($event)"
+              [maxSize]="7"
+              [rotate]="true">
+            </ngb-pagination>
+          </div>
+        }
       </div>
     </div>
   </div>

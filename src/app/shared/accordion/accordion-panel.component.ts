@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit, Host, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Host, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { faBars, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { AccordionComponent } from './accordion.component';
 import { Subscribable, Subscription } from 'rxjs';
@@ -35,7 +35,9 @@ import { Subscribable, Subscription } from 'rxjs';
             })),
             transition('closed <=> open', animate('200ms'))
         ])
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AccordionPanelComponent implements OnInit, OnDestroy {
     @Input()

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { SortOption } from '../../../shared/result-sorter/result-sorter-types';
 import { map, switchMap, take, tap } from 'rxjs/operators';
@@ -11,9 +11,11 @@ import { FinalProductDetailModalComponent } from '../final-product-detail-modal/
 import { ApiFinalProduct } from '../../../../api/model/apiFinalProduct';
 
 @Component({
-  selector: 'app-final-product-list',
-  templateUrl: './final-product-list.component.html',
-  styleUrls: ['./final-product-list.component.scss']
+    selector: 'app-final-product-list',
+    templateUrl: './final-product-list.component.html',
+    styleUrls: ['./final-product-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FinalProductListComponent implements OnInit, OnChanges {
 

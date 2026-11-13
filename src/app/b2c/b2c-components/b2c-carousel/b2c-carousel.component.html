@@ -1,41 +1,46 @@
 
 <div class="carousel">
-  <ng-container *ngFor="let item of slides; let i= index">
-
-    <ng-container *ngIf="i === currentSlide">
+  @for (item of slides; track item; let i = $index) {
+    @if (i === currentSlide) {
       <div class="af-b2c-sliders">
-        <div class="af-b2c-sliders-arrows" (click)="onPreviousClick()" *ngIf="!productionRecords">
-          <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--prev"></span>
-        </div>
+        @if (!productionRecords) {
+          <div class="af-b2c-sliders-arrows" (click)="onPreviousClick()">
+            <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--prev"></span>
+          </div>
+        }
         <div class="af-b2c-sliders--main">
           <!-- <img src="/api/public/document/{{item.document.storageKey}}" class="" /> -->
           <img
             src="/api/public/image/{{item.document.storageKey}}/MEDIUM"
             default="/api/public/image/{{item.document.storageKey}}">
+          </div>
+          @if (!productionRecords) {
+            <div class="af-b2c-sliders-arrows" (click)="onNextClick()">
+              <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--next"></span>
+            </div>
+          }
         </div>
-        <div class="af-b2c-sliders-arrows" (click)="onNextClick()" *ngIf="!productionRecords">
-          <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--next"></span>
-        </div>
-      </div>
-
-      <div class="af-b2c-sliders af-b2c-sliders--narrow" *ngIf="productionRecords">
-        <div class="af-b2c-sliders-arrows" (click)="onPreviousClick()">
-          <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--prev"></span>
-        </div>
-        <div class="af-b2c-sliders-arrows" (click)="onNextClick()">
-          <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--next"></span>
-        </div>
-      </div>
-
-      <h2 *ngIf="!productionRecords" [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">{{item.name}}</h2>
-
-      <p [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">{{item.description}}</p>
-      <blockquote *ngIf="!productionRecords">
-        <span [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">
-          {{item.quote}}
-        </span>
-      </blockquote>
-    </ng-container>
-
-  </ng-container>
-</div>
+        @if (productionRecords) {
+          <div class="af-b2c-sliders af-b2c-sliders--narrow">
+            <div class="af-b2c-sliders-arrows" (click)="onPreviousClick()">
+              <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--prev"></span>
+            </div>
+            <div class="af-b2c-sliders-arrows" (click)="onNextClick()">
+              <span class="af-b2c-sliders-arrows-shape af-b2c-sliders-arrows-shape--next"></span>
+            </div>
+          </div>
+        }
+        @if (!productionRecords) {
+          <h2 [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">{{item.name}}</h2>
+        }
+        <p [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">{{item.description}}</p>
+        @if (!productionRecords) {
+          <blockquote>
+            <span [style.font-family]="b2cSettings?.textFont ? 'custom-text' : ''">
+              {{item.quote}}
+            </span>
+          </blockquote>
+        }
+      }
+    }
+  </div>

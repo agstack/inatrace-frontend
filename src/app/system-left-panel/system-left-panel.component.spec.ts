@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SystemLeftPanelComponent } from './system-left-panel.component';
 
@@ -6,8 +7,9 @@ describe('SystemLeftPanelComponent', () => {
   let component: SystemLeftPanelComponent;
   let fixture: ComponentFixture<SystemLeftPanelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       declarations: [ SystemLeftPanelComponent ]
     })
     .compileComponents();

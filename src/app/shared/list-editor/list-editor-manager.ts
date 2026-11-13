@@ -1,10 +1,10 @@
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
-import { FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormArray, AbstractControl } from '@angular/forms';
 
 export class ListEditorManager<T> {
     constructor(
-        public formArray: FormArray,
-        private emptyObjectFactory: (valScheme?: SimpleValidationScheme<T>) => FormControl,
+        public formArray: UntypedFormArray,
+        private emptyObjectFactory: (valScheme?: SimpleValidationScheme<T>) => UntypedFormControl,
         private validationScheme: SimpleValidationScheme<T>,
         private activationCallback = (value: boolean) => null
     ) {
@@ -37,7 +37,7 @@ export class ListEditorManager<T> {
 
     public addNew(returnFocusElement) {
         if (this.formArray) {
-            let form: FormControl = this.emptyObjectFactory(this.validationScheme)
+            let form: UntypedFormControl = this.emptyObjectFactory(this.validationScheme)
             let oldLength = this.formArray.controls.length
             this.lastNew = oldLength
             this.formArray.push(form)

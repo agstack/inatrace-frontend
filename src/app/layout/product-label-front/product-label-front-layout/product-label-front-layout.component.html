@@ -1,16 +1,26 @@
 <app-product-label-front-top-nav></app-product-label-front-top-nav>
-<div [class.breadcrumbs-space]="isBreadcrumbsSpaceNeeded" *ngIf="isBreadcrumbsSpaceNeeded">
-  <div class="container container-drobtinice">
-    <ul class="drobtinice" *ngIf="drobtinice">
-      <ng-container *ngFor="let drobtinica of drobtinice; first as isFirst">
-        <li><span class="drobtinice-separator" *ngIf="!isFirst">/</span>
-          <a *ngIf="drobtinica.route" [routerLink]="drobtinica.route">{{drobtinica.title}}</a>
-          <ng-container *ngIf="!drobtinica.route">{{drobtinica.title}}</ng-container>
-        </li>
-      </ng-container>
-    </ul>
+@if (isBreadcrumbsSpaceNeeded) {
+  <div [class.breadcrumbs-space]="isBreadcrumbsSpaceNeeded">
+    <div class="container container-drobtinice">
+      @if (drobtinice) {
+        <ul class="drobtinice">
+          @for (drobtinica of drobtinice; track drobtinica; let isFirst = $first) {
+            <li>@if (!isFirst) {
+              <span class="drobtinice-separator">/</span>
+            }
+            @if (drobtinica.route) {
+              <a [routerLink]="drobtinica.route">{{drobtinica.title}}</a>
+            }
+            @if (!drobtinica.route) {
+              {{drobtinica.title}}
+            }
+          </li>
+        }
+      </ul>
+    }
   </div>
 </div>
+}
 <div [class.green-padding]="isGreenPaddingNeeded"></div>
 <div class="wrapper">
   <app-page-content></app-page-content>

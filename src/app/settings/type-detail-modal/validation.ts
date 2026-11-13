@@ -1,6 +1,6 @@
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { multiFieldValidator, UndesrcoreAndCapitalsValidator } from 'src/shared/validation';
-import { FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ApiFacilityType } from '../../../api/model/apiFacilityType';
 import { ApiMeasureUnitType } from '../../../api/model/apiMeasureUnitType';
 import { ApiProcessingEvidenceType } from '../../../api/model/apiProcessingEvidenceType';
@@ -12,7 +12,7 @@ import {ApiProductType} from '../../../api/model/apiProductType';
 
 export const ApiSemiProductValidationScheme = {
   validators: [
-      multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslationsSemiProduct(group), ['required'])
+      multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslationsSemiProduct(group), ['required'])
   ],
   fields: {
     id: {
@@ -45,7 +45,7 @@ export const ApiSemiProductValidationScheme = {
 
 export const ApiProductTypeValidationScheme = {
   validators: [
-    multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslationsProductType(group), ['required'])
+    multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslationsProductType(group), ['required'])
   ],
   fields: {
     id: {
@@ -98,7 +98,7 @@ export const ApiMeasureUnitTypeValidationScheme = {
 
 export const ApiProcessingEvidenceTypeValidationScheme = {
   validators: [
-    multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslationsProcessingTypeField(group), ['required'])
+    multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslationsProcessingTypeField(group), ['required'])
   ],
   fields: {
     id: {
@@ -136,7 +136,7 @@ export const ApiProcessingEvidenceTypeValidationScheme = {
 
 export const ApiProcessingEvidenceFieldValidationScheme = {
   validators: [
-    multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslationsProcessingEvidenceField(group), ['required'])
+    multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslationsProcessingEvidenceField(group), ['required'])
   ],
   fields: {
     id: {
@@ -163,7 +163,7 @@ export const ApiProcessingEvidenceFieldValidationScheme = {
   }
 } as SimpleValidationScheme<ApiProcessingEvidenceField>;
 
-export function requiredTranslationsSemiProduct(control: FormGroup): ValidationErrors | null {
+export function requiredTranslationsSemiProduct(control: UntypedFormGroup): ValidationErrors | null {
   if (!control || !control.value || !control.contains('translations')) {
     return null;
   }
@@ -180,7 +180,7 @@ export function requiredTranslationsSemiProduct(control: FormGroup): ValidationE
   return null;
 }
 
-export function requiredTranslationsProductType(control: FormGroup): ValidationErrors | null {
+export function requiredTranslationsProductType(control: UntypedFormGroup): ValidationErrors | null {
   if (!control || !control.value || !control.contains('translations')) {
     return null;
   }
@@ -197,7 +197,7 @@ export function requiredTranslationsProductType(control: FormGroup): ValidationE
   return null;
 }
 
-export function requiredTranslationsProcessingEvidenceField(control: FormGroup): ValidationErrors | null {
+export function requiredTranslationsProcessingEvidenceField(control: UntypedFormGroup): ValidationErrors | null {
   if (!control || !control.value || !control.contains('translations')) {
     return null;
   }
@@ -214,7 +214,7 @@ export function requiredTranslationsProcessingEvidenceField(control: FormGroup):
   return null;
 }
 
-export function requiredTranslationsProcessingTypeField(control: FormGroup): ValidationErrors | null {
+export function requiredTranslationsProcessingTypeField(control: UntypedFormGroup): ValidationErrors | null {
   if (!control || !control.value || !control.contains('translations')) {
     return null;
   }

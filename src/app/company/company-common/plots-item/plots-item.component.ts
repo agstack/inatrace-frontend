@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as turf from '@turf/turf';
 import { generateFormFromMetadata } from 'src/shared/utils';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { GenericEditableItemComponent } from 'src/app/shared/generic-editable-item/generic-editable-item.component';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 import { Subject } from 'rxjs/internal/Subject';
@@ -16,9 +16,11 @@ import { ApiPlotValidationScheme } from '../plots-form/validation';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-plots-item',
-  templateUrl: './plots-item.component.html',
-  styleUrls: ['./plots-item.component.scss']
+    selector: 'app-plots-item',
+    templateUrl: './plots-item.component.html',
+    styleUrls: ['./plots-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> implements OnInit {
 
@@ -110,7 +112,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiPlot.formMetadata(), value, ApiPlotValidationScheme);
   }
 
@@ -135,7 +137,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
   }
 
   updateFormCoordinates(coordinates: Array<ApiPlotCoordinate>) {
-    const coordinatesFormArray = this.form.get('coordinates') as FormArray;
+    const coordinatesFormArray = this.form.get('coordinates') as UntypedFormArray;
     coordinatesFormArray.clear();
 
     if (coordinates) {

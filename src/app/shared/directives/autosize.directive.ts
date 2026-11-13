@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 
 @Directive({
-    selector: 'textarea[autosize]'
+    selector: 'textarea[autosize]',
+    standalone: false
 })
 export class AutosizeDirective implements AfterViewInit, DoCheck {
     @Input()

@@ -1,16 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
 import { CodebookHelperService, PagedSearchResults } from 'src/interfaces/CodebookHelperService';
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { isRequired, pripraviSifrant } from 'src/shared/utils';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
     selector: 'single-choice',
     templateUrl: './single-choice.component.html',
-    styleUrls: ['./single-choice.component.scss']
+    styleUrls: ['./single-choice.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SingleChoiceComponent implements OnInit {
     @Input()
@@ -24,15 +26,15 @@ export class SingleChoiceComponent implements OnInit {
     @Input()
     markRequired?: boolean;
 
-    private _formControl: FormControl = null;
-    @Input() set formControlInput(value: FormControl) {
+    private _formControl: UntypedFormControl = null;
+    @Input() set formControlInput(value: UntypedFormControl) {
         this._formControl = value;
         if (value) {
             this.resubscribe()
         }
     }
 
-    get formControlInput(): FormControl {
+    get formControlInput(): UntypedFormControl {
         return this._formControl;
     }
 
@@ -101,15 +103,26 @@ export class SingleChoiceComponent implements OnInit {
     @Input()
     showPagingInFooter: boolean = false
 
-    get supplierState$(): Observable<string> {
-        return this.supplierFeedback && this.codebookService
+    supplierState: string = null;
+    notFoundText: string = $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
+    private supplierStateSub: Subscription = null;
+
+    private subscribeSupplierState(): void {
+        if (this.supplierStateSub) {
+            this.supplierStateSub.unsubscribe();
+            this.supplierStateSub = null;
+        }
+        const state$ = this.supplierFeedback && this.codebookService
             ? (this.codebookService as any).supplierState$ : null;
+        if (state$) {
+            this.supplierStateSub = state$.subscribe((value: string) => this.supplierState = value);
+        } else {
+            this.supplierState = null;
+        }
     }
 
     get supplierNotFoundText(): string {
-        const state = this.supplierFeedback && this.codebookService && (this.codebookService as any).supplierState$;
-        if (state && state.value !== 'ready') { return ''; }
-        return $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
+        return this.notFoundText;
     }
 
     retrySupplierQuery() {
@@ -166,8 +179,8 @@ export class SingleChoiceComponent implements OnInit {
     @Output() isActive = new EventEmitter<any>();
 
     options$: Observable<Array<any>> = null;
-    options: Array<any> = null
-    allOptions: Array<any> = null
+    options: Array<any> = []
+    allOptions: Array<any> = []
 
     keys$: Observable<string> = null
 
@@ -279,7 +292,7 @@ export class SingleChoiceComponent implements OnInit {
             this.optionsSubscription.unsubscribe()
         }
         this.optionsSubscription = this.autocompleteSelection$.subscribe((choices) => {
-            this.options = choices;
+            setTimeout(() => this.options = choices);
         })
     }
 
@@ -349,7 +362,7 @@ export class SingleChoiceComponent implements OnInit {
             }),
             startWith(this.allOptions)
         ).subscribe((choices) => {
-            this.options = choices;
+            setTimeout(() => this.options = choices);
         })
     }
 
@@ -381,6 +394,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     resubscribe() {
+        this.subscribeSupplierState();
         if (this.codebookService) {
             this.resubscribeCodebook()
         } else if (this.enumChoices) {

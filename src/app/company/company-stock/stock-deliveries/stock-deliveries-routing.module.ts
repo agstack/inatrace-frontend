@@ -7,7 +7,8 @@ import {StockBulkDeliveryDetailsComponent} from '../stock-core/stock-bulk-delive
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tab'
+    redirectTo: 'tab',
+    pathMatch: 'full'
   },
   {
     path: 'tab',

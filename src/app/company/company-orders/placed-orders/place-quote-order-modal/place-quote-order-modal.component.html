@@ -1,38 +1,40 @@
 <div class="modal-container">
-    <div class="modal-header">
-        <h4 class="modal-title sp-faq-modal-title"
-            i18n="@@company.orders.placedOrders.placeQuoteOrderModal.title">First select facility and order template</h4>
-        <button type="button" class="close" aria-label="Close"
-                (click)="activeModal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <single-choice label="Select facility"
-                       i18n-label="@@company.orders.placedOrders.placeQuoteOrderModal.field.facility.label"
-                       [formControlInput]="facilityFormControl"
-                       [codebookService]="facilitiesCodebookService">
-        </single-choice>
+  <div class="modal-header">
+    <h4 class="modal-title sp-faq-modal-title"
+    i18n="@@company.orders.placedOrders.placeQuoteOrderModal.title">First select facility and order template</h4>
+    <button type="button" class="btn-close" aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')">
 
-        <single-choice *ngIf="procActionsCodebookService"
-                       label="Select quote order template"
-                       i18n-label="@@company.orders.placedOrders.placeQuoteOrderModal.field.orderTemplate.label"
-                       [formControlInput]="processingActionFormControl"
-                       [codebookService]="procActionsCodebookService">
-        </single-choice>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outlined"
-                i18n="@@company.orders.placedOrders.placeQuoteOrderModal.button.cancel"
-                (click)="cancel()">
+    </button>
+  </div>
+  <div class="modal-body">
+    <single-choice label="Select facility"
+      i18n-label="@@company.orders.placedOrders.placeQuoteOrderModal.field.facility.label"
+      [formControlInput]="facilityFormControl"
+      [codebookService]="facilitiesCodebookService">
+    </single-choice>
+
+    @if (procActionsCodebookService) {
+      <single-choice
+        label="Select quote order template"
+        i18n-label="@@company.orders.placedOrders.placeQuoteOrderModal.field.orderTemplate.label"
+        [formControlInput]="processingActionFormControl"
+        [codebookService]="procActionsCodebookService">
+      </single-choice>
+    }
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlined"
+      i18n="@@company.orders.placedOrders.placeQuoteOrderModal.button.cancel"
+      (click)="cancel()">
             <span>Cancel</span>
         </button>
-        <button type="button" class="btn"
-                i18n="@@company.orders.placedOrders.placeQuoteOrderModal.button..confirm"
+    <button type="button" class="btn"
+      i18n="@@company.orders.placedOrders.placeQuoteOrderModal.button..confirm"
 
-                [disabled]="!facilityFormControl.valid || !processingActionFormControl.valid"
-                (click)="onConfirm()">
+      [disabled]="!facilityFormControl.valid || !processingActionFormControl.valid"
+      (click)="onConfirm()">
             <span>Confirm</span>
         </button>
-    </div>
+  </div>
 </div>

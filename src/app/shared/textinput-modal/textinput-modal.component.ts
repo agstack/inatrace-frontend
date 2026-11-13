@@ -1,18 +1,20 @@
-import { Component, OnInit, Input, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-textinput-modal',
     templateUrl: './textinput-modal.component.html',
-    styleUrls: ['./textinput-modal.component.scss']
+    styleUrls: ['./textinput-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TextinputModalComponent implements OnInit {
     @Input()
     label: string;
 
     @Input()
-    form: FormControl;
+    form: UntypedFormControl;
 
     @Input()
     rows?: number = 5;
@@ -51,7 +53,8 @@ export class TextinputModalComponent implements OnInit {
     ngAfterViewInit() {
         // hack da dela initial autoresize
         setTimeout(() => {
-            this.vnos.first.textareafield.first.nativeElement.focus()
+            const input = this.vnos?.first?.textareafield?.first?.nativeElement;
+            input?.focus();
         })
     }
 

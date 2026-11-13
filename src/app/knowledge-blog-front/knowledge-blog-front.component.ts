@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 
 @Component({
-  selector: 'app-knowledge-blog-front',
-  templateUrl: './knowledge-blog-front.component.html',
-  styleUrls: ['./knowledge-blog-front.component.scss']
+    selector: 'app-knowledge-blog-front',
+    templateUrl: './knowledge-blog-front.component.html',
+    styleUrls: ['./knowledge-blog-front.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class KnowledgeBlogFrontComponent implements OnInit {
 

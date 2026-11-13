@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { faBars} from '@fortawesome/free-solid-svg-icons';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UnsubscribeList } from 'src/shared/rxutils';
@@ -11,9 +11,11 @@ import { ApiUserGet } from '../../../api/model/apiUserGet';
 import { SelectedUserCompanyService } from '../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-user-box',
-  templateUrl: './user-box.component.html',
-  styleUrls: ['./user-box.component.scss']
+    selector: 'app-user-box',
+    templateUrl: './user-box.component.html',
+    styleUrls: ['./user-box.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UserBoxComponent implements OnInit, OnDestroy {
 

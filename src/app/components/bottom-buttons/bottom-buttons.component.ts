@@ -1,12 +1,14 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'bottom-buttons',
-  templateUrl: './bottom-buttons.component.html',
-  styleUrls: ['./bottom-buttons.component.scss']
+    selector: 'bottom-buttons',
+    templateUrl: './bottom-buttons.component.html',
+    styleUrls: ['./bottom-buttons.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BottomButtonsComponent implements OnInit {
 
@@ -23,7 +25,7 @@ export class BottomButtonsComponent implements OnInit {
   updateButton = false
 
   @Input()
-  form: FormGroup = null
+  form: UntypedFormGroup = null
 
   // Either we use form or fields 'changed' and 'invalid'
   @Input()

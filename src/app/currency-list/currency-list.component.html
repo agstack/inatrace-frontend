@@ -1,122 +1,125 @@
 <app-authorised-layout class="af-layout--system">
-    <app-system-left-panel title="System" [isAdmin]="true"></app-system-left-panel>
+  <app-system-left-panel title="System" [isAdmin]="true"></app-system-left-panel>
 
-    <div class="main">
-        <div class="row">
-            <div class="col">
-                <ng-container *ngIf="enabledCurrencyType$ | async as enabledCurrencyTypes">
-                    <div class="main-inside-top content-element">
-                        <div class="d-flex justify-content-between content-element--row1">
-                            <div class="title-page content-element--title" i18n="@@currencyList.currency.list">Currency list</div>
-                        </div>
-
-                        <div class="d-flex justify-content-between content-element--row2">
-                            <div>
-                                <div class="sub-title-page content-element--subtitle" i18n="@@currencyList.currencies.enabled">
+  <div class="main">
+    <div class="row">
+      <div class="col">
+        @if (enabledCurrencyType$ | async; as enabledCurrencyTypes) {
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@currencyList.currency.list">Currency list</div>
+            </div>
+            <div class="d-flex justify-content-between content-element--row2">
+              <div>
+                <div class="sub-title-page content-element--subtitle" i18n="@@currencyList.currencies.enabled">
                                     Enabled currencies
                                 </div>
-                                <div class="counting-page content-element--counting" i18n="@@currencyList.count">
+                <div class="counting-page content-element--counting" i18n="@@currencyList.count">
                                     Showing {{ (enabledPage - 1) * this.pageSize + enabledCurrencyTypes.items.length }}/{{ enabledCurrencyTypes.count }}
                                 </div>
-                            </div>
-
-                            <app-search-textinput
-                                    [form]="enabledSearchText"
-                                    (valueChange)="searchEnabledInput($event)">
-                            </app-search-textinput>
-                        </div>
-                    </div>
-
-                    <div class="main-inside-main">
-                        <table *ngIf="enabledCurrencyTypes && enabledCurrencyTypes.items && enabledCurrencyTypes.items.length > 0; else noCurrencies" class="af-table">
-                            <thead>
-                                <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChangeEnabled($event)"></tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let enabledCurrency of enabledCurrencyTypes.items">
-                                    <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ enabledCurrency.code }}</span></td>
-                                    <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ enabledCurrency.label }}</span></td>
-                                    <td [attr.data-label]="sortOptions[2].name">
-                                        <span>
-                                            <a i18n="@@currencyList.tableCol.action.disable"
-                                               (click)="disableCurrency(enabledCurrency.id)"
-                                               class="value-chain-action enabled-action"
-                                               [class.disabled-action]="isRegionalAdmin">Disable</a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div [style.display]="enabledPaginationActive ? 'flex' : 'none'" class="justify-content-end">
-                        <ngb-pagination
-                                [(page)]="enabledPage"
-                                [pageSize]="pageSize"
-                                [collectionSize]="enabledCurrencyTypes.count"
-                                (pageChange)="enabledPageChange($event)"
-                                [maxSize]="7"
-                                [rotate]="true"></ngb-pagination>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="disabledCurrencyType$ | async as disabledCurrencyTypes">
-                    <div class="d-flex justify-content-between content-element--row2">
-                        <div>
-                            <div class="sub-title-page content-element--subtitle" i18n="@@currencyList.currencies.disabled">
-                                Disabled currencies
-                            </div>
-                            <div class="counting-page content-element--counting" i18n="@@currencyList.count">
-                                Showing {{ (disabledPage - 1) * pageSize + disabledCurrencyTypes.items.length }}/{{ disabledCurrencyTypes.count }}
-                            </div>
-                        </div>
-
-                        <app-search-textinput
-                                [form]="disabledSearchText"
-                                (valueChange)="searchDisabledInput($event)">
-                        </app-search-textinput>
-                    </div>
-
-                    <div class="main-inside-main">
-
-                        <table *ngIf="disabledCurrencyTypes && disabledCurrencyTypes.items && disabledCurrencyTypes.items.length > 0; else noCurrencies" class="af-table">
-                            <thead>
-                                <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChangeDisabled($event)"></tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let disabledCurrency of disabledCurrencyTypes.items">
-                                <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ disabledCurrency.code }}</span></td>
-                                <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ disabledCurrency.label }}</span></td>
-                                <td [attr.data-label]="sortOptions[2].name">
-                                    <span>
-                                        <a i18n="@@currencyList.tableCol.action.enable"
-                                           (click)="enableCurrency(disabledCurrency.id)"
-                                           class="value-chain-action enabled-action">
-                                            Enable
-                                        </a>
-                                    </span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div [style.display]="disabledPaginationActive ? 'flex' : 'none'" class="justify-content-end">
-                        <ngb-pagination
-                                [(page)]="disabledPage"
-                                [pageSize]="pageSize"
-                                [collectionSize]="disabledCurrencyTypes.count"
-                                (pageChange)="disabledPageChange($event)"
-                                [maxSize]="7"
-                                [rotate]="true"></ngb-pagination>
-                    </div>
-                </ng-container>
+              </div>
+              <app-search-textinput
+                [form]="enabledSearchText"
+                (valueChange)="searchEnabledInput($event)">
+              </app-search-textinput>
             </div>
-        </div>
-    </div>
-    <ng-template #noCurrencies>
-        <div class="no-list-results" i18n="@@currencyList.noCurrencies">
+          </div>
+          <div class="main-inside-main">
+            @if (enabledCurrencyTypes && enabledCurrencyTypes.items && enabledCurrencyTypes.items.length > 0) {
+              <table class="af-table">
+                <thead>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChangeEnabled($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (enabledCurrency of enabledCurrencyTypes.items; track enabledCurrency) {
+                    <tr>
+                      <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ enabledCurrency.code }}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ enabledCurrency.label }}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name">
+                        <span>
+                          <a i18n="@@currencyList.tableCol.action.disable"
+                            (click)="disableCurrency(enabledCurrency.id)"
+                            class="value-chain-action enabled-action"
+                          [class.disabled-action]="isRegionalAdmin">Disable</a>
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
+              <div class="no-list-results" i18n="@@currencyList.noCurrencies">
             No currencies
         </div>
-    </ng-template>
+            }
+          </div>
+          <div [style.display]="enabledPaginationActive ? 'flex' : 'none'" class="justify-content-end">
+            <ngb-pagination
+              [(page)]="enabledPage"
+              [pageSize]="pageSize"
+              [collectionSize]="enabledCurrencyTypes.count"
+              (pageChange)="enabledPageChange($event)"
+              [maxSize]="7"
+            [rotate]="true"></ngb-pagination>
+          </div>
+        }
+
+        @if (disabledCurrencyType$ | async; as disabledCurrencyTypes) {
+          <div class="d-flex justify-content-between content-element--row2">
+            <div>
+              <div class="sub-title-page content-element--subtitle" i18n="@@currencyList.currencies.disabled">
+                                Disabled currencies
+                            </div>
+              <div class="counting-page content-element--counting" i18n="@@currencyList.count">
+                                Showing {{ (disabledPage - 1) * pageSize + disabledCurrencyTypes.items.length }}/{{ disabledCurrencyTypes.count }}
+                            </div>
+            </div>
+            <app-search-textinput
+              [form]="disabledSearchText"
+              (valueChange)="searchDisabledInput($event)">
+            </app-search-textinput>
+          </div>
+          <div class="main-inside-main">
+            @if (disabledCurrencyTypes && disabledCurrencyTypes.items && disabledCurrencyTypes.items.length > 0) {
+              <table class="af-table">
+                <thead>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChangeDisabled($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (disabledCurrency of disabledCurrencyTypes.items; track disabledCurrency) {
+                    <tr>
+                      <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ disabledCurrency.code }}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ disabledCurrency.label }}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name">
+                        <span>
+                          <a i18n="@@currencyList.tableCol.action.enable"
+                            (click)="enableCurrency(disabledCurrency.id)"
+                            class="value-chain-action enabled-action">
+                                            Enable
+                                        </a>
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
+              <div class="no-list-results" i18n="@@currencyList.noCurrencies">
+            No currencies
+        </div>
+            }
+          </div>
+          <div [style.display]="disabledPaginationActive ? 'flex' : 'none'" class="justify-content-end">
+            <ngb-pagination
+              [(page)]="disabledPage"
+              [pageSize]="pageSize"
+              [collectionSize]="disabledCurrencyTypes.count"
+              (pageChange)="disabledPageChange($event)"
+              [maxSize]="7"
+            [rotate]="true"></ngb-pagination>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
 </app-authorised-layout>

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { defaultEmptyObject, generateFormFromMetadata } from 'src/shared/utils';
 import { ApiProductLabelFeedback } from 'src/api/model/apiProductLabelFeedback';
@@ -14,9 +14,11 @@ import {
 import { EnumSifrant } from '../../../shared-services/enum-sifrant';
 
 @Component({
-  selector: 'app-feedback-modal',
-  templateUrl: './feedback-modal.component.html',
-  styleUrls: ['./feedback-modal.component.scss']
+    selector: 'app-feedback-modal',
+    templateUrl: './feedback-modal.component.html',
+    styleUrls: ['./feedback-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FeedbackModalComponent implements OnInit {
 
@@ -31,7 +33,7 @@ export class FeedbackModalComponent implements OnInit {
   @Input()
   feedback;
 
-  feedbackForm: FormGroup;
+  feedbackForm: UntypedFormGroup;
 
   productName: string;
 

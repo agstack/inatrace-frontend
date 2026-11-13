@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { debounceTime, map, shareReplay, startWith, switchMap, tap, take } from 'rxjs/operators';
@@ -10,15 +10,17 @@ import { GlobalEventManagerService } from 'src/app/core/global-event-manager.ser
 import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-improved.service';
 
 @Component({
-  selector: 'app-batches-list',
-  templateUrl: './batches-list.component.html',
-  styleUrls: ['./batches-list.component.scss']
+    selector: 'app-batches-list',
+    templateUrl: './batches-list.component.html',
+    styleUrls: ['./batches-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BatchesListComponent implements OnInit {
 
   batches = [];
 
-  searchName = new FormControl(null)
+  searchName = new UntypedFormControl(null)
 
   reloadPing$ = new BehaviorSubject<boolean>(false)
   pagingParams$ = new BehaviorSubject({})

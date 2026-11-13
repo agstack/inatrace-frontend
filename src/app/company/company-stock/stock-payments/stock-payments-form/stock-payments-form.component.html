@@ -1,438 +1,483 @@
 <!-- Confirmation data (if payment is already confirmed) -->
-<div class="af-payment-status" *ngIf="confirmedByUser && confirmedAt">
+@if (confirmedByUser && confirmedAt) {
+  <div class="af-payment-status">
     <div class="af-payment-status-icon">
-        <span class="af-payment-status-icon-shape af-payment-status-icon-shape--confirmed"></span>
+      <span class="af-payment-status-icon-shape af-payment-status-icon-shape--confirmed"></span>
     </div>
     <div class="af-payment-status-description" i18n="@@paymentForm.confirmedBy">
         <p>Payment was confirmed by: {{confirmedByUser}} <br>at ({{confirmedAt}})</p>
     </div>
-</div>
+  </div>
+}
 
-<div *ngIf="companyId != null" class="af-form-row af-form-row--nomargin">
-
+@if (companyId != null) {
+  <div class="af-form-row af-form-row--nomargin">
     <div class="af-form-block--c12">
-
-        <!-- Formal creation time -->
-        <div class="af-row">
-            <div class="af-c12">
-                <app-datepicker
-                        label="Payment date"
-                        i18n-label="@@paymentForm.datepicker.date.label"
-                        [form]="paymentForm.get('formalCreationTime')"
-                        [invalid]="submitted && paymentForm.get('formalCreationTime').invalid">
-                    <ng-container *ngIf="submitted">
-                        <div *ngIf="paymentForm.get('formalCreationTime').errors as errors" class="sc-invalid-feedback">
-                            <div *ngIf="errors.required" i18n="@@paymentForm.datepicker.date.error">
+      <!-- Formal creation time -->
+      <div class="af-row">
+        <div class="af-c12">
+          <app-datepicker
+            label="Payment date"
+            i18n-label="@@paymentForm.datepicker.date.label"
+            [form]="paymentForm.get('formalCreationTime')"
+            [invalid]="submitted && paymentForm.get('formalCreationTime').invalid">
+            @if (submitted) {
+              @if (paymentForm.get('formalCreationTime').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@paymentForm.datepicker.date.error">
                                 Payment date is required
                             </div>
-                        </div>
-                    </ng-container>
-                </app-datepicker>
-            </div>
-        </div>
-
-        <!-- Payable from (company) -->
-        <div class="af-row">
-            <div class="af-c12">
-                <textinput
-                        [form]="payableFromForm"
-                        label="Payable from"
-                        style="width: 100%"
-                        i18n-label="@@paymentForm.textinput.payableFromForm.label"
-                        [readOnly]=true>
-                </textinput>
-            </div>
-        </div>
-
-        <div class="af-row">
-            <div class="af-c12">
-
-                <!-- Title of the "tree" view (payable to) -->
-                <div class="af-row">
-                    <div class="af-c12">
-                        <label class="d-flex mb-0 text-input-label" i18n="@@paymentForm.textinput.payableTo.label">Payable to</label>
-                    </div>
+                  }
                 </div>
-
-                <!-- Nice "tree" view of farmer, collector and company -->
-                <div class="af-row">
-                    <div class="af-c1 af-ustwo--withfriends">
-                        <div class="af-ustwo" i18n="@@paymentForm.textinput.payableTo.or">or</div>
-                        <div class="af-ustwo" i18n="@@paymentForm.textinput.payableTo.or">or</div>
-                    </div>
-                    <div class="af-c2">
-                        <div class="af-ustwo-line1" i18n="@@paymentForm.textinput.payableTo.company">Company</div>
-                        <div class="af-ustwo-line2" i18n="@@paymentForm.textinput.payableTo.collector">Collector</div>
-                        <div class="af-ustwo-line3" i18n="@@paymentForm.textinput.payableTo.farmer">Farmer</div>
-                    </div>
-
-                    <div class="af-c9">
-
-                        <!-- Associated company -->
-                        <single-choice
-                                style="min-width: 150px;"
-                                [formControlInput]="searchCompaniesForm"
-                                [codebookService]="associatedCompaniesService"
-                                [isInvalidChoice]="submitted && paymentForm.get('recipientCompany').invalid"
-                                (onChange)="setCompany($event)">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('recipientCompany').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.atLeastOnePayableTo" i18n="@@productLabelStockPayments.singleChoice.company.error.atLeastOne">
+              }
+            }
+          </app-datepicker>
+        </div>
+      </div>
+      <!-- Payable from (company) -->
+      <div class="af-row">
+        <div class="af-c12">
+          <textinput
+            [form]="payableFromForm"
+            label="Payable from"
+            style="width: 100%"
+            i18n-label="@@paymentForm.textinput.payableFromForm.label"
+            [readOnly]=true>
+          </textinput>
+        </div>
+      </div>
+      <div class="af-row">
+        <div class="af-c12">
+          <!-- Title of the "tree" view (payable to) -->
+          <div class="af-row">
+            <div class="af-c12">
+              <label class="d-flex mb-0 text-input-label" i18n="@@paymentForm.textinput.payableTo.label">Payable to</label>
+            </div>
+          </div>
+          <!-- Nice "tree" view of farmer, collector and company -->
+          <div class="af-row">
+            <div class="af-c1 af-ustwo--withfriends">
+              <div class="af-ustwo" i18n="@@paymentForm.textinput.payableTo.or">or</div>
+              <div class="af-ustwo" i18n="@@paymentForm.textinput.payableTo.or">or</div>
+            </div>
+            <div class="af-c2">
+              <div class="af-ustwo-line1" i18n="@@paymentForm.textinput.payableTo.company">Company</div>
+              <div class="af-ustwo-line2" i18n="@@paymentForm.textinput.payableTo.collector">Collector</div>
+              <div class="af-ustwo-line3" i18n="@@paymentForm.textinput.payableTo.farmer">Farmer</div>
+            </div>
+            <div class="af-c9">
+              <!-- Associated company -->
+              <single-choice
+                style="min-width: 150px;"
+                [formControlInput]="searchCompaniesForm"
+                [codebookService]="associatedCompaniesService"
+                [isInvalidChoice]="submitted && paymentForm.get('recipientCompany').invalid"
+                (onChange)="setCompany($event)">
+                @if (submitted) {
+                  @if (paymentForm.get('recipientCompany').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.atLeastOnePayableTo) {
+                        <div i18n="@@productLabelStockPayments.singleChoice.company.error.atLeastOne">
                                         At least one of payable to fields is required
                                     </div>
-                                    <div *ngIf="errors.onlyOnePayableTo" i18n="@@productLabelStockPayments.singleChoice.company.error.onlyOne">
+                      }
+                      @if (errors.onlyOnePayableTo) {
+                        <div i18n="@@productLabelStockPayments.singleChoice.company.error.onlyOne">
                                         Only one of payable to fields is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-
-                        <!-- User customer representative (collector) -->
-                        <single-choice
-                                style="min-width: 150px"
-                                [formControlInput]="searchCollectorsForm"
-                                [codebookService]="collectorsCodebook"
-                                (onChange)="setCollector($event)">
-                        </single-choice>
-
-                        <!-- Recipient user customer (farmer) -->
-                        <single-choice
-                                style="min-width: 150px"
-                                [formControlInput]="searchFarmersForm"
-                                [codebookService]="farmersCodebook"
-                                [isInvalidChoice]="submitted && paymentForm.get('recipientUserCustomer').invalid"
-                                (onChange)="setFarmer($event)">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('recipientUserCustomer').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.atLeastOnePayableTo" i18n="@@productLabelStockPayments.singleChoice.farmer.error.atLeastOne">
+                      }
+                    </div>
+                  }
+                }
+              </single-choice>
+              <!-- User customer representative (collector) -->
+              <single-choice
+                style="min-width: 150px"
+                [formControlInput]="searchCollectorsForm"
+                [codebookService]="collectorsCodebook"
+                (onChange)="setCollector($event)">
+              </single-choice>
+              <!-- Recipient user customer (farmer) -->
+              <single-choice
+                style="min-width: 150px"
+                [formControlInput]="searchFarmersForm"
+                [codebookService]="farmersCodebook"
+                [isInvalidChoice]="submitted && paymentForm.get('recipientUserCustomer').invalid"
+                (onChange)="setFarmer($event)">
+                @if (submitted) {
+                  @if (paymentForm.get('recipientUserCustomer').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.atLeastOnePayableTo) {
+                        <div i18n="@@productLabelStockPayments.singleChoice.farmer.error.atLeastOne">
                                         At least one of payable to fields is required
                                     </div>
-                                    <div *ngIf="errors.onlyOnePayableTo" i18n="@@productLabelStockPayments.singleChoice.farmer.error.onlyOne">
+                      }
+                      @if (errors.onlyOnePayableTo) {
+                        <div i18n="@@productLabelStockPayments.singleChoice.farmer.error.onlyOne">
                                         Only one of payable to fields is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-
+                      }
                     </div>
-                </div>
-
-                <!-- Order reference -->
-                <div class="af-row">
-                    <textinput
-                            label="Order reference"
-                            placeholder="Enter order reference"
-                            i18n-label="@@paymentForm.textinput.stockOrderId.label"
-                            i18n-placeholder="@@paymentForm.textinput.stockOrderId.placeholder"
-                            style="width: 100%"
-                            [form]="orderReferenceForm"
-                            [readOnly]=true>
-                    </textinput>
-                </div>
-
-                <!-- Preferred way of payment -->
-                <div class="af-row" *ngIf="mode === modeEnum.PURCHASE">
-                    <div class="af-c12">
-                        <single-choice
-                                label="Preferred way of payment"
-                                i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment"
-                                style="min-width: 150px;"
-                                [formControlInput]="searchPreferredWayOfPayment"
-                                [codebookService]="codebookPreferredWayOfPayment"
-                                [isInvalidChoice]="submitted && searchPreferredWayOfPayment.invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="searchPreferredWayOfPayment.errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment.error">
+                  }
+                }
+              </single-choice>
+            </div>
+          </div>
+          <!-- Order reference -->
+          <div class="af-row">
+            <textinput
+              label="Order reference"
+              placeholder="Enter order reference"
+              i18n-label="@@paymentForm.textinput.stockOrderId.label"
+              i18n-placeholder="@@paymentForm.textinput.stockOrderId.placeholder"
+              style="width: 100%"
+              [form]="orderReferenceForm"
+              [readOnly]=true>
+            </textinput>
+          </div>
+          <!-- Preferred way of payment -->
+          @if (mode === modeEnum.PURCHASE) {
+            <div class="af-row">
+              <div class="af-c12">
+                <single-choice
+                  label="Preferred way of payment"
+                  i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment"
+                  style="min-width: 150px;"
+                  [formControlInput]="searchPreferredWayOfPayment"
+                  [codebookService]="codebookPreferredWayOfPayment"
+                  [isInvalidChoice]="submitted && searchPreferredWayOfPayment.invalid">
+                  @if (submitted) {
+                    @if (searchPreferredWayOfPayment.errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment.error">
                                         Preferred way of payment is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-                    </div>
-                </div>
-
-                <!-- Payment purpose -->
-                <div class="af-row">
-                    <div class="af-c12">
-                        <single-choice
-                                label="Payment purpose"
-                                i18n-label="@@paymentForm.label.paymentPurpose"
-                                [formControlInput]="paymentForm.get('paymentPurposeType')"
-                                [codebookService]="paymentPurposeTypesCodebook"
-                                [isInvalidChoice]="submitted && paymentForm.get('paymentPurposeType').invalid"
-                                (onChange)="changeReceiptDocumentLabel()">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('paymentPurposeType').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@paymentForm.textinput.paymentPurpose.error">
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              </div>
+            </div>
+          }
+          <!-- Payment purpose -->
+          <div class="af-row">
+            <div class="af-c12">
+              <single-choice
+                label="Payment purpose"
+                i18n-label="@@paymentForm.label.paymentPurpose"
+                [formControlInput]="paymentForm.get('paymentPurposeType')"
+                [codebookService]="paymentPurposeTypesCodebook"
+                [isInvalidChoice]="submitted && paymentForm.get('paymentPurposeType').invalid"
+                (onChange)="changeReceiptDocumentLabel()">
+                @if (submitted) {
+                  @if (paymentForm.get('paymentPurposeType').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@paymentForm.textinput.paymentPurpose.error">
                                         Payment purpose is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
+                      }
                     </div>
-                </div>
-
-                <!-- Payment type -->
-                <div class="af-row">
-                    <div class="af-c12">
-                        <single-choice
-                                label="Payment type"
-                                i18n-label="@@paymentForm.label.paymentType"
-                                [formControlInput]="paymentForm.get('paymentType')"
-                                [codebookService]="paymentTypesCodebook"
-                                [isInvalidChoice]="submitted && paymentForm.get('paymentType').invalid"
-                                [readonly]="readonlyPaymentType">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('paymentType').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@paymentForm.textinput.name.error">
+                  }
+                }
+              </single-choice>
+            </div>
+          </div>
+          <!-- Payment type -->
+          <div class="af-row">
+            <div class="af-c12">
+              <single-choice
+                label="Payment type"
+                i18n-label="@@paymentForm.label.paymentType"
+                [formControlInput]="paymentForm.get('paymentType')"
+                [codebookService]="paymentTypesCodebook"
+                [isInvalidChoice]="submitted && paymentForm.get('paymentType').invalid"
+                [readonly]="readonlyPaymentType">
+                @if (submitted) {
+                  @if (paymentForm.get('paymentType').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@paymentForm.textinput.name.error">
                                         Payment type is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
+                      }
                     </div>
-                </div>
-
-                <!-- Amount purchased -->
-                <div class="af-row" *ngIf="mode === modeEnum.PURCHASE">
-                    <div class="af-c12">
-                        <textinput
-                                [label]="getUnitLabelString(currencyAndUnitStrs.purchasedLabel)"
-                                placeholder="Enter purchased quantity"
-                                i18n-placeholder="@@paymentForm.textinput.purchased.placeholder"
-                                style="width: 100%"
-                                [value]="purchased"
-                                [valueTextInput]="true"
-                                [readOnly]="true">
-                        </textinput>
-                    </div>
-                </div>
-
-                <!-- Open balance (fulfilled quantity) -->
-                <div class="af-row" *ngIf="mode === modeEnum.PURCHASE">
-                    <div class="af-c12">
-                        <textinput
-                                [label]="getCurrencyString(currencyAndUnitStrs.openBalanceLabel)"
-                                placeholder="Enter balance"
-                                i18n-placeholder="@@paymentForm.textinput.balance.placeholder"
-                                style="width: 100%"
-                                [value]="openBalance"
-                                [valueTextInput]="true"
-                                [readOnly]="true">
-                        </textinput>
-                    </div>
-                </div>
-
-                <ng-container *ngIf="mode === modeEnum.PURCHASE">
-
-                    <!-- Amount paid to the collector -->
-                    <div class="af-row" *ngIf="paymentForm.get('preferredWayOfPayment')?.value == preferredWayOfPayment.CASHVIACOLLECTOR">
-                        <div class="af-c12">
-                            <textinput
-                                    [label]="getCurrencyString(currencyAndUnitStrs.paidFromCollectorToFarmerLabel)"
-                                    placeholder="Enter amount already paid"
-                                    i18n-placeholder="@@paymentForm.textinput.amountAlready.placeholder"
-                                    style="width: 100%"
-                                    [form]="paymentForm.get('amount')"
-                                    [isInvalid]="submitted && paymentForm.get('amount').invalid"
-                                    [readOnly]="viewOnly">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="paymentForm.get('amount').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@paymentForm.textinput.amountAlready.error">
+                  }
+                }
+              </single-choice>
+            </div>
+          </div>
+          <!-- Amount purchased -->
+          @if (mode === modeEnum.PURCHASE) {
+            <div class="af-row">
+              <div class="af-c12">
+                <textinput
+                  [label]="getUnitLabelString(currencyAndUnitStrs.purchasedLabel)"
+                  placeholder="Enter purchased quantity"
+                  i18n-placeholder="@@paymentForm.textinput.purchased.placeholder"
+                  style="width: 100%"
+                  [value]="purchased"
+                  [valueTextInput]="true"
+                  [readOnly]="true">
+                </textinput>
+              </div>
+            </div>
+          }
+          <!-- Open balance (fulfilled quantity) -->
+          @if (mode === modeEnum.PURCHASE) {
+            <div class="af-row">
+              <div class="af-c12">
+                <textinput
+                  [label]="getCurrencyString(currencyAndUnitStrs.openBalanceLabel)"
+                  placeholder="Enter balance"
+                  i18n-placeholder="@@paymentForm.textinput.balance.placeholder"
+                  style="width: 100%"
+                  [value]="openBalance"
+                  [valueTextInput]="true"
+                  [readOnly]="true">
+                </textinput>
+              </div>
+            </div>
+          }
+          @if (mode === modeEnum.PURCHASE) {
+            <!-- Amount paid to the collector -->
+            @if (paymentForm.get('preferredWayOfPayment')?.value == preferredWayOfPayment.CASHVIACOLLECTOR) {
+              <div class="af-row">
+                <div class="af-c12">
+                  <textinput
+                    [label]="getCurrencyString(currencyAndUnitStrs.paidFromCollectorToFarmerLabel)"
+                    placeholder="Enter amount already paid"
+                    i18n-placeholder="@@paymentForm.textinput.amountAlready.placeholder"
+                    style="width: 100%"
+                    [form]="paymentForm.get('amount')"
+                    [isInvalid]="submitted && paymentForm.get('amount').invalid"
+                    [readOnly]="viewOnly">
+                    @if (submitted) {
+                      @if (paymentForm.get('amount').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@paymentForm.textinput.amountAlready.error">
                                             Amount already paid is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </textinput>
+                          }
                         </div>
-                    </div>
-
-                    <!-- Amount paid to the farmer -->
-                    <div class="af-row" *ngIf="paymentForm.get('preferredWayOfPayment')?.value != preferredWayOfPayment.CASHVIACOLLECTOR">
-                        <div class="af-c12">
-                            <textinput
-                                    [label]="getCurrencyString(currencyAndUnitStrs.paidToFarmerLabel)"
-                                    placeholder="Enter paid amount"
-                                    i18n-placeholder="@@paymentForm.textinput.amount.placeholder"
-                                    style="width: 100%"
-                                    [form]="paymentForm.get('amount')"
-                                    [isInvalid]="submitted && paymentForm.get('amount').invalid"
-                                    [readOnly]="viewOnly">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="paymentForm.get('amount').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@paymentForm.textinput.amount.error">
+                      }
+                    }
+                  </textinput>
+                </div>
+              </div>
+            }
+            <!-- Amount paid to the farmer -->
+            @if (paymentForm.get('preferredWayOfPayment')?.value != preferredWayOfPayment.CASHVIACOLLECTOR) {
+              <div class="af-row">
+                <div class="af-c12">
+                  <textinput
+                    [label]="getCurrencyString(currencyAndUnitStrs.paidToFarmerLabel)"
+                    placeholder="Enter paid amount"
+                    i18n-placeholder="@@paymentForm.textinput.amount.placeholder"
+                    style="width: 100%"
+                    [form]="paymentForm.get('amount')"
+                    [isInvalid]="submitted && paymentForm.get('amount').invalid"
+                    [readOnly]="viewOnly">
+                    @if (submitted) {
+                      @if (paymentForm.get('amount').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@paymentForm.textinput.amount.error">
                                             Amount is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </textinput>
+                          }
                         </div>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="mode === modeEnum.CUSTOMER">
-                    <div class="af-row">
-
-                        <!-- Amount paid -->
-                        <div class="af-c8">
-                            <textinput
-                                    label="Amount paid"
-                                    placeholder="Enter amount"
-                                    i18n-label="@@paymentForm.textinput.amount.company.label"
-                                    i18n-placeholder="@@paymentForm.textinput.amount.company.placeholder"
-                                    style="width: 100%"
-                                    [form]="paymentForm.get('amount')"
-                                    [isInvalid]="submitted && paymentForm.get('amount').invalid"
-                                    [readOnly]="viewOnly">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="paymentForm.get('amount').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@paymentForm.textinput.amount.company.error">
+                      }
+                    }
+                  </textinput>
+                </div>
+              </div>
+            }
+          }
+          @if (mode === modeEnum.CUSTOMER) {
+            <div class="af-row">
+              <!-- Amount paid -->
+              <div class="af-c8">
+                <textinput
+                  label="Amount paid"
+                  placeholder="Enter amount"
+                  i18n-label="@@paymentForm.textinput.amount.company.label"
+                  i18n-placeholder="@@paymentForm.textinput.amount.company.placeholder"
+                  style="width: 100%"
+                  [form]="paymentForm.get('amount')"
+                  [isInvalid]="submitted && paymentForm.get('amount').invalid"
+                  [readOnly]="viewOnly">
+                  @if (submitted) {
+                    @if (paymentForm.get('amount').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@paymentForm.textinput.amount.company.error">
                                             Amount is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </textinput>
-                        </div>
-
-                        <!-- Currency -->
-                        <div class="af-c4">
-                            <single-choice
-                                    label="Currency"
-                                    i18n-label="@@paymentForm.textinput.amount.currency.label"
-                                    [formControlInput]="paymentForm.get('currency')"
-                                    [codebookService]="codebookCurrencyCodes"
-                                    [isInvalidChoice]="submitted && paymentForm.get('currency').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="paymentForm.get('currency').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@paymentpaymentForm.textinput.currency.error">
+                        }
+                      </div>
+                    }
+                  }
+                </textinput>
+              </div>
+              <!-- Currency -->
+              <div class="af-c4">
+                <single-choice
+                  label="Currency"
+                  i18n-label="@@paymentForm.textinput.amount.currency.label"
+                  [formControlInput]="paymentForm.get('currency')"
+                  [codebookService]="codebookCurrencyCodes"
+                  [isInvalidChoice]="submitted && paymentForm.get('currency').invalid">
+                  @if (submitted) {
+                    @if (paymentForm.get('currency').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@paymentpaymentForm.textinput.currency.error">
                                             Currency is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </single-choice>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Amount paid to the collector -->
-                <div class="af-row" *ngIf="mode === modeEnum.PURCHASE">
-                    <div class="af-c12">
-                        <textinput
-                                [label]="getCurrencyString(currencyAndUnitStrs.paidToCollectorLabel)"
-                                placeholder="Enter amount paid the collector"
-                                i18n-placeholder="@@paymentForm.textinput.amountPaidToTheCollector.placeholder"
-                                style="width: 100%"
-                                [form]="paymentForm.get('amountPaidToTheCollector')"
-                                [isInvalid]="submitted && paymentForm.get('amountPaidToTheCollector').invalid"
-                                [readOnly]="viewOnly">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('amountPaidToTheCollector').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@paymentForm.textinput.amountPaidToTheCollector.error">
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              </div>
+            </div>
+          }
+          <!-- Amount paid to the collector -->
+          @if (mode === modeEnum.PURCHASE) {
+            <div class="af-row">
+              <div class="af-c12">
+                <textinput
+                  [label]="getCurrencyString(currencyAndUnitStrs.paidToCollectorLabel)"
+                  placeholder="Enter amount paid the collector"
+                  i18n-placeholder="@@paymentForm.textinput.amountPaidToTheCollector.placeholder"
+                  style="width: 100%"
+                  [form]="paymentForm.get('amountPaidToTheCollector')"
+                  [isInvalid]="submitted && paymentForm.get('amountPaidToTheCollector').invalid"
+                  [readOnly]="viewOnly">
+                  @if (submitted) {
+                    @if (paymentForm.get('amountPaidToTheCollector').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@paymentForm.textinput.amountPaidToTheCollector.error">
                                         Amount paid to the collector is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-                    </div>
-                </div>
-
-                <!-- Total amount paid -->
-                <div class="af-row" *ngIf="mode === modeEnum.PURCHASE">
-                    <div class="af-c12">
-                        <textinput
-                                [label]="getCurrencyString(currencyAndUnitStrs.totalPaidLabel)"
-                                placeholder="Enter total amount paid"
-                                i18n-placeholder="@@paymentForm.textinput.totalPaid.placeholder"
-                                style="width: 100%"
-                                [value]="totalPaid"
-                                [valueTextInput]="true"
-                                [readOnly]="true">
-                        </textinput>
-                    </div>
-                </div>
-
-                <!-- Receipt number -->
-                <div class="af-row">
-                    <div class="af-c12">
-                        <textinput
-                                label="Receipt number"
-                                placeholder="Enter receipt number"
-                                i18n-label="@@paymentForm.textinput.receiptNumber.label"
-                                i18n-placeholder="@@paymentForm.textinput.receiptNumber.placeholder"
-                                style="width: 100%"
-                                [form]="paymentForm.get('receiptNumber')"
-                                [isInvalid]="submitted && paymentForm.get('receiptNumber').invalid"
-                                [readOnly]="viewOnly">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="paymentForm.get('receiptNumber').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@paymentpaymentForm.textinput.receiptNumber.error">
+                        }
+                      </div>
+                    }
+                  }
+                </textinput>
+              </div>
+            </div>
+          }
+          <!-- Total amount paid -->
+          @if (mode === modeEnum.PURCHASE) {
+            <div class="af-row">
+              <div class="af-c12">
+                <textinput
+                  [label]="getCurrencyString(currencyAndUnitStrs.totalPaidLabel)"
+                  placeholder="Enter total amount paid"
+                  i18n-placeholder="@@paymentForm.textinput.totalPaid.placeholder"
+                  style="width: 100%"
+                  [value]="totalPaid"
+                  [valueTextInput]="true"
+                  [readOnly]="true">
+                </textinput>
+              </div>
+            </div>
+          }
+          <!-- Receipt number -->
+          <div class="af-row">
+            <div class="af-c12">
+              <textinput
+                label="Receipt number"
+                placeholder="Enter receipt number"
+                i18n-label="@@paymentForm.textinput.receiptNumber.label"
+                i18n-placeholder="@@paymentForm.textinput.receiptNumber.placeholder"
+                style="width: 100%"
+                [form]="paymentForm.get('receiptNumber')"
+                [isInvalid]="submitted && paymentForm.get('receiptNumber').invalid"
+                [readOnly]="viewOnly">
+                @if (submitted) {
+                  @if (paymentForm.get('receiptNumber').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@paymentpaymentForm.textinput.receiptNumber.error">
                                         Receipt number is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
+                      }
                     </div>
-                </div>
-
-                <ng-container>
-                    <div class="af-row">
-
-                        <!-- Recipient document type -->
-                        <div class="af-c4">
-                            <single-choice
-                                    label="Type"
-                                    i18n-label="@@paymentForm.label.receiptDocumentType"
-                                    [formControlInput]="paymentForm.get('receiptDocumentType')"
-                                    [codebookService]="codebookAdditionalProofs"
-                                    [isInvalidChoice]="submitted && paymentForm.get('receiptDocumentType').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="paymentForm.get('receiptDocumentType').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@paymentForm.textinput.receiptDocumentType.error">
+                  }
+                }
+              </textinput>
+            </div>
+          </div>
+          <ng-container>
+            <div class="af-row">
+              <!-- Recipient document type -->
+              <div class="af-c4">
+                <single-choice
+                  label="Type"
+                  i18n-label="@@paymentForm.label.receiptDocumentType"
+                  [formControlInput]="paymentForm.get('receiptDocumentType')"
+                  [codebookService]="codebookAdditionalProofs"
+                  [isInvalidChoice]="submitted && paymentForm.get('receiptDocumentType').invalid">
+                  @if (submitted) {
+                    @if (paymentForm.get('receiptDocumentType').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@paymentForm.textinput.receiptDocumentType.error">
                                             Type is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </single-choice>
-                        </div>
-
-                        <!-- Recipient document -->
-                        <div class="af-c8">
-                            <ng-container>
-                                <attachment-uploader
-                                        allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-                                        allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-                                        i18n-allowedMimeTypeErrorMessage="@@paymentForm.attachment-uploader.allowedMimeTypeErrorMessage"
-                                        mode="simpleAsTextField"
-                                        [label]="uploaderLabel"
-                                        [form]="paymentForm.get('receiptDocument')"
-                                        [attachmentUploaderId]="'paymentForm' + 'orderReferenceForm.value'"
-                                        [invalid]="submitted && paymentForm.get('receiptDocument').invalid"
-                                        [readOnly]="viewOnly">
-                                    <attachment-uploader-content i18n="@@paymentForm.attachment-uploader.content">
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              </div>
+              <!-- Recipient document -->
+              <div class="af-c8">
+                <ng-container>
+                  <attachment-uploader
+                    allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+                    allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+                    i18n-allowedMimeTypeErrorMessage="@@paymentForm.attachment-uploader.allowedMimeTypeErrorMessage"
+                    mode="simpleAsTextField"
+                    [label]="uploaderLabel"
+                    [form]="paymentForm.get('receiptDocument')"
+                    [attachmentUploaderId]="'paymentForm' + 'orderReferenceForm.value'"
+                    [invalid]="submitted && paymentForm.get('receiptDocument').invalid"
+                    [readOnly]="viewOnly">
+                    <attachment-uploader-content i18n="@@paymentForm.attachment-uploader.content">
                                         Upload signed receipt
                                     </attachment-uploader-content>
-                                </attachment-uploader>
-                                <attachment-uploader-errors>
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="paymentForm.get('receiptDocument').errors as errors" class="sc-invalid-feedback" validation-error>
-                                            <div *ngIf="errors.required" i18n="@@paymentForm.attachment-uploader.error">
+                  </attachment-uploader>
+                  <attachment-uploader-errors>
+                    @if (submitted) {
+                      @if (paymentForm.get('receiptDocument').errors; as errors) {
+                        <div class="sc-invalid-feedback" validation-error>
+                          @if (errors.required) {
+                            <div i18n="@@paymentForm.attachment-uploader.error">
                                                 <span>
                                                   Signed receipt is required
                                                 </span>
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </attachment-uploader-errors>
-                            </ng-container>
+                          }
                         </div>
-
-                    </div>
+                      }
+                    }
+                  </attachment-uploader-errors>
                 </ng-container>
-
+              </div>
             </div>
+          </ng-container>
         </div>
-
+      </div>
     </div>
-
-</div>
+  </div>
+}
 

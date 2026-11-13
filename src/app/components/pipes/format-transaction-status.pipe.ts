@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'formatTransactionStatus'
+    name: 'formatTransactionStatus',
+    standalone: false
 })
 export class FormatTransactionStatusPipe implements PipeTransform {
 

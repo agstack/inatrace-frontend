@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { DeliveryDates } from '../stock-core-tab/stock-core-tab.component';
 import { SortOption } from '../../../../shared/result-sorter/result-sorter-types';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {finalize, map, skip, switchMap, take, tap} from 'rxjs/operators';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { StockOrderControllerService } from '../../../../../api/api/stockOrderController.service';
@@ -23,9 +23,11 @@ import {FileSaverService} from 'ngx-filesaver';
 import {ToastrService} from 'ngx-toastr';
 
 @Component({
-  selector: 'app-group-stock-unit-list',
-  templateUrl: './group-stock-unit-list.component.html',
-  styleUrls: ['./group-stock-unit-list.component.scss']
+    selector: 'app-group-stock-unit-list',
+    templateUrl: './group-stock-unit-list.component.html',
+    styleUrls: ['./group-stock-unit-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GroupStockUnitListComponent implements OnInit, OnDestroy {
 
@@ -73,7 +75,7 @@ export class GroupStockUnitListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   private paging$ = new BehaviorSubject<number>(1);
 
-  cbCheckedAll = new FormControl(false);
+  cbCheckedAll = new UntypedFormControl(false);
   private allSelected = false;
   currentData: ApiGroupStockOrder[];
 

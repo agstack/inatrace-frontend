@@ -4,10 +4,7 @@
   <div class="main">
     <div class="row">
       <div class="col">
-        <ng-container *ngIf="batches$ | async as batches">
-
-
-
+        @if (batches$ | async; as batches) {
           <div class="main-inside-top content-element">
             <div class="d-flex justify-content-between content-element--row1">
               <div class="title-page content-element--title" i18n="@@batchesList.title.batches">Batches</div>
@@ -25,39 +22,44 @@
               </app-search-textinput>
             </div>
           </div>
-
           <div class="main-inside-main">
-            <table *ngIf="batches && batches.items && batches.items.length> 0">
-              <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let batch of batches.items">
-                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{batch.number}}</span></td>
-                  <td [attr.data-label]="sortOptions[1].name"><span>{{batch.productionDate}}</span></td>
-                  <td [attr.data-label]="sortOptions[2].name"><span>{{batch.expiryDate}}</span></td>
-                  <td [attr.data-label]="sortOptions[3].name">
-                    <span>
-                    <a i18n="@@batchesList.tableCol.edit"
-                      (click)="editBatch(batch.id)"
-                      class="company-action"
-                      [class.enabled-action]="true">
+            @if (batches && batches.items && batches.items.length> 0) {
+              <table>
+                <thead>
+                  <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (batch of batches.items; track batch) {
+                    <tr>
+                      <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{batch.number}}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span>{{batch.productionDate}}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name"><span>{{batch.expiryDate}}</span></td>
+                      <td [attr.data-label]="sortOptions[3].name">
+                        <span>
+                          <a i18n="@@batchesList.tableCol.edit"
+                            (click)="editBatch(batch.id)"
+                            class="company-action"
+                            [class.enabled-action]="true">
                       Edit
                     </a>
-                    <a i18n="@@batchesList.tableCol.delete"
-                      (click)="deleteBatch(batch)"
-                      class="company-action"
-                      [class.enabled-action]="true">
+                          <a i18n="@@batchesList.tableCol.delete"
+                            (click)="deleteBatch(batch)"
+                            class="company-action"
+                            [class.enabled-action]="true">
                       Delete
                     </a>
-                  </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div *ngIf="batches && batches.items && batches.items.length == 0" class="no-list-results" i18n="@@batchesList.noBatches">
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+            @if (batches && batches.items && batches.items.length == 0) {
+              <div class="no-list-results" i18n="@@batchesList.noBatches">
               No batches found
             </div>
+            }
           </div>
           <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
             <ngb-pagination
@@ -69,7 +71,7 @@
               [rotate]="true">
             </ngb-pagination>
           </div>
-        </ng-container>
+        }
       </div>
     </div>
   </div>

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-product-label-front-layout',
-  templateUrl: './product-label-front-layout.component.html',
-  styleUrls: ['./product-label-front-layout.component.scss']
+    selector: 'app-product-label-front-layout',
+    templateUrl: './product-label-front-layout.component.html',
+    styleUrls: ['./product-label-front-layout.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelFrontLayoutComponent implements OnInit {
 

@@ -1,69 +1,84 @@
 <div class="af-row">
-    <div class="af-c12">
-        <button *ngIf="updateMode" (click)="uploadGeoData.emit()" class="btn mr-2" i18n="@@collectorDetail.plots.button.uploadGeo">
+  <div class="af-c12">
+    @if (updateMode) {
+      <button (click)="uploadGeoData.emit()" class="btn me-2" i18n="@@collectorDetail.plots.button.uploadGeo">
             <span>Upload geo-data</span>
         </button>
-        <button class="btn mr-2" (click)="drawPlot()" i18n="@@collectorDetail.plots.button.drawPlot">
+    }
+    <button class="btn me-2" (click)="drawPlot()" i18n="@@collectorDetail.plots.button.drawPlot">
             <span>Draw plot</span>
         </button>
-        <button *ngIf="updateMode" (click)="exportGeoData.emit()" class="btn" i18n="@@collectorDetail.plots.button.exportGeo">
+    @if (updateMode) {
+      <button (click)="exportGeoData.emit()" class="btn" i18n="@@collectorDetail.plots.button.exportGeo">
             <span>Export geo-data</span>
         </button>
-    </div>
+    }
+  </div>
 </div>
 
 <div class="af-row">
-    <app-map
-      style="width: 100%"
-      [mapId]="'map-viewer'"
-      [plots]="plots"
-      [plotCoordinates]="plotCoordinates"
-      (plotCoordinatesChange)="updateLonLat($event)"
-      (plotGeoIdChange)="updateFormGeoId($event)"
-      (geoIdOpenChange)="openGeoIdWhisp($event)"
-      [pin]="pin"
-      [farmerId]="form.get('id')?.value"
-      [initialLat]="initialLat"
-      [initialLng]="initialLng"
-      [plotCoordinatesManager]="plotCoordinatesManager">
-    </app-map>
+  <app-map
+    style="width: 100%"
+    [mapId]="'map-viewer'"
+    [plots]="plots"
+    [plotCoordinates]="plotCoordinates"
+    (plotCoordinatesChange)="updateLonLat($event)"
+    (plotGeoIdChange)="updateFormGeoId($event)"
+    (geoIdOpenChange)="openGeoIdWhisp($event)"
+    [pin]="pin"
+    [farmerId]="$safeNavigationMigration(form.get('id')?.value)"
+    [initialLat]="initialLat"
+    [initialLng]="initialLng"
+    [plotCoordinatesManager]="plotCoordinatesManager">
+  </app-map>
 </div>
 
-<div *ngIf="form.get('plots')">
-<list-editor *ngIf="plotsListManager"
-             [listEditorManager]="plotsListManager"
-             [canAdd]="true"
-             [addExternalSubj]="drawPlotSubject"
-             label=""
-             addText=""
-             [invalid]="submitted && form.get('plots')?.invalid">
-    <list-editor-items>
-        <div *ngFor="let item of form.get('plots').controls; let i=index;">
-
-            <app-plots-item *ngIf="form"
-                            [title]="item.value.plotName"
-                            [formControlInput]="item"
-                            [isOpen]="plotsListManager.isOpen(i)"
-                            [productTypesCodebook]="productTypesCodebook"
-                            [listEditorManager]="this.plotsListManager"
-                            [listEditorManagerPosition]="i"
-                            [initialLat]="initialLat"
-                            [initialLng]="initialLng"
-                            (onSave)="savePlot.emit()"
-                            (onDelete)="deletePlot.emit()">
-            </app-plots-item>
-        </div>
-    </list-editor-items>
-    <list-editor-errors>
-        <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('plots').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@collectorDetail.list-editor.plots.error">
+@if (form.get('plots')) {
+  <div>
+    @if (plotsListManager) {
+      <list-editor
+        [listEditorManager]="plotsListManager"
+        [canAdd]="true"
+        [addExternalSubj]="drawPlotSubject"
+        label=""
+        addText=""
+        [invalid]="submitted && form.get('plots')?.invalid">
+        <list-editor-items>
+          @for (item of form.get('plots').controls; track item; let i = $index) {
+            <div>
+              @if (form) {
+                <app-plots-item
+                  [title]="item.value.plotName"
+                  [formControlInput]="item"
+                  [isOpen]="plotsListManager.isOpen(i)"
+                  [productTypesCodebook]="productTypesCodebook"
+                  [listEditorManager]="this.plotsListManager"
+                  [listEditorManagerPosition]="i"
+                  [initialLat]="initialLat"
+                  [initialLng]="initialLng"
+                  (onSave)="savePlot.emit()"
+                  (onDelete)="deletePlot.emit()">
+                </app-plots-item>
+              }
+            </div>
+          }
+        </list-editor-items>
+        <list-editor-errors>
+          @if (submitted) {
+            @if (form.get('plots').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@collectorDetail.list-editor.plots.error">
                     <span>
                         Plot is required
                     </span>
                 </div>
-            </div>
-        </ng-container>
-    </list-editor-errors>
-</list-editor>
-</div>
+                }
+              </div>
+            }
+          }
+        </list-editor-errors>
+      </list-editor>
+    }
+  </div>
+}

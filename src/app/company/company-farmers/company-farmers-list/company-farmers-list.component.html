@@ -1,157 +1,160 @@
 <app-authorised-layout>
-    <app-company-left-panel></app-company-left-panel>
+  <app-company-left-panel></app-company-left-panel>
 
-    <div class="main">
-        <div class="main-inside-top content-element">
-            <div class="d-flex justify-content-between content-element--row1">
-                <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.farmers">Farmers</div>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-solid round btn-table-new content-element--btn mr-4"
-                            (click)="exportFarmerData()"
-                            i18n="@@productLabelStakeholders.button.exportFarmerData">
+  <div class="main">
+    <div class="main-inside-top content-element">
+      <div class="d-flex justify-content-between content-element--row1">
+        <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.farmers">Farmers</div>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-solid round btn-table-new content-element--btn me-4"
+            (click)="exportFarmerData()"
+            i18n="@@productLabelStakeholders.button.exportFarmerData">
                         <span>Export farmer data</span>
                     </button>
-                    <button *ngIf="isSystemOrRegionalAdmin"
-                            class="btn btn-solid round btn-table-new content-element--btn mr-4"
-                            (click)="importFarmers()"
-                            i18n="@@companyDetail.farmers.importFarmers.button">
+          @if (isSystemOrRegionalAdmin) {
+            <button
+              class="btn btn-solid round btn-table-new content-element--btn me-4"
+              (click)="importFarmers()"
+              i18n="@@companyDetail.farmers.importFarmers.button">
                         <span>+ Import farmers</span>
                     </button>
-                    <button class="btn btn-solid round btn-table-new content-element--btn"
-                            [ngbTooltip]="addFarmerButtonTooltipTemplate"
-                            [autoClose]="false"
-                            placement="bottom-right"
-                            triggers="manual"
-                            tooltipClass="self-onboarding-tooltip-class"
-                            #addFarmerButtonTooltip="ngbTooltip"
-                            (click)="addFarmer()"
-                            i18n="@@productLabelStakeholders.button.newFarmer">
+          }
+          <button class="btn btn-solid round btn-table-new content-element--btn"
+            [ngbTooltip]="addFarmerButtonTooltipTemplate"
+            [autoClose]="false"
+            placement="bottom-end"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+            #addFarmerButtonTooltip="ngbTooltip"
+            (click)="addFarmer()"
+            i18n="@@productLabelStakeholders.button.newFarmer">
                         <span>+ Add farmer</span>
                     </button>
-                    <ng-template #addFarmerButtonTooltipTemplate>
-                        <div>
-                            <h2 class="title" i18n="@@selfOnboarding.checklist.addFarmers.step2">Click '+Add farmer' to add farmer profiles individually.</h2>
-                            <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/3' }}</span></div>
-                        </div>
-                    </ng-template>
-                </div>
+          <ng-template #addFarmerButtonTooltipTemplate>
+            <div>
+              <h2 class="title" i18n="@@selfOnboarding.checklist.addFarmers.step2">Click '+Add farmer' to add farmer profiles individually.</h2>
+              <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/3' }}</span></div>
             </div>
+          </ng-template>
+        </div>
+      </div>
 
-            <div class="d-flex justify-content-between content-element--row2">
-                <div>
-                    <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfFarmers">List of farmers</div>
-                    <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingFarmers">Showing {{ showing }}/{{ farmerCount }}</div>
-                </div>
-
-                <app-search-textinput
-                        [form]="searchNameFarmers"
-                        (valueChange)="onSearchInput($event)"
-                        [items]="items"
-                        byCategory="true"
-                        [searchCategory]="this.byCategory"
-                        (categoryChange)="onCategoryChange($event)">
-                </app-search-textinput>
-            </div>
+      <div class="d-flex justify-content-between content-element--row2">
+        <div>
+          <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfFarmers">List of farmers</div>
+          <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingFarmers">Showing {{ showing }}/{{ farmerCount }}</div>
         </div>
 
-        <ng-container *ngIf="farmers$ | async as farmers">
-            <div class="main-inside-main">
-                <table *ngIf="farmers && farmers.items && farmers.items.length > 0; else noFarmers" class="af-table">
+        <app-search-textinput
+          [form]="searchNameFarmers"
+          (valueChange)="onSearchInput($event)"
+          [items]="items"
+          byCategory="true"
+          [searchCategory]="this.byCategory"
+          (categoryChange)="onCategoryChange($event)">
+        </app-search-textinput>
+      </div>
+    </div>
 
-                    <thead *ngIf="showRwanda">
-                        <tr scope="col" result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <thead *ngIf="showHonduras">
-                        <tr scope="col" result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <thead *ngIf="!showRwanda && !showHonduras">
-                        <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <tbody>
-                    <tr *ngFor="let farmer of farmers.items">
-                        <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{ farmer.name }}</span></td>
-                        <td [attr.data-label]="sortOptions[1].name"><span>{{ farmer.surname }}</span></td>
-                        <td [attr.data-label]="sortOptions[2].name"><span>{{ farmer.gender }}</span></td>
-                        <td [attr.data-label]="sortOptions[3].name"><span>{{ farmer.id }}</span></td>
-
-                        <ng-container *ngIf="showRwanda">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ farmer.location.address.village }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ farmer.location.address.cell }}</span>
-                            </td>
-                        </ng-container>
-
-                        <ng-container *ngIf="showHonduras">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ farmer.location.address.hondurasMunicipality }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ farmer.location.address.hondurasVillage }}</span>
-                            </td>
-                        </ng-container>
-
-                        <ng-container *ngIf="!showRwanda && !showHonduras">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ farmer.location.address.city }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ farmer.location.address.state }}</span>
-                            </td>
-                        </ng-container>
-
-                        <td [attr.data-label]="sortOptions[6].name">
-                            <span>
-                                <a i18n="@@productLabelStakeholdersCollectors.tableCol.edit"
-                                   (click)="editFarmer(farmer.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+    @if (farmers$ | async; as farmers) {
+      <div class="main-inside-main">
+        @if (farmers && farmers.items && farmers.items.length > 0) {
+          <table class="af-table">
+            @if (showRwanda) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            @if (showHonduras) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            @if (!showRwanda && !showHonduras) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            <tbody>
+              @for (farmer of farmers.items; track farmer) {
+                <tr>
+                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{ farmer.name }}</span></td>
+                  <td [attr.data-label]="sortOptions[1].name"><span>{{ farmer.surname }}</span></td>
+                  <td [attr.data-label]="sortOptions[2].name"><span>{{ farmer.gender }}</span></td>
+                  <td [attr.data-label]="sortOptions[3].name"><span>{{ farmer.id }}</span></td>
+                  @if (showRwanda) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ farmer.location.address.village }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ farmer.location.address.cell }}</span>
+                    </td>
+                  }
+                  @if (showHonduras) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ farmer.location.address.hondurasMunicipality }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ farmer.location.address.hondurasVillage }}</span>
+                    </td>
+                  }
+                  @if (!showRwanda && !showHonduras) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ farmer.location.address.city }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ farmer.location.address.state }}</span>
+                    </td>
+                  }
+                  <td [attr.data-label]="sortOptions[6].name">
+                    <span>
+                      <a i18n="@@productLabelStakeholdersCollectors.tableCol.edit"
+                        (click)="editFarmer(farmer.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Edit
                                 </a>
-                                <a i18n="@@productLabelStakeholdersCollectors.tableCol.delete"
-                                   (click)="deleteFarmer(farmer.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+                      <a i18n="@@productLabelStakeholdersCollectors.tableCol.delete"
+                        (click)="deleteFarmer(farmer.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Delete
                                 </a>
-                            </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-                <ngb-pagination
-                        [(page)]="page"
-                        [pageSize]="pageSize"
-                        [collectionSize]="farmers.count"
-                        (pageChange)="onPageChange($event)"
-                        [maxSize]="7"
-                        [rotate]="true"></ngb-pagination>
-            </div>
-        </ng-container>
-        <ng-template #noFarmers>
-            <div class="no-list-results" i18n="@@productLabelStakeholdersCollectors.noFarmers">
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="no-list-results" i18n="@@productLabelStakeholdersCollectors.noFarmers">
                 No farmers found
             </div>
-        </ng-template>
+        }
+      </div>
+      <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="farmers.count"
+          (pageChange)="onPageChange($event)"
+          [maxSize]="7"
+        [rotate]="true"></ngb-pagination>
+      </div>
+    }
 
-        <ng-container *ngIf="plots$ | async as companyPlots">
-            <h4 class="text-color-primary" i18n="@@collectorDetail.section.plots">Plots</h4>
-            <div class="main-inside-main">
-                <app-map style="width: 100%"
-                         [mapId]="'map-viewer'"
-                         [plots]="companyPlots"
-                         [plotCoordinates]="[]"
-                         [initialLat]="selectedCompany?.headquarters?.country?.latitude"
-                         [initialLng]="selectedCompany?.headquarters?.country?.longitude"
-                         (geoIdOpenChange)="openGeoIdWhisp($event)">
-                </app-map>
-            </div>
-        </ng-container>
-    </div>
+    @if (plots$ | async; as companyPlots) {
+      <h4 class="text-color-primary" i18n="@@collectorDetail.section.plots">Plots</h4>
+      <div class="main-inside-main">
+        <app-map style="width: 100%"
+          [mapId]="'map-viewer'"
+          [plots]="companyPlots"
+          [plotCoordinates]="[]"
+          [initialLat]="$safeNavigationMigration(selectedCompany?.headquarters?.country?.latitude)"
+          [initialLng]="$safeNavigationMigration(selectedCompany?.headquarters?.country?.longitude)"
+          (geoIdOpenChange)="openGeoIdWhisp($event)">
+        </app-map>
+      </div>
+    }
+  </div>
 </app-authorised-layout>

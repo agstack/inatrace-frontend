@@ -10,22 +10,22 @@
             {{ title }} (<em>{{ companyName?.name }}</em>)
           </div>
           <button class="btn btn-solid round btn-table-new content-element--btn"
-                  [ngbTooltip]="addFacilityButtonTooltipTemplate"
-                  [autoClose]="false"
-                  placement="left"
-                  triggers="manual"
-                  tooltipClass="self-onboarding-tooltip-class"
-                  #addFacilityButtonTooltip="ngbTooltip"
-                  (click)="newFacility()"
-                  i18n="@@productLabelStock.button.newFacility">
+            [ngbTooltip]="addFacilityButtonTooltipTemplate"
+            [autoClose]="false"
+            placement="start"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+            #addFacilityButtonTooltip="ngbTooltip"
+            (click)="newFacility()"
+            i18n="@@productLabelStock.button.newFacility">
             <span>+ Add facility</span>
           </button>
-            <ng-template #addFacilityButtonTooltipTemplate>
-                <div>
-                    <h2 class="title" i18n="@@selfOnboarding.checklist.addFacility.step3">Click here to add a facility</h2>
-                    <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '3/4' }}</span></div>
-                </div>
-            </ng-template>
+          <ng-template #addFacilityButtonTooltipTemplate>
+            <div>
+              <h2 class="title" i18n="@@selfOnboarding.checklist.addFacility.step3">Click here to add a facility</h2>
+              <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '3/4' }}</span></div>
+            </div>
+          </ng-template>
         </div>
         <div class="d-flex align-items-start content-element--row2">
           <div>
@@ -36,79 +36,89 @@
       </div>
 
       <div class="af-form-row">
-        <div class="af-form-block--c12" *ngIf="facilities$ | async as facilities">
-          <div class="main-inside-main">
-            <table *ngIf="facilities && facilities.data.count> 0" class="af-table">
-              <thead>
-              <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let facility of facilities.data.items">
-                <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{facility | translateCodebook: 'name'}}</span></td>
-                <td [attr.data-label]="sortOptions[1].name"><span>{{facility.facilityType | translateCodebook: 'label'}}</span></td>
-                <td [attr.data-label]="sortOptions[2].name"><span>{{publicSort(facility.isPublic)}}</span></td>
-                <td [attr.data-label]="sortOptions[3].name"><span>{{locationName(facility.facilityLocation)}}</span></td>
-                <td [attr.data-label]="sortOptions[4].name">
-                  <span>
-                    <a i18n="@@productLabelFacilities.tableCol.edit"
-                       [routerLink]="['/', 'companies', companyId, 'facilities', facility.id, 'edit']"
-                       class="company-action"
-                       [class.enabled-action]="true">
+        @if (facilities$ | async; as facilities) {
+          <div class="af-form-block--c12">
+            <div class="main-inside-main">
+              @if (facilities && facilities.data.count> 0) {
+                <table class="af-table">
+                  <thead>
+                    <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                  </thead>
+                  <tbody>
+                    @for (facility of facilities.data.items; track facility) {
+                      <tr>
+                        <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{facility | translateCodebook: 'name'}}</span></td>
+                        <td [attr.data-label]="sortOptions[1].name"><span>{{facility.facilityType | translateCodebook: 'label'}}</span></td>
+                        <td [attr.data-label]="sortOptions[2].name"><span>{{publicSort(facility.isPublic)}}</span></td>
+                        <td [attr.data-label]="sortOptions[3].name"><span>{{locationName(facility.facilityLocation)}}</span></td>
+                        <td [attr.data-label]="sortOptions[4].name">
+                          <span>
+                            <a i18n="@@productLabelFacilities.tableCol.edit"
+                              [routerLink]="['/', 'companies', companyId, 'facilities', facility.id, 'edit']"
+                              class="company-action"
+                              [class.enabled-action]="true">
                       Edit
                     </a>
-                    <a *ngIf="facility.deactivated"
-                       i18n="@@productLabelFacilities.tableCol.activate"
-                       (click)="activateFacility(facility.id)"
-                       class="company-action"
-                       [class.enabled-action]="true">
+                            @if (facility.deactivated) {
+                              <a
+                                i18n="@@productLabelFacilities.tableCol.activate"
+                                (click)="activateFacility(facility.id)"
+                                class="company-action"
+                                [class.enabled-action]="true">
                       Activate
                     </a>
-                    <a *ngIf="!facility.deactivated"
-                       i18n="@@productLabelFacilities.tableCol.deactivate"
-                       (click)="deactivateFacility(facility.id)"
-                       class="company-action"
-                       [class.enabled-action]="true">
+                            }
+                            @if (!facility.deactivated) {
+                              <a
+                                i18n="@@productLabelFacilities.tableCol.deactivate"
+                                (click)="deactivateFacility(facility.id)"
+                                class="company-action"
+                                [class.enabled-action]="true">
                       Deactivate
                     </a>
-                </span>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <div *ngIf="facilities && facilities.data.count == 0" class="no-list-results" i18n="@@productLabelFacilities.noFacilities">
+                            }
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+              @if (facilities && facilities.data.count == 0) {
+                <div class="no-list-results" i18n="@@productLabelFacilities.noFacilities">
               No facilities found
             </div>
+              }
+            </div>
+            <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+              <ngb-pagination
+                [(page)]="page"
+                [pageSize]="pageSize"
+                [collectionSize]="facilities.data.count"
+                (pageChange)="onPageChange($event)"
+                [maxSize]="7"
+                [rotate]="true">
+              </ngb-pagination>
+            </div>
+            <div style="height: 2rem;"></div>
+            @if (isGoogleMapsLoaded) {
+              <google-map
+                height="380px"
+                width="100%">
+                @for (marker of markers; track marker; let i = $index) {
+                  <map-marker
+                    #gMarker="mapMarker"
+                    [position]="marker.position"
+                    [label]="marker.label"
+                    (mapClick)="openInfoWindow(gMarker, marker)">
+                  </map-marker>
+                }
+                <map-info-window>{{gInfoWindowText}}</map-info-window>
+              </google-map>
+            }
+            <div style="height: 2rem;"></div>
           </div>
-
-          <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-            <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="facilities.data.count"
-                    (pageChange)="onPageChange($event)"
-                    [maxSize]="7"
-                    [rotate]="true">
-            </ngb-pagination>
-          </div>
-
-          <div style="height: 2rem;"></div>
-
-          <google-map
-                  *ngIf="isGoogleMapsLoaded"
-                  height="380px"
-                  width="100%">
-            <map-marker
-                #gMarker="mapMarker"
-                *ngFor="let marker of markers; index as i"
-                [position]="marker.position"
-                [label]="marker.label"
-                (mapClick)="openInfoWindow(gMarker, marker)">
-            </map-marker>
-            <map-info-window>{{gInfoWindowText}}</map-info-window>
-          </google-map>
-
-          <div style="height: 2rem;"></div>
-        </div>
+        }
       </div>
     </div>
 

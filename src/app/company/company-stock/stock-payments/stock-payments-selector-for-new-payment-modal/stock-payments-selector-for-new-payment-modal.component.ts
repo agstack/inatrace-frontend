@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { EnumSifrant } from '../../../../shared-services/enum-sifrant';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { StockOrderControllerService } from '../../../../../api/api/stockOrderController.service';
@@ -12,9 +12,11 @@ import OrderTypeEnum = ApiStockOrder.OrderTypeEnum;
 import UserCustomerTypeEnum = ApiUserCustomerCooperative.UserCustomerTypeEnum;
 
 @Component({
-  selector: 'app-stock-payments-selector-for-new-payment-modal',
-  templateUrl: './stock-payments-selector-for-new-payment-modal.component.html',
-  styleUrls: ['./stock-payments-selector-for-new-payment-modal.component.scss']
+    selector: 'app-stock-payments-selector-for-new-payment-modal',
+    templateUrl: './stock-payments-selector-for-new-payment-modal.component.html',
+    styleUrls: ['./stock-payments-selector-for-new-payment-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsSelectorForNewPaymentModalComponent implements OnInit {
 
@@ -32,9 +34,9 @@ export class StockPaymentsSelectorForNewPaymentModalComponent implements OnInit 
   womenShareCodebook = EnumSifrant.fromObject(this.womenShareTypes);
   purchaseOrdersForPaymentsCodebook: StockOrdersForCompanyService;
 
-  farmerForm = new FormControl(null);
-  womenCoffeeOnlyForm = new FormControl(null);
-  stockOrderForPaymentForm = new FormControl(null);
+  farmerForm = new UntypedFormControl(null);
+  womenCoffeeOnlyForm = new UntypedFormControl(null);
+  stockOrderForPaymentForm = new UntypedFormControl(null);
 
   constructor(
       public activeModal: NgbActiveModal,

@@ -1,262 +1,291 @@
 <ng-container>
-    <h2 *ngIf="actionType !== 'SHIPMENT'"
-        i18n="@@productLabelStockProcessingOrderDetail.section.output.outputsSectionTitle">Outputs of this processing</h2>
+  @if (actionType !== 'SHIPMENT') {
+    <h2
+    i18n="@@productLabelStockProcessingOrderDetail.section.output.outputsSectionTitle">Outputs of this processing</h2>
+  }
+  @for (tsoGroup of targetStockOrdersArray.controls; track tsoGroup; let tsoGroupIndex = $index) {
     <div class="af-form-element position-relative outputs-bottom-spacing processing-section"
-         [class.output]="actionType !== 'SHIPMENT'"
-         *ngFor="let tsoGroup of targetStockOrdersArray.controls; index as tsoGroupIndex">
-
-        <!-- CONTROLS FOR DISPLAYING AND SELECTING OUTPUT STOCK UNIT -->
-        <div class="af-row">
-
-            <!-- HANDLE CASE WHEN WE HAVE OUTPUT FINAL PRODUCT INSTEAD OF OUTPUT SEMI-PRODUCTS -->
-            <ng-container *ngIf="currentOutputFinalProduct; else outputSemiProduct">
-                <div class="af-c12">
-                    <textinput
-                            [form]="outputFinalProductNameControl"
-                            label="Final product type"
-                            i18n-label="@@productLabelStockProcessingOrderDetail.textinput.finalProductType.label"
-                            style="width: 100%">
-                    </textinput>
-                </div>
-            </ng-container>
-            <ng-template #outputSemiProduct>
-                <div class="af-c12 d-flex">
-                    <div class="flex-fill">
-                        <single-choice
-                                label="Semi-product type"
-                                i18n-label="@@productLabelStockProcessingOrderDetail.outputsSemiProductForm.label"
-                                [formControlInput]="$any(tsoGroup.get('semiProduct'))"
-                                [codebookService]="outputSemiProductsCodebook"
-                                [clearable]="false"
-                                style="min-width: 150px;"
-                                [isInvalidChoice]="submitted && tsoGroup.get('semiProduct').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="tsoGroup.get('semiProduct').errors as errors" class="sc-invalid-feedback"
-                                     i18n="@@productLabelStockProcessingOrderDetail.outputsSemiProductForm.error">
+      [class.output]="actionType !== 'SHIPMENT'"
+      >
+      <!-- CONTROLS FOR DISPLAYING AND SELECTING OUTPUT STOCK UNIT -->
+      <div class="af-row">
+        <!-- HANDLE CASE WHEN WE HAVE OUTPUT FINAL PRODUCT INSTEAD OF OUTPUT SEMI-PRODUCTS -->
+        @if (currentOutputFinalProduct) {
+          <div class="af-c12">
+            <textinput
+              [form]="outputFinalProductNameControl"
+              label="Final product type"
+              i18n-label="@@productLabelStockProcessingOrderDetail.textinput.finalProductType.label"
+              style="width: 100%">
+            </textinput>
+          </div>
+        } @else {
+          <div class="af-c12 d-flex">
+            <div class="flex-fill">
+              <single-choice
+                label="Semi-product type"
+                i18n-label="@@productLabelStockProcessingOrderDetail.outputsSemiProductForm.label"
+                [formControlInput]="$any(tsoGroup.get('semiProduct'))"
+                [codebookService]="outputSemiProductsCodebook"
+                [clearable]="false"
+                style="min-width: 150px;"
+                [isInvalidChoice]="submitted && tsoGroup.get('semiProduct').invalid">
+                @if (submitted) {
+                  @if (tsoGroup.get('semiProduct').errors; as errors) {
+                    <div class="sc-invalid-feedback"
+                      i18n="@@productLabelStockProcessingOrderDetail.outputsSemiProductForm.error">
                                     Output Semi-product is required
                                 </div>
-                            </ng-container>
-                        </single-choice>
-                    </div>
-                    <div class="ml-4">
-                        <div class="delete-output-icon"
-                             [class.disabled]="targetStockOrdersArray.length < 2"
-                             (click)="removeOutput(tsoGroupIndex)">
-                            <fa-icon class="del-icon" [icon]="faTrashAlt"></fa-icon>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-
-        </div>
-
-        <!-- CONTROLS FOR SELECTING OUTPUT FACILITY -->
-        <div class="af-row">
-            <div class="af-c12">
-                <single-choice
-                        *ngIf="currentOutputFinalProduct || tsoGroup.get('semiProduct').value"
-                        label="Facility"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.outputFacilityForm.label"
-                        [formControlInput]="$any(tsoGroup.get('facility'))"
-                        [codebookService]="getOutputFacilityCodebook($any(tsoGroup))"
-                        [clearable]="false"
-                        style="min-width: 150px;"
-                        [isInvalidChoice]="submitted && tsoGroup.get('facility').invalid">
-                    <ng-container *ngIf="submitted">
-                        <div *ngIf="tsoGroup.get('facility').errors as errors" class="sc-invalid-feedback"
-                             i18n="@@productLabelStockProcessingOrderDetail.outputFacilityForm.error">
+                  }
+                }
+              </single-choice>
+            </div>
+            <div class="ms-4">
+              <div class="delete-output-icon"
+                [class.disabled]="targetStockOrdersArray.length < 2"
+                (click)="removeOutput(tsoGroupIndex)">
+                <fa-icon class="del-icon" [icon]="faTrashAlt"></fa-icon>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <!-- CONTROLS FOR SELECTING OUTPUT FACILITY -->
+      <div class="af-row">
+        <div class="af-c12">
+          @if (currentOutputFinalProduct || tsoGroup.get('semiProduct').value) {
+            <single-choice
+              label="Facility"
+              i18n-label="@@productLabelStockProcessingOrderDetail.outputFacilityForm.label"
+              [formControlInput]="$any(tsoGroup.get('facility'))"
+              [codebookService]="getOutputFacilityCodebook($any(tsoGroup))"
+              [clearable]="false"
+              style="min-width: 150px;"
+              [isInvalidChoice]="submitted && tsoGroup.get('facility').invalid">
+              @if (submitted) {
+                @if (tsoGroup.get('facility').errors; as errors) {
+                  <div class="sc-invalid-feedback"
+                    i18n="@@productLabelStockProcessingOrderDetail.outputFacilityForm.error">
                             Output facility is required
                         </div>
-                    </ng-container>
-                </single-choice>
-            </div>
+                }
+              }
+            </single-choice>
+          }
         </div>
-
-        <!-- THE USER ENTERED ORDER ID - RELEVANT FOR QUOTE ORDER AND CAN BE SET ONLY WHEN NO PRODUCT ORDER IS PRESENT -->
-        <div class="af-row" *ngIf="actionType === 'SHIPMENT' && !productOrderId">
-            <div class="af-c12">
-                <textinput
-                        [form]="$any(tsoGroup.get('orderId'))"
-                        label="Order ID"
-                        placeholder="Enter the order ID"
-                        style="width: 100%"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.orderId.label"
-                        i18n-placeholder="productLabelStockProcessingOrderDetail.textinput.orderId.placeholder">
-                </textinput>
-            </div>
-        </div>
-
-        <!-- THE INTERNAL LOT NUMBER -->
+      </div>
+      <!-- THE USER ENTERED ORDER ID - RELEVANT FOR QUOTE ORDER AND CAN BE SET ONLY WHEN NO PRODUCT ORDER IS PRESENT -->
+      @if (actionType === 'SHIPMENT' && !productOrderId) {
         <div class="af-row">
-            <div class="af-c3">
-                <textinput
-                        [form]="procActionLotPrefixControl"
-                        label="Prefix"
-                        style="width: 100%"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.lotPrefix.label">
-                </textinput>
-            </div>
-            <div class="af-c9">
-                <textinput
-                        [form]="$any(tsoGroup.get('internalLotNumber'))"
-                        label="Internal lot name"
-                        style="width: 100%"
-                        placeholder="Enter internal lot name"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.internalLotNumber.label"
-                        i18n-placeholder="@@productLabelStockProcessingOrderDetail.textinput.internalLotNumber.placeholder"
-                        [isInvalid]="submitted && tsoGroup.get('internalLotNumber').invalid">
-                    <ng-container *ngIf="submitted">
-                        <div *ngIf="tsoGroup.get('internalLotNumber').errors as errors" class="sc-invalid-feedback">
-                            <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.internalLotNumber.textinput.error">
+          <div class="af-c12">
+            <textinput
+              [form]="$any(tsoGroup.get('orderId'))"
+              label="Order ID"
+              placeholder="Enter the order ID"
+              style="width: 100%"
+              i18n-label="@@productLabelStockProcessingOrderDetail.textinput.orderId.label"
+              i18n-placeholder="productLabelStockProcessingOrderDetail.textinput.orderId.placeholder">
+            </textinput>
+          </div>
+        </div>
+      }
+      <!-- THE INTERNAL LOT NUMBER -->
+      <div class="af-row">
+        <div class="af-c3">
+          <textinput
+            [form]="procActionLotPrefixControl"
+            label="Prefix"
+            style="width: 100%"
+            i18n-label="@@productLabelStockProcessingOrderDetail.textinput.lotPrefix.label">
+          </textinput>
+        </div>
+        <div class="af-c9">
+          <textinput
+            [form]="$any(tsoGroup.get('internalLotNumber'))"
+            label="Internal lot name"
+            style="width: 100%"
+            placeholder="Enter internal lot name"
+            i18n-label="@@productLabelStockProcessingOrderDetail.textinput.internalLotNumber.label"
+            i18n-placeholder="@@productLabelStockProcessingOrderDetail.textinput.internalLotNumber.placeholder"
+            [isInvalid]="submitted && tsoGroup.get('internalLotNumber').invalid">
+            @if (submitted) {
+              @if (tsoGroup.get('internalLotNumber').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@productLabelStockProcessingOrderDetail.internalLotNumber.textinput.error">
                                 Internal lot name is required
                             </div>
-                        </div>
-                    </ng-container>
-                </textinput>
-            </div>
+                  }
+                </div>
+              }
+            }
+          </textinput>
         </div>
-
-        <!-- FORM CONTROLS FOR DEFINING OUTPUT QUANTITY -->
-        <div *ngIf="actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE'" class="af-row">
-            <div class="af-c6">
-                <textinput
-                        [form]="$any(tsoGroup.get('totalQuantity'))"
-                        label="{{ targetStockOrderOutputQuantityLabel + ' ' + (tsoGroup.get('measureUnitType')?.value ? tsoGroup.get('measureUnitType').value.label : '-') }}"
-                        style="width: 100%"
-                        placeholder="Enter quantity"
-                        i18n-placeholder="@@productLabelStockProcessingOrderDetail.textinput.outputQuantity.placeholder">
-                    <ng-container *ngIf="submitted">
-                        <div *ngIf="tsoGroup.get('totalQuantity').errors as errors" class="sc-invalid-feedback">
-                            <div *ngIf="errors.required">
-                        <span *ngIf="actionType != 'SHIPMENT'; else quoteQuantityRequired"
-                              i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.required">Quantity is required</span>
-                                <ng-template #quoteQuantityRequired>
-                                    <span i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.requiredOnQuote">Enter the desired output quantity</span>
-                                </ng-template>
-                            </div>
-                        </div>
-                        <div *ngIf="notAllOutputQuantityIsUsed(tsoGroup)" class="sc-invalid-feedback">
-                            <span i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.notAllOutputQuantityIsUsed">Entered output quantity is not used completely</span>
-                        </div>
-                    </ng-container>
-                </textinput>
-            </div>
+      </div>
+      <!-- FORM CONTROLS FOR DEFINING OUTPUT QUANTITY -->
+      @if (actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE') {
+        <div class="af-row">
+          <div class="af-c6">
+            <textinput
+              [form]="$any(tsoGroup.get('totalQuantity'))"
+              label="{{ targetStockOrderOutputQuantityLabel + ' ' + (tsoGroup.get('measureUnitType')?.value ? tsoGroup.get('measureUnitType').value.label : '-') }}"
+              style="width: 100%"
+              placeholder="Enter quantity"
+              i18n-placeholder="@@productLabelStockProcessingOrderDetail.textinput.outputQuantity.placeholder">
+              @if (submitted) {
+                @if (tsoGroup.get('totalQuantity').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div>
+                        @if (actionType != 'SHIPMENT') {
+                          <span
+                          i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.required">Quantity is required</span>
+                        } @else {
+                          <span i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.requiredOnQuote">Enter the desired output quantity</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+                @if (notAllOutputQuantityIsUsed(tsoGroup)) {
+                  <div class="sc-invalid-feedback">
+                    <span i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.notAllOutputQuantityIsUsed">Entered output quantity is not used completely</span>
+                  </div>
+                }
+              }
+            </textinput>
+          </div>
         </div>
-
-        <!-- IF PROCESSING ACTION IS OF TYPE 'SHIPMENT' SHOW CONTROL FOR DELIVERY TIME -->
-        <div class="af-row" *ngIf="actionType === 'SHIPMENT'">
-            <div class="af-c6">
-                <app-datepicker
-                        label="Preferred delivery date"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.preferedDeliveryDate.label"
-                        [form]="tsoGroup.get('deliveryTime')"
-                        [invalid]="submitted && tsoGroup.get('deliveryTime').invalid">
-                    <ng-container>
-                        <ng-container *ngIf="submitted">
-                            <div *ngIf="tsoGroup.get('deliveryTime').errors as errors" class="sc-invalid-feedback">
-                                <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.preferedDeliveryDate.textinput.error">
+      }
+      <!-- IF PROCESSING ACTION IS OF TYPE 'SHIPMENT' SHOW CONTROL FOR DELIVERY TIME -->
+      @if (actionType === 'SHIPMENT') {
+        <div class="af-row">
+          <div class="af-c6">
+            <app-datepicker
+              label="Preferred delivery date"
+              i18n-label="@@productLabelStockProcessingOrderDetail.textinput.preferedDeliveryDate.label"
+              [form]="tsoGroup.get('deliveryTime')"
+              [invalid]="submitted && tsoGroup.get('deliveryTime').invalid">
+              <ng-container>
+                @if (submitted) {
+                  @if (tsoGroup.get('deliveryTime').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockProcessingOrderDetail.preferedDeliveryDate.textinput.error">
                                     Preferred delivery date is required
                                 </div>
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </app-datepicker>
-            </div>
-        </div>
-
-        <!-- DISPLAY THE PROCESSING EVIDENCE FIELDS -->
-        <ng-container *ngIf="selectedProcAction.requiredEvidenceFields">
-            <app-stock-processing-order-fields
-                    *ngFor="let fieldInfo of selectedProcAction.requiredEvidenceFields"
-                    side="right"
-                    [isQuote]="actionType === 'SHIPMENT'"
-                    [fieldInfo]="fieldInfo"
-                    [formGroup]="$any(tsoGroup.get('requiredProcEvidenceFieldGroup'))"
-                    [submitted]="submitted">
-            </app-stock-processing-order-fields>
-        </ng-container>
-
-        <!-- IF THE PROCESSING ACTION HAS SET 'repackedOutputs', DISPLAY LIST OF OUTPUT STOCK ORDERS -->
-        <ng-container *ngIf="getTSOGroupRepackedOutputsArray(tsoGroup) as repackedOutputsArray">
-            <ng-container *ngIf="repackedOutputsArray.length > 0">
-                <div class="af-row mt-4">
-                    <div class="af-c9">
-                        <label i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.outputs.label">Outputs</label>
+                      }
                     </div>
-
-                    <div class="af-c3 text-right">
-                        <button class="btn btn-solid round mr-2"
-                                (click)="prefillRepackedOutputSOQuantities(tsoGroup)"
-                                i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.prefill">
+                  }
+                }
+              </ng-container>
+            </app-datepicker>
+          </div>
+        </div>
+      }
+      <!-- DISPLAY THE PROCESSING EVIDENCE FIELDS -->
+      @if (selectedProcAction.requiredEvidenceFields) {
+        @for (fieldInfo of selectedProcAction.requiredEvidenceFields; track fieldInfo) {
+          <app-stock-processing-order-fields
+            side="right"
+            [isQuote]="actionType === 'SHIPMENT'"
+            [fieldInfo]="fieldInfo"
+            [formGroup]="$any(tsoGroup.get('requiredProcEvidenceFieldGroup'))"
+            [submitted]="submitted">
+          </app-stock-processing-order-fields>
+        }
+      }
+      <!-- IF THE PROCESSING ACTION HAS SET 'repackedOutputs', DISPLAY LIST OF OUTPUT STOCK ORDERS -->
+      @if (getTSOGroupRepackedOutputsArray(tsoGroup); as repackedOutputsArray) {
+        @if (repackedOutputsArray.length > 0) {
+          <div class="af-row mt-4">
+            <div class="af-c9">
+              <label i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.outputs.label">Outputs</label>
+            </div>
+            <div class="af-c3 text-end">
+              <button class="btn btn-solid round me-2"
+                (click)="prefillRepackedOutputSOQuantities(tsoGroup)"
+                i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.prefill">
                             <span>Prefill</span>
                         </button>
-                        <button class="btn btn-solid round"
-                                (click)="addRepackedOutputStockOrder(tsoGroup)"
-                                i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.add">
+              <button class="btn btn-solid round"
+                (click)="addRepackedOutputStockOrder(tsoGroup)"
+                i18n="@@productLabelStockProcessingOrderDetail.outputStockOrders.add">
                             <span>+</span>
                         </button>
-                    </div>
-                </div>
-
-                <div *ngFor="let repackedGroup of repackedOutputsArray.controls; index as repackedGroupIndex" class="af-row">
-                    <div class="af-c12">
-                        <div class="row">
-
-                            <div class="col-3">
-                                <textinput
-                                        [form]="$any(repackedGroup.get('sacNumber'))"
-                                        type="number"
-                                        min="0"
-                                        step="1"
-                                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.sacNumber"
-                                        label="Sac number"
-                                        [isInvalid]="submitted && repackedGroup.get('sacNumber').invalid">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="repackedGroup.get('sacNumber').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.textinput.sacNumber.required.error">
+            </div>
+          </div>
+          @for (repackedGroup of repackedOutputsArray.controls; track repackedGroup; let repackedGroupIndex = $index) {
+            <div class="af-row">
+              <div class="af-c12">
+                <div class="row">
+                  <div class="col-3">
+                    <textinput
+                      [form]="$any(repackedGroup.get('sacNumber'))"
+                      type="number"
+                      min="0"
+                      step="1"
+                      i18n-label="@@productLabelStockProcessingOrderDetail.textinput.sacNumber"
+                      label="Sac number"
+                      [isInvalid]="submitted && repackedGroup.get('sacNumber').invalid">
+                      @if (submitted) {
+                        @if (repackedGroup.get('sacNumber').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockProcessingOrderDetail.textinput.sacNumber.required.error">
                                                 Sac number is required
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-
-                            <div class="col-8">
-                                <textinput
-                                        [form]="$any(repackedGroup.get('totalQuantity'))"
-                                        [label]="getRepackedSacQuantityLabel(tsoGroup)"
-                                        [isInvalid]="submitted && repackedGroup.get('totalQuantity').invalid">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="repackedGroup.get('totalQuantity').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.textinput.quantity.required.error">
+                            }
+                          </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                  <div class="col-8">
+                    <textinput
+                      [form]="$any(repackedGroup.get('totalQuantity'))"
+                      [label]="getRepackedSacQuantityLabel(tsoGroup)"
+                      [isInvalid]="submitted && repackedGroup.get('totalQuantity').invalid">
+                      @if (submitted) {
+                        @if (repackedGroup.get('totalQuantity').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockProcessingOrderDetail.textinput.quantity.required.error">
                                                 Quantity is required
                                             </div>
-                                            <div *ngIf="errors.max" i18n="@@productLabelStockProcessingOrderDetail.textinput.quantity.max.error">
+                            }
+                            @if (errors.max) {
+                              <div i18n="@@productLabelStockProcessingOrderDetail.textinput.quantity.max.error">
                                                 Input exceeds the max value
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-
-                            <div class="col-1">
-                                <div class="delete-output-icon" (click)="removeRepackedOutputStockOrder(tsoGroup, repackedGroupIndex)">
-                                    <fa-icon class="del-icon" [icon]="faTrashAlt"></fa-icon>
-                                </div>
-                            </div>
-
-                        </div>
+                            }
+                          </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                  <div class="col-1">
+                    <div class="delete-output-icon" (click)="removeRepackedOutputStockOrder(tsoGroup, repackedGroupIndex)">
+                      <fa-icon class="del-icon" [icon]="faTrashAlt"></fa-icon>
                     </div>
+                  </div>
                 </div>
-            </ng-container>
-        </ng-container>
-
-        <div *ngIf="!rightSideEnabled" class="disabled-section-overlay"></div>
+              </div>
+            </div>
+          }
+        }
+      }
+      @if (!rightSideEnabled) {
+        <div class="disabled-section-overlay"></div>
+      }
     </div>
+  }
 
-    <div *ngIf="showAddNewOutputButton" class="d-flex justify-content-end outputs-bottom-spacing">
-        <button class="btn" type="button" (click)="addNewOutput()">
-            <span i18n="@@productLabelStockProcessingOrderDetail.section.output.button.addAdditionalOutput">Add additional output</span>
-        </button>
+  @if (showAddNewOutputButton) {
+    <div class="d-flex justify-content-end outputs-bottom-spacing">
+      <button class="btn" type="button" (click)="addNewOutput()">
+        <span i18n="@@productLabelStockProcessingOrderDetail.section.output.button.addAdditionalOutput">Add additional output</span>
+      </button>
     </div>
+  }
 </ng-container>

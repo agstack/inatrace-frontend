@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import _ from 'lodash-es';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ApiUserCustomer } from '../../../../api/model/apiUserCustomer';
@@ -40,9 +40,11 @@ import { SelfOnboardingService } from '../../../shared-services/self-onboarding.
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-company-farmers-details',
-  templateUrl: './company-farmers-details.component.html',
-  styleUrls: ['./company-farmers-details.component.scss']
+    selector: 'app-company-farmers-details',
+    templateUrl: './company-farmers-details.component.html',
+    styleUrls: ['./company-farmers-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
 
@@ -55,7 +57,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   company: ApiCompany;
   companyId;
   farmer: ApiUserCustomer;
-  farmerForm: FormGroup;
+  farmerForm: UntypedFormGroup;
   submitted = false;
   qrCodeSize = 110;
   appName = environment.appName;
@@ -68,7 +70,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   codebookAssoc: EnumSifrant;
   codebookCoop;
   assocCoop;
-  assocForm = new FormControl(null);
+  assocForm = new UntypedFormControl(null);
 
   genderCodebook = EnumSifrant.fromObject({
     MALE: $localize`:@@collectorDetail.gender.male:Male`,
@@ -85,10 +87,10 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   selectedPayments: ApiPayment[];
 
   farmerIdPing$ = new BehaviorSubject<number>(this.route.snapshot.params.id);
-  productTypesForm = new FormControl(null);
+  productTypesForm = new UntypedFormControl(null);
   productTypes: Array<ApiProductType> = [];
   productTypesCodebook: CompanyProductTypesService;
-  selectedProductTypesForm = new FormControl(null, [ListNotEmptyValidator()]);
+  selectedProductTypesForm = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   // Deliveries table parameters
   showedDeliveries = 0;
@@ -189,9 +191,9 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     return obj;
   }
 
-  static ApiUserCustomerCooperativeEmptyObjectFormFactory(): () => FormControl {
+  static ApiUserCustomerCooperativeEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyFarmersDetailsComponent.ApiUserCustomerCooperativeCreateEmptyObject(),
+      return new UntypedFormControl(CompanyFarmersDetailsComponent.ApiUserCustomerCooperativeCreateEmptyObject(),
         ApiUserCustomerCooperativeValidationScheme.validators);
     };
   }
@@ -201,18 +203,18 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     return defaultEmptyObject(obj) as ApiCertification;
   }
 
-  static ApiCertificationEmptyObjectFormFactory(): () => FormControl {
+  static ApiCertificationEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyFarmersDetailsComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
+      return new UntypedFormControl(CompanyFarmersDetailsComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
     };
   }
 
   get certifications(): AbstractControl[] {
-    return (this.farmerForm.get('certifications') as FormArray).controls;
+    return (this.farmerForm.get('certifications') as UntypedFormArray).controls;
   }
 
   get farmPlantInfos(): AbstractControl[] {
-    return (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).controls;
+    return (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).controls;
   }
 
   ngOnInit(): void {
@@ -281,7 +283,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
 
   private prefillFarmPlantInformation(): void {
 
-    const farmPlantInformationList = this.farmerForm.get('farm.farmPlantInformationList') as FormArray;
+    const farmPlantInformationList = this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray;
     if (farmPlantInformationList == null) {
       return;
     }
@@ -291,59 +293,59 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     listControls.forEach(control => {
       const farmPlantInformation = control.value as ApiFarmPlantInformation;
 
-      const formGroup = new FormGroup({
-        productType: new FormControl(farmPlantInformation.productType),
-        plantCultivatedArea: new FormControl(farmPlantInformation.plantCultivatedArea),
-        numberOfPlants: new FormControl(farmPlantInformation.numberOfPlants)
+      const formGroup = new UntypedFormGroup({
+        productType: new UntypedFormControl(farmPlantInformation.productType),
+        plantCultivatedArea: new UntypedFormControl(farmPlantInformation.plantCultivatedArea),
+        numberOfPlants: new UntypedFormControl(farmPlantInformation.numberOfPlants)
       });
 
-      this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as FormControl);
+      this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as UntypedFormControl);
 
       newListControls.push(formGroup);
     });
 
     // add missing product type in lists
-    const listProductTypeControls = (this.farmerForm.get('productTypes') as FormArray).controls;
+    const listProductTypeControls = (this.farmerForm.get('productTypes') as UntypedFormArray).controls;
     listProductTypeControls.forEach(ptControl =>  {
       const productType = ptControl.value as ApiProductType;
 
       const productFound = listControls.find(plantInfo => plantInfo.value.productType.id === productType.id);
       if ( productFound === undefined ) {
-        const formGroup = new FormGroup({
-          productType: new FormControl(productType),
-          plantCultivatedArea: new FormControl(null),
-          numberOfPlants: new FormControl(null)
+        const formGroup = new UntypedFormGroup({
+          productType: new UntypedFormControl(productType),
+          plantCultivatedArea: new UntypedFormControl(null),
+          numberOfPlants: new UntypedFormControl(null)
         });
 
-        this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as FormControl);
+        this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as UntypedFormControl);
 
         newListControls.push(formGroup);
       }
     });
 
-    (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).clear();
+    (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).clear();
 
     newListControls.forEach(newControl => {
-      (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).push(newControl);
+      (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).push(newControl);
     });
   }
 
   private addNewFarmPlantInformation(productType: ApiProductType): void {
 
-    const formGroup = new FormGroup({
-      productType: new FormControl(productType),
-      plantCultivatedArea: new FormControl(null),
-      numberOfPlants: new FormControl(null)
+    const formGroup = new UntypedFormGroup({
+      productType: new UntypedFormControl(productType),
+      plantCultivatedArea: new UntypedFormControl(null),
+      numberOfPlants: new UntypedFormControl(null)
     });
 
-    this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as FormControl);
+    this.addControlValueChangeListener(formGroup.get('plantCultivatedArea') as UntypedFormControl);
 
-    (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).push(formGroup);
+    (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).push(formGroup);
   }
 
   private removeFarmPlantInformation(productType: ApiProductType): void {
 
-    const plantInfoListArray = this.farmerForm.get('farm.farmPlantInformationList') as FormArray;
+    const plantInfoListArray = this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray;
 
     const resultArrayControls = plantInfoListArray.controls.filter(control => control.get('productType').value.id !== productType.id);
 
@@ -390,7 +392,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addControlValueChangeListener(control: FormControl) {
+  private addControlValueChangeListener(control: UntypedFormControl) {
     this.subscriptions.push(control.valueChanges.pipe(
       startWith(null),
       debounceTime(100)).subscribe(
@@ -419,9 +421,9 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
         this.selfOnboardingService.addFarmersCurrentStep$.subscribe(currentStep => {
           if (currentStep === 3) {
-            setTimeout(() => this.newFarmerTitleTooltip.open());
+            setTimeout(() => this.newFarmerTitleTooltip?.open());
           } else {
-            setTimeout(() => this.newFarmerTitleTooltip.close());
+            setTimeout(() => this.newFarmerTitleTooltip?.close());
           }
         })
     );
@@ -610,13 +612,13 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   initializeListManager() {
 
     this.producersListManager = new ListEditorManager<ApiUserCustomerCooperative>(
-        this.farmerForm.get('cooperatives') as FormArray,
+        this.farmerForm.get('cooperatives') as UntypedFormArray,
         CompanyFarmersDetailsComponent.ApiUserCustomerCooperativeEmptyObjectFormFactory(),
         ApiUserCustomerCooperativeValidationScheme
     );
 
     this.certificationListManager = new ListEditorManager<ApiCertification>(
-      (this.farmerForm.get('certifications')) as FormArray,
+      (this.farmerForm.get('certifications')) as UntypedFormArray,
       CompanyFarmersDetailsComponent.ApiCertificationEmptyObjectFormFactory(),
       ApiCertificationValidationScheme
     );
@@ -695,28 +697,28 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
       !this.checkNullEmpty(this.areaOrganicCertified));
   }
 
-  checkNullEmpty(control: FormControl){
+  checkNullEmpty(control: UntypedFormControl){
     return control == null || control.value == null || control.value === '';
   }
 
   checkPlantsCultivatedAreaFields() {
-    const farmPlantInformationList = this.farmerForm.get('farm.farmPlantInformationList') as FormArray;
+    const farmPlantInformationList = this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray;
     if (farmPlantInformationList != null) {
       const controls = farmPlantInformationList.controls;
-      return controls.some(control => !this.checkNullEmpty(control.get('plantCultivatedArea') as FormControl));
+      return controls.some(control => !this.checkNullEmpty(control.get('plantCultivatedArea') as UntypedFormControl));
     }
   }
 
-  public get areaUnit(): FormControl {
-    return this.farmerForm.get('farm.areaUnit') as FormControl;
+  public get areaUnit(): UntypedFormControl {
+    return this.farmerForm.get('farm.areaUnit') as UntypedFormControl;
   }
 
-  public get totalCultivatedArea(): FormControl {
-    return this.farmerForm.get('farm.totalCultivatedArea') as FormControl;
+  public get totalCultivatedArea(): UntypedFormControl {
+    return this.farmerForm.get('farm.totalCultivatedArea') as UntypedFormControl;
   }
 
-  public get areaOrganicCertified(): FormControl {
-    return this.farmerForm.get('farm.areaOrganicCertified') as FormControl;
+  public get areaOrganicCertified(): UntypedFormControl {
+    return this.farmerForm.get('farm.areaOrganicCertified') as UntypedFormControl;
   }
   
   appendAreaUnit(message: string, unit: string): string {
@@ -727,7 +729,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   }
 
   getProductTypeName(index: number): string {
-    const selectedControl = (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).controls[index];
+    const selectedControl = (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).controls[index];
     const productType = selectedControl.get('productType')?.value;
     return (productType) ? productType.name : '';
   }
@@ -741,7 +743,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
   }
 
   appendProductType(message: string, index: number): string {
-    const selectedControl = (this.farmerForm.get('farm.farmPlantInformationList') as FormArray).controls[index];
+    const selectedControl = (this.farmerForm.get('farm.farmPlantInformationList') as UntypedFormArray).controls[index];
     const productType = selectedControl.get('productType')?.value;
     const productTypeName = (productType) ? `(${productType.name})` : '';
     return message + ` ${productTypeName}`;

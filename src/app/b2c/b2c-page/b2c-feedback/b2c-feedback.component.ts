@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { defaultEmptyObject, generateFormFromMetadata } from '../../../../shared/utils';
 import { ApiProductLabelFeedback } from '../../../../api/model/apiProductLabelFeedback';
@@ -15,9 +15,11 @@ import { GlobalEventManagerService } from '../../../core/global-event-manager.se
 import { PublicControllerService } from '../../../../api/api/publicController.service';
 
 @Component({
-  selector: 'app-b2c-feedback',
-  templateUrl: './b2c-feedback.component.html',
-  styleUrls: ['./b2c-feedback.component.scss']
+    selector: 'app-b2c-feedback',
+    templateUrl: './b2c-feedback.component.html',
+    styleUrls: ['./b2c-feedback.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cFeedbackComponent implements OnInit {
 
@@ -25,7 +27,7 @@ export class B2cFeedbackComponent implements OnInit {
 
   submitted = false;
 
-  feedbackForm: FormGroup;
+  feedbackForm: UntypedFormGroup;
 
   tab: string = null;
 
