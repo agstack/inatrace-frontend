@@ -7,108 +7,117 @@
   [disableDelete]="disableDelete"
   [disableRowClick]="true">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="af-tagitem-container">
-        <span class="af-tagitem-text">{{ name }}</span>
-        <div (click)="viewImage()" class="af-tagitem-image">
-          <img *ngIf="isImageToShow()"
-            src="/api/common/document/{{ this.contentObject.document.storageKey }}" alt="The image of additional proof item">
-        </div>
-      </div>
-    </div>
-  </tag-closed>
-  <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-
-        <div class="af-form-row af-form-row--nomargin">
-          <div class="af-form-block--c6">
-
-            <div class="af-row">
-              <div class="af-c4">
-                <app-datepicker
-                  label="Date"
-                  i18n-label="@@additionalProofItem.datepicker.date.label"
-                  [form]="form.get('formalCreationDate')"
-                  [invalid]="submitted && form.get('formalCreationDate').invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('formalCreationDate').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@additionalProofItem.datepicker.date.error">
-                        Date is required
-                      </div>
-                    </div>
-                  </ng-container>
-                </app-datepicker>
-              </div>
-              <div class="af-c8">
-                <single-choice
-                  label="Type"
-                  i18n-label="@@additionalProofItem.label.type"
-                  [formControlInput]="form.get('type')"
-                  [codebookService]="codebookAdditionalProofs"
-                  [isInvalidChoice]="submitted && form.get('type').invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('type').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@additionalProofItem.textinput.type.error">
-                        Type is required
-                      </div>
-                    </div>
-                  </ng-container>
-                </single-choice>
-              </div>
-
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="af-tagitem-container">
+          <span class="af-tagitem-text">{{ name }}</span>
+          <div (click)="viewImage()" class="af-tagitem-image">
+            @if (isImageToShow()) {
+              <img
+                src="/api/common/document/{{ this.contentObject.document.storageKey }}" alt="The image of additional proof item">
+              }
             </div>
           </div>
-
-          <div class="af-form-block--c6" style="margin-left: 0;">
-
-            <div class="af-row">
-              <div class="af-c12">
-                <ng-container>
-                  <attachment-uploader
-                    allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-                    allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-                    mode="simpleAsTextField"
-                    label="Document (JPG, PNG, PDF)"
-                    i18n-label="@@additionalProofItem.attachment-uploader.label"
-                    i18n-allowedMimeTypeErrorMessage="@@additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage"
-                    [form]="form.get('document')"
-                    [attachmentUploaderId]="'standardsAndCertificates'+listEditorManagerPosition"
-                    [invalid]="submitted && form.get('document').invalid"
-                    [readOnly]="form.get('document').disabled">
-                    <attachment-uploader-content i18n="@@additionalProofItem.attachment-uploader.content">
+        </div>
+      }
+    </tag-closed>
+    <tag-open>
+      @if (this.form) {
+        <subform-layout>
+          <subform-form>
+            <div class="af-form-row af-form-row--nomargin">
+              <div class="af-form-block--c6">
+                <div class="af-row">
+                  <div class="af-c4">
+                    <app-datepicker
+                      label="Date"
+                      i18n-label="@@additionalProofItem.datepicker.date.label"
+                      [form]="form.get('formalCreationDate')"
+                      [invalid]="submitted && form.get('formalCreationDate').invalid">
+                    @if (submitted) {
+                      @if (form.get('formalCreationDate').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@additionalProofItem.datepicker.date.error">
+                        Date is required
+                      </div>
+                          }
+                        </div>
+                      }
+                    }
+                  </app-datepicker>
+                </div>
+                <div class="af-c8">
+                  <single-choice
+                    label="Type"
+                    i18n-label="@@additionalProofItem.label.type"
+                    [formControlInput]="form.get('type')"
+                    [codebookService]="codebookAdditionalProofs"
+                    [isInvalidChoice]="submitted && form.get('type').invalid">
+                    @if (submitted) {
+                      @if (form.get('type').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@additionalProofItem.textinput.type.error">
+                        Type is required
+                      </div>
+                          }
+                        </div>
+                      }
+                    }
+                  </single-choice>
+                </div>
+              </div>
+            </div>
+            <div class="af-form-block--c6" style="margin-left: 0;">
+              <div class="af-row">
+                <div class="af-c12">
+                  <ng-container>
+                    <attachment-uploader
+                      allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+                      allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+                      mode="simpleAsTextField"
+                      label="Document (JPG, PNG, PDF)"
+                      i18n-label="@@additionalProofItem.attachment-uploader.label"
+                      i18n-allowedMimeTypeErrorMessage="@@additionalProofItem.attachment-uploader.allowedMimeTypeErrorMessage"
+                      [form]="form.get('document')"
+                      [attachmentUploaderId]="'standardsAndCertificates'+listEditorManagerPosition"
+                      [invalid]="submitted && form.get('document').invalid"
+                      [readOnly]="form.get('document').disabled">
+                      <attachment-uploader-content i18n="@@additionalProofItem.attachment-uploader.content">
                       Upload document
                     </attachment-uploader-content>
-                  </attachment-uploader>
-                  <attachment-uploader-errors>
-                    <ng-container *ngIf="submitted">
-                      <div *ngIf="form.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@additionalProofItem.attachment-uploader.error">
+                    </attachment-uploader>
+                    <attachment-uploader-errors>
+                      @if (submitted) {
+                        @if (form.get('document').errors; as errors) {
+                          <div validation-error class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@additionalProofItem.attachment-uploader.error">
                           <span>
                             Document is required
                           </span>
                         </div>
-                      </div>
-                    </ng-container>
-                  </attachment-uploader-errors>
-                </ng-container>
+                            }
+                          </div>
+                        }
+                      }
+                    </attachment-uploader-errors>
+                  </ng-container>
+                </div>
               </div>
-
             </div>
           </div>
-        </div>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

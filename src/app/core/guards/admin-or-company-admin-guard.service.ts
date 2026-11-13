@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { take } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import RoleEnum = ApiUserGet.RoleEnum;
 @Injectable({
     providedIn: 'root'
 })
-export class AdminOrCompanyAdminGuardService implements CanActivate {
+export class AdminOrCompanyAdminGuardService  {
 
     constructor(
         private router: Router,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -23,9 +23,11 @@ interface GroupedStockOrders {
 }
 
 @Component({
-  selector: 'app-batch-history',
-  templateUrl: './batch-history.component.html',
-  styleUrls: ['./batch-history.component.scss']
+    selector: 'app-batch-history',
+    templateUrl: './batch-history.component.html',
+    styleUrls: ['./batch-history.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BatchHistoryComponent implements OnInit {
 

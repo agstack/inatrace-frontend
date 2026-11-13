@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'listFilter'
+    name: 'listFilter',
+    standalone: false
 })
 export class ListFilterPipe<T> implements PipeTransform {
     transform(list: T[], key: string, match: string, multiplicity: 'MULTI'): T[];

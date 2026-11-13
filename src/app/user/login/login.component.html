@@ -26,16 +26,22 @@
             type="text"
             i18n-placeholder="@@login.input.username.placeholder"
             [formControl]="$any(loginForm.get('username'))">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="loginForm.get('username').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@login.input.username.error">
+          @if (submitted) {
+            @if (loginForm.get('username').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@login.input.username.error">
                 Username is required
               </div>
-              <div *ngIf="errors.wrongEmail" i18n="@@login.input.username.errorWrongFormat">
+                }
+                @if (errors.wrongEmail) {
+                  <div i18n="@@login.input.username.errorWrongFormat">
                 Username is in the wrong format.
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
           <div class="login-small-spacer"></div>
           <div class="login-small-spacer"></div>
           <label for="password" class="mb-0 mt-3 text-input-label">
@@ -56,15 +62,21 @@
               (keyup.enter)="login()">
 
           </div>
-          <div *ngIf="submitted">
-            <div *ngIf="loginForm.get('password').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@login.input.password.error">
+          @if (submitted) {
+            <div>
+              @if (loginForm.get('password').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@login.input.password.error">
                 <span>
                   Password is required
                 </span>
               </div>
+                  }
+                </div>
+              }
             </div>
-          </div>
+          }
         </form>
         <div class="login-medium-spacer"></div>
 

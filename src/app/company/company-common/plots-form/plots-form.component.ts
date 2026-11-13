@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ApiProductType} from '../../../../api/model/apiProductType';
 import {CompanyProductTypesService} from '../../../shared-services/company-product-types.service';
 import {ApiPlotCoordinate} from '../../../../api/model/apiPlotCoordinate';
@@ -15,9 +15,11 @@ import {
 } from '../../company-farmers/open-plot-details-externally-modal/open-plot-details-externally-modal.component';
 
 @Component({
-  selector: 'app-plots-form',
-  templateUrl: './plots-form.component.html',
-  styleUrls: ['./plots-form.component.scss']
+    selector: 'app-plots-form',
+    templateUrl: './plots-form.component.html',
+    styleUrls: ['./plots-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PlotsFormComponent implements OnInit {
 
@@ -39,7 +41,7 @@ export class PlotsFormComponent implements OnInit {
   productTypesCodebook: CompanyProductTypesService;
 
   @Input()
-  form: FormGroup; // contains the plots control
+  form: UntypedFormGroup; // contains the plots control
 
   @Input()
   submitted = false;
@@ -64,9 +66,9 @@ export class PlotsFormComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiPlot;
   }
 
-  static ApiPlotEmptyObjectFormFactory(): () => FormControl {
+  static ApiPlotEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(PlotsFormComponent.ApiPlotCreateEmptyObject(), ApiPlotValidationScheme.validators);
+      return new UntypedFormControl(PlotsFormComponent.ApiPlotCreateEmptyObject(), ApiPlotValidationScheme.validators);
     };
   }
   
@@ -108,7 +110,7 @@ export class PlotsFormComponent implements OnInit {
 
   initializeListManager() {
     this.plotsListManager = new ListEditorManager<ApiPlot>(
-      this.form.get('plots') as FormArray,
+      this.form.get('plots') as UntypedFormArray,
       PlotsFormComponent.ApiPlotEmptyObjectFormFactory(),
       ApiPlotValidationScheme
     );

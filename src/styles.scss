@@ -1,8 +1,8 @@
 @import 'scss/unit.scss';
 @import 'variables';
-@import '~bootstrap/scss/bootstrap';
-@import "~@ng-select/ng-select/scss/default.theme.scss";
-@import '~ngx-toastr/toastr';
+@import 'bootstrap/scss/bootstrap';
+@import "@ng-select/ng-select/scss/default.theme";
+@import 'ngx-toastr/toastr';
 @import 'scss/fontawesome.scss';
 @import 'scss/solid.scss';
 @import 'scss/pathway-gothic-one-regular';
@@ -2264,7 +2264,7 @@ tr:nth-child(odd) {
       &-c11 {
         @include make-col(11);
 
-        max-width: calc(91.6666666667 - 10px) !important;
+        max-width: calc(91.6666666667% - 10px) !important;
         background-color: $af-row;
         margin-left: 20px;
 
@@ -2542,9 +2542,9 @@ $ustwo-colour-delux: #666;
     opacity: 0.95;
   }
 
-  &.bs-tooltip-left {
+  &.bs-tooltip-start {
     padding: 0 0.8rem;
-    .arrow {
+    .tooltip-arrow {
       top: calc(50% - .8rem);
       width: .8rem;
       &:before {
@@ -2554,9 +2554,9 @@ $ustwo-colour-delux: #666;
     }
   }
 
-  &.bs-tooltip-right {
+  &.bs-tooltip-end {
     padding: 0 0.8rem;
-    .arrow {
+    .tooltip-arrow {
       top: calc(50% - .8rem);
       width: 0.8rem;
       &:before {
@@ -2566,15 +2566,15 @@ $ustwo-colour-delux: #666;
     }
   }
 
-  &.bs-tooltip-right-top {
-    .arrow {
+  &.bs-tooltip-end-top {
+    .tooltip-arrow {
       top: 1.3rem;
     }
   }
 
   &.bs-tooltip-bottom {
     padding: 0.8rem 0;
-    .arrow {
+    .tooltip-arrow {
       left: calc(50% - .8rem);
       top: 0.4rem;
       &:before {
@@ -4184,4 +4184,25 @@ input.toggle-switch-checkbox:checked + label.toggle-switch-label:after {
 
 .geoid-content {
   word-break: break-all;
+}
+
+
+/* Bootstrap 5 compatibility for classes used by the app */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+.form-row > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
 }

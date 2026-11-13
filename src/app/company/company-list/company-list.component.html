@@ -1,9 +1,9 @@
 <app-authorised-layout class="af-layout--system">
 
   <app-system-left-panel
-          [isAdmin]="true"
-          i18n="@@companyList.navTitle"
-          title="System">
+    [isAdmin]="true"
+    i18n="@@companyList.navTitle"
+    title="System">
   </app-system-left-panel>
 
   <div class="main">
@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col">
 
-        <ng-container *ngIf="companies$ | async as companies">
+        @if (companies$ | async; as companies) {
           <div class="main-inside-top content-element">
             <div class="d-flex justify-content-between content-element--row1">
               <div class="title-page content-element--title" i18n="@@companyList.title.companies">Companies</div>
@@ -19,129 +19,135 @@
                 New company
               </button>
             </div>
-
             <div class="d-flex justify-content-between content-element--row2">
               <div>
                 <div class="sub-title-page content-element--subtitle" i18n="@@companyList.subTitle.listOfCompanies">List of companies</div>
                 <div class="counting-page content-element--counting" i18n="@@companyList.subTitle.showing">Showing {{showedCompanies}}/{{allCompanies}}</div>
               </div>
-
               <div class="d-flex align-items-top">
-                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-                  <div *ngIf="searchStatus && searchStatus?.value.length>0" class="d-flex filter-text" style="margin-left: 0.75rem"> Show {{searchStatus.value | lowercase}}
-                    <div (click)="clearValue(searchStatus)" style="margin-left: 0.5rem;">
-                      <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
-                      </fa-icon>
+                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+                  @if (searchStatus && searchStatus?.value.length>0) {
+                    <div class="d-flex filter-text" style="margin-left: 0.75rem"> Show {{searchStatus.value | lowercase}}
+                      <div (click)="clearValue(searchStatus)" style="margin-left: 0.5rem;">
+                        <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
+                        </fa-icon>
+                      </div>
                     </div>
-                  </div>
-                  <div *ngIf="myCompanies && myCompanies.value && isSystemAdmin"
-                       class="d-flex filter-text"
-                       style="margin-left: 0.75rem"
-                       i18n="@@companyList.filter.myCompanies">My companies
+                  }
+                  @if (myCompanies && myCompanies.value && isSystemAdmin) {
+                    <div
+                      class="d-flex filter-text"
+                      style="margin-left: 0.75rem"
+                      i18n="@@companyList.filter.myCompanies">My companies
                     <div (click)="clearValue(myCompanies, true)" style="margin-left: 0.5rem;">
                       <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
-
+                  }
                   <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@companyList.filter.placeholder">
                     <div class="button-icon">
                       <span class="button-icon-shape button-icon-shape--filter"></span>
                     </div>
                     <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
                   </button>
-
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button ngbDropdownItem (click)="showStatus('ACTIVE')" i18n="@@companyList.filter.showActive">Show active</button>
                     <button ngbDropdownItem (click)="showStatus('DEACTIVATED')" i18n="@@companyList.filter.showDeactivated">Show deactivated</button>
                     <button ngbDropdownItem (click)="showStatus('REGISTERED')" i18n="@@companyList.filter.showRegistered">Show registered</button>
-                    <ng-container *ngIf="isSystemAdmin">
+                    @if (isSystemAdmin) {
                       <div class="line"></div>
                       <button ngbDropdownItem (click)="myCompaniesOnly(true)" i18n="@@companyList.filter.showMyCompanies">Show my companies</button>
-                    </ng-container>
+                    }
                   </div>
                 </div>
-
                 <app-search-textinput
                   [form]="searchName">
                 </app-search-textinput>
               </div>
             </div>
-
           </div>
-
           <div class="main-inside-main">
-
-            <table *ngIf="companies && companies.items && companies.items.length> 0" class="af-table">
-              <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let company of companies.items">
-                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span class="limit-chars" >{{company.name}}</span></td>
-                  <td [attr.data-label]="sortOptions[1].name"><span>{{company.status}}</span></td>
-                  <td [attr.data-label]="sortOptions[2].name"><span>
-                    <a i18n="@@companyList.tableCol.edit"
-                      (click)="edit(company.id)"
-                      class="company-action"
-                      [class.enabled-action]="true">
+            @if (companies && companies.items && companies.items.length> 0) {
+              <table class="af-table">
+                <thead>
+                  <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (company of companies.items; track company) {
+                    <tr>
+                      <td scope="row" [attr.data-label]="sortOptions[0].name"><span class="limit-chars" >{{company.name}}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span>{{company.status}}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name"><span>
+                        <a i18n="@@companyList.tableCol.edit"
+                          (click)="edit(company.id)"
+                          class="company-action"
+                          [class.enabled-action]="true">
                       Edit
                     </a>
-                    <a i18n="@@companyList.tableCol.activate"
-                      (click)="company.status != 'ACTIVE' && activate(company.id)"
-                      class="company-action"
-                      [class.enabled-action]="company.status != 'ACTIVE'"
-                      [class.disabled-action]="company.status === 'ACTIVE'">
+                        <a i18n="@@companyList.tableCol.activate"
+                          (click)="company.status != 'ACTIVE' && activate(company.id)"
+                          class="company-action"
+                          [class.enabled-action]="company.status != 'ACTIVE'"
+                          [class.disabled-action]="company.status === 'ACTIVE'">
                       Activate
                     </a>
-                    <a i18n="@@companyList.tableCol.deactivate"
-                      (click)="company.status != 'DEACTIVATED' && deactivate(company.id)"
-                      class="company-action"
-                      [class.enabled-action]="company.status != 'DEACTIVATED'"
-                      [class.disabled-action]="company.status === 'DEACTIVATED' || isRegionalAdmin">
+                        <a i18n="@@companyList.tableCol.deactivate"
+                          (click)="company.status != 'DEACTIVATED' && deactivate(company.id)"
+                          class="company-action"
+                          [class.enabled-action]="company.status != 'DEACTIVATED'"
+                          [class.disabled-action]="company.status === 'DEACTIVATED' || isRegionalAdmin">
                       Deactivate
                     </a>
-                    <a i18n="@@companyList.tableCol.mergTo"
-                      (click)="mergeTo(company)"
-                      class="company-action"
-                      [class.enabled-action]="true"
-                      [class.disabled-action]="isRegionalAdmin">
+                        <a i18n="@@companyList.tableCol.mergTo"
+                          (click)="mergeTo(company)"
+                          class="company-action"
+                          [class.enabled-action]="true"
+                          [class.disabled-action]="isRegionalAdmin">
                       Merge to
                     </a>
-                    </span>
-                  </td>
-                </tr>
+                      </span>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
-            <div *ngIf="companies && companies.items && companies.items.length == 0" class="no-list-results" i18n="@@companyList.noCompanies">
+          }
+          @if (companies && companies.items && companies.items.length == 0) {
+            <div class="no-list-results" i18n="@@companyList.noCompanies">
               No companies found
             </div>
-          </div>
-          <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-            <ngb-pagination
-              [(page)]="page"
-              [pageSize]="pageSize"
-              [collectionSize]="companies.count"
-              (pageChange)="onPageChange($event)"
-              [maxSize]="7"
-              [rotate]="true">
-            </ngb-pagination>
-          </div>
-        </ng-container>
-      </div>
+          }
+        </div>
+        <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+          <ngb-pagination
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="companies.count"
+            (pageChange)="onPageChange($event)"
+            [maxSize]="7"
+            [rotate]="true">
+          </ngb-pagination>
+        </div>
+      }
     </div>
+  </div>
 
 
 
-    <div *ngIf="listErrorStatus$.value === 'UNAUTHORIZED'" i18n="@@companyList.unauthorized">
+  @if (listErrorStatus$.value === 'UNAUTHORIZED') {
+    <div i18n="@@companyList.unauthorized">
       Not authorised to see the list of companies.
     </div>
+  }
 
-    <div *ngIf="!!listErrorStatus$.value && listErrorStatus$.value != 'UNAUTHORIZED'" i18n="@@companyList.somethingWentWrong">
+  @if (!!listErrorStatus$.value && listErrorStatus$.value != 'UNAUTHORIZED') {
+    <div i18n="@@companyList.somethingWentWrong">
       Something went wrong during login.
     </div>
+  }
 
 
 
-  </div>
+</div>
 </app-authorised-layout>

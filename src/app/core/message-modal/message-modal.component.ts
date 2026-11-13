@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageButtonStringDict, MessageResultType, MessageModalLabelsService, MessageType } from './message-modal-labels.service';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -7,7 +7,9 @@ import { faInfoCircle, faExclamationTriangle, faExclamationCircle, faQuestionCir
 @Component({
     selector: 'app-message-modal',
     templateUrl: './message-modal.component.html',
-    styleUrls: ['./message-modal.component.scss']
+    styleUrls: ['./message-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MessageModalComponent implements OnInit {
     constructor(

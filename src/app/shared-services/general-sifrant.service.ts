@@ -1,4 +1,4 @@
-import { FormArray, FormGroup, ValidatorFn } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { isEqual } from 'lodash';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
     autocompleteMinPrefix = 2;
     maxAllCandidates = 100;
 
-    public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => FormGroup {
+    public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => UntypedFormGroup {
         throw new Error('Method not implemented.');
     }
 
@@ -112,10 +112,10 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
     public formatter(): (x: T) => string {
         return ((x: T) => this.textRepresentation(x));
     }
-    public addElement(arr: FormArray, el: T): void {
+    public addElement(arr: UntypedFormArray, el: T): void {
         throw new Error('Method not implemented.');
     }
-    public removeElement(arr: FormArray, index: number): void {
+    public removeElement(arr: UntypedFormArray, index: number): void {
         arr.removeAt(index);
         arr.markAsDirty();
         arr.updateValueAndValidity();

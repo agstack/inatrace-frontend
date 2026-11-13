@@ -6,7 +6,8 @@ import { BatchHistoryComponent } from '../stock-core/batch-history/batch-history
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tab'
+    redirectTo: 'tab',
+    pathMatch: 'full'
   },
   {
     path: 'tab',

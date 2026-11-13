@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyDetailTabManagerComponent } from '../company-detail-tab-manager/company-detail-tab-manager.component';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
@@ -14,9 +14,11 @@ import {
 import { NgbModalImproved } from "../../../core/ngb-modal-improved/ngb-modal-improved.service";
 
 @Component({
-  selector: 'app-company-processing-actions',
-  templateUrl: './company-processing-actions.component.html',
-  styleUrls: ['./company-processing-actions.component.scss']
+    selector: 'app-company-processing-actions',
+    templateUrl: './company-processing-actions.component.html',
+    styleUrls: ['./company-processing-actions.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyProcessingActionsComponent extends CompanyDetailTabManagerComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -58,9 +60,9 @@ export class CompanyProcessingActionsComponent extends CompanyDetailTabManagerCo
 
     this.subscriptions = this.selfOnboardingService.addProcessingActionCurrentStep$.subscribe(step => {
       if (step === 3) {
-        this.addProcActionButtonTooltip.open();
+        this.addProcActionButtonTooltip?.open();
       } else {
-        this.addProcActionButtonTooltip.close();
+        this.addProcActionButtonTooltip?.close();
       }
     });
   }

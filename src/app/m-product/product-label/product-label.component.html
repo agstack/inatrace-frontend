@@ -3,422 +3,428 @@
     [create]="this.mode === 'create'">
   </app-product-label-left-panel-content>
 
-  <div class="main"
-    *ngIf="companyId != null && productForm"
-    onDragStart="return false;"
-    onDragEnter="return false;"
-    onDragOver="return false;"
-    onDrop="return false;"
-    contents
-    [initialValue]="labelsSection.anchor"
-    [submitted]="submitted">
-
-    <div class="af-form-wrapper">
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-            <div *ngIf="this.action === 'labels'" class="title-page content-element--title"
-                 i18n="@@productLabel.title.qrLabels">QR labels
-            </div>
-            <div *ngIf="this.action != 'labels'"
-                 class="title-page content-element--title">
-                <span i18n="@@productLabel.title.productSettings"
-                      [ngbTooltip]="createProductTooltipTemplate"
-                      [autoClose]="false"
-                      placement="right"
-                      triggers="manual"
-                      tooltipClass="self-onboarding-tooltip-class"
-                      #createProductTooltip="ngbTooltip">Product settings</span>
-                <ng-template #createProductTooltipTemplate>
-                    <div>
-                        <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step4">Click 'Create' button on the bottom after adding all product details</h2>
-                        <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '4/4' }}</span></div>
-                    </div>
-                </ng-template>
-            </div>
-        </div>
-      </div>
-
-      <div class="af-form-row">
-
-        <ng-container *ngIf="this.action === 'labels'">
+  @if (companyId != null && productForm) {
+    <div class="main"
+      onDragStart="return false;"
+      onDragEnter="return false;"
+      onDragOver="return false;"
+      onDrop="return false;"
+      contents
+      [initialValue]="labelsSection.anchor"
+      [submitted]="submitted">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
           <div class="af-form-block--c12">
-            <h2 i18n="@@productLabel.section.qrLabels">QR labels</h2>
-            <div class="af-form-element af-form-element--inheritbg">
-
+            @if (this.action === 'labels') {
+              <div class="title-page content-element--title"
+                i18n="@@productLabel.title.qrLabels">QR labels
+            </div>
+            }
+            @if (this.action != 'labels') {
+              <div
+                class="title-page content-element--title">
+                <span i18n="@@productLabel.title.productSettings"
+                  [ngbTooltip]="createProductTooltipTemplate"
+                  [autoClose]="false"
+                  placement="end"
+                  triggers="manual"
+                  tooltipClass="self-onboarding-tooltip-class"
+                #createProductTooltip="ngbTooltip">Product settings</span>
+                <ng-template #createProductTooltipTemplate>
+                  <div>
+                    <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step4">Click 'Create' button on the bottom after adding all product details</h2>
+                    <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '4/4' }}</span></div>
+                  </div>
+                </ng-template>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="af-form-row">
+          @if (this.action === 'labels') {
+            <div class="af-form-block--c12">
+              <h2 i18n="@@productLabel.section.qrLabels">QR labels</h2>
+              <div class="af-form-element af-form-element--inheritbg">
+                <section
+                  cdkDropList
+                  class="droppable-list">
+                  <app-label-selector
+                    [labels]="labels$ | async"
+                    (onCreate)="createLabel()"
+                    [toSelect]="labelSelect$"
+                    (onSelect)="loadLabel($event)"
+                    (onDelete)="deleteLabel($event)"
+                    (onTitleChange)="toggleEditTitleMode()"
+                    [currentLabelForm]="labelTitleForm"
+                    [changed]="changed"
+                    [editable]="canEdit()">
+                  </app-label-selector>
+                  @if (currentLabel) {
+                    <div class="d-flex flex-column flex-md-row align-items-start justify-content-between">
+                      <div>
+                        <div class="tool-button" [class.side-menu-item-disabled]="changed" (click)="viewLabel()" i18n="@@productLabel.labelActions.viewPage">
+                      <fa-icon [icon]="faCompass" class="button-icon2"></fa-icon>View page (only label data are visible)
+                    </div>
+                        @if (canEdit()) {
+                          <div class="tool-button" (click)="togglePublish()" [class.side-menu-item-disabled]="changed">
+                            <fa-icon [icon]="faEye" class="button-icon2"></fa-icon>{{publishText}}
+                          </div>
+                        }
+                      </div>
+                      <div style="margin-right: -8px;">
+                        @if (canEdit()) {
+                          <div class="tool-button" [class.side-menu-item-disabled]="changed" (click)="batches()" i18n="@@productLabel.labelActions.batches">
+                      <fa-icon [icon]="faCodeBranch" class="button-icon2"></fa-icon>Batches
+                    </div>
+                        }
+                        @if (canEdit()) {
+                          <div class="tool-button" [class.side-menu-item-disabled]="changed" (click)="feedbacks()" i18n="@@productLabel.labelActions.feedback">
+                      <fa-icon [icon]="faQrcode" class="button-icon2"></fa-icon>Feedback
+                    </div>
+                        }
+                        @if (canEdit()) {
+                          <div class="tool-button" [class.side-menu-item-disabled]="changed" (click)="statistics()" i18n="@@productLabel.labelActions.statistics">
+                      <fa-icon [icon]="faSlidersH" class="button-icon2"></fa-icon>Statistics
+                    </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                  <div [@expandCollapse]="editTitleMode ? 'open' : 'closed'" class="row">
+                    <div class="col-11 offset-1">
+                      <div class="col">
+                        <textinput
+                          #labelTitleInput
+                          [form]="labelTitleForm"
+                          (onKeyUpEnter)="toggleEditTitleMode()"
+                          (onBlur)="toggleEditTitleMode(false)"
+                          style="width: 100%"
+                          label=""
+                          placeholder="Enter label name"
+                          i18n-placeholder="@@productLabel.labelActions.textinput.editLabelName">
+                        </textinput>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          }
+        </div>
+        @if (action !== 'labels') {
+          <div class="af-form-row">
+            <div class="af-form-block--c12">
+              <h2 i18n="@@productLabel.section.valueChain">Value chain</h2>
+              <div class="af-form-element" style="margin-top: 20px;">
+                <section [class.sp-page-fade-in]="fadeInProduct"
+                  cdkDropList
+                  class="droppable-list">
+                  <div cdkDrag class="row" [class.draggable-box]="reorderMode" [cdkDragDisabled]="!reorderMode">
+                    <div cdkDragHandle class="col-1 px-0 d-flex justify-content-start">
+                      @if (reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="this.valueChainName"></ng-template>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        }
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            @if (!this.currentLabel) {
+              <h2 i18n="@@productLabel.section.productData">Product data</h2>
+            }
+            @if (this.currentLabel) {
+              <h2 i18n="@@productLabel.section.labelData">Label data</h2>
+            }
+            <div class="af-form-element" style="margin-top: 20px;">
+              <section [class.sp-page-fade-in]="fadeInProduct"
+                cdkDropList
+                class="droppable-list">
+                @for (element of productElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div cdkDragHandle class="col-1 px-0 d-flex justify-content-start">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
+                    </div>
+                  </div>
+                }
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabel.section.process">Process</h2>
+            <div class="af-form-element">
               <section
                 cdkDropList
                 class="droppable-list">
-                <app-label-selector
-                  [labels]="labels$ | async"
-                  (onCreate)="createLabel()"
-                  [toSelect]="labelSelect$"
-                  (onSelect)="loadLabel($event)"
-                  (onDelete)="deleteLabel($event)"
-                  (onTitleChange)="toggleEditTitleMode()"
-                  [currentLabelForm]="labelTitleForm"
-                  [changed]="changed"
-                  [editable]="canEdit()">
-                </app-label-selector>
-
-                <div class="d-flex flex-column flex-md-row align-items-start justify-content-between" *ngIf="currentLabel">
-
-                  <div>
-                    <div class="tool-button" [class.side-menu-item-disabled]="changed" (click)="viewLabel()" i18n="@@productLabel.labelActions.viewPage">
-                      <fa-icon [icon]="faCompass" class="button-icon2"></fa-icon>View page (only label data are visible)
+                @for (element of processElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
                     </div>
-                    <div class="tool-button" *ngIf="canEdit()" (click)="togglePublish()" [class.side-menu-item-disabled]="changed">
-                      <fa-icon [icon]="faEye" class="button-icon2"></fa-icon>{{publishText}}
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
                     </div>
                   </div>
-
-                  <div style="margin-right: -8px;">
-
-                    <div *ngIf="canEdit()" class="tool-button" [class.side-menu-item-disabled]="changed" (click)="batches()" i18n="@@productLabel.labelActions.batches">
-                      <fa-icon [icon]="faCodeBranch" class="button-icon2"></fa-icon>Batches
-                    </div>
-                    <div *ngIf="canEdit()" class="tool-button" [class.side-menu-item-disabled]="changed" (click)="feedbacks()" i18n="@@productLabel.labelActions.feedback">
-                      <fa-icon [icon]="faQrcode" class="button-icon2"></fa-icon>Feedback
-                    </div>
-                    <div *ngIf="canEdit()" class="tool-button" [class.side-menu-item-disabled]="changed" (click)="statistics()" i18n="@@productLabel.labelActions.statistics">
-                      <fa-icon [icon]="faSlidersH" class="button-icon2"></fa-icon>Statistics
-                    </div>
-                  </div>
-                </div>
-
-                <div [@expandCollapse]="editTitleMode ? 'open' : 'closed'" class="row">
-                  <div class="col-11 offset-1">
-                    <div class="col">
-                      <textinput
-                        #labelTitleInput
-                        [form]="labelTitleForm"
-                        (onKeyUpEnter)="toggleEditTitleMode()"
-                        (onBlur)="toggleEditTitleMode(false)"
-                        style="width: 100%"
-                        label=""
-                        placeholder="Enter label name"
-                        i18n-placeholder="@@productLabel.labelActions.textinput.editLabelName">
-                      </textinput>
-                    </div>
-                  </div>
-                </div>
+                }
               </section>
-
             </div>
           </div>
-        </ng-container>
-      </div>
-
-      <div class="af-form-row" *ngIf="action !== 'labels'">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.valueChain">Value chain</h2>
-          <div class="af-form-element" style="margin-top: 20px;">
-            <section [class.sp-page-fade-in]="fadeInProduct"
-                     cdkDropList
-                     class="droppable-list">
-              <div cdkDrag class="row" [class.draggable-box]="reorderMode" [cdkDragDisabled]="!reorderMode">
-                <div cdkDragHandle class="col-1 px-0 d-flex justify-content-start">
-                  <fa-icon *ngIf="reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                </div>
-                <div class="col-11">
-                  <ng-template *ngTemplateOutlet="this.valueChainName"></ng-template>
-                </div>
-              </div>
-            </section>
-          </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 *ngIf="!this.currentLabel" i18n="@@productLabel.section.productData">Product data</h2>
-          <h2 *ngIf="this.currentLabel" i18n="@@productLabel.section.labelData">Label data</h2>
-          <div class="af-form-element" style="margin-top: 20px;">
-            <section [class.sp-page-fade-in]="fadeInProduct"
-              cdkDropList
-              class="droppable-list">
-              <ng-container *ngFor="let element of productElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div cdkDragHandle class="col-1 px-0 d-flex justify-content-start">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                  </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabel.section.socialResponsibility">Social responsibility</h2>
+            <div class="af-form-element">
+              <section
+                cdkDropList
+                class="droppable-list">
+                <div class="row">
+                  <div class="col-1 px-0"></div>
                   <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
-                  </div>
-                </div>
-              </ng-container>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.process">Process</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-
-              <ng-container *ngFor="let element of processElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                  </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
-                  </div>
-                </div>
-              </ng-container>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.socialResponsibility">Social responsibility</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-              <div class="row">
-                <div class="col-1 px-0"></div>
-                <div class="col-11">
-                  <button class="tool-button tool-button-right prefill-button" style="margin-top: 2px;" [attr.disabled]="!canEdit() ? true : null" (click)="prefillFromOther(true)" i18n="@@productLabel.button.prefillFromOther.resp.prefill">
+                    <button class="tool-button tool-button-right prefill-button" style="margin-top: 2px;" [attr.disabled]="!canEdit() ? true : null" (click)="prefillFromOther(true)" i18n="@@productLabel.button.prefillFromOther.resp.prefill">
                     Prefill
                   </button>
-                </div>
-              </div>
-
-              <ng-container *ngFor="let element of socialResponsibilityElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                  </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
                   </div>
                 </div>
-              </ng-container>
-            </section>
+                @for (element of socialResponsibilityElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
+                    </div>
+                  </div>
+                }
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.environmentalSustainability">Environmental sustainability</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-              <div class="row">
-                <div class="col-1 px-0"></div>
-                <div class="col-11">
-                  <button class="tool-button tool-button-right prefill-button" style="margin-top: 2px;" [attr.disabled]="!canEdit() ? true : null" (click)="prefillFromOther(false)" i18n="@@productLabel.button.prefillFromOther.sust.prefill">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabel.section.environmentalSustainability">Environmental sustainability</h2>
+            <div class="af-form-element">
+              <section
+                cdkDropList
+                class="droppable-list">
+                <div class="row">
+                  <div class="col-1 px-0"></div>
+                  <div class="col-11">
+                    <button class="tool-button tool-button-right prefill-button" style="margin-top: 2px;" [attr.disabled]="!canEdit() ? true : null" (click)="prefillFromOther(false)" i18n="@@productLabel.button.prefillFromOther.sust.prefill">
                     Prefill
                   </button>
-                </div>
-              </div>
-
-              <ng-container *ngFor="let element of environmentalSustainabilityElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                  </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
                   </div>
                 </div>
-              </ng-container>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2>Product journey</h2>
-          <div class="af-form-element">
-            <section class="droppable-list">
-
-              <app-pathline-map [markersForm]="journeyMarkersCtrl">
-              </app-pathline-map>
-
-              <div class="mt-3 mb-3 markers-form">
-                <div *ngFor="let markerCtrl of journeyMarkersCtrl.controls; let idx = index">
-                  <div class="row">
-                    <div class="col-3">
-                      <textinput [form]="$any(markerCtrl).get('latitude')"
-                          label="Latitude"
-                          [readOnly]="true">
-                      </textinput>
+                @for (element of environmentalSustainabilityElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
                     </div>
-                    <div class="col-3">
-                      <textinput [form]="$any(markerCtrl).get('longitude')"
-                          label="Longitude"
-                          [readOnly]="true">
-                      </textinput>
-                    </div>
-                    <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
-                      <button class="btn round btn-del"
-                          [disabled]="idx === journeyMarkersCtrl.controls.length - 1"
-                          (click)="moveJourneyMarkerDown(idx)">
-                        <span><fa-icon
-                            class="del-icon"
-                            [icon]="faArrowDown">
-                        </fa-icon></span>
-                      </button>
-                      <button class="btn round btn-del" (click)="moveJourneyMarkerUp(idx)" [disabled]="idx === 0">
-                        <span><fa-icon
-                            class="del-icon"
-                            [icon]="faArrowUp">
-                        </fa-icon></span>
-                      </button>
-
-                      <button class="btn round btn-del" (click)="removeJourneyMarker(idx)">
-                        <span><fa-icon
-                            class="del-icon"
-                            [icon]="faTrashAlt">
-                        </fa-icon></span>
-                      </button>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
                     </div>
                   </div>
-                </div>
-              </div>
-
-            </section>
+                }
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.settings">Settings</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-
-              <ng-container *ngFor="let element of settingsElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
-                  </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
-                  </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2>Product journey</h2>
+            <div class="af-form-element">
+              <section class="droppable-list">
+                <app-pathline-map [markersForm]="journeyMarkersCtrl">
+                </app-pathline-map>
+                <div class="mt-3 mb-3 markers-form">
+                  @for (markerCtrl of journeyMarkersCtrl.controls; track markerCtrl; let idx = $index) {
+                    <div>
+                      <div class="row">
+                        <div class="col-3">
+                          <textinput [form]="$any(markerCtrl).get('latitude')"
+                            label="Latitude"
+                            [readOnly]="true">
+                          </textinput>
+                        </div>
+                        <div class="col-3">
+                          <textinput [form]="$any(markerCtrl).get('longitude')"
+                            label="Longitude"
+                            [readOnly]="true">
+                          </textinput>
+                        </div>
+                        <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
+                          <button class="btn round btn-del"
+                            [disabled]="idx === journeyMarkersCtrl.controls.length - 1"
+                            (click)="moveJourneyMarkerDown(idx)">
+                            <span><fa-icon
+                              class="del-icon"
+                              [icon]="faArrowDown">
+                            </fa-icon></span>
+                          </button>
+                          <button class="btn round btn-del" (click)="moveJourneyMarkerUp(idx)" [disabled]="idx === 0">
+                            <span><fa-icon
+                              class="del-icon"
+                              [icon]="faArrowUp">
+                            </fa-icon></span>
+                          </button>
+                          <button class="btn round btn-del" (click)="removeJourneyMarker(idx)">
+                            <span><fa-icon
+                              class="del-icon"
+                              [icon]="faTrashAlt">
+                            </fa-icon></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  }
                 </div>
-              </ng-container>
-            </section>
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabel.section.company">Company</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-              <div class="row">
-                <div class="col-1 px-0">
-                </div>
-                <div class="col-11 px-0" i18n="@@productLabel.companySection.subtitle">
-                  <p>If you want to edit company details, please first save all changes and proceed to the <a *ngIf="productForm?.get('company.id')?.value" [routerLink]="['/', 'companies', productForm.get('company.id')?.value]" style="font-size: 1rem; text-decoration: underline;">company section</a>. Please note that company information will change on all of your products.</p>
-                </div>
-              </div>
-
-
-              <ng-container *ngFor="let element of companyElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabel.section.settings">Settings</h2>
+            <div class="af-form-element">
+              <section
+                cdkDropList
+                class="droppable-list">
+                @for (element of settingsElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
+                    </div>
                   </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
-                  </div>
-                </div>
-              </ng-container>
-
-            </section>
+                }
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2>B2C settings</h2>
-          <div class="af-form-element">
-            <section
-              cdkDropList
-              class="droppable-list">
-
-              <ng-container *ngFor="let element of b2cElements">
-                <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
-                  <div class="col-1 px-0 d-flex justify-content-center">
-                    <fa-icon *ngIf="!element.disableDrag && reorderMode" [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabel.section.company">Company</h2>
+            <div class="af-form-element">
+              <section
+                cdkDropList
+                class="droppable-list">
+                <div class="row">
+                  <div class="col-1 px-0">
                   </div>
-                  <div class="col-11">
-                    <ng-template *ngTemplateOutlet="element.template"></ng-template>
-                  </div>
+                  <div class="col-11 px-0" i18n="@@productLabel.companySection.subtitle">
+                  <p>If you want to edit company details, please first save all changes and proceed to the @if (productForm?.get('company.id')?.value) {
+<a [routerLink]="['/', 'companies', $safeNavigationMigration(productForm.get('company.id')?.value)]" style="font-size: 1rem; text-decoration: underline;">company section</a>
+}. Please note that company information will change on all of your products.</p>
                 </div>
-              </ng-container>
-            </section>
-
+                </div>
+                @for (element of companyElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
+                    </div>
+                  </div>
+                }
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="af-bottom-buttons">
-            <ng-container *ngIf="mode === 'update'">
-              <bottom-buttons
-                [changed]="changed"
-                [invalid]="submitted && invalid"
-                (onSave)="save()"
-                (onBack)="goBack()"
-                customBackFn="true"
-                [floatingValidate]="true"
-                [error]="submitted && productForm.invalid"
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2>B2C settings</h2>
+            <div class="af-form-element">
+              <section
+                cdkDropList
+                class="droppable-list">
+                @for (element of b2cElements; track element) {
+                  <div cdkDrag class="row" [class.draggable-box]="!element.disableDrag && reorderMode" [cdkDragDisabled]="element.disableDrag || !reorderMode">
+                    <div class="col-1 px-0 d-flex justify-content-center">
+                      @if (!element.disableDrag && reorderMode) {
+                        <fa-icon [icon]="faArrowsAlt" class="arrows-move"></fa-icon>
+                      }
+                    </div>
+                    <div class="col-11">
+                      <ng-template *ngTemplateOutlet="element.template"></ng-template>
+                    </div>
+                  </div>
+                }
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons">
+              @if (mode === 'update') {
+                <bottom-buttons
+                  [changed]="changed"
+                  [invalid]="submitted && invalid"
+                  (onSave)="save()"
+                  (onBack)="goBack()"
+                  customBackFn="true"
+                  [floatingValidate]="true"
+                  [error]="submitted && productForm.invalid"
                 [success]="submitted && !productForm.invalid"></bottom-buttons>
-            </ng-container>
-            <ng-container *ngIf="mode === 'create'">
-              <bottom-buttons
-                [changed]="changed"
-                [invalid]="submitted && invalid"
-                (onSave)="create()"
-                (onBack)="goBack()"
-                customBackFn="true"
-                saveButtonLabel="Create"
-                i18n-saveButtonLabel="@@productLabel.botomButtoms.saveButtonLabel"
-                [floatingValidate]="true"
-                [error]="submitted && productForm.invalid"
+              }
+              @if (mode === 'create') {
+                <bottom-buttons
+                  [changed]="changed"
+                  [invalid]="submitted && invalid"
+                  (onSave)="create()"
+                  (onBack)="goBack()"
+                  customBackFn="true"
+                  saveButtonLabel="Create"
+                  i18n-saveButtonLabel="@@productLabel.botomButtoms.saveButtonLabel"
+                  [floatingValidate]="true"
+                  [error]="submitted && productForm.invalid"
                 [success]="submitted && !productForm.invalid"></bottom-buttons>
-            </ng-container>
+              }
+            </div>
           </div>
         </div>
       </div>
-
     </div>
-  </div>
+  }
 </app-authorised-layout>
 
 <!-- PRODUCT TEMPLATES -->
 
 <ng-template #valueChainName>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('valueChain')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('valueChain')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart">
     <textinput [form]="$any(productForm).get('valueChain').get('name')"
-               [readOnly]="true"
-               style="width: 100%;"
-               hideAsterisk="true">
+      [readOnly]="true"
+      style="width: 100%;"
+      hideAsterisk="true">
     </textinput>
   </app-closable>
 </ng-template>
@@ -436,15 +442,19 @@
       hideAsterisk="true"
       [readOnly]="!canEdit()"
       [isInvalid]="submitted && productForm.get('name').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('name').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@productLabel.textinput.productName.error">
+      @if (submitted) {
+        @if (productForm.get('name').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@productLabel.textinput.productName.error">
             <span>
               Product name is required
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </textinput>
   </app-closable>
 </ng-template>
@@ -475,15 +485,19 @@
       <attachment-uploader-errors>
       </attachment-uploader-errors>
     </attachment-uploader>
-    <ng-container *ngIf="submitted">
-      <div *ngIf="productForm.get('photo').errors as errors" validation-error class="sc-invalid-feedback">
-        <div *ngIf="errors.required" i18n-label="@@productLabel.attachment-uploader.productPhoto.error">
-          <span>
-            Product photo is required
-          </span>
+    @if (submitted) {
+      @if (productForm.get('photo').errors; as errors) {
+        <div validation-error class="sc-invalid-feedback">
+          @if (errors.required) {
+            <div i18n-label="@@productLabel.attachment-uploader.productPhoto.error">
+              <span>
+                Product photo is required
+              </span>
+            </div>
+          }
         </div>
-      </div>
-    </ng-container>
+      }
+    }
     <div style="height: 1rem;"></div>
   </app-closable>
 </ng-template>
@@ -504,15 +518,19 @@
       helpText="Briefly describe the product AND reasons why your product is worth buying. (example: special properties, health benefits, great value, organic production....)"
       [readOnly]="!canEdit()"
       [isInvalid]="submitted && productForm.get('description').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('description').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n-label="@@productLabel.textinput.productDesc.error">
-            <span>
-              Product description is required
-            </span>
+      @if (submitted) {
+        @if (productForm.get('description').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@productLabel.textinput.productDesc.error">
+                <span>
+                  Product description is required
+                </span>
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
     </textinput>
   </app-closable>
 </ng-template>
@@ -534,80 +552,92 @@
       i18n-helpText="@@productLabel.textinput.originText.helpText"
       [readOnly]="!canEdit()"
       [isInvalid]="submitted && productForm.get('origin.text').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('origin.text').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@productLabel.textinput.originText.error">
+      @if (submitted) {
+        @if (productForm.get('origin.text').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@productLabel.textinput.originText.error">
             <span>
               Origin is required
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </textinput>
-    <google-map
-      *ngIf="isGoogleMapsLoaded"
-      width="100%"
-      [zoom]="defaultZoom"
-      [center]="defaultCenter"
-      [options]="{disableDoubleClickZoom: true}"
-      (mapDblclick)="dblClick($event)">
-      <map-marker
-        #gMarker="mapMarker"
-        *ngFor="let marker of markers; index as i"
-        [position]="marker.position"
-        [label]="marker.label"
-        [options]="{draggable: canEdit()}"
-        (mapRightclick)="removeOriginLocation(i)"
-        (mapDragend)="dragend($event, i)"
-        (mapClick)="openInfoWindow(gMarker, marker)">
-      </map-marker>
-      <map-info-window>{{gInfoWindowText}}</map-info-window>
-    </google-map>
+    @if (isGoogleMapsLoaded) {
+      <google-map
+        width="100%"
+        [zoom]="defaultZoom"
+        [center]="defaultCenter"
+        [options]="{disableDoubleClickZoom: true}"
+        (mapDblclick)="dblClick($event)">
+        @for (marker of markers; track marker; let i = $index) {
+          <map-marker
+            #gMarker="mapMarker"
+            [position]="marker.position"
+            [label]="marker.label"
+            [options]="{draggable: canEdit()}"
+            (mapRightclick)="removeOriginLocation(i)"
+            (mapDragend)="dragend($event, i)"
+            (mapClick)="openInfoWindow(gMarker, marker)">
+          </map-marker>
+        }
+        <map-info-window>{{gInfoWindowText}}</map-info-window>
+      </google-map>
+    }
     <small i18n="@@productLabel.origin.helpText">
       Double click on the map to drop a pin and mark the locations of farmers / suppliers. Indicate the number of farmers / suppliers you work with directly or indirectly at each location. You can also name each location.
     </small>
-    <ng-container *ngIf="submitted">
-      <div *ngIf="productForm.get('origin.locations').errors as errors" class="sc-invalid-feedback">
-        <div *ngIf="errors.required" i18n="@@productLabel.origin.error">
+    @if (submitted) {
+      @if (productForm.get('origin.locations').errors; as errors) {
+        <div class="sc-invalid-feedback">
+          @if (errors.required) {
+            <div i18n="@@productLabel.origin.error">
           <span>
             Origin is required
           </span>
         </div>
-      </div>
-    </ng-container>
+          }
+        </div>
+      }
+    }
     <div class="spacer-between-fields"></div>
 
     <button class="tool-button tool-button-right prefill-button" [attr.disabled]="!canEdit() ? true : null" (click)="resetMap()" i18n="@@productLabel.button.resetMap">
       Reset map
     </button>
 
-    <div *ngFor="let loc of $any(productForm.get('origin.locations'))?.controls; index as idx">
-      <div class="row">
-        <div class="col-6">
-          <textinput [form]="loc.get('pinName')"
-            i18n-label="@@productLabel.textinput.origin.pinName"
-            label="Pin name"
-            [readOnly]="!canEdit()"
-            (keyup)="onKey($event, idx)">
-          </textinput>
-        </div>
-        <div class="col-4">
-          <textinput [form]="loc.get('numberOfFarmers')"
-            label="# of farmers" type="number"
-            i18n-label="@@productLabel.textinput.origin.numberOfFarmers"
-            [readOnly]="!canEdit()">
-          </textinput>
-        </div>
-        <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
-          <button class="btn round" [attr.disabled]="!canEdit() ? true : null" (click)="removeOriginLocation(idx)" class="btn-del">
-            <span><fa-icon
+    @for (loc of $any(productForm.get('origin.locations'))?.controls; track loc; let idx = $index) {
+      <div>
+        <div class="row">
+          <div class="col-6">
+            <textinput [form]="loc.get('pinName')"
+              i18n-label="@@productLabel.textinput.origin.pinName"
+              label="Pin name"
+              [readOnly]="!canEdit()"
+              (keyup)="onKey($event, idx)">
+            </textinput>
+          </div>
+          <div class="col-4">
+            <textinput [form]="loc.get('numberOfFarmers')"
+              label="# of farmers" type="number"
+              i18n-label="@@productLabel.textinput.origin.numberOfFarmers"
+              [readOnly]="!canEdit()">
+            </textinput>
+          </div>
+          <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
+            <button class="btn round" [attr.disabled]="!canEdit() ? true : null" (click)="removeOriginLocation(idx)" class="btn-del">
+              <span><fa-icon
                 class="del-icon"
                 [icon]="faTrashAlt">
               </fa-icon></span>
-          </button>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
   </app-closable>
 </ng-template>
 
@@ -628,15 +658,19 @@
       i18n-helpText="@@productLabel.textinput.production.helpText"
       [readOnly]="!canEdit()"
       [isInvalid]="submitted && productForm.get('process.production').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('process.production').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n-label="@@productLabel.textinput.production.error">
-            <span>
-              Production is required
-            </span>
+      @if (submitted) {
+        @if (productForm.get('process.production').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@productLabel.textinput.production.error">
+                <span>
+                  Production is required
+                </span>
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
     </textinput>
   </app-closable>
 </ng-template>
@@ -658,15 +692,19 @@
       i18n-helpText="@@productLabel.textinput.laborPolicies.helpText"
       [readOnly]="!canEdit()"
       [isInvalid]="submitted && productForm.get('responsibility.laborPolicies').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('responsibility.laborPolicies').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@productLabel.textinput.laborPolicies.error">
+      @if (submitted) {
+        @if (productForm.get('responsibility.laborPolicies').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@productLabel.textinput.laborPolicies.error">
             <span>
               Labor Policies are required
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </textinput>
   </app-closable>
 </ng-template>
@@ -687,20 +725,26 @@
       i18n-label="@@productLabel.textinput.environmentalyFriendlyProduction.label"
       i18n-helpText="@@productLabel.textinput.environmentalyFriendlyProduction.helpText"
       [isInvalid]="submitted && productForm.get('sustainability.production').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('sustainability.production').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n-label="@@productLabel.textinput.environmentalyFriendlyProduction.error">
-            <span>
-              Production is required
-            </span>
-          </div>
-          <div *ngIf="errors.maxlength" i18n="@@productLabel.textinput.environmentalyFriendlyProduction.errorLimit">
+      @if (submitted) {
+        @if (productForm.get('sustainability.production').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@productLabel.textinput.environmentalyFriendlyProduction.error">
+                <span>
+                  Production is required
+                </span>
+              </div>
+            }
+            @if (errors.maxlength) {
+              <div i18n="@@productLabel.textinput.environmentalyFriendlyProduction.errorLimit">
             <span>
               Entry exceeds allowed max characters limit
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </textinput>
   </app-closable>
 
@@ -719,15 +763,19 @@
       i18n-label="@@productLabel.textinput.sustainablePackaging.label"
       i18n-helpText="@@productLabel.textinput.sustainablePackaging.helpText"
       [isInvalid]="submitted && productForm.get('sustainability.packaging').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="productForm.get('sustainability.packaging').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.maxlength" i18n="@@productLabel.textinput.sustainablePackaging.error">
+      @if (submitted) {
+        @if (productForm.get('sustainability.packaging').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.maxlength) {
+              <div i18n="@@productLabel.textinput.sustainablePackaging.error">
             <span>
               Entry exceeds allowed max characters limit
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
 
     </textinput>
   </app-closable>
@@ -851,10 +899,12 @@
     [nonClosable]="true"
     [openOnValueChange]="openOnStart">
     <div class="readonly-text-data">
-      <img *ngIf="productForm.get('company.logo').value && productForm.get('company.logo').value.storageKey"
-        src="/api/common/image/{{productForm.get('company.logo').value.storageKey}}/SMALL"
-        default="/api/common/image/{{productForm.get('company.logo').value.storageKey}}"
-        style="width: 100%">
+      @if (productForm.get('company.logo').value && productForm.get('company.logo').value.storageKey) {
+        <img
+          src="/api/common/image/{{productForm.get('company.logo').value.storageKey}}/SMALL"
+          default="/api/common/image/{{productForm.get('company.logo').value.storageKey}}"
+          style="width: 100%">
+      }
     </div>
   </app-closable>
 </ng-template>
@@ -869,11 +919,19 @@
     [form]="productForm.get('company.headquarters')"
     [nonClosable]="true"
     [openOnValueChange]="openOnStart">
-    <div class="readonly-text-data" *ngIf="productForm.get('company.headquarters').value as address">
-      {{address.address}}<span *ngIf="address.city">, {{address.zip}} {{address.city}}</span>
-      <span *ngIf="address.state">, {{address.state}}</span><span *ngIf="address.country">, {{address.country.name}}</span>
+    @if (productForm.get('company.headquarters').value; as address) {
+      <div class="readonly-text-data">
+        {{address.address}}@if (address.city) {
+        <span>, {{address.zip}} {{address.city}}</span>
+      }
+      @if (address.state) {
+        <span>, {{address.state}}</span>
+        }@if (address.country) {
+        <span>, {{address.country.name}}</span>
+      }
     </div>
-  </app-closable>
+  }
+</app-closable>
 </ng-template>
 
 <ng-template #aboutTheCompany>
@@ -949,178 +1007,183 @@
 </ng-template>
 
 <ng-template #facebook>
-  <app-closable
-    [visibilityForm]="visibilityMap.get('company.mediaLinks.facebook')"
-    [reorderMode]="reorderMode"
-    *ngIf="productForm.get('company.mediaLinks')?.get('facebook')"
-    mode="simple"
-    label="Facebook webpage URL"
-    i18n-label="@@productLabel.facebook.label"
-    [form]="productForm.get('company.mediaLinks.facebook')">
-    <div class="readonly-text-data">
-      {{productForm.get('company.mediaLinks.facebook').value || emptyField}}
-    </div>
-  </app-closable>
+  @if (productForm.get('company.mediaLinks')?.get('facebook')) {
+    <app-closable
+      [visibilityForm]="visibilityMap.get('company.mediaLinks.facebook')"
+      [reorderMode]="reorderMode"
+      mode="simple"
+      label="Facebook webpage URL"
+      i18n-label="@@productLabel.facebook.label"
+      [form]="productForm.get('company.mediaLinks.facebook')">
+      <div class="readonly-text-data">
+        {{productForm.get('company.mediaLinks.facebook').value || emptyField}}
+      </div>
+    </app-closable>
+  }
 </ng-template>
 
 <ng-template #instagram>
-  <app-closable
-    [visibilityForm]="visibilityMap.get('company.mediaLinks.instagram')"
-    [reorderMode]="reorderMode"
-    *ngIf="productForm.get('company.mediaLinks')?.get('instagram')"
-    mode="simple" label="Instagram webpage URL"
-    i18n-label="@@productLabel.instagram.label"
-    [form]="productForm.get('company.mediaLinks.instagram')">
-    <div class="readonly-text-data">
-      {{productForm.get('company.mediaLinks.instagram').value || emptyField}}
-    </div>
-  </app-closable>
+  @if (productForm.get('company.mediaLinks')?.get('instagram')) {
+    <app-closable
+      [visibilityForm]="visibilityMap.get('company.mediaLinks.instagram')"
+      [reorderMode]="reorderMode"
+      mode="simple" label="Instagram webpage URL"
+      i18n-label="@@productLabel.instagram.label"
+      [form]="productForm.get('company.mediaLinks.instagram')">
+      <div class="readonly-text-data">
+        {{productForm.get('company.mediaLinks.instagram').value || emptyField}}
+      </div>
+    </app-closable>
+  }
 </ng-template>
 
 <ng-template #twitter>
-  <app-closable
-    [visibilityForm]="visibilityMap.get('company.mediaLinks.twitter')"
-    [reorderMode]="reorderMode"
-    *ngIf="productForm.get('company.mediaLinks')?.get('twitter')"
-    mode="simple"
-    label="Twitter webpage URL"
-    i18n-label="@@productLabel.twitter.label"
-    [form]="productForm.get('company.mediaLinks.twitter')">
-    <div class="readonly-text-data">
-      {{productForm.get('company.mediaLinks.twitter').value || emptyField}}
-    </div>
-  </app-closable>
+  @if (productForm.get('company.mediaLinks')?.get('twitter')) {
+    <app-closable
+      [visibilityForm]="visibilityMap.get('company.mediaLinks.twitter')"
+      [reorderMode]="reorderMode"
+      mode="simple"
+      label="Twitter webpage URL"
+      i18n-label="@@productLabel.twitter.label"
+      [form]="productForm.get('company.mediaLinks.twitter')">
+      <div class="readonly-text-data">
+        {{productForm.get('company.mediaLinks.twitter').value || emptyField}}
+      </div>
+    </app-closable>
+  }
 </ng-template>
 
 <ng-template #youtube>
-  <app-closable
-    [visibilityForm]="visibilityMap.get('company.mediaLinks.youtube')"
-    [reorderMode]="reorderMode"
-    *ngIf="productForm.get('company.mediaLinks')?.get('youtube')"
-    mode="simple" label="YouTube webpage URL"
-    i18n-label="@@productLabel.youtube.label"
-    [form]="productForm.get('company.mediaLinks.youtube')">
-    <div class="readonly-text-data">
-      {{productForm.get('company.mediaLinks.youtube').value || emptyField}}
-    </div>
-  </app-closable>
+  @if (productForm.get('company.mediaLinks')?.get('youtube')) {
+    <app-closable
+      [visibilityForm]="visibilityMap.get('company.mediaLinks.youtube')"
+      [reorderMode]="reorderMode"
+      mode="simple" label="YouTube webpage URL"
+      i18n-label="@@productLabel.youtube.label"
+      [form]="productForm.get('company.mediaLinks.youtube')">
+      <div class="readonly-text-data">
+        {{productForm.get('company.mediaLinks.youtube').value || emptyField}}
+      </div>
+    </app-closable>
+  }
 </ng-template>
 
 <ng-template #other>
-  <app-closable
-    [visibilityForm]="visibilityMap.get('company.mediaLinks.other')"
-    [reorderMode]="reorderMode"
-    *ngIf="productForm.get('company.mediaLinks')?.get('other')"
-    mode="simple" label="Other webpage URL"
-    i18n-label="@@productLabel.other.label"
-    [form]="productForm.get('company.mediaLinks.other')">
-    <div class="readonly-text-data">
-      {{productForm.get('company.mediaLinks.other').value || emptyField}}
-    </div>
-  </app-closable>
+  @if (productForm.get('company.mediaLinks')?.get('other')) {
+    <app-closable
+      [visibilityForm]="visibilityMap.get('company.mediaLinks.other')"
+      [reorderMode]="reorderMode"
+      mode="simple" label="Other webpage URL"
+      i18n-label="@@productLabel.other.label"
+      [form]="productForm.get('company.mediaLinks.other')">
+      <div class="readonly-text-data">
+        {{productForm.get('company.mediaLinks.other').value || emptyField}}
+      </div>
+    </app-closable>
+  }
 </ng-template>
 
 <ng-template #b2cPrimaryColor>
   <app-closable
-      [nonClosable]="true"
-      [visibilityForm]="visibilityMap.get('businessToCustomerSettings.primaryColor')"
-      [reorderMode]="reorderMode"
-      [openOnValueChange]="openOnStart"
-      label="Primary color"
-      i18n-label="@@productLabel.b2c.primaryColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.primaryColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Primary color"
+    i18n-label="@@productLabel.b2c.primaryColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.primaryColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cSecondaryColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.secondaryColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Secondary color"
-          i18n-label="@@productLabel.b2c.secondaryColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.secondaryColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Secondary color"
+    i18n-label="@@productLabel.b2c.secondaryColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.secondaryColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cTertiaryColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tertiaryColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Tertiary color"
-          i18n-label="@@productLabel.b2c.tertiaryColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tertiaryColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Tertiary color"
+    i18n-label="@@productLabel.b2c.tertiaryColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.tertiaryColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cQuaternaryColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.quaternaryColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Quaternary color"
-          i18n-label="@@productLabel.b2c.quaternaryColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.quaternaryColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Quaternary color"
+    i18n-label="@@productLabel.b2c.quaternaryColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.quaternaryColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cProductTitleColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.productTitleColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Product title color"
-          i18n-label="@@productLabel.b2c.productTitleColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.productTitleColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Product title color"
+    i18n-label="@@productLabel.b2c.productTitleColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.productTitleColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cHeadingColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.headingColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Heading color"
-          i18n-label="@@productLabel.b2c.headingColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.headingColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Heading color"
+    i18n-label="@@productLabel.b2c.headingColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.headingColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cTextColor>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.textColor')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          label="Text color"
-          i18n-label="@@productLabel.b2c.textColor">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.textColor')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    label="Text color"
+    i18n-label="@@productLabel.b2c.textColor">
     <app-color-input [control]="$any(productForm).get('businessToCustomerSettings.textColor')" [disabled]="!canEdit()"></app-color-input>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cProductFont>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.productFont')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.productFont')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div class="mt-4">
       <attachment-uploader [allowedMimeType]="['font/ttf', 'font/woff', 'font/woff2', 'application/x-font-ttf', 'application/font-woff', 'application/x-font-woff', '']"
-                           allowedMimeTypeErrorMessage="Upload only file types: TTF, WOFF or WOFF2."
-                           mode="simpleAsTextField"
-                           label="Product font"
-                           i18n-label="@@productLabel.b2c.productFont"
-                           i18n-allowedMimeTypeErrorMessage="@@productLabel.b2c.font.allowedMimeTypeErrorMessage"
-                           [form]="$any(productForm).get('businessToCustomerSettings.productFont')"
-                           [attachmentUploaderId]="'b2cProductFont'"
-                           [readOnly]="!canEdit()">
+        allowedMimeTypeErrorMessage="Upload only file types: TTF, WOFF or WOFF2."
+        mode="simpleAsTextField"
+        label="Product font"
+        i18n-label="@@productLabel.b2c.productFont"
+        i18n-allowedMimeTypeErrorMessage="@@productLabel.b2c.font.allowedMimeTypeErrorMessage"
+        [form]="$any(productForm).get('businessToCustomerSettings.productFont')"
+        [attachmentUploaderId]="'b2cProductFont'"
+        [readOnly]="!canEdit()">
         <attachment-uploader-content>Upload product font</attachment-uploader-content>
       </attachment-uploader>
       <small i18n="@@productLabel.b2c.productFontHint">Upload font used for product title (TTF, WOFF or WOFF2)</small>
@@ -1130,21 +1193,21 @@
 
 <ng-template #b2cTextFont>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.textFont')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.textFont')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div>
       <attachment-uploader [allowedMimeType]="['font/ttf', 'font/woff', 'font/woff2', 'application/x-font-ttf', 'application/font-woff', 'application/x-font-woff', '']"
-                           allowedMimeTypeErrorMessage="Upload only file types: TTF, WOFF or WOFF2."
-                           mode="simpleAsTextField"
-                           label="Text font"
-                           i18n-label="@@productLabel.b2c.textFont"
-                           i18n-allowedMimeTypeErrorMessage="@@productLabel.b2c.font.allowedMimeTypeErrorMessage"
-                           [form]="$any(productForm).get('businessToCustomerSettings.textFont')"
-                           [attachmentUploaderId]="'b2cTextFont'"
-                           [readOnly]="!canEdit()">
+        allowedMimeTypeErrorMessage="Upload only file types: TTF, WOFF or WOFF2."
+        mode="simpleAsTextField"
+        label="Text font"
+        i18n-label="@@productLabel.b2c.textFont"
+        i18n-allowedMimeTypeErrorMessage="@@productLabel.b2c.font.allowedMimeTypeErrorMessage"
+        [form]="$any(productForm).get('businessToCustomerSettings.textFont')"
+        [attachmentUploaderId]="'b2cTextFont'"
+        [readOnly]="!canEdit()">
         <attachment-uploader-content>Upload text font</attachment-uploader-content>
       </attachment-uploader>
       <small i18n="@@productLabel.b2c.textFontHint">Upload font used for main content (TTF, WOFF or WOFF2)</small>
@@ -1154,18 +1217,18 @@
 
 <ng-template #b2cLandingPageImage>
   <app-closable [nonClosable]="true"
-                [visibilityForm]="visibilityMap.get('businessToCustomerSettings.landingPageImage')"
-                [reorderMode]="reorderMode"
-                [openOnValueChange]="openOnStart"
-                class="af-form-element--nolabel">
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.landingPageImage')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <attachment-uploader [allowedMimeType]="['image/jpeg', 'image/png']"
-                         [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
-                         mode="simpleAsTextField"
-                         label="Landing page image"
-                         i18n-label="@@productLabel.b2c.landingPageImage"
-                         [form]="$any(productForm).get('businessToCustomerSettings.landingPageImage')"
-                         [attachmentUploaderId]="'b2cLandingPageImage'"
-                         [readOnly]="!canEdit()">
+      [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
+      mode="simpleAsTextField"
+      label="Landing page image"
+      i18n-label="@@productLabel.b2c.landingPageImage"
+      [form]="$any(productForm).get('businessToCustomerSettings.landingPageImage')"
+      [attachmentUploaderId]="'b2cLandingPageImage'"
+      [readOnly]="!canEdit()">
     </attachment-uploader>
     <small i18n="@@productLabel.b2c.landingPageImageHint">Upload high-quality landing page product image (recommended size 780x780px; file types: PNG, JPG and JPEG)</small>
   </app-closable>
@@ -1173,18 +1236,18 @@
 
 <ng-template #b2cLandingPageBackgroundImage>
   <app-closable [nonClosable]="true"
-                [visibilityForm]="visibilityMap.get('businessToCustomerSettings.landingPageBackgroundImage')"
-                [reorderMode]="reorderMode"
-                [openOnValueChange]="openOnStart"
-                class="af-form-element--nolabel">
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.landingPageBackgroundImage')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <attachment-uploader [allowedMimeType]="['image/jpeg', 'image/png', 'image/svg+xml']"
-                         [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
-                         mode="simpleAsTextField"
-                         label="Landing page background image"
-                         i18n-label="@@productLabel.b2c.landingPageBackgroundImage"
-                         [form]="$any(productForm).get('businessToCustomerSettings.landingPageBackgroundImage')"
-                         [attachmentUploaderId]="'b2cLandingPageBackgroundImage'"
-                         [readOnly]="!canEdit()">
+      [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
+      mode="simpleAsTextField"
+      label="Landing page background image"
+      i18n-label="@@productLabel.b2c.landingPageBackgroundImage"
+      [form]="$any(productForm).get('businessToCustomerSettings.landingPageBackgroundImage')"
+      [attachmentUploaderId]="'b2cLandingPageBackgroundImage'"
+      [readOnly]="!canEdit()">
     </attachment-uploader>
     <small i18n="@@productLabel.b2c.landingPageBackgroundImageHint">Upload high-quality landing page background image (recommended size 1200x1800px; file types: PNG, JPG and JPEG)</small>
   </app-closable>
@@ -1192,18 +1255,18 @@
 
 <ng-template #b2cHeaderBackgroundImage>
   <app-closable [nonClosable]="true"
-                [visibilityForm]="visibilityMap.get('businessToCustomerSettings.headerBackgroundImage')"
-                [reorderMode]="reorderMode"
-                [openOnValueChange]="openOnStart"
-                class="af-form-element--nolabel">
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.headerBackgroundImage')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <attachment-uploader [allowedMimeType]="['image/jpeg', 'image/png', 'image/svg+xml']"
-                         [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
-                         mode="simpleAsTextField"
-                         label="Header background image"
-                         i18n-label="@@productLabel.b2c.headerBackgroundImage"
-                         [form]="$any(productForm).get('businessToCustomerSettings.headerBackgroundImage')"
-                         [attachmentUploaderId]="'b2cHeaderBackgroundImage'"
-                         [readOnly]="!canEdit()">
+      [allowedMimeTypeErrorMessage]="'Upload only file types: PNG, JPG and JPEG.'"
+      mode="simpleAsTextField"
+      label="Header background image"
+      i18n-label="@@productLabel.b2c.headerBackgroundImage"
+      [form]="$any(productForm).get('businessToCustomerSettings.headerBackgroundImage')"
+      [attachmentUploaderId]="'b2cHeaderBackgroundImage'"
+      [readOnly]="!canEdit()">
     </attachment-uploader>
     <small i18n="@@productLabel.b2c.headerBackgroundImageHint">Upload high-quality header background image (recommended size 1200x476px; file types: PNG, JPG and JPEG)</small>
   </app-closable>
@@ -1211,33 +1274,35 @@
 
 <ng-template #b2cTabFairPrices>
   <app-closable
-      [nonClosable]="true"
-      [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabFairPrices')"
-      [reorderMode]="reorderMode"
-      [openOnValueChange]="openOnStart"
-      class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabFairPrices')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div class="d-flex align-items-baseline justify-content-between">
       <checkbox-input
-              [form]="$any(productForm).get('businessToCustomerSettings.tabFairPrices')"
-              [disabled]="!canEdit()">
+        [form]="$any(productForm).get('businessToCustomerSettings.tabFairPrices')"
+        [disabled]="!canEdit()">
         <checkbox-input-rich-label i18n="@@productLabel.b2c.tabFairPrices">
           Enable 'Fair prices' tab
         </checkbox-input-rich-label>
       </checkbox-input>
 
-      <div class="mt-2" *ngIf="productForm.get('businessToCustomerSettings.tabFairPrices').value">
-        <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderFairPrices')"
-                   label="'Fair prices' tab position" [readOnly]="!canEdit()"></textinput>
-      </div>
+      @if (productForm.get('businessToCustomerSettings.tabFairPrices').value) {
+        <div class="mt-2">
+          <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderFairPrices')"
+          label="'Fair prices' tab position" [readOnly]="!canEdit()"></textinput>
+        </div>
+      }
     </div>
 
     <div>
       <tinymce-textarea
-          label="Pricing transparency description"
-          i18n-label="@@productLabel.section.pricingTransparency"
-          [formControlInput]="$any(productForm).get('settings.incomeIncreaseDescription')"
-          [disabled]="!canEdit()"
-          style="width: 100%;">
+        label="Pricing transparency description"
+        i18n-label="@@productLabel.section.pricingTransparency"
+        [formControlInput]="$any(productForm).get('settings.incomeIncreaseDescription')"
+        [disabled]="!canEdit()"
+        style="width: 100%;">
       </tinymce-textarea>
     </div>
 
@@ -1246,72 +1311,78 @@
 
 <ng-template #b2cTabProducers>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabProducers')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabProducers')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div class="d-flex align-items-baseline justify-content-between">
       <checkbox-input
-              [form]="$any(productForm).get('businessToCustomerSettings.tabProducers')"
-              [disabled]="!canEdit()">
+        [form]="$any(productForm).get('businessToCustomerSettings.tabProducers')"
+        [disabled]="!canEdit()">
         <checkbox-input-rich-label i18n="@@productLabel.b2c.tabProducers">
           Enable 'Producers' tab
         </checkbox-input-rich-label>
       </checkbox-input>
 
-      <div class="mt-2" *ngIf="productForm.get('businessToCustomerSettings.tabProducers').value">
-        <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderProducers')"
-                   label="'Producers' tab position" [readOnly]="!canEdit()"></textinput>
-      </div>
+      @if (productForm.get('businessToCustomerSettings.tabProducers').value) {
+        <div class="mt-2">
+          <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderProducers')"
+          label="'Producers' tab position" [readOnly]="!canEdit()"></textinput>
+        </div>
+      }
     </div>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cTabQuality>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabQuality')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabQuality')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div class="d-flex align-items-baseline justify-content-between">
       <checkbox-input
-              [form]="$any(productForm).get('businessToCustomerSettings.tabQuality')"
-              [disabled]="!canEdit()">
+        [form]="$any(productForm).get('businessToCustomerSettings.tabQuality')"
+        [disabled]="!canEdit()">
         <checkbox-input-rich-label i18n="@@productLabel.b2c.tabQuality">
           Enable 'Quality' tab
         </checkbox-input-rich-label>
       </checkbox-input>
 
-      <div class="mt-2" *ngIf="productForm.get('businessToCustomerSettings.tabQuality').value">
-        <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderQuality')"
-                   label="'Quality' tab position" [readOnly]="!canEdit()"></textinput>
-      </div>
+      @if (productForm.get('businessToCustomerSettings.tabQuality').value) {
+        <div class="mt-2">
+          <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderQuality')"
+          label="'Quality' tab position" [readOnly]="!canEdit()"></textinput>
+        </div>
+      }
     </div>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cTabFeedback>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabFeedback')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.tabFeedback')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <div class="d-flex align-items-baseline justify-content-between">
       <checkbox-input
-              [form]="$any(productForm).get('businessToCustomerSettings.tabFeedback')"
-              [disabled]="!canEdit()">
+        [form]="$any(productForm).get('businessToCustomerSettings.tabFeedback')"
+        [disabled]="!canEdit()">
         <checkbox-input-rich-label i18n="@@productLabel.b2c.tabFeedback">
           Enable 'Feedback' tab
         </checkbox-input-rich-label>
       </checkbox-input>
 
-      <div class="mt-2" *ngIf="productForm.get('businessToCustomerSettings.tabFeedback').value">
-        <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderFeedback')"
-                   label="'Feedback' tab position" [readOnly]="!canEdit()"></textinput>
-      </div>
+      @if (productForm.get('businessToCustomerSettings.tabFeedback').value) {
+        <div class="mt-2">
+          <textinput [form]="$any(productForm).get('businessToCustomerSettings.orderFeedback')"
+          label="'Feedback' tab position" [readOnly]="!canEdit()"></textinput>
+        </div>
+      }
     </div>
   </app-closable>
 </ng-template>
@@ -1319,14 +1390,14 @@
 <ng-template #b2cPricePaidToProducerGraphic>
   <div class="mt-3">
     <app-closable
-            [nonClosable]="true"
-            [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicPriceToProducer')"
-            [reorderMode]="reorderMode"
-            [openOnValueChange]="openOnStart">
+      [nonClosable]="true"
+      [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicPriceToProducer')"
+      [reorderMode]="reorderMode"
+      [openOnValueChange]="openOnStart">
       <single-choice
-              label="Price paid to producer graphic"
-              [formControlInput]="$any(productForm).get('businessToCustomerSettings.graphicPriceToProducer')"
-              [codebookService]="graphicFairPricesCodes" [readonly]="!canEdit()">
+        label="Price paid to producer graphic"
+        [formControlInput]="$any(productForm).get('businessToCustomerSettings.graphicPriceToProducer')"
+        [codebookService]="graphicFairPricesCodes" [readonly]="!canEdit()">
       </single-choice>
     </app-closable>
   </div>
@@ -1334,68 +1405,68 @@
 
 <ng-template #b2cFarmGatePriceGraphic>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicFarmGatePrice')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicFarmGatePrice')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart">
     <single-choice
-            label="Farm-gate price graphic"
-            [formControlInput]="$any(productForm).get('businessToCustomerSettings.graphicFarmGatePrice')"
-            [codebookService]="graphicFairPricesCodes" [readonly]="!canEdit()">
+      label="Farm-gate price graphic"
+      [formControlInput]="$any(productForm).get('businessToCustomerSettings.graphicFarmGatePrice')"
+      [codebookService]="graphicFairPricesCodes" [readonly]="!canEdit()">
     </single-choice>
   </app-closable>
 </ng-template>
 
 <ng-template #b2cPrices>
   <app-closable
-          [nonClosable]="true"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart">
+    [nonClosable]="true"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart">
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.containerSize')"
-                 [readOnly]="!canEdit()"
-                 label="Container size"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.containerSize">
+        [readOnly]="!canEdit()"
+        label="Container size"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.containerSize">
       </textinput>
     </div>
 
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.worldMarket')"
-                 [readOnly]="!canEdit()"
-                 label="World market price (USD/pound)"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.worldMarket">
+        [readOnly]="!canEdit()"
+        label="World market price (USD/pound)"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.worldMarket">
       </textinput>
     </div>
 
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.fairTrade')"
-                 [readOnly]="!canEdit()"
-                 label="Fairtrade Minimum Price + Premium (USD/pound)"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.fairTrade">
+        [readOnly]="!canEdit()"
+        label="Fairtrade Minimum Price + Premium (USD/pound)"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.fairTrade">
       </textinput>
     </div>
 
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.manualFarmGatePrice')"
-                 [readOnly]="!canEdit()"
-                 label="Manual farm-gate price (USD/kg)"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.manualFarmGatePrice">
+        [readOnly]="!canEdit()"
+        label="Manual farm-gate price (USD/kg)"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.manualFarmGatePrice">
       </textinput>
     </div>
 
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.averageRegionFarmGatePrice')"
-                 [readOnly]="!canEdit()"
-                 label="Average farm-gate price for region (USD/pound)"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.averageRegionFarmGatePrice">
+        [readOnly]="!canEdit()"
+        label="Average farm-gate price for region (USD/pound)"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.averageRegionFarmGatePrice">
       </textinput>
     </div>
 
     <div class="mt-2">
       <textinput [form]="$any(productForm).get('businessToCustomerSettings.manualProducerPrice')"
-                 [readOnly]="!canEdit()"
-                 label="Manual producer price (USD/kg)"
-                 i18n-label="@@productLabel.textinput.comparisonOfPrice.manualProducerPrice">
+        [readOnly]="!canEdit()"
+        label="Manual producer price (USD/kg)"
+        i18n-label="@@productLabel.textinput.comparisonOfPrice.manualProducerPrice">
       </textinput>
     </div>
   </app-closable>
@@ -1403,14 +1474,14 @@
 
 <ng-template #b2cGraphicQuality>
   <app-closable
-          [nonClosable]="true"
-          [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicQuality')"
-          [reorderMode]="reorderMode"
-          [openOnValueChange]="openOnStart"
-          class="af-form-element--nolabel">
+    [nonClosable]="true"
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.graphicQuality')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <checkbox-input
-            [form]="$any(productForm).get('businessToCustomerSettings.graphicQuality')"
-            [disabled]="!canEdit()">
+      [form]="$any(productForm).get('businessToCustomerSettings.graphicQuality')"
+      [disabled]="!canEdit()">
       <checkbox-input-rich-label i18n="@@productLabel.b2c.graphicQuality">
         Enable 'Quality' graphic
       </checkbox-input-rich-label>
@@ -1420,12 +1491,12 @@
 
 <ng-template #b2cMedia>
   <app-closable [nonClosable]="true"
-                [visibilityForm]="visibilityMap.get('businessToCustomerSettings.b2cMedia')"
-                [reorderMode]="reorderMode"
-                [openOnValueChange]="openOnStart"
-                class="af-form-element--nolabel">
+    [visibilityForm]="visibilityMap.get('businessToCustomerSettings.b2cMedia')"
+    [reorderMode]="reorderMode"
+    [openOnValueChange]="openOnStart"
+    class="af-form-element--nolabel">
     <h2 i18n="@@productLabel.b2c.videos" class="mt-4 mb-0">Videos</h2>
-    <ng-container *ngFor="let video of videoList">
+    @for (video of videoList; track video) {
       <div class="d-flex flex-row align-items-end">
         <checkbox-input [form]="$any(video).get('active')" [disabled]="!canEdit()">
           <checkbox-input-rich-label>
@@ -1433,40 +1504,44 @@
           </checkbox-input-rich-label>
         </checkbox-input>
       </div>
-    </ng-container>
-    <ng-container *ngIf="submitted">
-      <div *ngIf="mediaForm.get('video').errors as errors" class="sc-invalid-feedback">
-        <div *ngIf="errors.maxActive">
-          <span>
-            Only one video can be selected
-          </span>
+    }
+    @if (submitted) {
+      @if (mediaForm.get('video').errors; as errors) {
+        <div class="sc-invalid-feedback">
+          @if (errors.maxActive) {
+            <div>
+              <span>
+                Only one video can be selected
+              </span>
+            </div>
+          }
         </div>
-      </div>
-    </ng-container>
+      }
+    }
 
     <h2 i18n="@@productLabel.b2c.meetTheFarmers" class="mt-4 mb-0">Meet the farmers</h2>
-    <ng-container *ngFor="let farmer of farmerList">
+    @for (farmer of farmerList; track farmer) {
       <div class="d-flex flex-row align-items-end">
         <checkbox-input [form]="$any(farmer).get('active')" [disabled]="!canEdit()">
           <checkbox-input-rich-label>
             <app-document-preview [document]="$any(farmer)"></app-document-preview>
           </checkbox-input-rich-label>
         </checkbox-input>
-        <fa-icon [icon]="viewIcon" class="eye-icon ml-2" (click)="showImage(farmer.get('document').value.storageKey)"></fa-icon>
+        <fa-icon [icon]="viewIcon" class="eye-icon ms-2" (click)="showImage(farmer.get('document').value.storageKey)"></fa-icon>
       </div>
-    </ng-container>
+    }
 
     <h2 i18n="@@productLabel.b2c.productionRecords" class="mt-4 mb-0">Production records</h2>
-    <ng-container *ngFor="let record of productionRecordList">
+    @for (record of productionRecordList; track record) {
       <div class="d-flex flex-row align-items-end">
         <checkbox-input [form]="$any(record).get('active')" [disabled]="!canEdit()">
           <checkbox-input-rich-label>
             <app-document-preview [document]="$any(record)"></app-document-preview>
           </checkbox-input-rich-label>
         </checkbox-input>
-        <fa-icon [icon]="viewIcon" class="eye-icon ml-2" (click)="showImage(record.get('document').value.storageKey)"></fa-icon>
+        <fa-icon [icon]="viewIcon" class="eye-icon ms-2" (click)="showImage(record.get('document').value.storageKey)"></fa-icon>
       </div>
-    </ng-container>
+    }
 
   </app-closable>
 </ng-template>

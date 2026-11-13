@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -8,7 +8,9 @@ import { CookieManagementService } from 'src/app/shared/directives/cookie-manage
 @Component({
     selector: 'app-clear-cookie-consent',
     templateUrl: './clear-cookie-consent.component.html',
-    styleUrls: ['./clear-cookie-consent.component.scss']
+    styleUrls: ['./clear-cookie-consent.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ClearCookieConsentComponent implements OnInit, OnDestroy {
 

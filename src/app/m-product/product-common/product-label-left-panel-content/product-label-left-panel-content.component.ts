@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { ProductControllerService } from 'src/api/api/productController.service';
@@ -6,9 +6,11 @@ import { AuthService } from 'src/app/core/auth.service';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 
 @Component({
-  selector: 'app-product-label-left-panel-content',
-  templateUrl: './product-label-left-panel-content.component.html',
-  styleUrls: ['./product-label-left-panel-content.component.scss']
+    selector: 'app-product-label-left-panel-content',
+    templateUrl: './product-label-left-panel-content.component.html',
+    styleUrls: ['./product-label-left-panel-content.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelLeftPanelContentComponent implements OnInit {
 

@@ -1,16 +1,18 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GoogleMap } from '@angular/google-maps';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-product-label-statistics-page',
-  templateUrl: './product-label-statistics-page.component.html',
-  styleUrls: ['./product-label-statistics-page.component.scss']
+    selector: 'app-product-label-statistics-page',
+    templateUrl: './product-label-statistics-page.component.html',
+    styleUrls: ['./product-label-statistics-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
 
@@ -48,10 +50,10 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
   showAuth = true;
   showOrig = true;
 
-  locationsForm = new FormGroup({
-    visitLoc: new FormControl(true),
-    authLoc: new FormControl(false),
-    origLoc: new FormControl(false)
+  locationsForm = new UntypedFormGroup({
+    visitLoc: new UntypedFormControl(true),
+    authLoc: new UntypedFormControl(false),
+    origLoc: new UntypedFormControl(false)
     });
 
   constructor(

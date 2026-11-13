@@ -1,71 +1,94 @@
 <div class="form-group" [class.no-formgroup-margin]="noMargin">
-    <label class="d-flex mb-0 text-input-label" [class.sc-invalid-feedback-label-color]="isInvalidChoice">{{label}}<span *ngIf="isRequired()">*</span></label>
+  <label class="d-flex mb-0 text-input-label" [class.sc-invalid-feedback-label-color]="isInvalidChoice">{{label}}@if (isRequired()) {
+    <span>*</span>
+  }</label>
+  @if (codebookService || enumChoices || this.isBooleanSelector()) {
     <ng-select
-        #ngSelect
-        *ngIf="codebookService || enumChoices || this.isBooleanSelector()"
-        [multiple]="allowMultiple"
-        [items]="this.options"
-        [placeholder]="isDisabled() ? '' : (codebookService ? codebookService.placeholder() : (enumChoices ? enumPlaceholder : ''))"
-        [ngModel]="allowMultiple ? modelChoiceArr : modelChoice"
-        (ngModelChange)="onChangeHandler($event)"
-        [clearable]="clearable"
-        [readonly]="readonly"
-        (clear)="onClear($event)"
-        (blur)="onBlur($event)"
-        (focus)="onFocus($event)"
-        [typeahead]="typeahead$"
-        [class.ng-invalid]="isInvalidChoice"
-        [class.ng-dirty]="isInvalidChoice"
-        [class.ng-touched]="isInvalidChoice"
-        [notFoundText]="supplierNotFoundText"
-        i18-typeToSearchText="@@ui.singleChoice.enterSearchTerm"
-        typeToSearchText="Enter search term"
-        [disabled]="isDisabled()"
-        class="custom labelPlaceholder"
-        style="border:none">
-        <ng-template ng-header-tmp *ngIf="headerTemplate">
-            <div class="hover-pointer ">
-                <ng-template *ngTemplateOutlet="headerTemplate"></ng-template>
-            </div>
+      #ngSelect
+      [multiple]="allowMultiple"
+      [items]="this.options"
+      [placeholder]="isDisabled() ? '' : (codebookService ? codebookService.placeholder() : (enumChoices ? enumPlaceholder : ''))"
+      [ngModel]="allowMultiple ? modelChoiceArr : modelChoice"
+      (ngModelChange)="onChangeHandler($event)"
+      [clearable]="clearable"
+      [readonly]="readonly"
+      (clear)="onClear($event)"
+      (blur)="onBlur($event)"
+      (focus)="onFocus($event)"
+      [typeahead]="typeahead$"
+      [class.ng-invalid]="isInvalidChoice"
+      [class.ng-dirty]="isInvalidChoice"
+      [class.ng-touched]="isInvalidChoice"
+      [notFoundText]="supplierNotFoundText"
+      i18-typeToSearchText="@@ui.singleChoice.enterSearchTerm"
+      typeToSearchText="Enter search term"
+      [disabled]="isDisabled()"
+      class="custom labelPlaceholder"
+      style="border:none">
+      @if (headerTemplate) {
+        <ng-template ng-header-tmp>
+          <div class="hover-pointer ">
+            <ng-template *ngTemplateOutlet="headerTemplate"></ng-template>
+          </div>
         </ng-template>
-        <ng-template ng-label-tmp let-item="item">
-            <div [ngClass]="{'ng-value-simple-style-label': useSimpleStyle, 'ng-value-label': !useSimpleStyle, 'sp-custom-ng-select-label': true}" class="labelPlaceholder">
-                <fa-icon *ngIf="item.icon"
-                    class="ml-1 mr-2"
-                    [icon]="item.icon"
-                    [class]="item.class"></fa-icon>
-                {{this.formatter(item)}}
-            </div>
-        </ng-template>
-        <ng-template ng-option-tmp let-item="item" let-index="index">
-            <div [ngClass]="{'ng-value-simple-style-label': useSimpleStyle, 'ng-value-label': !useSimpleStyle, 'sp-custom-ng-select-option': true}" class="labelPlaceholder">
-                <fa-icon *ngIf="item.icon"
-                    class="ml-1 mr-2"
-                    [icon]="item.icon"
-                    [class]="item.class"></fa-icon>
-                {{this.formatter(item)}}
-            </div>
-        </ng-template>
-        <ng-container *ngIf="pagingData$ | async as paging">
-            <ng-template ng-footer-tmp *ngIf="paging.totalCount> 0">
-                <div class="d-flex align-items-center pl-3" style="height: 1.5rem">
-                    Zadetki:
-                    <button *ngIf="isPagePrev()" class="btn btn-link ml-3" (click)="onPagePrev()">&lt;</button>
-                    {{paging.offset + 1}}-{{min(paging.offset + paging.limit, paging.totalCount)}} od
-                    {{paging.totalCount}}
-                    <button *ngIf="isPageNext()" class="btn btn-link ml-3" (click)="onPageNext()">&gt;</button>
-                </div>
-            </ng-template>
-        </ng-container>
-    </ng-select>
-    <ng-container *ngIf="supplierState$ | async as supplierState">
-        <div *ngIf="supplierState === 'loading'" i18n="@@supplierFacility.loading">Loading supplier facilities…</div>
-        <div *ngIf="supplierState === 'empty'" i18n="@@supplierFacility.empty">No eligible supplier facilities are available. Ask your administrator to check company roles, partners and whether supplier facilities are public, active and support the selected product.</div>
-        <div *ngIf="supplierState === 'error'">
-            <span i18n="@@supplierFacility.error">Supplier facilities could not be loaded.</span>
-            <button type="button" class="btn btn-link p-0 ml-1" (click)="retrySupplierQuery()" i18n="@@supplierFacility.retry">Try again</button>
+      }
+      <ng-template ng-label-tmp let-item="item">
+        <div [ngClass]="{'ng-value-simple-style-label': useSimpleStyle, 'ng-value-label': !useSimpleStyle, 'sp-custom-ng-select-label': true}" class="labelPlaceholder">
+          @if (item.icon) {
+            <fa-icon
+              class="ms-1 me-2"
+              [icon]="item.icon"
+            [class]="item.class"></fa-icon>
+          }
+          {{this.formatter(item)}}
         </div>
-        <div *ngIf="supplierState === 'forbidden'" i18n="@@supplierFacility.forbidden">You do not have permission to view supplier facilities.</div>
-    </ng-container>
-    <ng-content></ng-content>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <div [ngClass]="{'ng-value-simple-style-label': useSimpleStyle, 'ng-value-label': !useSimpleStyle, 'sp-custom-ng-select-option': true}" class="labelPlaceholder">
+          @if (item.icon) {
+            <fa-icon
+              class="ms-1 me-2"
+              [icon]="item.icon"
+            [class]="item.class"></fa-icon>
+          }
+          {{this.formatter(item)}}
+        </div>
+      </ng-template>
+      @if (pagingData$ | async; as paging) {
+        @if (paging.totalCount> 0) {
+          <ng-template ng-footer-tmp>
+            <div class="d-flex align-items-center ps-3" style="height: 1.5rem">
+              Zadetki:
+              @if (isPagePrev()) {
+                <button class="btn btn-link ms-3" (click)="onPagePrev()">&lt;</button>
+              }
+              {{paging.offset + 1}}-{{min(paging.offset + paging.limit, paging.totalCount)}} od
+              {{paging.totalCount}}
+              @if (isPageNext()) {
+                <button class="btn btn-link ms-3" (click)="onPageNext()">&gt;</button>
+              }
+            </div>
+          </ng-template>
+        }
+      }
+    </ng-select>
+  }
+  @if (supplierState) {
+    @if (supplierState === 'loading') {
+      <div i18n="@@supplierFacility.loading">Loading supplier facilities…</div>
+    }
+    @if (supplierState === 'empty') {
+      <div i18n="@@supplierFacility.empty">No eligible supplier facilities are available. Ask your administrator to check company roles, partners and whether supplier facilities are public, active and support the selected product.</div>
+    }
+    @if (supplierState === 'error') {
+      <div>
+        <span i18n="@@supplierFacility.error">Supplier facilities could not be loaded.</span>
+        <button type="button" class="btn btn-link p-0 ms-1" (click)="retrySupplierQuery()" i18n="@@supplierFacility.retry">Try again</button>
+      </div>
+    }
+    @if (supplierState === 'forbidden') {
+      <div i18n="@@supplierFacility.forbidden">You do not have permission to view supplier facilities.</div>
+    }
+  }
+  <ng-content></ng-content>
 </div>

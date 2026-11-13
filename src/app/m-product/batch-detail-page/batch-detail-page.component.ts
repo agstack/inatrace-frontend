@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, Input, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ApiProductLabelBatch } from 'src/api/model/apiProductLabelBatch';
 import {dateISOString, generateFormFromMetadata} from 'src/shared/utils';
 import { ApiProductLabelBatchValidationScheme } from '../batches-list/batch-edit-modal/validation';
@@ -17,9 +17,11 @@ import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-impr
 
 
 @Component({
-  selector: 'app-batch-detail-page',
-  templateUrl: './batch-detail-page.component.html',
-  styleUrls: ['./batch-detail-page.component.scss']
+    selector: 'app-batch-detail-page',
+    templateUrl: './batch-detail-page.component.html',
+    styleUrls: ['./batch-detail-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BatchDetailPageComponent implements OnInit, OnDestroy {
 
@@ -56,7 +58,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
 
   batch: ApiProductLabelBatch = {};
 
-  batchDetailForm: FormGroup;
+  batchDetailForm: UntypedFormGroup;
   submitted: boolean = false;
   rootImageUrl: string = environment.relativeImageUploadUrlAllSizes;
   title: string = "";
@@ -222,25 +224,25 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   //origin location helper methods
-  get originLocations(): FormArray {
-    return this.batchDetailForm.get('locations') as FormArray
+  get originLocations(): UntypedFormArray {
+    return this.batchDetailForm.get('locations') as UntypedFormArray
   }
 
-  createOrFillOriginLocationsItem(loc: any, create: boolean): FormGroup {
-    return new FormGroup({
-      latitude: new FormControl(create ? loc.lat : loc.latitude),
-      longitude: new FormControl(create ? loc.lng : loc.longitude),
-      pinName: new FormControl(create ? null : loc.pinName),
-      numberOfFarmers: new FormControl(create ? null : loc.numberOfFarmers),
+  createOrFillOriginLocationsItem(loc: any, create: boolean): UntypedFormGroup {
+    return new UntypedFormGroup({
+      latitude: new UntypedFormControl(create ? loc.lat : loc.latitude),
+      longitude: new UntypedFormControl(create ? loc.lng : loc.longitude),
+      pinName: new UntypedFormControl(create ? null : loc.pinName),
+      numberOfFarmers: new UntypedFormControl(create ? null : loc.numberOfFarmers),
     });
   }
 
   initializeOriginLocations(locs): void {
-    let tmp = new FormArray([]);
+    let tmp = new UntypedFormArray([]);
     for (let loc of locs) {
       tmp.push(this.createOrFillOriginLocationsItem(loc, false));
     };
-    (this.batchDetailForm as FormGroup).setControl('locations', tmp);
+    (this.batchDetailForm as UntypedFormGroup).setControl('locations', tmp);
     this.batchDetailForm.updateValueAndValidity()
   }
 
@@ -272,7 +274,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
     }
     this.markers.push(tmp)
     this.initialBounds.push(tmp.position);
-    this.originLocations.push(this.createOrFillOriginLocationsItem(loc, true) as FormGroup);
+    this.originLocations.push(this.createOrFillOriginLocationsItem(loc, true) as UntypedFormGroup);
     this.batchDetailForm.markAsDirty();
   }
 
@@ -306,7 +308,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
     this.markers.splice(index, 1, tmp);
   }
 
-  dblClick(event: google.maps.MouseEvent) {
+  dblClick(event: google.maps.MapMouseEvent) {
     this.addOriginLocations(event.latLng.toJSON());
   }
 

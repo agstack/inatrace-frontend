@@ -1,43 +1,51 @@
 <div class="header-wrapper"
-     [style.background-image]="headerBackgroundImage ? 'url(' + headerBackgroundImage + ')' : ''"
-     [style.background-color]="b2cSettings.primaryColor">
-    <div class="af-b2c-header--logo">
-        <h1 [style.font-family]="b2cSettings.productFont ? 'custom-product' : ''">{{ productName }}</h1>
-    </div>
-    <ul class="af-b2c-nav text-center">
-        <li i18n="@@frontPage.header.tab.journey"
-            [class.af-b2c-nav--selected]="tab === tabEnum.JOURNEY"
-            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-            (click)="goTo(tabEnum.JOURNEY)">
+  [style.background-image]="headerBackgroundImage ? 'url(' + headerBackgroundImage + ')' : ''"
+  [style.background-color]="b2cSettings.primaryColor">
+  <div class="af-b2c-header--logo">
+    <h1 [style.font-family]="b2cSettings.productFont ? 'custom-product' : ''">{{ productName }}</h1>
+  </div>
+  <ul class="af-b2c-nav text-center">
+    <li i18n="@@frontPage.header.tab.journey"
+      [class.af-b2c-nav--selected]="tab === tabEnum.JOURNEY"
+      [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+      (click)="goTo(tabEnum.JOURNEY)">
             JOURNEY
         </li>
-        <ng-container *ngFor="let tabElement of tabList">
-            <ng-container [ngSwitch]="tabElement">
-                <li *ngSwitchCase="tabEnum.FAIR_PRICES" i18n="@@frontPage.header.tab.fair-prices"
-                    [class.af-b2c-nav--selected]="tab === tabEnum.FAIR_PRICES"
-                    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                    (click)="goTo(tabEnum.FAIR_PRICES)">
+    @for (tabElement of tabList; track tabElement) {
+      @switch (tabElement) {
+        @case (tabEnum.FAIR_PRICES) {
+          <li i18n="@@frontPage.header.tab.fair-prices"
+            [class.af-b2c-nav--selected]="tab === tabEnum.FAIR_PRICES"
+            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+            (click)="goTo(tabEnum.FAIR_PRICES)">
                     FAIR PRICES
                 </li>
-                <li *ngSwitchCase="tabEnum.PRODUCERS" i18n="@@frontPage.header.tab.producers"
-                    [class.af-b2c-nav--selected]="tab === tabEnum.PRODUCERS"
-                    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                    (click)="goTo(tabEnum.PRODUCERS)">
+        }
+        @case (tabEnum.PRODUCERS) {
+          <li i18n="@@frontPage.header.tab.producers"
+            [class.af-b2c-nav--selected]="tab === tabEnum.PRODUCERS"
+            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+            (click)="goTo(tabEnum.PRODUCERS)">
                     PRODUCERS
                 </li>
-                <li *ngSwitchCase="tabEnum.QUALITY" i18n="@@frontPage.header.tab.quality"
-                    [class.af-b2c-nav--selected]="tab === tabEnum.QUALITY"
-                    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                    (click)="goTo(tabEnum.QUALITY)">
+        }
+        @case (tabEnum.QUALITY) {
+          <li i18n="@@frontPage.header.tab.quality"
+            [class.af-b2c-nav--selected]="tab === tabEnum.QUALITY"
+            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+            (click)="goTo(tabEnum.QUALITY)">
                     QUALITY
                 </li>
-                <li *ngSwitchCase="tabEnum.FEEDBACK" i18n="@@frontPage.header.tab.feedback"
-                    [class.af-b2c-nav--selected]="tab === tabEnum.FEEDBACK"
-                    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                    (click)="goTo(tabEnum.FEEDBACK)">
+        }
+        @case (tabEnum.FEEDBACK) {
+          <li i18n="@@frontPage.header.tab.feedback"
+            [class.af-b2c-nav--selected]="tab === tabEnum.FEEDBACK"
+            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+            (click)="goTo(tabEnum.FEEDBACK)">
                     FEEDBACK
                 </li>
-            </ng-container>
-        </ng-container>
-    </ul>
+        }
+      }
+    }
+  </ul>
 </div>

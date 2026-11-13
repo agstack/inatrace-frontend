@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 import { Subject } from 'rxjs/internal/Subject';
@@ -9,7 +9,9 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-pathline-map',
     templateUrl: './pathline-map.component.html',
-    styleUrls: ['./pathline-map.component.scss']
+    styleUrls: ['./pathline-map.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PathlineMapComponent implements OnInit, OnChanges, OnDestroy {
     
@@ -50,7 +52,7 @@ export class PathlineMapComponent implements OnInit, OnChanges, OnDestroy {
     private markersFormValueChangeSubs: Subscription;
 
     @Input()
-    public markersForm: FormArray;
+    public markersForm: UntypedFormArray;
     
     constructor(public globalEventManager: GlobalEventManagerService) {
     }
@@ -136,10 +138,10 @@ export class PathlineMapComponent implements OnInit, OnChanges, OnDestroy {
         map.fitBounds(this.bounds.union(minBounds));
     }
     
-    addJourneyMarker(event: google.maps.MouseEvent) {
-        this.markersForm.push(new FormGroup({
-            latitude: new FormControl(event.latLng.lat()),
-            longitude: new FormControl(event.latLng.lng()),
+    addJourneyMarker(event: google.maps.MapMouseEvent) {
+        this.markersForm.push(new UntypedFormGroup({
+            latitude: new UntypedFormControl(event.latLng.lat()),
+            longitude: new UntypedFormControl(event.latLng.lng()),
         }));
         this.markersForm.markAsDirty();
     }

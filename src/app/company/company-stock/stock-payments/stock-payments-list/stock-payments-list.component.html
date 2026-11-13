@@ -1,81 +1,108 @@
-<ng-container *ngIf="payments$ | async as payments">
-    <div *ngIf="sortOptions.length > 0" class="main-inside-main">
-        <table *ngIf="payments && payments.items && payments.items.length> 0" class="af-table  af-checkbox--small">
-            <thead>
+@if (payments$ | async; as payments) {
+  @if (sortOptions.length > 0) {
+    <div class="main-inside-main">
+      @if (payments && payments.items && payments.items.length> 0) {
+        <table class="af-table  af-checkbox--small">
+          <thead>
             <tr result-sorter [sortOptions]="sortOptions" [cbChecked]="cbCheckedAll" (sortByKey)="changeSort($event)"></tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let payment of payments.items; index as i">
-                <td *ngIf="!sortOptions[0].hide" scope="row" [attr.data-label]="sortOptions[0].name">
-                    <checkbox-input *ngIf="this.currentData[i].paymentStatus === paymentStatusEnum.UNCONFIRMED"
-                                    inTable="true"
-                                    (onClick)="cbSelected(payment, i)"
-                                    [checked]="this.currentData[i].selected && this.currentData[i].paymentStatus === paymentStatusEnum.UNCONFIRMED">
-                    </checkbox-input>
-                </td>
-                <td *ngIf="!sortOptions[1].hide" [attr.data-label]="sortOptions[1].name"><span>{{ readablePaymentPurpose(payment.paymentPurposeType) }}</span></td>
-                <td *ngIf="!sortOptions[2].hide" [attr.data-label]="sortOptions[2].name"><span>{{ payment.amount  | number : '1.0-2' }} {{ payment.currency }}</span></td>
-                <td *ngIf="!sortOptions[3].hide" [attr.data-label]="sortOptions[3].name"><span>{{ payment.recipientUserCustomer ? payment.recipientUserCustomer.name + ' ' + payment.recipientUserCustomer.surname   : '' }}</span></td>
-                <td *ngIf="!sortOptions[4].hide" [attr.data-label]="sortOptions[4].name"><span>{{ payment.recipientCompany ? payment.recipientCompany.name : '' }}</span></td>
-                <td *ngIf="!sortOptions[5].hide" [attr.data-label]="sortOptions[5].name"><span>{{ formatDate(payment.productionDate) }}</span></td>
-                <td *ngIf="!sortOptions[6].hide" [attr.data-label]="sortOptions[6].name"><span>{{ formatDate(payment.formalCreationTime) }}</span></td>
-                <td *ngIf="!sortOptions[7].hide" [attr.data-label]="sortOptions[7].name"><span>{{ payment.preferredWayOfPayment | formatWayOfPayment }}</span></td>
+          </thead>
+          <tbody>
+            @for (payment of payments.items; track payment; let i = $index) {
+              <tr>
+                @if (!sortOptions[0].hide) {
+                  <td scope="row" [attr.data-label]="sortOptions[0].name">
+                    @if (this.currentData[i].paymentStatus === paymentStatusEnum.UNCONFIRMED) {
+                      <checkbox-input
+                        inTable="true"
+                        (onClick)="cbSelected(payment, i)"
+                        [checked]="this.currentData[i].selected && this.currentData[i].paymentStatus === paymentStatusEnum.UNCONFIRMED">
+                      </checkbox-input>
+                    }
+                  </td>
+                }
+                @if (!sortOptions[1].hide) {
+                  <td [attr.data-label]="sortOptions[1].name"><span>{{ readablePaymentPurpose(payment.paymentPurposeType) }}</span></td>
+                }
+                @if (!sortOptions[2].hide) {
+                  <td [attr.data-label]="sortOptions[2].name"><span>{{ payment.amount  | number : '1.0-2' }} {{ payment.currency }}</span></td>
+                }
+                @if (!sortOptions[3].hide) {
+                  <td [attr.data-label]="sortOptions[3].name"><span>{{ payment.recipientUserCustomer ? payment.recipientUserCustomer.name + ' ' + payment.recipientUserCustomer.surname   : '' }}</span></td>
+                }
+                @if (!sortOptions[4].hide) {
+                  <td [attr.data-label]="sortOptions[4].name"><span>{{ payment.recipientCompany ? payment.recipientCompany.name : '' }}</span></td>
+                }
+                @if (!sortOptions[5].hide) {
+                  <td [attr.data-label]="sortOptions[5].name"><span>{{ formatDate(payment.productionDate) }}</span></td>
+                }
+                @if (!sortOptions[6].hide) {
+                  <td [attr.data-label]="sortOptions[6].name"><span>{{ formatDate(payment.formalCreationTime) }}</span></td>
+                }
+                @if (!sortOptions[7].hide) {
+                  <td [attr.data-label]="sortOptions[7].name"><span>{{ payment.preferredWayOfPayment | formatWayOfPayment }}</span></td>
+                }
                 <td [attr.data-label]="sortOptions[8].name">
-                    <span>
-                        <a class="company-action"
-                           i18n="@@productLabelPayments.tableCol.view"
-                           [class.enabled-action]="true"
-                           (click)="editPayment(payment)">
+                  <span>
+                    <a class="company-action"
+                      i18n="@@productLabelPayments.tableCol.view"
+                      [class.enabled-action]="true"
+                      (click)="editPayment(payment)">
                             View
                         </a>
-                        <a *ngIf="!readOnly && payment.paymentStatus === paymentStatusEnum.UNCONFIRMED"
-                           class="company-action"
-                           i18n="@@productLabelPayments.tableCol.confirm"
-                           (click)="confirmPayment(payment)"
-                           [class.enabled-action]="true">
+                    @if (!readOnly && payment.paymentStatus === paymentStatusEnum.UNCONFIRMED) {
+                      <a
+                        class="company-action"
+                        i18n="@@productLabelPayments.tableCol.confirm"
+                        (click)="confirmPayment(payment)"
+                        [class.enabled-action]="true">
                             Confirm
                         </a>
-                        <a *ngIf="!readOnly" class="company-action"
-                           i18n="@@productLabelPayments.tableCol.delete"
-                           (click)="deletePayment(payment)"
-                           [class.enabled-action]="true">
+                    }
+                    @if (!readOnly) {
+                      <a class="company-action"
+                        i18n="@@productLabelPayments.tableCol.delete"
+                        (click)="deletePayment(payment)"
+                        [class.enabled-action]="true">
                             Delete
                         </a>
-                    </span>
+                    }
+                  </span>
                 </td>
-            </tr>
-            </tbody>
+              </tr>
+            }
+          </tbody>
         </table>
-        <div *ngIf="payments && payments.items && payments.items.length == 0" class="no-list-results" i18n="@@productLabelPayments.noPayments">
+      }
+      @if (payments && payments.items && payments.items.length == 0) {
+        <div class="no-list-results" i18n="@@productLabelPayments.noPayments">
             No payments found
         </div>
+      }
     </div>
-
-    <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-        <ngb-pagination
-                [(page)]="page"
-                [pageSize]="pageSize"
-                [collectionSize]="payments.count"
-                (pageChange)="onPageChange($event)"
-                [maxSize]="7"
-                [rotate]="true">
-        </ngb-pagination>
-    </div>
-
-    <h4 class="text-color-primary" i18n="@@productLabelPurchaseOrder.aggregated.title">Summed up quantities</h4>
-    <div class="aggregated-orders">
-        <table class="aggregated-orders-table">
-            <thead>
-                <tr>
-                    <th i18n="@@productLabelPurchaseOrder.aggregated.totalAmountPaid">Total amount paid</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{aggregatedTotalPaid | number : '1.0-2' }} {{ currency }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-</ng-container>
+  }
+  <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="payments.count"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="7"
+      [rotate]="true">
+    </ngb-pagination>
+  </div>
+  <h4 class="text-color-primary" i18n="@@productLabelPurchaseOrder.aggregated.title">Summed up quantities</h4>
+  <div class="aggregated-orders">
+    <table class="aggregated-orders-table">
+      <thead>
+        <tr>
+          <th i18n="@@productLabelPurchaseOrder.aggregated.totalAmountPaid">Total amount paid</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{aggregatedTotalPaid | number : '1.0-2' }} {{ currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+}

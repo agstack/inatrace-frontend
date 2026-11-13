@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ListEditorManager } from '../../../shared/list-editor/list-editor-manager';
 import { ApiCompanyUser } from '../../../../api/model/apiCompanyUser';
-import { FormArray, FormControl } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ApiCompanyUserValidationScheme } from '../validation';
 import { CompanyControllerService } from '../../../../api/api/companyController.service';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
@@ -14,13 +14,15 @@ import { ApiResponseApiCompanyName } from '../../../../api/model/apiResponseApiC
 import StatusEnum = ApiResponseApiCompanyName.StatusEnum;
 
 @Component({
-  selector: 'app-company-detail-users',
-  templateUrl: './company-detail-users.component.html',
-  styleUrls: ['./company-detail-users.component.scss']
+    selector: 'app-company-detail-users',
+    templateUrl: './company-detail-users.component.html',
+    styleUrls: ['./company-detail-users.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailUsersComponent extends CompanyDetailTabManagerComponent implements OnInit, OnDestroy {
 
-  companyUsersFormArray: FormArray;
+  companyUsersFormArray: UntypedFormArray;
   companyUserListManager = null;
 
   submitted = false;
@@ -44,14 +46,14 @@ export class CompanyDetailUsersComponent extends CompanyDetailTabManagerComponen
     return defaultEmptyObject(obj) as ApiCompanyUser;
   }
 
-  static ApiCompanyUserEmptyObjectFormFactory(): () => FormControl {
+  static ApiCompanyUserEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyDetailUsersComponent.ApiCompanyUserCreateEmptyObject(), ApiCompanyUserValidationScheme.validators);
+      return new UntypedFormControl(CompanyDetailUsersComponent.ApiCompanyUserCreateEmptyObject(), ApiCompanyUserValidationScheme.validators);
     };
   }
 
-  get companyUsersControls(): FormControl[] {
-    return this.companyUsersFormArray.controls as FormControl[];
+  get companyUsersControls(): UntypedFormControl[] {
+    return this.companyUsersFormArray.controls as UntypedFormControl[];
   }
 
   ngOnInit(): void {
@@ -65,8 +67,8 @@ export class CompanyDetailUsersComponent extends CompanyDetailTabManagerComponen
       .subscribe(
         response => {
           if (response && response.status === StatusEnum.OK) {
-            this.companyUsersFormArray = new FormArray([]);
-            response.data.forEach(apiCompanyUser => this.companyUsersFormArray.push(new FormControl(apiCompanyUser)));
+            this.companyUsersFormArray = new UntypedFormArray([]);
+            response.data.forEach(apiCompanyUser => this.companyUsersFormArray.push(new UntypedFormControl(apiCompanyUser)));
             this.initializeListManagers();
           }
         }

@@ -1,76 +1,95 @@
 <div class="d-flex flex-column h-100 b2c-container">
-    <header *ngIf="!loading" class="flex-shrink-0 splitter" [style.background-color]="b2cSettings.quaternaryColor">
+  @if (!loading) {
+    <header class="flex-shrink-0 splitter" [style.background-color]="b2cSettings.quaternaryColor">
     </header>
+  }
 
-    <div class="flex-grow-1">
-        <ng-container *ngIf="loading">
-            <div class="h-100 d-flex flex-column justify-content-center">
-                <div class="text-center">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="!loading">
-            <app-b2c-tabs *ngIf="tab" [tab]="tab" [b2cSettings]="b2cSettings" [productName]="productName" [uuid]="uuid" [qrTag]="qrTag"></app-b2c-tabs>
+  <div class="flex-grow-1">
+    @if (loading) {
+      <div class="h-100 d-flex flex-column justify-content-center">
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    }
+    @if (!loading) {
+      @if (tab) {
+        <app-b2c-tabs [tab]="tab" [b2cSettings]="b2cSettings" [productName]="productName" [uuid]="uuid" [qrTag]="qrTag"></app-b2c-tabs>
+      }
+      <router-outlet></router-outlet>
+    }
+  </div>
 
-            <router-outlet></router-outlet>
-        </ng-container>
+  @if (!loading) {
+    <div class="d-flex flex-row justify-content-center align-items-center py-4" [style.background-color]="b2cSettings.primaryColor">
+      @if (facebook) {
+        <div class="af-b2c-social">
+          <a role="button" href="{{ facebook }}" target="_blank">
+            <span class="af-b2c-social-shape af-b2c-social-shape--fb" [style.background-color]="b2cSettings.primaryColor"></span>
+          </a>
+        </div>
+      }
+      @if (twitter) {
+        <div class="af-b2c-social">
+          <a role="button" href="{{ twitter }}" target="_blank">
+            <span class="af-b2c-social-shape af-b2c-social-shape--twitter" [style.background-color]="b2cSettings.primaryColor"></span>
+          </a>
+        </div>
+      }
+      @if (instagram) {
+        <div class="af-b2c-social">
+          <a role="button" href="{{ instagram }}" target="_blank">
+            <span class="af-b2c-social-shape af-b2c-social-shape--instagram" [style.background-color]="b2cSettings.primaryColor"></span>
+          </a>
+        </div>
+      }
+      @if (youtube) {
+        <div class="af-b2c-social">
+          <a role="button" href="{{ youtube }}" target="_blank">
+            <span class="af-b2c-social-shape af-b2c-social-shape--youtube" [style.background-color]="b2cSettings.primaryColor"></span>
+          </a>
+        </div>
+      }
+      @if (other) {
+        <div class="af-b2c-social">
+          <a role="button" href="{{ other }}" target="_blank">
+            <span class="af-b2c-social-shape af-b2c-social-shape--other" [style.background-color]="b2cSettings.primaryColor"></span>
+          </a>
+        </div>
+      }
     </div>
+  }
 
-    <div *ngIf="!loading" class="d-flex flex-row justify-content-center align-items-center py-4" [style.background-color]="b2cSettings.primaryColor">
-        <div class="af-b2c-social" *ngIf="facebook">
-            <a role="button" href="{{ facebook }}" target="_blank">
-                <span class="af-b2c-social-shape af-b2c-social-shape--fb" [style.background-color]="b2cSettings.primaryColor"></span>
-            </a>
+  @if (!loading) {
+    <footer class="py-4">
+      <div class="container-fluid">
+        <div class="row text-white text-center">
+          <div class="col-12 col-md-6">
+            <p><a [routerLink]="['/', 'p-cd', this.uuid, this.qrTag, 'terms-of-use']" i18n="@@frontPage.terms.title">Terms of Use</a></p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p><a [routerLink]="['/', 'p-cd', this.uuid, this.qrTag, 'privacy-policy']" i18n="@@frontPage.privacy.title">Privacy Policy</a></p>
+          </div>
         </div>
-        <div class="af-b2c-social" *ngIf="twitter">
-            <a role="button" href="{{ twitter }}" target="_blank">
-                <span class="af-b2c-social-shape af-b2c-social-shape--twitter" [style.background-color]="b2cSettings.primaryColor"></span>
-            </a>
+        <div class="row text-center">
+          <div class="col-12">
+            <p id="copyright" class="m-0">Copyright © 2023 INATrace.<br>All Rights Reserved.</p>
+          </div>
         </div>
-        <div class="af-b2c-social" *ngIf="instagram">
-            <a role="button" href="{{ instagram }}" target="_blank">
-                <span class="af-b2c-social-shape af-b2c-social-shape--instagram" [style.background-color]="b2cSettings.primaryColor"></span>
-            </a>
-        </div>
-        <div class="af-b2c-social" *ngIf="youtube">
-            <a role="button" href="{{ youtube }}" target="_blank">
-                <span class="af-b2c-social-shape af-b2c-social-shape--youtube" [style.background-color]="b2cSettings.primaryColor"></span>
-            </a>
-        </div>
-        <div class="af-b2c-social" *ngIf="other">
-            <a role="button" href="{{ other }}" target="_blank">
-                <span class="af-b2c-social-shape af-b2c-social-shape--other" [style.background-color]="b2cSettings.primaryColor"></span>
-            </a>
-        </div>
-    </div>
-
-    <footer *ngIf="!loading" class="py-4">
-        <div class="container-fluid">
-            <div class="row text-white text-center">
-                <div class="col-12 col-md-6">
-                    <p><a [routerLink]="['/', 'p-cd', this.uuid, this.qrTag, 'terms-of-use']" i18n="@@frontPage.terms.title">Terms of Use</a></p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p><a [routerLink]="['/', 'p-cd', this.uuid, this.qrTag, 'privacy-policy']" i18n="@@frontPage.privacy.title">Privacy Policy</a></p>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="col-12">
-                    <p id="copyright" class="m-0">Copyright © 2023 INATrace.<br>All Rights Reserved.</p>
-                </div>
-            </div>
-        </div>
+      </div>
     </footer>
+  }
 
-    <a class="back-to-top" *ngIf="showScrollToTop" (click)="scrollToTop()">
-        <svg width="22px" height="32px" viewBox="0 0 22 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <title>back-to-top</title>
-            <g id="back-to-top" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
-                <path d="M11,1 C16.5228475,1 21,5.4771525 21,11 L21,20.2196923 L21,20.2196923 L11,31 L1,20.2196923 L1,11 C1,5.4771525 5.4771525,1 11,1 Z" id="Rectangle-Copy-29" [style.stroke]="b2cSettings.secondaryColor" stroke-width="2" transform="translate(11.000000, 16.000000) scale(-1, -1) translate(-11.000000, -16.000000) "></path>
-            </g>
-        </svg>
+  @if (showScrollToTop) {
+    <a class="back-to-top" (click)="scrollToTop()">
+      <svg width="22px" height="32px" viewBox="0 0 22 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <title>back-to-top</title>
+        <g id="back-to-top" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+          <path d="M11,1 C16.5228475,1 21,5.4771525 21,11 L21,20.2196923 L21,20.2196923 L11,31 L1,20.2196923 L1,11 C1,5.4771525 5.4771525,1 11,1 Z" id="Rectangle-Copy-29" [style.stroke]="b2cSettings.secondaryColor" stroke-width="2" transform="translate(11.000000, 16.000000) scale(-1, -1) translate(-11.000000, -16.000000) "></path>
+        </g>
+      </svg>
     </a>
+  }
 </div>

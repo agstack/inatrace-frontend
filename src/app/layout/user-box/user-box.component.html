@@ -1,68 +1,73 @@
-<div class="user-box" *ngIf="userDisplayName" ngbDropdown placement="bottom" display="dynamic" container="body">
-
-  <div class="d-flex af-user" ngbDropdownToggle>
-
-    <div class="d-flex whole-name">
-      <div class="user-box-name af-user--displayname">{{ userDisplayName }}</div>
-      <div class="d-flex af-user--displaycompany">
-        <div class="user-box-name">&nbsp;(</div>
-        <div class="user-box-company">{{ companyDisplayName ? companyDisplayName : '/' }}</div>
-        <div class="user-box-name">)</div>
+@if (userDisplayName) {
+  <div class="user-box" ngbDropdown placement="bottom" display="dynamic" container="body">
+    <div class="d-flex af-user" ngbDropdownToggle>
+      <div class="d-flex whole-name">
+        <div class="user-box-name af-user--displayname">{{ userDisplayName }}</div>
+        <div class="d-flex af-user--displaycompany">
+          <div class="user-box-name">&nbsp;(</div>
+          <div class="user-box-company">{{ companyDisplayName ? companyDisplayName : '/' }}</div>
+          <div class="user-box-name">)</div>
+        </div>
       </div>
-    </div>
-
-    <div class="dropdown-menu" ngbDropdownMenu>
-      <button ngbDropdownItem routerLink="/home" i18n="@@userBox.dropdown.home">Home</button>
-
-      <button ngbDropdownItem routerLink="/product-labels" i18n="@@userBox.dropdown.products">Products</button>
-      <div *ngIf="this.showProductNav" class="af-mobnav--block">
-        <button class="subMenu" ngbDropdownItem routerLink="/product-labels/{{this.productId}}" i18n="@@productLabel.sideTitle.qrLabels">QR labels</button>
-        <button class="subMenu" ngbDropdownItem (click)="goTo('knowledge-blog')" i18n="@@productLabel.sideTitle.knowledgeBlog">Knowledge blog</button>
-        <button class="subMenu" ngbDropdownItem (click)="goTo('stakeholders')" i18n="@@productLabel.sideTitle.stakeholders">Stakeholders</button>
-        <ng-container *ngIf="this.showProductStakeholdersTabs">
-          <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/value-chain')" i18n="@@productLabelStakeholders.tab0.title">Value chain</button>
-        </ng-container>
-        <button *ngIf="isAdmin" class="subMenu" ngbDropdownItem (click)="deleteCurrentProduct()" i18n="@@productLabel.sideTitle.archiveProduct">Archive product</button>
-      </div>
-
-      <ng-container *ngIf="isAdmin">
-        <button ngbDropdownItem routerLink="/companies" i18n="@@userBox.dropdown.system">System</button>
-        <div *ngIf="this.showSystemNav" class="af-mobnav--block">
-          <button class="subMenu" ngbDropdownItem routerLink="/companies" i18n="@@systemLeftPanel.sideTitle.companies">Companies</button>
-          <ng-container *ngIf="this.showCompaniesTabs">
-            <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('company')" i18n="@@companyDetailTab.tab0.title">Company</button>
+      <div class="dropdown-menu" ngbDropdownMenu>
+        <button ngbDropdownItem routerLink="/home" i18n="@@userBox.dropdown.home">Home</button>
+        <button ngbDropdownItem routerLink="/product-labels" i18n="@@userBox.dropdown.products">Products</button>
+        @if (this.showProductNav) {
+          <div class="af-mobnav--block">
+            <button class="subMenu" ngbDropdownItem routerLink="/product-labels/{{this.productId}}" i18n="@@productLabel.sideTitle.qrLabels">QR labels</button>
+            <button class="subMenu" ngbDropdownItem (click)="goTo('knowledge-blog')" i18n="@@productLabel.sideTitle.knowledgeBlog">Knowledge blog</button>
+            <button class="subMenu" ngbDropdownItem (click)="goTo('stakeholders')" i18n="@@productLabel.sideTitle.stakeholders">Stakeholders</button>
+            @if (this.showProductStakeholdersTabs) {
+              <button class="subMenuTab" ngbDropdownItem (click)="goTo('stakeholders/value-chain')" i18n="@@productLabelStakeholders.tab0.title">Value chain</button>
+            }
+            @if (isAdmin) {
+              <button class="subMenu" ngbDropdownItem (click)="deleteCurrentProduct()" i18n="@@productLabel.sideTitle.archiveProduct">Archive product</button>
+            }
+          </div>
+        }
+        @if (isAdmin) {
+          <button ngbDropdownItem routerLink="/companies" i18n="@@userBox.dropdown.system">System</button>
+          @if (this.showSystemNav) {
+            <div class="af-mobnav--block">
+              <button class="subMenu" ngbDropdownItem routerLink="/companies" i18n="@@systemLeftPanel.sideTitle.companies">Companies</button>
+              @if (this.showCompaniesTabs) {
+                <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('company')" i18n="@@companyDetailTab.tab0.title">Company</button>
+                <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('users')" i18n="@@companyDetailTab.tab2.title">Users</button>
+                <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('facilities')" i18n="@@companyDetailTab.tab3.title">Facilities</button>
+                <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('processingActions')" i18n="@@companyDetailTab.tab4.title">Processing actions</button>
+              }
+              <button class="subMenu" ngbDropdownItem routerLink="/users" i18n="@@systemLeftPanel.sideTitle.users">Users</button>
+              <button class="subMenu" ngbDropdownItem routerLink="/settings" i18n="@@systemLeftPanel.sideTitle.settings">Settings</button>
+              @if (this.showSystemNav) {
+                <button class="subMenuTab" ngbDropdownItem routerLink="/settings/additional" i18n="@@settingsPage.tab0.title">Additional settings</button>
+                <button class="subMenuTab" ngbDropdownItem routerLink="/settings/types" i18n="@@settingsPage.tab1.title">Types</button>
+              }
+              <button class="subMenu" ngbDropdownItem routerLink="/value-chains" i18n="@@systemLeftPanel.sideTitle.valueChains">Value chains</button>
+              <button class="subMenu" ngbDropdownItem routerLink="/currencies" i18n="@@systemLeftPanel.sideTitle.currencies">Currencies</button>
+            </div>
+          }
+        }
+        <div class="line"></div>
+        <button ngbDropdownItem (click)="aboutUser()" i18n="@@userBox.dropdown.userProfile">User profile</button>
+        @if (isAdmin || isCompanyAdmin) {
+          <button ngbDropdownItem (click)="companyProfile()" i18n="@@userBox.dropdown.companyProfile">Company profile</button>
+        }
+        @if (showCompaniesTabs && !isAdmin) {
+          <div class="af-mobnav--block">
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('users')" i18n="@@companyDetailTab.tab2.title">Users</button>
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('facilities')" i18n="@@companyDetailTab.tab3.title">Facilities</button>
             <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('processingActions')" i18n="@@companyDetailTab.tab4.title">Processing actions</button>
-          </ng-container>
-          <button class="subMenu" ngbDropdownItem routerLink="/users" i18n="@@systemLeftPanel.sideTitle.users">Users</button>
-          <button class="subMenu" ngbDropdownItem routerLink="/settings" i18n="@@systemLeftPanel.sideTitle.settings">Settings</button>
-          <ng-container *ngIf="this.showSystemNav">
-            <button class="subMenuTab" ngbDropdownItem routerLink="/settings/additional" i18n="@@settingsPage.tab0.title">Additional settings</button>
-            <button class="subMenuTab" ngbDropdownItem routerLink="/settings/types" i18n="@@settingsPage.tab1.title">Types</button>
-          </ng-container>
-          <button class="subMenu" ngbDropdownItem routerLink="/value-chains" i18n="@@systemLeftPanel.sideTitle.valueChains">Value chains</button>
-          <button class="subMenu" ngbDropdownItem routerLink="/currencies" i18n="@@systemLeftPanel.sideTitle.currencies">Currencies</button>
-        </div>
-      </ng-container>
-      <div class="line"></div>
-      <button ngbDropdownItem (click)="aboutUser()" i18n="@@userBox.dropdown.userProfile">User profile</button>
-      <button *ngIf="isAdmin || isCompanyAdmin" ngbDropdownItem (click)="companyProfile()" i18n="@@userBox.dropdown.companyProfile">Company profile</button>
-      <div *ngIf="showCompaniesTabs && !isAdmin" class="af-mobnav--block">
-        <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('users')" i18n="@@companyDetailTab.tab2.title">Users</button>
-        <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('facilities')" i18n="@@companyDetailTab.tab3.title">Facilities</button>
-        <button class="subMenuTab" ngbDropdownItem (click)="goToCompany('processingActions')" i18n="@@companyDetailTab.tab4.title">Processing actions</button>
+          </div>
+        }
+        <button ngbDropdownItem (click)="logout()" i18n="@@userBox.dropdown.logout">Logout</button>
+        <div class="line"></div>
+        <button ngbDropdownItem (click)="aboutApp()" i18n="@@userBox.dropdown.aboutApp">About</button>
       </div>
-      <button ngbDropdownItem (click)="logout()" i18n="@@userBox.dropdown.logout">Logout</button>
-      <div class="line"></div>
-      <button ngbDropdownItem (click)="aboutApp()" i18n="@@userBox.dropdown.aboutApp">About</button>
-    </div>
-
-    <div class="af-user-caret-box">
-      <fa-icon
-        class="af-user-caret-box--icon"
+      <div class="af-user-caret-box">
+        <fa-icon
+          class="af-user-caret-box--icon"
         [icon]="faBars"></fa-icon>
+      </div>
     </div>
-
   </div>
-</div>
+}

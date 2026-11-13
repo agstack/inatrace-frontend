@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ApiDocument } from 'src/api/model/apiDocument';
 import { defaultEmptyObject, generateFormFromMetadata } from 'src/shared/utils';
 import { ProductControllerService } from 'src/api/api/productController.service';
@@ -13,9 +13,11 @@ import { ListEditorManager } from 'src/app/shared/list-editor/list-editor-manage
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 
 @Component({
-  selector: 'app-knowledge-blog-part',
-  templateUrl: './knowledge-blog-part.component.html',
-  styleUrls: ['./knowledge-blog-part.component.scss']
+    selector: 'app-knowledge-blog-part',
+    templateUrl: './knowledge-blog-part.component.html',
+    styleUrls: ['./knowledge-blog-part.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implements OnInit {
 
@@ -24,7 +26,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
   }
 
   @Input()
-  form: FormGroup;
+  form: UntypedFormGroup;
   listManager = null;
   title: string = "";
   currentType: string = "";
@@ -90,7 +92,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
 
   initializeListManagers() {
     this.listManager = new ListEditorManager<ApiDocument>(
-      this.form.get('documents') as FormArray,
+      this.form.get('documents') as UntypedFormArray,
       KnowledgeBlogPartComponent.EmptyObjectFormFactory(), null
     )
   }
@@ -100,9 +102,9 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
     return defaultEmptyObject(obj) as ApiDocument
   }
 
-  static EmptyObjectFormFactory(): () => FormControl {
+  static EmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      let f = new FormControl(KnowledgeBlogPartComponent.CreateEmptyObject())
+      let f = new UntypedFormControl(KnowledgeBlogPartComponent.CreateEmptyObject())
       return f
     }
   }

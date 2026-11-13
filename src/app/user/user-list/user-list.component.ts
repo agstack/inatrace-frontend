@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UserControllerService } from 'src/api/api/userController.service';
 import { UserDetailComponent } from '../user-detail/user-detail.component';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { startWith, debounceTime, tap, switchMap, map, shareReplay, take } from 'rxjs/operators';
@@ -13,9 +13,11 @@ import { SortOption } from '../../shared/result-sorter/result-sorter-types';
 import { ApiPaginatedResponseApiUserBase } from '../../../api/model/apiPaginatedResponseApiUserBase';
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+    selector: 'app-user-list',
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
@@ -25,9 +27,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild(UserDetailComponent) userDetails;
   listErrorStatus$: BehaviorSubject<string>;
 
-  searchQuery = new FormControl(null);
-  searchStatus = new FormControl('');
-  searchRole = new FormControl('');
+  searchQuery = new UntypedFormControl(null);
+  searchStatus = new UntypedFormControl('');
+  searchRole = new UntypedFormControl('');
   reloadPing$ = new BehaviorSubject<boolean>(false);
   pagingParams$ = new BehaviorSubject({});
   sortingParams$ = new BehaviorSubject({ sortBy: 'name', sort: 'ASC' });
@@ -39,7 +41,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   page = 0;
   pageSize = 10;
 
-  myUsers = new FormControl(true);
+  myUsers = new UntypedFormControl(true);
 
   searchParams$ = combineLatest(
       this.searchQuery.valueChanges.pipe(
@@ -265,7 +267,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearValue(form: FormControl, myUsers: boolean = false) {
+  clearValue(form: UntypedFormControl, myUsers: boolean = false) {
     if (myUsers) { form.setValue(false); }
     else { form.setValue(''); }
   }

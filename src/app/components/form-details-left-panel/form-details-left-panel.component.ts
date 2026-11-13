@@ -1,11 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-form-details-left-panel',
-  templateUrl: './form-details-left-panel.component.html',
-  styleUrls: ['./form-details-left-panel.component.scss']
+    selector: 'app-form-details-left-panel',
+    templateUrl: './form-details-left-panel.component.html',
+    styleUrls: ['./form-details-left-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FormDetailsLeftPanelComponent implements OnInit {
 

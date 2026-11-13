@@ -2,159 +2,167 @@
 
   <app-company-left-panel></app-company-left-panel>
 
-  <div class="main" *ngIf="companyId != null && isAuthRoleToSeeMyStock">
-    <div class="main-inside-top content-element">
-
-      <div class="d-flex justify-content-between content-element--row1">
-        <div class="title-page content-element--title"
-             i18n="@@productLabelStock.title.allStockOrders"
-             [ngbTooltip]="allStockTitleTooltipTemplate"
-             [autoClose]="false"
-             placement="bottom"
-             triggers="manual"
-             tooltipClass="self-onboarding-tooltip-class"
-             #allStockTitleTooltip="ngbTooltip">All stock</div>
-        <div *ngIf="isAuthRoleToExportToBeyco && !isBeycoAuthorized">
-          <button class="btn" type="button" (click)="getAuthBeyco()">
-            <span i18n="@@productLabelStock.beyco.button.login">Login to Beyco</span>
-          </button>
-        </div>
-        <div *ngIf="isAuthRoleToExportToBeyco && isBeycoAuthorized">
-          <button class="btn" type="button" (click)="logoutFromBeyco()">
-            <span i18n="@@productLabelStock.beyco.button.logout">Logout from Beyco</span>
-          </button>
-        </div>
+  @if (companyId != null && isAuthRoleToSeeMyStock) {
+    <div class="main">
+      <div class="main-inside-top content-element">
+        <div class="d-flex justify-content-between content-element--row1">
+          <div class="title-page content-element--title"
+            i18n="@@productLabelStock.title.allStockOrders"
+            [ngbTooltip]="allStockTitleTooltipTemplate"
+            [autoClose]="false"
+            placement="bottom"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+          #allStockTitleTooltip="ngbTooltip">All stock</div>
+          @if (isAuthRoleToExportToBeyco && !isBeycoAuthorized) {
+            <div>
+              <button class="btn" type="button" (click)="getAuthBeyco()">
+                <span i18n="@@productLabelStock.beyco.button.login">Login to Beyco</span>
+              </button>
+            </div>
+          }
+          @if (isAuthRoleToExportToBeyco && isBeycoAuthorized) {
+            <div>
+              <button class="btn" type="button" (click)="logoutFromBeyco()">
+                <span i18n="@@productLabelStock.beyco.button.logout">Logout from Beyco</span>
+              </button>
+            </div>
+          }
           <ng-template #allStockTitleTooltipTemplate>
-              <div>
-                  <div i18n="@@guidedTour.allStockSection.title" class="section-title">ALL STOCK</div>
-                  <div class="sub-title" i18n="@@guidedTour.allStockSection.allStockSubmenu">In the 'all stock' submenu you find all products available in your facilities and can access the batch history, Geo data and generated QR Codes.</div>
-                  <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(11)"
-                          i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
-              </div>
+            <div>
+              <div i18n="@@guidedTour.allStockSection.title" class="section-title">ALL STOCK</div>
+              <div class="sub-title" i18n="@@guidedTour.allStockSection.allStockSubmenu">In the 'all stock' submenu you find all products available in your facilities and can access the batch history, Geo data and generated QR Codes.</div>
+              <button class="btn btn-white" (click)="this.selfOnboardingService.guidedTourNextStep(11)"
+              i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
+            </div>
           </ng-template>
-      </div>
-
-      <!-- FACILITY SELECTION DROPDOWN -->
-      <div class="af-form-row af-form-row--nomargin">
-        <div class="af-form-block--c6">
-          <div class="af-form-element">
-            <div class="af-row">
-              <div class="af-c12">
-                <single-choice *ngIf="facilityCodebook"
-                               label="Selected facility"
-                               i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.facilityForStockOrder"
-                               [formControlInput]="facilityForStockOrderForm"
-                               [codebookService]="facilityCodebook"
-                               (onChange)="facilityForStockOrderChanged($event)"
-                               style="min-width: 150px;"
-                               [ngbTooltip]="allStockSelectFacilityTooltipTemplate"
-                               [autoClose]="false"
-                               placement="bottom"
-                               triggers="manual"
-                               tooltipClass="self-onboarding-tooltip-class"
-                               #allStockSelectFacilityTooltip="ngbTooltip">
-                </single-choice>
+        </div>
+        <!-- FACILITY SELECTION DROPDOWN -->
+        <div class="af-form-row af-form-row--nomargin">
+          <div class="af-form-block--c6">
+            <div class="af-form-element">
+              <div class="af-row">
+                <div class="af-c12">
+                  @if (facilityCodebook) {
+                    <single-choice
+                      label="Selected facility"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.facilityForStockOrder"
+                      [formControlInput]="facilityForStockOrderForm"
+                      [codebookService]="facilityCodebook"
+                      (onChange)="facilityForStockOrderChanged($event)"
+                      style="min-width: 150px;"
+                      [ngbTooltip]="allStockSelectFacilityTooltipTemplate"
+                      [autoClose]="false"
+                      placement="bottom"
+                      triggers="manual"
+                      tooltipClass="self-onboarding-tooltip-class"
+                      #allStockSelectFacilityTooltip="ngbTooltip">
+                    </single-choice>
+                  }
                   <ng-template #allStockSelectFacilityTooltipTemplate>
-                      <div>
-                          <div i18n="@@guidedTour.allStockSection.title" class="section-title">ALL STOCK</div>
-                          <div class="sub-title" i18n="@@guidedTour.allStockSection.selectFacility">Here you select the facility your (semi-) product is currently located in.</div>
-                          <button class="btn btn-white" (click)="openUserHome()"
-                                  i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
-                      </div>
+                    <div>
+                      <div i18n="@@guidedTour.allStockSection.title" class="section-title">ALL STOCK</div>
+                      <div class="sub-title" i18n="@@guidedTour.allStockSection.selectFacility">Here you select the facility your (semi-) product is currently located in.</div>
+                      <button class="btn btn-white" (click)="openUserHome()"
+                      i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
+                    </div>
                   </ng-template>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="af-form-block--c6">
-          <div *ngIf="!selectedFacilityId" style="max-width: 260px; font-size: 14px; color: #8788AA; line-height: 20px;" i18n="@@productLabelStock.facility.select.desc">Please select one facility to see the list of all stock orders.</div>
-        </div>
-      </div>
-
-      <!-- FILTERS -->
-      <div class="d-flex justify-content-between main-inside-top--row2" *ngIf="selectedFacilityId">
-        <div class="d-flex align-items-center">
-          <div>
-            <div *ngIf="!showGroupView" class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfOrders">List of orders</div>
-            <div *ngIf="showGroupView" class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfGroupedOrders">List of grouped orders</div>
-            <div class="counting-page content-element--counting" i18n="@@productLabelStock.subTitle.showingOrders">Showing {{ showedOrders }}/{{ allOrders }}</div>
+          <div class="af-form-block--c6">
+            @if (!selectedFacilityId) {
+              <div style="max-width: 260px; font-size: 14px; color: #8788AA; line-height: 20px;" i18n="@@productLabelStock.facility.select.desc">Please select one facility to see the list of all stock orders.</div>
+            }
           </div>
-
-          <div class="ml-3">
-            <div class="btn-group btn-group-toggle">
-              <button class="btn"
-                      [class.btn-outlined]="!showGroupView"
-                      [class.no-hover]="showGroupView"
-                      (click)="changeShowGroupView(true)">
-                <span i18n="@@productLabelStock.subTitle.groupedOrdersButton">Group view</span>
-              </button>
-              <button class="btn"
-                      [class.btn-outlined]="showGroupView"
-                      [class.no-hover]="!showGroupView"
-                      (click)="changeShowGroupView(false)">
-                <span i18n="@@productLabelStock.subTitle.singleOrdersButton">Single view</span>
-              </button>
+        </div>
+        <!-- FILTERS -->
+        @if (selectedFacilityId) {
+          <div class="d-flex justify-content-between main-inside-top--row2">
+            <div class="d-flex align-items-center">
+              <div>
+                @if (!showGroupView) {
+                  <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfOrders">List of orders</div>
+                }
+                @if (showGroupView) {
+                  <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStock.subTitle.listOfGroupedOrders">List of grouped orders</div>
+                }
+                <div class="counting-page content-element--counting" i18n="@@productLabelStock.subTitle.showingOrders">Showing {{ showedOrders }}/{{ allOrders }}</div>
+              </div>
+              <div class="ms-3">
+                <div class="btn-group btn-group-toggle">
+                  <button class="btn"
+                    [class.btn-outlined]="!showGroupView"
+                    [class.no-hover]="showGroupView"
+                    (click)="changeShowGroupView(true)">
+                    <span i18n="@@productLabelStock.subTitle.groupedOrdersButton">Group view</span>
+                  </button>
+                  <button class="btn"
+                    [class.btn-outlined]="showGroupView"
+                    [class.no-hover]="!showGroupView"
+                    (click)="changeShowGroupView(false)">
+                    <span i18n="@@productLabelStock.subTitle.singleOrdersButton">Single view</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="d-flex align-items-top">
-          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-
-            <div *ngIf="openBalanceOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.openBalanceOnly.filter">Open balance
+            <div class="d-flex align-items-top">
+              <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+                @if (openBalanceOnly) {
+                  <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.openBalanceOnly.filter">Open balance
               <div style="margin-left: 0.5rem;" (click)="setOpenBalanceOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs"></fa-icon>
               </div>
             </div>
-
-            <div *ngIf="purchaseOrderOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.purchaseOrderOnly.filter">Purchase order only
+                }
+                @if (purchaseOrderOnly) {
+                  <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.purchaseOrderOnly.filter">Purchase order only
               <div style="margin-left: 0.5rem;" (click)="setPurchaseOrdersOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs"></fa-icon>
               </div>
             </div>
-
-            <div *ngIf="availableOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.availableOnly.filter">Available only
+                }
+                @if (availableOnly) {
+                  <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@productLabelStock.filter.availableOnly.filter">Available only
               <div style="margin-left: 0.5rem;" (click)="setAvailableOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs"></fa-icon>
               </div>
             </div>
-
-            <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
-              <div class="button-icon">
-                <span class="button-icon-shape button-icon-shape--filter"></span>
-              </div>
-              <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
-            </button>
-
-            <div class="dropdown-menu" ngbDropdownMenu>
-              <button ngbDropdownItem (click)="setPurchaseOrdersOnly(true)" i18n="@@productLabelStock.filter.purchaseOrderOnly.button">Purchase order only</button>
-              <button ngbDropdownItem (click)="setAvailableOnly(true)" i18n="@@productLabelStock.filter.availableOnly.button">Available only</button>
-            </div>
-
-            <div class="ml-2">
-              <single-choice
-                      [noMargin]="true"
-                      i18n-label="@@productLabelStockPurchaseOrdersModal.semiProduct.label"
-                      [formControlInput]="semiProductFrom"
-                      [codebookService]="facilitySemiProducts">
-              </single-choice>
-            </div>
-
-            <button
-                    *ngIf="isAuthRoleToExportToBeyco && isBeycoAuthorized"
+                }
+                <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
+                  <div class="button-icon">
+                    <span class="button-icon-shape button-icon-shape--filter"></span>
+                  </div>
+                  <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
+                </button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                  <button ngbDropdownItem (click)="setPurchaseOrdersOnly(true)" i18n="@@productLabelStock.filter.purchaseOrderOnly.button">Purchase order only</button>
+                  <button ngbDropdownItem (click)="setAvailableOnly(true)" i18n="@@productLabelStock.filter.availableOnly.button">Available only</button>
+                </div>
+                <div class="ms-2">
+                  <single-choice
+                    [noMargin]="true"
+                    i18n-label="@@productLabelStockPurchaseOrdersModal.semiProduct.label"
+                    [formControlInput]="semiProductFrom"
+                    [codebookService]="facilitySemiProducts">
+                  </single-choice>
+                </div>
+                @if (isAuthRoleToExportToBeyco && isBeycoAuthorized) {
+                  <button
                     [disabled]="!showGroupView  || (showGroupView && selectedGroupOrders.length === 0)"
                     (click)="openBeycoOrderFieldList()"
-                    class="btn ml-2"
+                    class="btn ms-2"
                     type="button"
-            ><span i18n="@@productLabelStock.beyco.button.export">Export to Beyco</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- LIST OF STOCK ORDERS -->
-      <app-stock-unit-list
-              *ngIf="selectedFacilityId && !showGroupView"
+                    ><span i18n="@@productLabelStock.beyco.button.export">Export to Beyco</span></button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+          <!-- LIST OF STOCK ORDERS -->
+          @if (selectedFacilityId && !showGroupView) {
+            <app-stock-unit-list
               mode="GENERAL"
               [reloadPingList$]="reloadStockOrdersPing$"
               (countAll)="onCountAllSO($event)"
@@ -169,10 +177,10 @@
               (selectedIdsChanged)="selectedIdsChanged($event, 'PURCHASE')"
               [clickAddPaymentsPing$]="clickAddPaymentsPing$"
               [hideCheckbox]="true">
-      </app-stock-unit-list>
-
-      <app-group-stock-unit-list
-              *ngIf="selectedFacilityId && showGroupView"
+            </app-stock-unit-list>
+          }
+          @if (selectedFacilityId && showGroupView) {
+            <app-group-stock-unit-list
               [reloadPingList$]="reloadStockOrdersPing$"
               (countAll)="onCountAllSO($event)"
               [facilityId$]="facilityIdPing$"
@@ -182,9 +190,10 @@
               (selectedIdsChanged)="selectedIdsChanged($event, 'GROUP')"
               [selectedOrders]="selectedGroupOrders"
               [semiProductId$]="semiProductId$">
-      </app-group-stock-unit-list>
+            </app-group-stock-unit-list>
+          }
+        </div>
+      </div>
+    }
 
-    </div>
-  </div>
-
-</app-authorised-layout>
+  </app-authorised-layout>

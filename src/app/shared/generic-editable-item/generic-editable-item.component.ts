@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 
 @Component({
-    template: ''
+    template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GenericEditableItemComponent<T> implements OnInit {
 
@@ -19,7 +21,7 @@ export class GenericEditableItemComponent<T> implements OnInit {
     @Input()
     listEditorManagerPosition = null;
     @Input()
-    set formControlInput(value: FormControl) {
+    set formControlInput(value: UntypedFormControl) {
         if (!value || value.value == null) {
             throw Error('It\'s possible that \'null\' Editable component is not supported.');
         }
@@ -38,8 +40,8 @@ export class GenericEditableItemComponent<T> implements OnInit {
     @Output()
     onToggle = new EventEmitter<boolean>();
 
-    originalFormControl: FormControl = null;
-    tmpFormGroup: FormGroup = null;
+    originalFormControl: UntypedFormControl = null;
+    tmpFormGroup: UntypedFormGroup = null;
 
     validationScheme: SimpleValidationScheme<T> = null;
 
@@ -47,11 +49,11 @@ export class GenericEditableItemComponent<T> implements OnInit {
 
     onFormChanged() { }
 
-    get formControlInput(): FormControl {
+    get formControlInput(): UntypedFormControl {
         return this.originalFormControl;
     }
 
-    get form(): FormGroup {
+    get form(): UntypedFormGroup {
         return this.tmpFormGroup;
     }
 
@@ -137,7 +139,7 @@ export class GenericEditableItemComponent<T> implements OnInit {
     }
 
     // should be overriden, takes care of
-    public generateForm(value: any): FormGroup {
+    public generateForm(value: any): UntypedFormGroup {
         throw Error('Not yet implemented');
     }
 

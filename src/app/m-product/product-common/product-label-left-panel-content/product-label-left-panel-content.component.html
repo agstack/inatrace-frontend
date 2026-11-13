@@ -4,18 +4,22 @@
 
     <div class="img-container-small">
       <span class="img-container-small--overlay"></span>
-      <img *ngIf="this.imgStorageKey"
-        src="/api/common/image/{{this.imgStorageKey}}/SMALL"
-        default="/api/common/image/{{this.imgStorageKey}}"
-        class="img-style">
+      @if (this.imgStorageKey) {
+        <img
+          src="/api/common/image/{{this.imgStorageKey}}/SMALL"
+          default="/api/common/image/{{this.imgStorageKey}}"
+          class="img-style">
+      }
     </div>
 
     <div class="above-sidenav-title d-flex">
 
       <div class="above-sidenav-title-cursor" (click)="goToProduct()">
-        <div *ngIf="showIcon" class="above-sidenav-icon">
-          <span class="above-sidenav-icon-shape above-sidenav-icon-shape--back"></span>
-        </div>
+        @if (showIcon) {
+          <div class="above-sidenav-icon">
+            <span class="above-sidenav-icon-shape above-sidenav-icon-shape--back"></span>
+          </div>
+        }
       </div>
       {{title}}
     </div>
@@ -25,10 +29,12 @@
 
     <div class="img-container">
       <span class="img-container--overlay"></span>
-      <img *ngIf="this.imgStorageKey"
-        src="/api/common/image/{{this.imgStorageKey}}/SMALL"
-        default="/api/common/image/{{this.imgStorageKey}}"
-        class="img-style">
+      @if (this.imgStorageKey) {
+        <img
+          src="/api/common/image/{{this.imgStorageKey}}/SMALL"
+          default="/api/common/image/{{this.imgStorageKey}}"
+          class="img-style">
+      }
     </div>
 
     <li style="max-width:100%; margin-top: 2.375rem">
@@ -68,20 +74,22 @@
     </li>
     <li>
       <a class="link-normal"
-         routerLinkActive="active"
-         [routerLink]="goTo('final-products')"
-         i18n="@@productLabel.sideTitle.finalProducts">
+        routerLinkActive="active"
+        [routerLink]="goTo('final-products')"
+        i18n="@@productLabel.sideTitle.finalProducts">
         Final products
       </a>
     </li>
-    <li *ngIf="isSystemAdmin">
-      <div class="spacer"></div>
-      <a class="link-error">
-        <div (click)="deleteCurrentProduct()" [class.side-menu-item-disabled]="changed" i18n="@@productLabel.sideTitle.archiveProduct">
+    @if (isSystemAdmin) {
+      <li>
+        <div class="spacer"></div>
+        <a class="link-error">
+          <div (click)="deleteCurrentProduct()" [class.side-menu-item-disabled]="changed" i18n="@@productLabel.sideTitle.archiveProduct">
           Archive product
         </div>
-      </a>
-    </li>
+        </a>
+      </li>
+    }
     <li style="height: 32px;"></li>
   </ul>
 

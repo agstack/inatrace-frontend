@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[dir-heavyLabel-primary]'
+    selector: '[dir-heavyLabel-primary]',
+    standalone: false
 })
 export class HeavyLabelPrimaryDirective {
 

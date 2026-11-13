@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { PublicControllerService } from '../../../api/api/publicController.service';
 import { ActivatedRoute } from '@angular/router';
@@ -19,9 +19,11 @@ import { ApiQRTagPublic } from '../../../api/model/apiQRTagPublic';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-b2c-page',
-  templateUrl: './b2c-page.component.html',
-  styleUrls: ['./b2c-page.component.scss']
+    selector: 'app-b2c-page',
+    templateUrl: './b2c-page.component.html',
+    styleUrls: ['./b2c-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cPageComponent implements OnInit {
 
@@ -204,11 +206,15 @@ export class B2cPageComponent implements OnInit {
   }
 
   get productFontHref() {
-    return `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.productFont.storageKey}`;
+    return this.b2cSettings.productFont?.storageKey
+      ? `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.productFont.storageKey}`
+      : null;
   }
 
   get textFontHref() {
-    return `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.textFont.storageKey}`;
+    return this.b2cSettings.textFont?.storageKey
+      ? `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.textFont.storageKey}`
+      : null;
   }
 
 }

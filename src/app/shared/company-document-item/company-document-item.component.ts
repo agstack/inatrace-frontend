@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faImage, faStamp, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -20,9 +20,11 @@ enum DocumentCategory {
 }
 
 @Component({
-  selector: 'app-company-document-item',
-  templateUrl: './company-document-item.component.html',
-  styleUrls: ['./company-document-item.component.scss']
+    selector: 'app-company-document-item',
+    templateUrl: './company-document-item.component.html',
+    styleUrls: ['./company-document-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDocumentItemComponent extends GenericEditableItemComponent<ApiCompanyDocument> implements OnInit {
 
@@ -62,13 +64,13 @@ export class CompanyDocumentItemComponent extends GenericEditableItemComponent<A
     return defaultEmptyObject(document) as ApiCompanyDocument;
   }
 
-  static emptyObjectFormFactory(): () => FormControl {
+  static emptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyDocumentItemComponent.createEmptyObject(), ApiCompanyDocumentValidationScheme.validators);
+      return new UntypedFormControl(CompanyDocumentItemComponent.createEmptyObject(), ApiCompanyDocumentValidationScheme.validators);
     };
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
       return generateFormFromMetadata(ApiCompanyDocument.formMetadata(), value, ApiCompanyDocumentValidationScheme);
   }
 

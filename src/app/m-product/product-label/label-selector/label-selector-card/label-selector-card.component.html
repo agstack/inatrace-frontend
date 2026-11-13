@@ -2,16 +2,24 @@
   class="label-card-wrapper"
   (click)="select(label)">
   <div class="dot-wrapper">
-    <div *ngIf="label?.status=='PUBLISHED'" class="dot" [class.dot-active]="isSelected" [class.dot-inactive]="!isSelected"></div>
-    <div *ngIf="label?.status=='UNPUBLISHED'" class="dot-placeholder"></div>
+    @if (label?.status=='PUBLISHED') {
+      <div class="dot" [class.dot-active]="isSelected" [class.dot-inactive]="!isSelected"></div>
+    }
+    @if (label?.status=='UNPUBLISHED') {
+      <div class="dot-placeholder"></div>
+    }
     <div
       class="label-card"
       (mouseover)="onMouseOver.next($event)"
       (mouseenter)="enter($event)"
       (mouseleave)="leave($event)"
       [class.selected-card]="isSelected">
-      <img src="assets/logo-INATrace/logo-INA.png" class="logo-image" *ngIf="isSelected" alt="Logo icon when selected">
-      <img src="assets/logo-INATrace/logo-INA.png" class="logo-image-inactive" *ngIf="!isSelected" alt="Logo icon when not selected">
+      @if (isSelected) {
+        <img src="assets/logo-INATrace/logo-INA.png" class="logo-image" alt="Logo icon when selected">
+      }
+      @if (!isSelected) {
+        <img src="assets/logo-INATrace/logo-INA.png" class="logo-image-inactive" alt="Logo icon when not selected">
+      }
       <div class="scan-me" [class.label-active]="isSelected" [class.label-inactive]="!isSelected" i18n="@@productLabel.labelSelectorCard.tryMeLabel">TRY ME!</div>
       <div class="qr-code-container" [class.qr-code-container-active]="isSelected" [class.qr-code-container-inactive]="!isSelected">
         <div class="qr-code-cropper">
@@ -22,25 +30,39 @@
       <div class="trademark-title">
         {{appName}}™
       </div>
-      <div class="delete-button" *ngIf="editable && showDeleteButton$ | async" (click)="delete($event)">
-        <fa-icon [icon]="faTimes" class="delete-button-icon"></fa-icon>
+      @if (editable && showDeleteButton$ | async) {
+        <div class="delete-button" (click)="delete($event)">
+          <fa-icon [icon]="faTimes" class="delete-button-icon"></fa-icon>
+        </div>
+      }
+    </div>
+    @if (isSelected && label?.title && currentLabelForm.value) {
+      <div class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
+        {{currentLabelForm.value | uppercase }}
       </div>
-    </div>
-    <div *ngIf="isSelected && label?.title && currentLabelForm.value" class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
-      {{currentLabelForm.value | uppercase }}
-    </div>
-    <div *ngIf="(!isSelected && label?.title) || (isSelected && label?.title && !currentLabelForm.value)" class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
-      {{label.title | uppercase }}
-    </div>
-    <div *ngIf="isSelected && !label?.title && currentLabelForm.value" class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
-      {{currentLabelForm.value | uppercase }}
-    </div>
-    <div *ngIf="isSelected && !label?.title && !currentLabelForm.value && editable" class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)" i18n="@@productLabel.labelSelectorCard.addTitle">
+    }
+    @if ((!isSelected && label?.title) || (isSelected && label?.title && !currentLabelForm.value)) {
+      <div class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
+        {{label.title | uppercase }}
+      </div>
+    }
+    @if (isSelected && !label?.title && currentLabelForm.value) {
+      <div class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)">
+        {{currentLabelForm.value | uppercase }}
+      </div>
+    }
+    @if (isSelected && !label?.title && !currentLabelForm.value && editable) {
+      <div class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)" i18n="@@productLabel.labelSelectorCard.addTitle">
       <fa-icon [icon]="faPen" style="margin-right: 0.5rem;"></fa-icon>ADD TITLE
     </div>
-    <div *ngIf="!isSelected && !label?.title && editable" class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)" i18n="@@productLabel.labelSelectorCard.addTitle">
+    }
+    @if (!isSelected && !label?.title && editable) {
+      <div class="name-block" [class.name-active]="isSelected" [class.name-inactive]="!isSelected" (click)="toogleEditTitle($event)" i18n="@@productLabel.labelSelectorCard.addTitle">
       <fa-icon [icon]="faPen" style="margin-right: 0.5rem;"></fa-icon>ADD TITLE
     </div>
+    }
   </div>
-  <div class="arrow-up" *ngIf="isSelected"></div>
+  @if (isSelected) {
+    <div class="arrow-up"></div>
+  }
 </div>

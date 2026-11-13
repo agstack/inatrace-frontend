@@ -1,4 +1,4 @@
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {SimpleValidationScheme} from 'src/interfaces/Validation';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
 import {take} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export function defaultIfNull<T>(value: T, defaultValue: T): T {
 /**
  * Extract some keys from object
  */
-export function objectSlice<T>(obj: T, keys: Array<keyof T>): Partial<T> {
+export function objectSlice<T extends object>(obj: T, keys: Array<keyof T>): Partial<T> {
   let result: Partial<T> = {};
   for (let key of keys) {
     if (key in obj) {
@@ -68,7 +68,7 @@ export function pripraviSifrant(obj: any, forceLowercase = false) {
 
 }
 
-export function removeValidators(form: FormGroup, fields: Array<string>) {
+export function removeValidators(form: UntypedFormGroup, fields: Array<string>) {
   fields.forEach(key => {
     form.controls[key].clearValidators()
     form.controls[key].updateValueAndValidity()
@@ -115,14 +115,14 @@ export function applyValidationScheme(inForm: AbstractControl, valScheme: Simple
   if (!form.value) return
   if (valScheme.fields) { // form group
     for (let key in valScheme.fields) {
-      if (!(form as FormGroup).controls[key]) {
+      if (!(form as UntypedFormGroup).controls[key]) {
         throw Error("Non matching key for validation scheme: " + key)
       }
-      applyValidationScheme((form as FormGroup).controls[key], valScheme.fields[key]);
-      (form as FormGroup).controls[key].updateValueAndValidity()
+      applyValidationScheme((form as UntypedFormGroup).controls[key], valScheme.fields[key]);
+      (form as UntypedFormGroup).controls[key].updateValueAndValidity()
     }
   } else if (valScheme.arrayElementValidators) {
-    (form as FormArray).controls.forEach((a: AbstractControl) => {
+    (form as UntypedFormArray).controls.forEach((a: AbstractControl) => {
       applyValidationScheme(a, valScheme.arrayElementValidators)
       a.updateValueAndValidity()
     })
@@ -161,8 +161,8 @@ export function setForceExpand(valScheme: SimpleValidationScheme<any>, value: bo
 }
 
 
-export function generateFormFromMetadata(metadata: any, model: any, valScheme?: SimpleValidationScheme<any>): FormGroup {
-  let result = new FormGroup({})
+export function generateFormFromMetadata(metadata: any, model: any, valScheme?: SimpleValidationScheme<any>): UntypedFormGroup {
+  let result = new UntypedFormGroup({})
   for (let varInfo of metadata.vars) {
     let name = varInfo.name
     let value = model[varInfo.name]
@@ -179,7 +179,7 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
     }
     if (varInfo.isPrimitiveType) {
       if (varInfo.isListContainer) {
-        result.setControl(name, new FormArray(
+        result.setControl(name, new UntypedFormArray(
           value
             ? value.map(x => {
               if (arrayElementsSchema && arrayElementsSchema.forceExpand) {
@@ -187,21 +187,21 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
                 return generateFormFromMetadata(varInfo.metadata(), x, arrayElementsSchema)
               } else {
                 // default
-                return new FormControl(x, arrayElementsSchema && arrayElementsSchema.validators)
+                return new UntypedFormControl(x, arrayElementsSchema && arrayElementsSchema.validators)
               }
             })
             : []
           , validators))
       } else {
-        result.setControl(name, new FormControl(value, validators))
+        result.setControl(name, new UntypedFormControl(value, validators))
       }
 
     } else if (varInfo.isListContainer) {
       if (forceFormControl) {
-        result.setControl(name, new FormControl(value, validators))
+        result.setControl(name, new UntypedFormControl(value, validators))
       } else {
         // default for arrays is expansion to FormArray with FormControl elements
-        result.setControl(name, new FormArray(
+        result.setControl(name, new UntypedFormArray(
           value
             ? value.map(x => {
               if (arrayElementsSchema && arrayElementsSchema.forceExpand) {
@@ -209,7 +209,7 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
                 return generateFormFromMetadata(varInfo.metadata(), x, arrayElementsSchema)
               } else {
                 // default
-                return new FormControl(x, arrayElementsSchema && arrayElementsSchema.validators)
+                return new UntypedFormControl(x, arrayElementsSchema && arrayElementsSchema.validators)
               }
             })
             : []
@@ -217,7 +217,7 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
       }
     } else {
       if (varInfo.isEnum) {
-        result.setControl(name, new FormControl(value, validators))
+        result.setControl(name, new UntypedFormControl(value, validators))
       } else {
         if (forceExpand) {
           if (value != null) {
@@ -225,12 +225,12 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
           } else {
             // this is exotic case, where FormControl is used instead of FormGroup.
             // component handling this case must be able to manage changes between FormGroup and FormControl
-            result.setControl(name, new FormControl(null))
+            result.setControl(name, new UntypedFormControl(null))
           }
 
         } else {
           // default for formgroups is formcontrol
-          result.setControl(name, new FormControl(value, validators))
+          result.setControl(name, new UntypedFormControl(value, validators))
         }
       }
     }
@@ -262,7 +262,7 @@ export function defaultEmptyObject(metadata: any) {
   return result
 }
 
-export function formAssign(form: FormGroup, metadata: any, model: any, valScheme: SimpleValidationScheme<any>) {
+export function formAssign(form: UntypedFormGroup, metadata: any, model: any, valScheme: SimpleValidationScheme<any>) {
   for (let varInfo of metadata.vars) {
     let name = varInfo.name
     let value = model[varInfo.name]
@@ -274,7 +274,7 @@ export function formAssign(form: FormGroup, metadata: any, model: any, valScheme
     if (forceFormControl || varInfo.isPrimitiveType) {
       form.get(name).setValue(value)
     } else if (varInfo.isListContainer) {
-      let fa = form.get(name) as FormArray
+      let fa = form.get(name) as UntypedFormArray
       fa.clear()
       for (let el of value) {
         fa.push(generateFormFromMetadata(varInfo.metadata(), el, arrayElementsSchema))
@@ -286,9 +286,9 @@ export function formAssign(form: FormGroup, metadata: any, model: any, valScheme
         if (form.get(name).value == null && value != null) {  // legacy
           form.setControl(name, generateFormFromMetadata(varInfo.metadata(), value, fieldSchema))
         } else if (value == null) {  // legacy
-          form.setControl(name, new FormControl(null, fieldSchema.validators))
+          form.setControl(name, new UntypedFormControl(null, fieldSchema.validators))
         } else {
-          formAssign(form.get(name) as FormGroup, varInfo.metadata(), value, fieldSchema)
+          formAssign(form.get(name) as UntypedFormGroup, varInfo.metadata(), value, fieldSchema)
         }
       }
     }
@@ -485,7 +485,7 @@ export function setNavigationParameter(router: Router, route: ActivatedRoute, pa
   router.navigate([], { relativeTo: route, queryParams: params })
 }
 
-export async function setSelectedIdFieldFromQueryParams(component: any, route: ActivatedRoute, field: string, form: FormControl, codebook: GeneralSifrantService<any>, setCallback: (val: any) => void) {
+export async function setSelectedIdFieldFromQueryParams(component: any, route: ActivatedRoute, field: string, form: UntypedFormControl, codebook: GeneralSifrantService<any>, setCallback: (val: any) => void) {
   component[field] = route.snapshot.queryParams[field]
   let entities = await codebook.getAllCandidates().pipe(take(1)).toPromise()
   let res = entities.find(x => dbKey(x) === component[field])

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject, throwError } from 'rxjs';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import { StockOrderControllerService } from '../../../../../../api/api/stockOrderController.service';
@@ -18,7 +18,7 @@ describe('ProcessingOrderInputComponent available stock requests', () => {
     ]);
     component = new ProcessingOrderInputComponent(stockOrderController, null);
     component.selectedProcAction = { type: ApiProcessingAction.TypeEnum.PROCESSING } as ApiProcessingAction;
-    component.targetStockOrdersArray = new FormArray([]);
+    component.targetStockOrdersArray = new UntypedFormArray([]);
   });
 
   it('keeps an HTTP failure distinct from a successful empty response', async () => {
@@ -140,18 +140,21 @@ describe('ProcessingOrderInputComponent available stock feedback', () => {
     component = fixture.componentInstance;
     component.companyId = 1;
     component.selectedProcAction = { type: ApiProcessingAction.TypeEnum.PROCESSING } as ApiProcessingAction;
-    component.inputFacilityControl = new FormControl({ id: 1, company: { id: 1 } });
-    component.totalInputQuantityControl = new FormControl(null);
-    component.remainingQuantityControl = new FormControl(null);
-    component.targetStockOrdersArray = new FormArray([]);
-    component.inputTransactionsArray = new FormArray([]);
+    component.inputFacilityControl = new UntypedFormControl({ id: 1, company: { id: 1 } });
+    component.totalInputQuantityControl = new UntypedFormControl(null);
+    component.remainingQuantityControl = new UntypedFormControl(null);
+    component.targetStockOrdersArray = new UntypedFormArray([]);
+    component.inputTransactionsArray = new UntypedFormArray([]);
     component.inputTransactions = [];
   });
 
-  it('replaces the empty-stock message with request feedback after a failed query', () => {
+  it('shows the empty-stock message when the query succeeds with no stock', () => {
+    component.availableStockOrdersError = false;
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('No relevant stock to add transactions in facility');
+  });
 
+  it('replaces the empty-stock message with request feedback after a failed query', () => {
     component.availableStockOrdersError = true;
     fixture.detectChanges();
 

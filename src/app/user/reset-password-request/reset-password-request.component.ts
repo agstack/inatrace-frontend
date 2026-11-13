@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { EmailValidator } from 'src/shared/validation';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 import { UserControllerService } from 'src/api/api/userController.service';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-reset-password-request',
-  templateUrl: './reset-password-request.component.html',
-  styleUrls: ['./reset-password-request.component.scss']
+    selector: 'app-reset-password-request',
+    templateUrl: './reset-password-request.component.html',
+    styleUrls: ['./reset-password-request.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ResetPasswordRequestComponent implements OnInit {
 
@@ -21,8 +23,8 @@ export class ResetPasswordRequestComponent implements OnInit {
     private location: Location
   ) { }
 
-  form = new FormGroup({
-    email: new FormControl(null, [Validators.required, EmailValidator()]),
+  form = new UntypedFormGroup({
+    email: new UntypedFormControl(null, [Validators.required, EmailValidator()]),
   });
 
   ngOnInit(): void {

@@ -7,9 +7,7 @@ import { CompanyCommonModule } from '../company-common/company-common.module';
 import { CompanyCollectorsRoutingModule } from './company-collectors-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { QRCodeModule } from 'angular2-qrcode';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ProductStakeholdersModule } from '../../m-product/product-stakeholders/product-stakeholders.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
@@ -23,9 +21,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     CompanyCollectorsRoutingModule,
     SharedModule,
     NgbPaginationModule,
-    QRCodeModule,
     DragDropModule,
-    ProductStakeholdersModule,
     FontAwesomeModule
   ]
 })

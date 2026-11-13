@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { SortOption, SortOrder } from '../../../shared/result-sorter/result-sorter-types';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 import { CompanyControllerService, GetUserCustomersForCompanyAndType } from '../../../../api/api/companyController.service';
 import { Router } from '@angular/router';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { AuthService } from '../../../core/auth.service';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 import { ApiUserGet } from '../../../../api/model/apiUserGet';
@@ -21,9 +21,11 @@ import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { SelfOnboardingService } from "../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-company-farmers-list',
-  templateUrl: './company-farmers-list.component.html',
-  styleUrls: ['./company-farmers-list.component.scss']
+    selector: 'app-company-farmers-list',
+    templateUrl: './company-farmers-list.component.html',
+    styleUrls: ['./company-farmers-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyFarmersListComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -35,7 +37,7 @@ export class CompanyFarmersListComponent implements OnInit, OnDestroy, AfterView
   showing;
   farmerCount;
 
-  searchNameFarmers = new FormControl('');
+  searchNameFarmers = new UntypedFormControl('');
   byCategory = 'BY_NAME';
 
   farmers$: Observable<any>;
@@ -218,9 +220,9 @@ export class CompanyFarmersListComponent implements OnInit, OnDestroy, AfterView
 
     this.subs = this.selfOnboardingService.addFarmersCurrentStep$.subscribe(currentStep => {
       if (currentStep === 2) {
-        this.addFarmerButtonTooltip.open();
+        this.addFarmerButtonTooltip?.open();
       } else {
-        this.addFarmerButtonTooltip.close();
+        this.addFarmerButtonTooltip?.close();
       }
     });
   }

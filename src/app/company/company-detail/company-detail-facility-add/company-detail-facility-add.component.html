@@ -1,271 +1,287 @@
 <app-authorised-layout>
-    <div *ngIf="form" class="af-layout--authorised">
-        <div class="af-form-wrapper">
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="title-page content-element--title">{{title}}</div>
-                </div>
+  @if (form) {
+    <div class="af-layout--authorised">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">{{title}}</div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@productLabelStockFacilityModal.section.basicInfo">Basic information</h2>
+            <div class="af-form-element">
+              <single-choice
+                label="Facility type"
+                i18n-label="@@productLabelStockFacilityModal.facilityType.label"
+                [formControlInput]="form.get('facilityType')"
+                [codebookService]="activeFacilityTypeService"
+                [isInvalidChoice]="submitted && form.get('facilityType').invalid">
+                @if (submitted && form.get('facilityType').errors && form.get('facilityType').errors.required) {
+                  <div class="sc-invalid-feedback">
+                    Facility type is required
+                  </div>
+                }
+              </single-choice>
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@productLabelStockFacilityModal.section.basicInfo">Basic information</h2>
-                    <div class="af-form-element">
-                        <single-choice
-                            label="Facility type"
-                            i18n-label="@@productLabelStockFacilityModal.facilityType.label"
-                            [formControlInput]="form.get('facilityType')"
-                            [codebookService]="activeFacilityTypeService"
-                            [isInvalidChoice]="submitted && form.get('facilityType').invalid">
-                            <ng-container *ngIf="submitted && form.get('facilityType').errors && form.get('facilityType').errors.required">
-                                <div class="sc-invalid-feedback">
-                                    Facility type is required
-                                </div>
-                            </ng-container>
-                        </single-choice>
-                    </div>
-                </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@companyDetailProcessingActions.section1.translations">Translations</h2>
-                    <div class="af-form-element">
-
-                        <small i18n="@@companyDetailProcessingActions.hint.translations">
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@companyDetailProcessingActions.section1.translations">Translations</h2>
+            <div class="af-form-element">
+              <small i18n="@@companyDetailProcessingActions.hint.translations">
                             Specify name in English and add translations for all used languages.
                         </small>
-
-                        <div class="spacer-title-section"></div>
-
-                        <div class="af-row">
-                            <div class="af-c12">
-                                <div class="d-flex af-translation-language">
-                                    <div (click)="selectLanguage(languageEnum.EN)"
+              <div class="spacer-title-section"></div>
+              <div class="af-row">
+                <div class="af-c12">
+                  <div class="d-flex af-translation-language">
+                    <div (click)="selectLanguage(languageEnum.EN)"
                                          [ngClass]="selectedLanguage === 'EN'
                                             ? 'af-translation-language--selected'
                                             : (submitted && this.form.get('translations').errors && this.form.get('translations').errors.required
                                                 ? 'af-translation-language--error'
                                                 : '')">
-                                        <img src="../../../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
-                                        <span>EN</span>
-                                    </div>
-                                    <div (click)="selectLanguage(languageEnum.DE)"
-                                         [ngClass]="selectedLanguage === 'DE' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
-                                        <span>DE</span>
-                                    </div>
-                                    <div (click)="selectLanguage(languageEnum.RW)"
-                                         [ngClass]="selectedLanguage === 'RW' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
-                                        <span>RW</span>
-                                    </div>
-                                    <div (click)="selectLanguage(languageEnum.ES)"
-                                         [ngClass]="selectedLanguage === 'ES' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
-                                        <span>ES</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="spacer-title-section"></div>
-
-                        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-                            <ng-container *ngIf="translation.value.language === selectedLanguage">
-                                <textinput
-                                        label="Name of facility"
-                                        placeholder="Enter name"
-                                        i18n-label="@@companyDetailFacilities.textInput.name.label"
-                                        i18n-placeholder="@@companyDetailFacilities.textInput.name.placeholder"
-                                        [form]="this.form.get('translations.' + i + '.name')"
-                                        [isInvalid]="translation.value.language === 'EN' && submitted && !this.form.get('translations.' + i + '.name').value"
-                                        style="width: 100%">
-                                    <ng-container *ngIf="submitted && translation.value.language === 'EN' && !this.form.get('translations.' + i + '.name').value">
-                                        <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required" i18n="@@companyDetailFacilities.textInput.name.error">
+                      <img src="../../../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
+                      <span>EN</span>
+                    </div>
+                    <div (click)="selectLanguage(languageEnum.DE)"
+                      [ngClass]="selectedLanguage === 'DE' ? 'af-translation-language--selected' : ''">
+                      <img src="../../../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
+                      <span>DE</span>
+                    </div>
+                    <div (click)="selectLanguage(languageEnum.RW)"
+                      [ngClass]="selectedLanguage === 'RW' ? 'af-translation-language--selected' : ''">
+                      <img src="../../../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
+                      <span>RW</span>
+                    </div>
+                    <div (click)="selectLanguage(languageEnum.ES)"
+                      [ngClass]="selectedLanguage === 'ES' ? 'af-translation-language--selected' : ''">
+                      <img src="../../../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
+                      <span>ES</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="spacer-title-section"></div>
+              @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+                @if (translation.value.language === selectedLanguage) {
+                  <textinput
+                    label="Name of facility"
+                    placeholder="Enter name"
+                    i18n-label="@@companyDetailFacilities.textInput.name.label"
+                    i18n-placeholder="@@companyDetailFacilities.textInput.name.placeholder"
+                    [form]="this.form.get('translations.' + i + '.name')"
+                    [isInvalid]="translation.value.language === 'EN' && submitted && !this.form.get('translations.' + i + '.name').value"
+                    style="width: 100%">
+                    @if (submitted && translation.value.language === 'EN' && !this.form.get('translations.' + i + '.name').value) {
+                      @if (this.form.get('translations').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@companyDetailFacilities.textInput.name.error">
                                                 <span>
                                                   Name of facility is required
                                                 </span>
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </ng-container>
-                        </ng-container>
-                    </div>
-                </div>
+                          }
+                        </div>
+                      }
+                    }
+                  </textinput>
+                }
+              }
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <h2 i18n="@@productLabelStockFacilityModal.section.location">Location</h2>
-                    <div class="af-form-element">
-                        <app-location-form-new
-                            [form]="form"
-                            [submitted]="submitted">
-                        </app-location-form-new>
-                    </div>
-                </div>
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabelStockFacilityModal.section.location">Location</h2>
+            <div class="af-form-element">
+              <app-location-form-new
+                [form]="form"
+                [submitted]="submitted">
+              </app-location-form-new>
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@productLabelStockFacilityModal.section.additional">Additional attributes</h2>
-                    <div class="af-form-element">
-                        <single-choice
-                                label="Is this a collection facility?"
-                                i18n-label="@@productLabelStockFacilityModal.textinput.collection.semi-product.label"
-                                [formControlInput]="form.get('isCollectionFacility')"
-                                [codebookService]="codebookStatus"
-                                [isInvalidChoice]="submitted && form.get('isCollectionFacility').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('isCollectionFacility').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required">
-                                        Choice is required
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-                        <single-choice
-                                label="Contains sellable semi-products or final products?"
-                                i18n-label="@@productLabelStockFacilityModal.textinput.sellable.semi-products.label"
-                                [formControlInput]="form.get('isPublic')"
-                                [codebookService]="codebookStatus"
-                                [isInvalidChoice]="submitted && form.get('isPublic').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('isPublic').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required">
-                                        Choice is required
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-                        <checkbox-input [form]="form.get('displayMayInvolveCollectors')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.mayInvolveCollectors.label">
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@productLabelStockFacilityModal.section.additional">Additional attributes</h2>
+            <div class="af-form-element">
+              <single-choice
+                label="Is this a collection facility?"
+                i18n-label="@@productLabelStockFacilityModal.textinput.collection.semi-product.label"
+                [formControlInput]="form.get('isCollectionFacility')"
+                [codebookService]="codebookStatus"
+                [isInvalidChoice]="submitted && form.get('isCollectionFacility').invalid">
+                @if (submitted) {
+                  @if (form.get('isCollectionFacility').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div>
+                          Choice is required
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </single-choice>
+              <single-choice
+                label="Contains sellable semi-products or final products?"
+                i18n-label="@@productLabelStockFacilityModal.textinput.sellable.semi-products.label"
+                [formControlInput]="form.get('isPublic')"
+                [codebookService]="codebookStatus"
+                [isInvalidChoice]="submitted && form.get('isPublic').invalid">
+                @if (submitted) {
+                  @if (form.get('isPublic').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div>
+                          Choice is required
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </single-choice>
+              <checkbox-input [form]="form.get('displayMayInvolveCollectors')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.mayInvolveCollectors.label">
                                 Display "May involve collectors"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayOrganic')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.organic.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayOrganic')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.organic.label">
                                 Display "Organic"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayWomenOnly')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.womenOnly.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayWomenOnly')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.womenOnly.label">
                                 Display "Women only"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayTare')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.tare.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayTare')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.tare.label">
                                 Display "Tare"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayPriceDeductionDamage')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.priceReductionDamage.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayPriceDeductionDamage')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.priceReductionDamage.label">
                                 Display "Damaged price deduction"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayWeightDeductionDamage')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.weightReductionDamage.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayWeightDeductionDamage')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.weightReductionDamage.label">
                                 Display "Damaged weight deduction"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                        <checkbox-input [form]="form.get('displayPriceDeterminedLater')">
-                            <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.priceDeterminedLater.label">
+              </checkbox-input>
+              <checkbox-input [form]="form.get('displayPriceDeterminedLater')">
+                <checkbox-input-rich-label i18n="@@productLabelStockFacilityModal.checkbox.priceDeterminedLater.label">
                                 Display "Price determined later"
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                    </div>
-                </div>
-                <div class="af-form-block--c6">
-                    <div>
-                        <h2 i18n="@@productLabelStockFacilityModal.section.valueChains">Value chains</h2>
-                        <div class="af-form-element">
-                            <div class="search-field">
-                                <single-choice
-                                  [formControlInput]="valueChainsForm"
-                                  [codebookService]="companyValueChainsCodebook"
-                                  (onChange)="addSelectedValueChain($event)">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="selectedCompanyValueChainsControl.errors as errors"
-                                             class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required"
-                                                 i18n="@@productLabelStockFacilityModal.singleChoice.valueChains.error">
+              </checkbox-input>
+            </div>
+          </div>
+          <div class="af-form-block--c6">
+            <div>
+              <h2 i18n="@@productLabelStockFacilityModal.section.valueChains">Value chains</h2>
+              <div class="af-form-element">
+                <div class="search-field">
+                  <single-choice
+                    [formControlInput]="valueChainsForm"
+                    [codebookService]="companyValueChainsCodebook"
+                    (onChange)="addSelectedValueChain($event)">
+                    @if (submitted) {
+                      @if (selectedCompanyValueChainsControl.errors; as errors) {
+                        <div
+                          class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div
+                              i18n="@@productLabelStockFacilityModal.singleChoice.valueChains.error">
                                             <span>
                                               At least one value chain is required
                                             </span>
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div *ngFor="let sp of this.valueChains; index as idx">
-                                <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                                    <div>{{ sp.name }}</div>
-                                    <div (click)="deleteValueChain(idx)" class="cursor-pointer">
-                                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
+                          }
                         </div>
-                    </div>
-                    <div>
-                        <h2 i18n="@@productLabelStockFacilityModal.section.semi-products">Contained semi-products</h2>
-                        <div class="af-form-element">
-                            <div class="search-field">
-                                <single-choice
-                                  [formControlInput]="semiProductsForm"
-                                  [codebookService]="semiProductsForValueChainsService"
-                                  (onChange)="addSelectedSemiProduct($event)">
-                                </single-choice>
-                            </div>
-                            <div *ngFor="let sp of this.semiProducts; index as idx">
-                                <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                                    <div>{{ sp.name }}</div>
-                                    <div (click)="deleteSemiProduct(sp, idx)" class="cursor-pointer">
-                                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="!semiProductsForValueChainsService">
-                                <small><em i18n="@@productLabelStockFacilityModal.hint.selectValueChain">Please select at least one value chain</em></small>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h2 i18n="@@productLabelStockFacilityModal.section.final-products">Contained final products</h2>
-                        <div class="af-form-element">
-                            <div class="search-field">
-                                <single-choice
-                                  [formControlInput]="finalProductForm"
-                                  [codebookService]="finalProductsForCompanyCodebook"
-                                  (onChange)="addSelectedFinalProduct($event)">
-                                </single-choice>
-                            </div>
-                            <div *ngFor="let fp of this.finalProducts; index as idx">
-                                <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                                    <div>{{ fp.name }} ({{ fp.product.name }})</div>
-                                    <div (click)="deleteFinalProduct(fp, idx)" class="cursor-pointer">
-                                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                      }
+                    }
+                  </single-choice>
                 </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="af-bottom-buttons">
-                        <button class="btn btn-outlined mr-2" type="button" (click)="dismiss()"
-                            i18n="@@productLabelStockFacilityModal.modal.footer.button.cancel">Cancel</button>
-                        <button class="btn" type="button" (click)="save()"
-                            i18n="@@productLabelStockFacilityModal.modal.footer.button.save">Save</button>
+                @for (sp of this.valueChains; track sp; let idx = $index) {
+                  <div>
+                    <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+                      <div>{{ sp.name }}</div>
+                      <div (click)="deleteValueChain(idx)" class="cursor-pointer">
+                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+                      </div>
                     </div>
-                </div>
+                  </div>
+                }
+              </div>
             </div>
+            <div>
+              <h2 i18n="@@productLabelStockFacilityModal.section.semi-products">Contained semi-products</h2>
+              <div class="af-form-element">
+                <div class="search-field">
+                  <single-choice
+                    [formControlInput]="semiProductsForm"
+                    [codebookService]="semiProductsForValueChainsService"
+                    (onChange)="addSelectedSemiProduct($event)">
+                  </single-choice>
+                </div>
+                @for (sp of this.semiProducts; track sp; let idx = $index) {
+                  <div>
+                    <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+                      <div>{{ sp.name }}</div>
+                      <div (click)="deleteSemiProduct(sp, idx)" class="cursor-pointer">
+                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+                      </div>
+                    </div>
+                  </div>
+                }
+                @if (!semiProductsForValueChainsService) {
+                  <div>
+                    <small><em i18n="@@productLabelStockFacilityModal.hint.selectValueChain">Please select at least one value chain</em></small>
+                  </div>
+                }
+              </div>
+            </div>
+            <div>
+              <h2 i18n="@@productLabelStockFacilityModal.section.final-products">Contained final products</h2>
+              <div class="af-form-element">
+                <div class="search-field">
+                  <single-choice
+                    [formControlInput]="finalProductForm"
+                    [codebookService]="finalProductsForCompanyCodebook"
+                    (onChange)="addSelectedFinalProduct($event)">
+                  </single-choice>
+                </div>
+                @for (fp of this.finalProducts; track fp; let idx = $index) {
+                  <div>
+                    <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+                      <div>{{ fp.name }} ({{ fp.product.name }})</div>
+                      <div (click)="deleteFinalProduct(fp, idx)" class="cursor-pointer">
+                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons">
+              <button class="btn btn-outlined me-2" type="button" (click)="dismiss()"
+              i18n="@@productLabelStockFacilityModal.modal.footer.button.cancel">Cancel</button>
+              <button class="btn" type="button" (click)="save()"
+              i18n="@@productLabelStockFacilityModal.modal.footer.button.save">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  }
 </app-authorised-layout>

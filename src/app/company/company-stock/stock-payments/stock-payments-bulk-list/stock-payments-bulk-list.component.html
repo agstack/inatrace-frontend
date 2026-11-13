@@ -1,54 +1,58 @@
-<ng-container *ngIf="bulkPayments$ | async as bulkPayments">
-    <div class="main-inside-main">
-
-        <table *ngIf="bulkPayments && bulkPayments.items && bulkPayments.items.length> 0"
-               class="af-table af-checkbox--small">
-            <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let bulkPayment of bulkPayments.items; index as i">
-                    <td scope="row" [attr.data-label]="sortOptions[0].name">
-                        <span>{{bulkPayment.receiptNumber}}</span>
-                    </td>
-                    <td scope="row" [attr.data-label]="sortOptions[1].name">
-                        <span>{{readablePaymentPurpose(bulkPayment.paymentPurposeType)}}</span>
-                    </td>
-                    <td scope="row" [attr.data-label]="sortOptions[2].name">
-                        <span>{{bulkPayment.totalAmount}}</span>
-                    </td>
-                    <td [attr.data-label]="sortOptions[3].name">
-                        <span>
-                            <a *ngIf="!readOnly"
-                               i18n="@@productLabelBulkPayments.tableCol.view"
-                               class="company-action"
-                               [class.enabled-action]="true"
-                               (click)="editBulkPayment(bulkPayment)">
+@if (bulkPayments$ | async; as bulkPayments) {
+  <div class="main-inside-main">
+    @if (bulkPayments && bulkPayments.items && bulkPayments.items.length> 0) {
+      <table
+        class="af-table af-checkbox--small">
+        <thead>
+          <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+        </thead>
+        <tbody>
+          @for (bulkPayment of bulkPayments.items; track bulkPayment; let i = $index) {
+            <tr>
+              <td scope="row" [attr.data-label]="sortOptions[0].name">
+                <span>{{bulkPayment.receiptNumber}}</span>
+              </td>
+              <td scope="row" [attr.data-label]="sortOptions[1].name">
+                <span>{{readablePaymentPurpose(bulkPayment.paymentPurposeType)}}</span>
+              </td>
+              <td scope="row" [attr.data-label]="sortOptions[2].name">
+                <span>{{bulkPayment.totalAmount}}</span>
+              </td>
+              <td [attr.data-label]="sortOptions[3].name">
+                <span>
+                  @if (!readOnly) {
+                    <a
+                      i18n="@@productLabelBulkPayments.tableCol.view"
+                      class="company-action"
+                      [class.enabled-action]="true"
+                      (click)="editBulkPayment(bulkPayment)">
                               View
                             </a>
-                      </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div *ngIf="bulkPayments && bulkPayments.items && bulkPayments.items.length == 0"
-             class="no-list-results"
-             i18n="@@productLabelBulkPayments.noPayments">
+                  }
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @if (bulkPayments && bulkPayments.items && bulkPayments.items.length == 0) {
+      <div
+        class="no-list-results"
+        i18n="@@productLabelBulkPayments.noPayments">
             No bulk payments found
         </div>
-    </div>
-
-    <div [style.display]="showPagination() ? 'flex' : 'none'"
-         class="justify-content-end">
-        <ngb-pagination
-                [(page)]="page"
-                [pageSize]="pageSize"
-                [collectionSize]="bulkPayments.count"
-                (pageChange)="onPageChange($event)"
-                [maxSize]="7"
-                [rotate]="true">
-        </ngb-pagination>
-    </div>
-
-</ng-container>
+    }
+  </div>
+  <div [style.display]="showPagination() ? 'flex' : 'none'"
+    class="justify-content-end">
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="bulkPayments.count"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="7"
+      [rotate]="true">
+    </ngb-pagination>
+  </div>
+}

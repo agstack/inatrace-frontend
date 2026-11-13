@@ -1,15 +1,17 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { faChevronLeft, faChevronRight, faPlus, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ApiProductLabelGet } from 'src/api/model/apiProductLabelGet';
 import { ThemeService } from 'src/app/shared-services/theme.service';
 import { environment } from 'src/environments/environment';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-label-selector',
-  templateUrl: './label-selector.component.html',
-  styleUrls: ['./label-selector.component.scss']
+    selector: 'app-label-selector',
+    templateUrl: './label-selector.component.html',
+    styleUrls: ['./label-selector.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LabelSelectorComponent implements OnInit {
 
@@ -38,7 +40,7 @@ export class LabelSelectorComponent implements OnInit {
   toSelect: Observable<number> = null;
 
   @Input()
-  currentLabelForm: FormControl;
+  currentLabelForm: UntypedFormControl;
 
   @Input()
   changed: Boolean;

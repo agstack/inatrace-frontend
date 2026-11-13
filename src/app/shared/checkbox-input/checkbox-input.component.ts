@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
-import { FormControl, AbstractControl } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, AbstractControl } from '@angular/forms';
 import { uuidv4 } from 'src/shared/utils';
 
 @Component({
     selector: 'checkbox-input',
     templateUrl: './checkbox-input.component.html',
-    styleUrls: ['./checkbox-input.component.scss']
+    styleUrls: ['./checkbox-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CheckboxInputComponent implements OnInit {
 
     @Input()
-    form: FormControl = null;
+    form: UntypedFormControl = null;
 
     @Input()
     label: string = null;

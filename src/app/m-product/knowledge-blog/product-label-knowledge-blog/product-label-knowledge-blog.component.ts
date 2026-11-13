@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, Subscription } from 'rxjs';
@@ -13,9 +13,11 @@ import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-impr
 import { KnowledgeBlogSelectSectionModalComponent } from '../knowledge-blog-select-section-modal/knowledge-blog-select-section-modal.component';
 
 @Component({
-  selector: 'app-product-label-knowledge-blog',
-  templateUrl: './product-label-knowledge-blog.component.html',
-  styleUrls: ['./product-label-knowledge-blog.component.scss']
+    selector: 'app-product-label-knowledge-blog',
+    templateUrl: './product-label-knowledge-blog.component.html',
+    styleUrls: ['./product-label-knowledge-blog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelKnowledgeBlogComponent implements OnInit {
 
@@ -28,8 +30,8 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
   paging$ = new BehaviorSubject<number>(1);
   page: number = 0;
   pageSize = 10;
-  searchName = new FormControl(null)
-  searchStatus = new FormControl("")
+  searchName = new UntypedFormControl(null)
+  searchStatus = new UntypedFormControl("")
   routerSub: Subscription;
 
   allBlogs: number = 0;

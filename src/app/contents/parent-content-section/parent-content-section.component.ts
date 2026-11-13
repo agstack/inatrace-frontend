@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Host } from '@angular/core';
+import { Component, OnInit, Input, Host, ChangeDetectionStrategy } from '@angular/core';
 import { ContentsSectionDirective } from '../contents-section.directive';
 import { ContentsDirective } from '../contents.directive';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -6,7 +6,9 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 @Component({
     selector: '[parent-content-section]',
     templateUrl: './parent-content-section.component.html',
-    styleUrls: ['./parent-content-section.component.scss']
+    styleUrls: ['./parent-content-section.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ParentContentSectionComponent implements OnInit {
     // @Input()

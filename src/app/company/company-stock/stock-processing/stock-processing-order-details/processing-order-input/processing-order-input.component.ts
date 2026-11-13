@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { faCut, faFemale, faLeaf, faQrcode, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FormArray, FormControl } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ApiFacility } from '../../../../../../api/model/apiFacility';
 import { CompanyFacilitiesForStockUnitProductService } from '../../../../../shared-services/company-facilities-for-stock-unit-product.service';
 import { AvailableSellingFacilitiesForCompany } from '../../../../../shared-services/available-selling-facilities-for.company';
@@ -29,9 +29,11 @@ interface AvailableStockOrdersResult {
 }
 
 @Component({
-  selector: 'app-processing-order-input',
-  templateUrl: './processing-order-input.component.html',
-  styleUrls: ['./processing-order-input.component.scss', '../stock-processing-order-details-common.scss']
+    selector: 'app-processing-order-input',
+    templateUrl: './processing-order-input.component.html',
+    styleUrls: ['./processing-order-input.component.scss', '../stock-processing-order-details-common.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
 
@@ -45,16 +47,16 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
   selectedInputFacility: ApiFacility = null;
 
   // Input stock orders filter controls
-  dateFromFilterControl = new FormControl(null);
-  dateToFilterControl = new FormControl(null);
-  internalLotNameSearchControl = new FormControl(null);
-  womenOnlyFilterControl = new FormControl(null);
-  organicOnlyFilterControl = new FormControl(null);
+  dateFromFilterControl = new UntypedFormControl(null);
+  dateToFilterControl = new UntypedFormControl(null);
+  internalLotNameSearchControl = new UntypedFormControl(null);
+  womenOnlyFilterControl = new UntypedFormControl(null);
+  organicOnlyFilterControl = new UntypedFormControl(null);
 
   // Input stock orders properties and controls
   organicOnlyInputStockOrders = false;
   womenOnlyInputStockOrders = false;
-  cbSelectAllControl = new FormControl(false);
+  cbSelectAllControl = new UntypedFormControl(false);
 
   // Input stock orders properties and controls
   availableInputStockOrders: ApiStockOrderSelectable[] = [];
@@ -85,22 +87,22 @@ export class ProcessingOrderInputComponent implements OnInit, OnDestroy {
   inputFacilitiesCodebook: CompanyFacilitiesForStockUnitProductService | AvailableSellingFacilitiesForCompany;
 
   @Input()
-  inputFacilityControl: FormControl;
+  inputFacilityControl: UntypedFormControl;
 
   @Input()
-  totalInputQuantityControl: FormControl;
+  totalInputQuantityControl: UntypedFormControl;
 
   @Input()
   currentInputStockUnit: ApiSemiProduct | ApiFinalProduct;
 
   @Input()
-  remainingQuantityControl: FormControl;
+  remainingQuantityControl: UntypedFormControl;
 
   @Input()
-  targetStockOrdersArray: FormArray;
+  targetStockOrdersArray: UntypedFormArray;
 
   @Input()
-  inputTransactionsArray: FormArray;
+  inputTransactionsArray: UntypedFormArray;
 
   @Input()
   inputTransactions: ApiTransaction[];

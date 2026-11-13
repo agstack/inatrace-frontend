@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
@@ -16,9 +16,11 @@ import PaymentStatusEnum = ApiPayment.PaymentStatusEnum;
 import { ApiPaginatedListApiPayment } from '../../../../../api/model/apiPaginatedListApiPayment';
 
 @Component({
-  selector: 'app-stock-payments-list',
-  templateUrl: './stock-payments-list.component.html',
-  styleUrls: ['./stock-payments-list.component.scss']
+    selector: 'app-stock-payments-list',
+    templateUrl: './stock-payments-list.component.html',
+    styleUrls: ['./stock-payments-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsListComponent implements OnInit, OnDestroy {
 
@@ -65,7 +67,7 @@ export class StockPaymentsListComponent implements OnInit, OnDestroy {
   showedPayments = 0;
 
   clickClearCheckboxesPing$ = new BehaviorSubject<boolean>(false);
-  cbCheckedAll = new FormControl(false);
+  cbCheckedAll = new UntypedFormControl(false);
 
   pagingParams$ = new BehaviorSubject({});
   sortingParams$ = new BehaviorSubject(null); // { sortBy: 'productionDate', sort: 'DESC' }

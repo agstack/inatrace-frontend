@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ViewChildren, ViewChild, Output, EventEmitter, Optional, Host, ElementRef } from '@angular/core';
-import { FormControl, AbstractControl, FormArray } from '@angular/forms';
+import { Component, Input, OnInit, ViewChildren, ViewChild, Output, EventEmitter, Optional, Host, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, AbstractControl, UntypedFormArray } from '@angular/forms';
 import cloneDeep from 'lodash/cloneDeep';
 import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-improved.service';
 import { TextinputModalComponent } from '../textinput-modal/textinput-modal.component';
@@ -12,9 +12,11 @@ import { uuidv4 } from 'src/shared/utils';
 import { ClosableComponent } from '../closable/closable.component';
 
 @Component({
-  selector: 'textinput',
-  templateUrl: './textinput.component.html',
-  styleUrls: ['./textinput.component.scss']
+    selector: 'textinput',
+    templateUrl: './textinput.component.html',
+    styleUrls: ['./textinput.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TextinputComponent implements OnInit {
 
@@ -27,14 +29,14 @@ export class TextinputComponent implements OnInit {
   htmlLabel: string;
 
   _form = null;
-  @Input() set form(value: FormControl) {
+  @Input() set form(value: UntypedFormControl) {
     this._form = value;
     if (value) {
       this.resubscribe();
     }
   }
 
-  get form(): FormControl {
+  get form(): UntypedFormControl {
     return this._form;
   }
 
@@ -104,16 +106,16 @@ export class TextinputComponent implements OnInit {
 
   autocompleteSearchAdditionalParams$ = new BehaviorSubject<any>(null)
 
-  private _languageFormArray: FormArray;
+  private _languageFormArray: UntypedFormArray;
 
-  @Input() set languageFormArray(value: FormArray) {
+  @Input() set languageFormArray(value: UntypedFormArray) {
     this._languageFormArray = value;
     if (value) {
       this.resubscribe()
     }
   }
 
-  get languageFormArray(): FormArray {
+  get languageFormArray(): UntypedFormArray {
     return this._languageFormArray;
   }
 
@@ -447,7 +449,7 @@ export class TextinputComponent implements OnInit {
     return this.currentLanguage$.value
   }
 
-  languageFormControl = new FormControl(null)
+  languageFormControl = new UntypedFormControl(null)
   lastLanguage = 'sl'
   currentLanguage$ = new BehaviorSubject<string>(this.lastLanguage)
   langAndTextSubscription: Subscription = null;
@@ -499,11 +501,11 @@ export class TextinputComponent implements OnInit {
   setForLanguage(language: string, text: string) {
     if (!language) return;
     let res: Array<any> = this.languageFormArray.controls.filter(x => {
-      return (x as FormControl).value.key == language
+      return (x as UntypedFormControl).value.key == language
     })
     if (res.length == 0) {
       if (text) {
-        this.languageFormArray.push(new FormControl(
+        this.languageFormArray.push(new UntypedFormControl(
           {
             key: language,
             value: text
@@ -515,7 +517,7 @@ export class TextinputComponent implements OnInit {
     } else if (res.length > 1) {
       throw Error("languageFormArray ne sme vsebovati večkratnih vnosov za jezik: " + language)
     } else {
-      let fc = (res[0] as FormControl)
+      let fc = (res[0] as UntypedFormControl)
       if (this.lastLanguage == language) {  // zavedi spremembo samo, če ni bilo spremembe jezika
         fc.setValue(
           {
@@ -541,7 +543,7 @@ export class TextinputComponent implements OnInit {
   clearEmptyLanguages() {
     let i = 0;
     for (let el of this.languageFormArray.controls) {
-      let val = (el as FormControl).value.value
+      let val = (el as UntypedFormControl).value.value
       if (!val) {
         this.languageFormArray.removeAt(i);
         this.clearEmptyLanguages();
@@ -554,7 +556,7 @@ export class TextinputComponent implements OnInit {
 
   initializeLanguage(language: string) {
     let res: Array<any> = this.languageFormArray.controls.filter(x => {
-      return (x as FormControl).value.key == language
+      return (x as UntypedFormControl).value.key == language
     })
     if (res.length > 1) {
       throw Error("večkratni prevodi v languageFormArray za jezik:  " + this.language)

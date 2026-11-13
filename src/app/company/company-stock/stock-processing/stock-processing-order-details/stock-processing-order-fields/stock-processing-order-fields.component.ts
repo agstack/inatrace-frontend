@@ -1,16 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { ApiProcessingEvidenceField } from '../../../../../../api/model/apiProcessingEvidenceField';
 
 @Component({
-  selector: 'app-stock-processing-order-fields',
-  templateUrl: './stock-processing-order-fields.component.html',
-  styleUrls: ['./stock-processing-order-fields.component.scss']
+    selector: 'app-stock-processing-order-fields',
+    templateUrl: './stock-processing-order-fields.component.html',
+    styleUrls: ['./stock-processing-order-fields.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockProcessingOrderFieldsComponent implements OnInit {
 
   private fieldInfoLocal: ApiProcessingEvidenceField;
-  private formGroupLocal: FormGroup;
+  private formGroupLocal: UntypedFormGroup;
 
   @Input()
   submitted: boolean;
@@ -37,11 +39,11 @@ export class StockProcessingOrderFieldsComponent implements OnInit {
   }
 
   @Input()
-  set formGroup(value: FormGroup) {
+  set formGroup(value: UntypedFormGroup) {
     this.formGroupLocal = value;
   }
 
-  get formGroup(): FormGroup {
+  get formGroup(): UntypedFormGroup {
     return this.formGroupLocal;
   }
 

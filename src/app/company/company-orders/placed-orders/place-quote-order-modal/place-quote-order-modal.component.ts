@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceQuoteOrderModalResult } from './model';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { CompanyFacilitiesService } from '../../../../shared-services/company-facilities.service';
 import { FacilityControllerService } from '../../../../../api/api/facilityController.service';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
@@ -14,15 +14,17 @@ import { ApiProcessingAction } from '../../../../../api/model/apiProcessingActio
 import { CompanyQuoteProcActionsForFacilityService } from '../../../../shared-services/company-quote-proc-actions-for-facility.service';
 
 @Component({
-  selector: 'app-place-quote-order-modal',
-  templateUrl: './place-quote-order-modal.component.html',
-  styleUrls: ['./place-quote-order-modal.component.scss']
+    selector: 'app-place-quote-order-modal',
+    templateUrl: './place-quote-order-modal.component.html',
+    styleUrls: ['./place-quote-order-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PlaceQuoteOrderModalComponent implements OnInit, OnDestroy {
 
-  facilityFormControl = new FormControl(null, Validators.required);
+  facilityFormControl = new UntypedFormControl(null, Validators.required);
 
-  processingActionFormControl = new FormControl(null, Validators.required);
+  processingActionFormControl = new UntypedFormControl(null, Validators.required);
 
   facilitiesCodebookService: CompanyFacilitiesService;
   procActionsCodebookService: CompanyQuoteProcActionsForFacilityService;

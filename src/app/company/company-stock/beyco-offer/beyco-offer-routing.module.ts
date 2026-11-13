@@ -16,7 +16,8 @@ const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/my-stock/all-stock/tab'
+        redirectTo: '/my-stock/all-stock/tab',
+        pathMatch: 'full'
     }
 ];
 

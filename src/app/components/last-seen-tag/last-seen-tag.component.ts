@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { formatDateTimeWithDots } from 'src/shared/utils';
 
 @Component({
-  selector: 'app-last-seen-tag',
-  templateUrl: './last-seen-tag.component.html',
-  styleUrls: ['./last-seen-tag.component.scss']
+    selector: 'app-last-seen-tag',
+    templateUrl: './last-seen-tag.component.html',
+    styleUrls: ['./last-seen-tag.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LastSeenTagComponent implements OnInit {
 

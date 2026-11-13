@@ -1,5 +1,5 @@
-import { AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import { AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
 import { NgbActiveModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {ActiveCompaniesService} from '../../../shared-services/active-companies.service';
 import {ActiveValueChainService} from '../../../shared-services/active-value-chain.service';
@@ -8,9 +8,11 @@ import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
 
 @Component({
-  selector: 'app-new-product-modal',
-  templateUrl: './new-product-modal.component.html',
-  styleUrls: ['./new-product-modal.component.scss']
+    selector: 'app-new-product-modal',
+    templateUrl: './new-product-modal.component.html',
+    styleUrls: ['./new-product-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class NewProductModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -32,8 +34,8 @@ export class NewProductModalComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild('selectProductCompanyTooltip')
   selectProductCompanyTooltip: NgbTooltip;
 
-  companyForm = new FormControl(null);
-  valueChainForm = new FormControl(null);
+  companyForm = new UntypedFormControl(null);
+  valueChainForm = new UntypedFormControl(null);
 
   private subs: Subscription;
 
@@ -51,9 +53,9 @@ export class NewProductModalComponent implements OnInit, OnDestroy, AfterViewIni
 
     this.subs = this.selfOnboardingService.addProductCurrentStep$.subscribe(step => {
       if (step == 3) {
-        this.selectProductCompanyTooltip.open();
+        this.selectProductCompanyTooltip?.open();
       } else {
-        this.selectProductCompanyTooltip.close();
+        this.selectProductCompanyTooltip?.close();
       }
     });
   }

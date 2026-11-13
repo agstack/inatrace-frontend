@@ -1,98 +1,107 @@
-<div class="modal-container" style="max-width: 500px;" *ngIf="form">
-
+@if (form) {
+  <div class="modal-container" style="max-width: 500px;">
     <div class="modal-header">
-        <h4 class="modal-title">{{ title }}</h4>
-        <button class="close"
-                type="button"
-                aria-label="Close"
-                (click)="activeModal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
+      <h4 class="modal-title">{{ title }}</h4>
+      <button class="btn-close"
+        type="button"
+        aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
     </div>
-
     <div class="modal-body">
-        <textinput
-                label="Name"
-                placeholder="Enter name"
-                i18n-label="@@productLabelFinalProduct.modal.textInput.name.label"
-                i18n-placeholder="@@productLabelFinalProduct.modal.textInput.name.placeholder"
-                style="width: 100%"
-                [form]="form.get('name')"
-                [isInvalid]="submitted && form.get('name').invalid">
-            <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('name').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@productLabelFinalProduct.modal.textInput.name.error">
+      <textinput
+        label="Name"
+        placeholder="Enter name"
+        i18n-label="@@productLabelFinalProduct.modal.textInput.name.label"
+        i18n-placeholder="@@productLabelFinalProduct.modal.textInput.name.placeholder"
+        style="width: 100%"
+        [form]="form.get('name')"
+        [isInvalid]="submitted && form.get('name').invalid">
+        @if (submitted) {
+          @if (form.get('name').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@productLabelFinalProduct.modal.textInput.name.error">
                         <span>
                           Name is required
                         </span>
                     </div>
-                </div>
-            </ng-container>
-        </textinput>
-
-        <textinput
-                label="Description"
-                helpText="Enter short final product description."
-                i18n-label="@@productLabelFinalProduct.modal.textInput.description.label"
-                i18n-helpText="@@productLabelFinalProduct.modal.textInput.description.helpText"
-                style="width: 100%"
-                [form]="form.get('description')"
-                [textarea]="true"
-                [isInvalid]="submitted && form.get('description').invalid">
-            <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@productLabelFinalProduct.modal.description.error">
+              }
+            </div>
+          }
+        }
+      </textinput>
+      <textinput
+        label="Description"
+        helpText="Enter short final product description."
+        i18n-label="@@productLabelFinalProduct.modal.textInput.description.label"
+        i18n-helpText="@@productLabelFinalProduct.modal.textInput.description.helpText"
+        style="width: 100%"
+        [form]="form.get('description')"
+        [textarea]="true"
+        [isInvalid]="submitted && form.get('description').invalid">
+        @if (submitted) {
+          @if (form.get('description').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@productLabelFinalProduct.modal.description.error">
                         <span>
                           Description is required
                         </span>
                     </div>
-                </div>
-            </ng-container>
-        </textinput>
-
-        <single-choice
-                label="Measurement unit type"
-                i18n-label="@@productLabelFinalProduct.modal.singleChoice.measurementUnitType.label"
-                [formControlInput]="form.get('measurementUnitType')"
-                [codebookService]="activeMeasureUnitTypeService"
-                [isInvalidChoice]="submitted && form.get('measurementUnitType').invalid">
-            <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('measurementUnitType').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@productLabelFinalProduct.modal.singleChoice.measurementUnitType.error">
+              }
+            </div>
+          }
+        }
+      </textinput>
+      <single-choice
+        label="Measurement unit type"
+        i18n-label="@@productLabelFinalProduct.modal.singleChoice.measurementUnitType.label"
+        [formControlInput]="form.get('measurementUnitType')"
+        [codebookService]="activeMeasureUnitTypeService"
+        [isInvalidChoice]="submitted && form.get('measurementUnitType').invalid">
+        @if (submitted) {
+          @if (form.get('measurementUnitType').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@productLabelFinalProduct.modal.singleChoice.measurementUnitType.error">
                         Measurement unit type is required
                     </div>
-                </div>
-            </ng-container>
-        </single-choice>
-
-        <div>
-            <single-choice
-                    label="Product labels"
-                    i18n-label="@@productLabelFinalProduct.modal.singleChoice.productLabels.label"
-                    [formControlInput]="productLabelForm"
-                    [codebookService]="productLabelsCodebook"
-                    (onChange)="addSelectedProductLabel($event)">
-            </single-choice>
-            <div *ngFor="let pl of this.productLabels; index as idx">
-                <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                    <div>
-                        <span>{{ pl.title }}</span>
-                        <span *ngIf="pl.status === 'UNPUBLISHED'"> (<span i18n="@@productLabelFinalProduct.modal.singleChoice.productLabels.status.unpublished">Unpublished</span>)</span>
-                    </div>
-                    <div (click)="removeSelectedProductLabel(idx)" class="cursor-pointer">
-                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                    </div>
-                </div>
+              }
             </div>
-        </div>
-
+          }
+        }
+      </single-choice>
+      <div>
+        <single-choice
+          label="Product labels"
+          i18n-label="@@productLabelFinalProduct.modal.singleChoice.productLabels.label"
+          [formControlInput]="productLabelForm"
+          [codebookService]="productLabelsCodebook"
+          (onChange)="addSelectedProductLabel($event)">
+        </single-choice>
+        @for (pl of this.productLabels; track pl; let idx = $index) {
+          <div>
+            <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+              <div>
+                <span>{{ pl.title }}</span>
+                @if (pl.status === 'UNPUBLISHED') {
+                  <span> (<span i18n="@@productLabelFinalProduct.modal.singleChoice.productLabels.status.unpublished">Unpublished</span>)</span>
+                }
+              </div>
+              <div (click)="removeSelectedProductLabel(idx)" class="cursor-pointer">
+                <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     </div>
-
     <div class="modal-footer"
-         i18n="@@collectorDetail.modal.footer.buttons">
+      i18n="@@collectorDetail.modal.footer.buttons">
         <button class="btn btn-outlined"
                 type="button"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
                 (click)="dismiss()">
             <span>Cancel</span>
         </button>
@@ -102,5 +111,5 @@
             <span>Save</span>
         </button>
     </div>
-
-</div>
+  </div>
+}

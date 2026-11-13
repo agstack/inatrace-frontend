@@ -3,10 +3,11 @@
 <div class="modal-container">
   <div class="modal-header">
     <h4 class="modal-title" i18n="@@cookies.cookieManagement.modal.title">Cookies settings</h4>
-    <button *ngIf="dismissable" type="button" class="close" aria-label="Close"
-      (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    @if (dismissable) {
+      <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
+    }
   </div>
   <div>
     <div class="sp-cookie-management-table">
@@ -16,65 +17,68 @@
           <span>Performance cookies.</span>
         </div>
         <div class="col-2">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input"
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input"
               [formControl]="form.get('googleAnalytics')" id="googleAnalyticsCookie">
-            <label class="custom-control-label" for="googleAnalyticsCookie">
+            <label class="form-check-label" for="googleAnalyticsCookie">
               <span class="show-for-sr"></span>
             </label>
           </div>
         </div>
       </div>
       <!-- <div class="row">
-        <div class="col-10 sp-cookie-management-label">
-          <span>Facebook Pixel</span>
-          <span>Targeting Cookies.</span>
+      <div class="col-10 sp-cookie-management-label">
+        <span>Facebook Pixel</span>
+        <span>Targeting Cookies.</span>
+      </div>
+      <div class="col-2">
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input"
+            [formControl]="form.get('facebookPixel')" id="facebookPixelCookie">
+          <label class="form-check-label" for="facebookPixelCookie">
+            <span class="show-for-sr"></span>
+          </label>
         </div>
-        <div class="col-2">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input"
-              [formControl]="form.get('facebookPixel')" id="facebookPixelCookie">
-            <label class="custom-control-label" for="facebookPixelCookie">
-              <span class="show-for-sr"></span>
-            </label>
-          </div>
-        </div>
-      </div> -->
-      <div class="row" *ngIf="chatEngine === 'intercom'">
+      </div>
+    </div> -->
+    @if (chatEngine === 'intercom') {
+      <div class="row">
         <div class="col-10 sp-cookie-management-label" i18n="@@cookies.cookieManagement.modal.body.intercom">
           <span>Intercom</span>
           <span>Customer suport with live chat.</span>
         </div>
         <div class="col-2">
-
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input"
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input"
               [formControl]="form.get('intercom')" id="intercomCookie">
-            <label class="custom-control-label" for="intercomCookie">
+            <label class="form-check-label" for="intercomCookie">
               <span class="show-for-sr"></span>
             </label>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="chatEngine === 'rocket'">
+    }
+    @if (chatEngine === 'rocket') {
+      <div class="row">
         <div class="col-10 sp-cookie-management-label" i18n="@@cookies.cookieManagement.modal.body.rocketChat">
           <span>Rocket Chat</span>
           <span>Customer suport with live chat.</span>
         </div>
         <div class="col-2 sp-cookie-management-checkbox">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input"
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input"
               [formControl]="form.get('rocket')" id="rocketCookie">
-            <label class="custom-control-label" for="rocketCookie">
+            <label class="form-check-label" for="rocketCookie">
               <span class="show-for-sr"></span>
             </label>
           </div>
         </div>
       </div>
+    }
 
-    </div>
   </div>
-  <div class="modal-footer" i18n="@@cookies.cookieManagement.modal.footer.buttons.backAndSave">
+</div>
+<div class="modal-footer" i18n="@@cookies.cookieManagement.modal.footer.buttons.backAndSave">
     <button
       class="btn"
       (click)="activeModal.dismiss('Nazaj click')"
@@ -84,4 +88,4 @@
       (click)="save()"><span>Save</span></button>
 
   </div>
-</div>
+  </div>

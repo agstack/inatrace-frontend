@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-prefill-locations-from-product-modal',
-  templateUrl: './prefill-locations-from-product-modal.component.html',
-  styleUrls: ['./prefill-locations-from-product-modal.component.scss']
+    selector: 'app-prefill-locations-from-product-modal',
+    templateUrl: './prefill-locations-from-product-modal.component.html',
+    styleUrls: ['./prefill-locations-from-product-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PrefillLocationsFromProductModalComponent implements OnInit {
 

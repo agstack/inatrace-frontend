@@ -7,6 +7,7 @@ import { ContentsDirective } from './contents.directive';
 @Directive({
     selector: '[contentsLink]',
     exportAs: 'contentsLink',
+    standalone: false
 })
 export class ContentsLinkDirective implements OnInit, OnDestroy {
     ngUnsubscribe: Subject<void> = new Subject<void>();

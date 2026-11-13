@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output, Host, Optional } from '@angular/core';
-import { FormControl, FormGroup, AbstractControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, Host, Optional, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faFile, faFileImage, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faExclamationTriangle, faEye, faFileUpload, faPlusCircle, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
@@ -53,7 +53,9 @@ class AttachmentFileUploader extends FileUploader {
 @Component({
     selector: 'attachment-uploader',
     templateUrl: './attachment-uploader.component.html',
-    styleUrls: ['./attachment-uploader.component.scss']
+    styleUrls: ['./attachment-uploader.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AttachmentUploaderComponent implements OnInit {
 
@@ -144,9 +146,9 @@ export class AttachmentUploaderComponent implements OnInit {
     @Input()
     deleteRouteGenerator: (x: number | string) => string = null
 
-    _form: FormControl | FormGroup = null
+    _form: UntypedFormControl | UntypedFormGroup = null
 
-    @Input() set form(value: FormControl | FormGroup) {
+    @Input() set form(value: UntypedFormControl | UntypedFormGroup) {
         this._form = value;
         let contentValue = value.value
         if (contentValue && contentValue.storageKey) {
@@ -156,7 +158,7 @@ export class AttachmentUploaderComponent implements OnInit {
         // this.resubscribe()
     }
 
-    get form(): FormControl | FormGroup {
+    get form(): UntypedFormControl | UntypedFormGroup {
         return this._form;
     }
 

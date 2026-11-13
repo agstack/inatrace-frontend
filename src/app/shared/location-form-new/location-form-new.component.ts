@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CountryService } from '../../shared-services/countries.service';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import _ from 'lodash-es';
 import { EnumSifrant } from '../../shared-services/enum-sifrant';
 import { GoogleMap } from '@angular/google-maps';
@@ -9,14 +9,16 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-location-form-new',
-  templateUrl: './location-form-new.component.html',
-  styleUrls: ['./location-form-new.component.scss']
+    selector: 'app-location-form-new',
+    templateUrl: './location-form-new.component.html',
+    styleUrls: ['./location-form-new.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LocationFormNewComponent implements OnInit, OnDestroy {
 
   @Input()
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   @Input()
   submitted = false;
@@ -105,7 +107,7 @@ export class LocationFormNewComponent implements OnInit, OnDestroy {
     return obj;
   }
 
-  dblClick(event: google.maps.MouseEvent) {
+  dblClick(event: google.maps.MapMouseEvent) {
     if (this.marker) {
       this.updateMarkerLocation(event.latLng.toJSON());
     } else {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PublicControllerService } from 'src/api/api/publicController.service';
 import { environment } from 'src/environments/environment';
@@ -6,9 +6,11 @@ import { take } from 'rxjs/operators';
 import { ApiLogRequest } from 'src/api/model/apiLogRequest';
 
 @Component({
-  selector: 'app-qr-code-redirect',
-  templateUrl: './qr-code-redirect.component.html',
-  styleUrls: ['./qr-code-redirect.component.scss']
+    selector: 'app-qr-code-redirect',
+    templateUrl: './qr-code-redirect.component.html',
+    styleUrls: ['./qr-code-redirect.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class QrCodeRedirectComponent implements OnInit {
 

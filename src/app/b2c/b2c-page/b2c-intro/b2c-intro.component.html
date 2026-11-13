@@ -1,24 +1,26 @@
 <div id="intro-wrapper"
-     class="h-100 d-flex flex-column justify-content-center align-items-center"
-     [style.background-color]="b2cSettings.tertiaryColor"
-     [style.background-image]="landingPageBackgroundImage ? 'url(' + landingPageBackgroundImage + ')' : ''">
-    <div id="intro-content" class="d-flex flex-column justify-content-center align-items-center">
-        <div class="intro-image-wrapper">
-            <img *ngIf="b2cSettings.landingPageImage"
-                 src="{{ appBaseUrl }}/api/public/document/{{ b2cSettings.landingPageImage.storageKey }}" class="mw-100"
-                 alt="Header image">
-        </div>
-
-        <h2 class="af-b2c-front--headline mb-4"
-            [style.font-family]="b2cSettings.productFont ? 'custom-product' : ''"
-            [style.color]="b2cSettings.productTitleColor">
-            {{ this.productName }}
-        </h2>
-        <div>
-            <button class="btn px-5 mb-5" (click)="openJourney()" [style.background-color]="b2cSettings.secondaryColor"
-                    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                    i18n="@@front-page.button.productJourney">PRODUCT JOURNEY
-            </button>
-        </div>
+  class="h-100 d-flex flex-column justify-content-center align-items-center"
+  [style.background-color]="b2cSettings.tertiaryColor"
+  [style.background-image]="landingPageBackgroundImage ? 'url(' + landingPageBackgroundImage + ')' : ''">
+  <div id="intro-content" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="intro-image-wrapper">
+      @if (b2cSettings.landingPageImage) {
+        <img
+          src="{{ appBaseUrl }}/api/public/document/{{ b2cSettings.landingPageImage.storageKey }}" class="mw-100"
+          alt="Header image">
+      }
     </div>
+
+    <h2 class="af-b2c-front--headline mb-4"
+      [style.font-family]="b2cSettings.productFont ? 'custom-product' : ''"
+      [style.color]="b2cSettings.productTitleColor">
+      {{ this.productName }}
+    </h2>
+    <div>
+      <button class="btn px-5 mb-5" (click)="openJourney()" [style.background-color]="b2cSettings.secondaryColor"
+        [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+        i18n="@@front-page.button.productJourney">PRODUCT JOURNEY
+            </button>
+    </div>
+  </div>
 </div>

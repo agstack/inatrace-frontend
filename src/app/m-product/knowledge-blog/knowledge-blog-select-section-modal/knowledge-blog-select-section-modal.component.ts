@@ -1,14 +1,16 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
 
 
 @Component({
-  selector: 'app-knowledge-blog-select-section-modal',
-  templateUrl: './knowledge-blog-select-section-modal.component.html',
-  styleUrls: ['./knowledge-blog-select-section-modal.component.scss']
+    selector: 'app-knowledge-blog-select-section-modal',
+    templateUrl: './knowledge-blog-select-section-modal.component.html',
+    styleUrls: ['./knowledge-blog-select-section-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class KnowledgeBlogSelectSectionModalComponent implements OnInit {
 
@@ -27,7 +29,7 @@ export class KnowledgeBlogSelectSectionModalComponent implements OnInit {
   @Input()
   onSelected: (section: any) => {};
 
-  form = new FormControl(null);
+  form = new UntypedFormControl(null);
   subs: Subscription[] = [];
 
   constructor(

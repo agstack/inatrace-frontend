@@ -2,94 +2,124 @@
 <div [ngClass]="{'attachement-uploader-container': useAttachmentUploaderStyle}">
   <div style="display: flex; flex: 1 1 0; justify-content: space-between;"
     ng2FileDrop [uploader]="uploader">
-    <div *ngIf="this.mode == 'simpleAsTextField'">
-      <label *ngIf="label && !htmlLabel" class="sp-textinput-label"
-        style="margin-bottom: 0px;">{{ label }}</label>
-      <label *ngIf="!label && htmlLabel" class="sp-textinput-label"
-        [innerHTML]="htmlLabel" routeTransformer></label>
-        <span *ngIf="isRequired()">*</span>
-    </div>
-    <div *ngIf="this.mode != 'simpleAsTextField'">
-      <label *ngIf="label && !htmlLabel" class="sp-textinput-label"
-        style="margin-bottom: 0px;">{{ label }}</label>
-      <label *ngIf="!label && htmlLabel" class="sp-textinput-label"
-        [innerHTML]="htmlLabel" routeTransformer></label>
-    </div>
-    <div *ngIf="this.mode != 'simpleAsTextField'" style="display: flex;">
-      <div *ngIf="!readOnly" class="addbutton" style="white-space: nowrap;"
-        [class.in-focus]="inFocus">
-        <input (focus)="onAddFocus()" (blur)="onAddBlur()" class="file-input"
-          name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect
-          [uploader]="uploader" multiple />
-        <label class="sp-textinput-label file-input"
-          [class.ab-closed-label]="labelClosedIndicator"
-          for="{{attachmentUploaderId}}">Upload file <fa-icon class="plusicon"
-            [icon]="faPlusCircle"></fa-icon></label>
-        <span *ngIf="isRequired()">*</span>
+    @if (this.mode == 'simpleAsTextField') {
+      <div>
+        @if (label && !htmlLabel) {
+          <label class="sp-textinput-label"
+          style="margin-bottom: 0px;">{{ label }}</label>
+        }
+        @if (!label && htmlLabel) {
+          <label class="sp-textinput-label"
+          [innerHTML]="htmlLabel" routeTransformer></label>
+        }
+        @if (isRequired()) {
+          <span>*</span>
+        }
       </div>
-    </div>
+    }
+    @if (this.mode != 'simpleAsTextField') {
+      <div>
+        @if (label && !htmlLabel) {
+          <label class="sp-textinput-label"
+          style="margin-bottom: 0px;">{{ label }}</label>
+        }
+        @if (!label && htmlLabel) {
+          <label class="sp-textinput-label"
+          [innerHTML]="htmlLabel" routeTransformer></label>
+        }
+      </div>
+    }
+    @if (this.mode != 'simpleAsTextField') {
+      <div style="display: flex;">
+        @if (!readOnly) {
+          <div class="addbutton" style="white-space: nowrap;"
+            [class.in-focus]="inFocus">
+            <input (focus)="onAddFocus()" (blur)="onAddBlur()" class="file-input"
+              name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect
+              [uploader]="uploader" multiple />
+            <label class="sp-textinput-label file-input"
+              [class.ab-closed-label]="labelClosedIndicator"
+              for="{{attachmentUploaderId}}">Upload file <fa-icon class="plusicon"
+            [icon]="faPlusCircle"></fa-icon></label>
+            @if (isRequired()) {
+              <span>*</span>
+            }
+          </div>
+        }
+      </div>
+    }
   </div>
 
-  <div *ngIf="this.mode === 'drop' && !hideBody"
-    ng2FileDrop
-    [ngClass]="{'file-over': draggingFileOver}"
-    (fileOver)="fileOver($event)"
-    [uploader]="uploader"
-    class="drop-zone upload-{{uploadState}} sp-drop-zone"
-    [class.sc-invalid-feedback-border]="invalid">
-    <div class="row">
-      <!-- <div class="drop-icon col-auto hover-pointer" (click)="showContentModal()">
-      <fa-icon [icon]="icon" size="4x"></fa-icon>
-    </div> -->
-      <div class="col" *ngIf="uploader.queue.length == 0"
-        [ngSwitch]="uploadState">
-        <ng-container *ngSwitchCase="'start'">
-          <div class="upload-prompt">
-            <ng-content select="attachment-uploader-content"></ng-content>
-          </div>
-          <!-- <div class="row">
-          <div class="col-auto" i18n="attachment uploader ali label|@@ui.attachmentUploader.or.label">ali</div>
-          <input class="file-input" name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect [uploader]="uploader" multiple />
-          <label class="file-input" for="{{attachmentUploaderId}}" i18n="attachment uploader poiščite in pripnite datoteko label|@@ui.attachmentUploader.poisciteInPripniteDatoteko.label">poiščite in pripnite datoteko</label>
-        </div> -->
-        </ng-container>
-        <ng-container *ngSwitchCase="'ok'">
+  @if (this.mode === 'drop' && !hideBody) {
+    <div
+      ng2FileDrop
+      [ngClass]="{'file-over': draggingFileOver}"
+      (fileOver)="fileOver($event)"
+      [uploader]="uploader"
+      class="drop-zone upload-{{uploadState}} sp-drop-zone"
+      [class.sc-invalid-feedback-border]="invalid">
+      <div class="row">
+        <!-- <div class="drop-icon col-auto hover-pointer" (click)="showContentModal()">
+        <fa-icon [icon]="icon" size="4x"></fa-icon>
+      </div> -->
+      @if (uploader.queue.length == 0) {
+        <div class="col"
+          >
+          @switch (uploadState) {
+            @case ('start') {
+              <div class="upload-prompt">
+                <ng-content select="attachment-uploader-content"></ng-content>
+              </div>
+              <!-- <div class="row">
+              <div class="col-auto" i18n="attachment uploader ali label|@@ui.attachmentUploader.or.label">ali</div>
+              <input class="file-input" name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect [uploader]="uploader" multiple />
+              <label class="file-input" for="{{attachmentUploaderId}}" i18n="attachment uploader poiščite in pripnite datoteko label|@@ui.attachmentUploader.poisciteInPripniteDatoteko.label">poiščite in pripnite datoteko</label>
+            </div> -->
+          }
+          @case ('ok') {
           <div class="upload-prompt-ok" style="display: flex; justify-content:
             space-between;">
-            <div class="upload-prevent-text-overflow">
-              <!-- {{nalozeno}} -->
-              <a (click)="onDownload(fileInfo.storageKey)">{{truncateFilename(uploadName)}}</a>
-            </div>
-            <div *ngIf="!readOnly" style="display: flex;">
-              <div *ngIf="isImage() && showShowIcon" class="delete-file"
-                (click)="showContentModal()"><fa-icon [icon]="showIcon"></fa-icon></div>
-              <div class="delete-file" (click)="deleteCurrent()"><fa-icon
-                  [icon]="deleteIcon"></fa-icon></div>
-            </div>
-          </div>
-          <!-- <div>
-          <input class="file-input" name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect [uploader]="uploader" multiple />
-          <label class="file-input" for="{{attachmentUploaderId}}" i18n="attachment uploader pripnite drugo datoteko label|@@ui.attachmentUploader.pripniteDrugoDatoteko.label">pripnite drugo datoteko</label>
-        </div> -->
-        </ng-container>
-        <ng-container *ngSwitchCase="'error'">
+              <div class="upload-prevent-text-overflow">
+                <!-- {{nalozeno}} -->
+                <a (click)="onDownload(fileInfo.storageKey)">{{truncateFilename(uploadName)}}</a>
+              </div>
+              @if (!readOnly) {
+                <div style="display: flex;">
+                  @if (isImage() && showShowIcon) {
+                    <div class="delete-file"
+                      (click)="showContentModal()"><fa-icon [icon]="showIcon"></fa-icon></div>
+                    }
+                    <div class="delete-file" (click)="deleteCurrent()"><fa-icon
+                    [icon]="deleteIcon"></fa-icon></div>
+                  </div>
+                }
+              </div>
+              <!-- <div>
+              <input class="file-input" name="file" id="{{attachmentUploaderId}}" type="file" ng2FileSelect [uploader]="uploader" multiple />
+              <label class="file-input" for="{{attachmentUploaderId}}" i18n="attachment uploader pripnite drugo datoteko label|@@ui.attachmentUploader.pripniteDrugoDatoteko.label">pripnite drugo datoteko</label>
+            </div> -->
+          }
+          @case ('error') {
           <div class="upload-prompt-error" i18n="attachment uploader error
             prišlo je do napake
             message|@@ui.attachmentUploader.error.prisloJeDoNapake.message">
             There was an error during loading
           </div>
-          <div>
-            <input class="file-input" name="file" id="{{attachmentUploaderId}}"
-              type="file" ng2FileSelect [uploader]="uploader" multiple />
-            <label class="file-input" for="{{attachmentUploaderId}}"
+            <div>
+              <input class="file-input" name="file" id="{{attachmentUploaderId}}"
+                type="file" ng2FileSelect [uploader]="uploader" multiple />
+              <label class="file-input" for="{{attachmentUploaderId}}"
               i18n="attachment uploader poskusite ponovno ali pripnite drugo
               datoteko
               label|@@ui.attachmentUploader.poskusitePonovnoAliPripniteDrugoDatoteko.label">try again or attach another file</label>
-          </div>
-        </ng-container>
+            </div>
+          }
+        }
       </div>
-      <div class="col" *ngIf="uploader.queue.length> 0">
-        <ng-container *ngFor="let item of uploader.queue">
+    }
+    @if (uploader.queue.length> 0) {
+      <div class="col">
+        @for (item of uploader.queue; track item) {
           <div i18n="attachment uploader nalaganje
             label|@@ui.attachmentUploader.nalaganje.label">Loading {{item.file.name}}, {{item.progress}}% from {{item.file.size / 1024 |number:'1.1-1'}}K</div>
           <div class="progress">
@@ -99,46 +129,50 @@
           <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary my-2"></div>
           </div>
-
-        </ng-container>
+        }
       </div>
-    </div>
+    }
   </div>
-  <ng-content select="attachment-uploader-errors"></ng-content>
-  <!-- <image-viewer [url]="downloadLinkGenerator(this.identifier())"></image-viewer> -->
-  <div *ngIf="this.mode === 'simple'">
-    <div *ngIf="uploader.queue.length == 0" [ngSwitch]="uploadState">
-      <ng-container *ngSwitchCase="'start'">
-        <div class="row">
-          <input class="file-input col" name="fileSimple" #fileSimple
-            type="file" ng2FileSelect [uploader]="uploader" />
-          <div class="col text-primary hover-pointer"
+</div>
+}
+<ng-content select="attachment-uploader-errors"></ng-content>
+<!-- <image-viewer [url]="downloadLinkGenerator(this.identifier())"></image-viewer> -->
+@if (this.mode === 'simple') {
+  <div>
+    @if (uploader.queue.length == 0) {
+      <div>
+        @switch (uploadState) {
+          @case ('start') {
+            <div class="row">
+              <input class="file-input col" name="fileSimple" #fileSimple
+                type="file" ng2FileSelect [uploader]="uploader" />
+              <div class="col text-primary hover-pointer"
             (click)="fileSimple.click()" i18n="attachment uploader poiščite in
             pripnite datoteko caps
             label|@@ui.attachmentUploader.poisciteInPripniteDatotekoCaps.label">Locate and attach the file</div>
-          <div class="col-auto" (click)="fileSimple.click()"><fa-icon
+              <div class="col-auto" (click)="fileSimple.click()"><fa-icon
               class="text-primary hover-pointer" [icon]="'paperclip'"></fa-icon></div>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'ok'">
+            </div>
+          }
+          @case ('ok') {
         <div class="c-heavy-label-title-as-single-choice" i18n="attachment
           uploader ime datoteke
           label|@@ui.attachmentUploader.imeDatoteke.label">File name</div>
-        <div class="row">
-          <a class="col" (click)="onDownload(fileInfo.storageKey)"><b>{{truncateFilename(uploadName)}}</b></a>
-          <div class="col-auto" (click)="deleteCurrent()"><fa-icon
-              class="text-primary hover-pointer" [icon]="deleteIcon"
-              title="Delete attachment"
+            <div class="row">
+              <a class="col" (click)="onDownload(fileInfo.storageKey)"><b>{{truncateFilename(uploadName)}}</b></a>
+              <div class="col-auto" (click)="deleteCurrent()"><fa-icon
+                class="text-primary hover-pointer" [icon]="deleteIcon"
+                title="Delete attachment"
               i18n-title="tooltip|@@ui.attachmentUploader.izbrisiPrilogo.tooltip"></fa-icon></div>
-          <div class="col-auto" (click)="fileSimple.click()"><fa-icon
-              class="text-primary hover-pointer" [icon]="faSyncAlt"
-              title="Replace the attachment"
+              <div class="col-auto" (click)="fileSimple.click()"><fa-icon
+                class="text-primary hover-pointer" [icon]="faSyncAlt"
+                title="Replace the attachment"
               i18n-title="tooltip|@@ui.attachmentUploader.zamenjajDatotekoPriloge.tooltip"></fa-icon></div>
-          <input class="file-input" name="fileSimple" #fileSimple type="file"
-            ng2FileSelect [uploader]="uploader" />
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'error'">
+              <input class="file-input" name="fileSimple" #fileSimple type="file"
+                ng2FileSelect [uploader]="uploader" />
+            </div>
+          }
+          @case ('error') {
         <div class="upload-prompt-error row" i18n="attachment uploader error
           napaka message|@@ui.attachmentUploader.error.napaka.message">
           Error!
@@ -147,80 +181,95 @@
           <input class="file-input" name="fileSimple" id="fileSimple"
             type="file" ng2FileSelect [uploader]="uploader" />
         </div>
-      </ng-container>
-    </div>
-    <div *ngIf="uploader.queue.length> 0">
-      <ng-container *ngFor="let item of uploader.queue">
+          }
+        }
+      </div>
+    }
+    @if (uploader.queue.length> 0) {
+      <div>
+        @for (item of uploader.queue; track item) {
         <div i18n="attachment uploader nalaganje
           label|@@ui.attachmentUploader.nalaganje.label">Loading {{item.file.name}}, {{item.progress}}% from {{item.file.size / 1024 |number:'1.1-1'}}K</div>
-        <div class="progress">
+          <div class="progress">
           <div class="progress-bar" role="progressbar" [ngStyle]="{ width:
             item.progress + '%' }"></div>
-        </div>
-        <div class="d-flex justify-content-center">
-          <div class="spinner-border text-primary my-2"></div>
-        </div>
-
-      </ng-container>
-    </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary my-2"></div>
+          </div>
+        }
+      </div>
+    }
   </div>
+}
 
 
-  <div *ngIf="this.mode === 'simpleAsTextField' && !hideBody">
-    <div *ngIf="uploader.queue.length == 0" [ngSwitch]="uploadState">
-      <ng-container *ngSwitchCase="'start'" class="simple-view-container">
-        <div class="row">
-          <div [class.col-9]="!flexCol" [class.col]="flexCol">
-            <div class="input-group">
-              <div class="custom-file">
-                <input class="custom-file-input" name="fileSimple"
-                  [id]="attachmentUploaderId" #fileSimple type="file" ng2FileSelect [disabled]="readOnly"
-                  [uploader]="uploader" />
-                <label class="custom-file-label labelPlaceholder" i18n="attachmentUploader.label.chooseFile"
-                  [for]="attachmentUploaderId" ng2FileSelect>Choose file</label>
+@if (this.mode === 'simpleAsTextField' && !hideBody) {
+  <div>
+    @if (uploader.queue.length == 0) {
+      <div>
+        @switch (uploadState) {
+          @case ('start') {
+            <ng-container class="simple-view-container">
+              <div class="row">
+                <div [class.col-9]="!flexCol" [class.col]="flexCol">
+                  <div class="input-group">
+                    <div class="mb-3">
+                      <input class="form-control" name="fileSimple"
+                        [id]="attachmentUploaderId" #fileSimple type="file" ng2FileSelect [disabled]="readOnly"
+                        [uploader]="uploader" />
+                      <label class="form-label labelPlaceholder" i18n="attachmentUploader.label.chooseFile"
+                      [for]="attachmentUploaderId" ng2FileSelect>Choose file</label>
+                    </div>
+                  </div>
+                </div>
+                @if (!flexCol) {
+                  <div class="col-3"></div>
+                }
+              </div>
+            </ng-container>
+          }
+          @case ('ok') {
+            <ng-container class="simple-view-container">
+              <div class="row">
+                <div [class.col-9]="!flexCol" [class.col]="flexCol">
+                  <div class="mb-3">
+                    <input class="form-control" name="fileSimple" #fileSimple
+                      [disabled]="readOnly"
+                      type="file" ng2FileSelect [uploader]="uploader" />
+                    <label class="form-label labelPlaceholder" ng2FileSelect>{{truncateFilename(uploadName)}}</label>
+                  </div>
+                </div>
+                <div [class.col-3]="!flexCol" [class.col-2]="flexCol">
+                  <div class="d-flex flex-row">
+                    <div (click)="readOnly ? deleteCurrentReadOnly(): deleteCurrent()" ><fa-icon
+                      class="simple-view-clear"
+                      [icon]="deleteIcon"
+                      title="Delete attachment"
+                    i18n-title="tooltip|@@ui.attachmentUploader.izbrisiPrilogo.tooltip"></fa-icon>
+                  </div>
+                  <div style="width: 16px"></div>
+                  @if (showShowIcon) {
+                    <div
+                      (click)="showContentModal()"><fa-icon
+                    class="simple-view-view" [icon]="showIcon"></fa-icon>
+                  </div>
+                }
               </div>
             </div>
           </div>
-          <div *ngIf="!flexCol" class="col-3"></div>
-        </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="'ok'" class="simple-view-container">
-        <div class="row">
-          <div [class.col-9]="!flexCol" [class.col]="flexCol">
-            <div class="custom-file">
-              <input class="custom-file-input" name="fileSimple" #fileSimple
-              [disabled]="readOnly"
-                type="file" ng2FileSelect [uploader]="uploader" />
-              <label class="custom-file-label labelPlaceholder" ng2FileSelect>{{truncateFilename(uploadName)}}</label>
-            </div>
-          </div>
-          <div [class.col-3]="!flexCol" [class.col-2]="flexCol">
-            <div class="d-flex flex-row">
-              <div (click)="readOnly ? deleteCurrentReadOnly(): deleteCurrent()" ><fa-icon
-                  class="simple-view-clear"
-                  [icon]="deleteIcon"
-                  title="Delete attachment"
-                  i18n-title="tooltip|@@ui.attachmentUploader.izbrisiPrilogo.tooltip"></fa-icon>
-              </div>
-              <div style="width: 16px"></div>
-              <div *ngIf="showShowIcon"
-                (click)="showContentModal()"><fa-icon
-                  class="simple-view-view" [icon]="showIcon"></fa-icon>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="row">
+          <!-- <div class="row">
           <a class="col" (click)="onDownload(fileInfo.storageKey)"><b>{{truncateFilename(uploadName)}}</b></a>
           <div class="col-auto" (click)="deleteCurrent()"><fa-icon
-              class="text-primary hover-pointer" [icon]="deleteIcon"
-              title="Delete"
-              i18n-title="tooltip|@@ui.attachmentUploader.izbrisiPrilogo.tooltip"></fa-icon></div>
+            class="text-primary hover-pointer" [icon]="deleteIcon"
+            title="Delete"
+          i18n-title="tooltip|@@ui.attachmentUploader.izbrisiPrilogo.tooltip"></fa-icon></div>
           <input class="file-input" name="fileSimple" #fileSimple type="file"
             ng2FileSelect [uploader]="uploader" />
         </div> -->
       </ng-container>
-      <ng-container *ngSwitchCase="'error'">
+    }
+    @case ('error') {
         <div class="upload-prompt-error row" i18n="attachment uploader error
           napaka message|@@ui.attachmentUploader.error.napaka.message">
           Error!
@@ -229,27 +278,36 @@
           <input class="file-input" name="fileSimple" id="fileSimple"
             type="file" ng2FileSelect [uploader]="uploader" />
         </div>
-      </ng-container>
-    </div>
-    <div *ngIf="uploader.queue.length> 0">
-      <ng-container *ngFor="let item of uploader.queue">
-        <div class="row">
-          <div [class.col-9]="!flexCol" [class.col]="flexCol">
+    }
+  }
+</div>
+}
+@if (uploader.queue.length> 0) {
+  <div>
+    @for (item of uploader.queue; track item) {
+      <div class="row">
+        <div [class.col-9]="!flexCol" [class.col]="flexCol">
             <div i18n="attachment uploader nalaganje
               label|@@ui.attachmentUploader.nalaganje.label"
-              class="labelPlaceholder">Loading {{item.file.name}}, {{item.progress}}% from {{item.file.size / 1024 | number:'1.1-1'}}K</div>
-            <div class="progress">
+          class="labelPlaceholder">Loading {{item.file.name}}, {{item.progress}}% from {{item.file.size / 1024 | number:'1.1-1'}}K</div>
+          <div class="progress">
               <div class="progress-bar" role="progressbar" [ngStyle]="{ width:
                 item.progress + '%' }"></div>
-            </div>
-            <div class="d-flex justify-content-center">
-              <div class="spinner-border text-primary my-2"></div>
-            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary my-2"></div>
           </div>
         </div>
-        <div *ngIf="!flexCol" class="col-3"></div>
-      </ng-container>
-    </div>
+      </div>
+      @if (!flexCol) {
+        <div class="col-3"></div>
+      }
+    }
   </div>
+}
 </div>
-<small *ngIf="comment && !hideBody">{{comment}}</small>
+}
+</div>
+@if (comment && !hideBody) {
+  <small>{{comment}}</small>
+}

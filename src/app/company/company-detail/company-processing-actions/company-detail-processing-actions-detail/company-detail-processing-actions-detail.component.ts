@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyDetailTabManagerComponent } from '../../company-detail-tab-manager/company-detail-tab-manager.component';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { EnumSifrant } from '../../../../shared-services/enum-sifrant';
 import { ProcessingEvidenceTypeService } from '../../../../shared-services/processing-evidence-types.service';
 import { ProcessingEvidenceTypeControllerService } from '../../../../../api/api/processingEvidenceTypeController.service';
@@ -38,9 +38,11 @@ import { ApiFinalProduct } from '../../../../../api/model/apiFinalProduct';
 import { ApiProcessingActionOutputSemiProduct } from '../../../../../api/model/apiProcessingActionOutputSemiProduct';
 
 @Component({
-  selector: 'app-company-detail-processing-actions',
-  templateUrl: './company-detail-processing-actions-detail.component.html',
-  styleUrls: ['./company-detail-processing-actions-detail.component.scss']
+    selector: 'app-company-detail-processing-actions',
+    templateUrl: './company-detail-processing-actions-detail.component.html',
+    styleUrls: ['./company-detail-processing-actions-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetailTabManagerComponent implements OnInit, OnDestroy {
 
@@ -51,28 +53,28 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   title: string;
   editMode: boolean;
   companyId: number;
-  form: FormGroup;
+  form: UntypedFormGroup;
   action: ApiProcessingAction;
 
   codebookProcessingTransaction = EnumSifrant.fromObject(this.processingActionType);
 
-  outputSemiProductInputForm: FormControl;
+  outputSemiProductInputForm: UntypedFormControl;
   semiProductsForValueChainsService: SemiProductsForValueChainsService;
 
   processingEvidenceTypeService: ProcessingEvidenceTypeService;
   processingEvidenceFieldService: ProcessingEvidenceFieldsService;
-  evidenceDocInputForm: FormControl;
-  evidenceFieldInputForm: FormControl;
+  evidenceDocInputForm: UntypedFormControl;
+  evidenceFieldInputForm: UntypedFormControl;
 
-  supportedFacilitiesInputForm: FormControl;
+  supportedFacilitiesInputForm: UntypedFormControl;
   supportedFacilitiesService: CompanyFacilitiesService;
 
   finalProductsForCompanyCodebook: FinalProductsForCompanyService;
 
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChainsForm = new FormControl(null);
+  valueChainsForm = new UntypedFormControl(null);
   valueChains: Array<ApiValueChain> = [];
-  selectedCompanyValueChainsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   languages = ['EN', 'DE', 'RW', 'ES'];
   selectedLanguage = 'EN';
@@ -138,24 +140,24 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     return (this.inputSemiProductControl.value as ApiSemiProduct).measurementUnitType;
   }
 
-  public get outputSemiProductsArray(): FormArray {
-    return this.form.get('outputSemiProducts') as FormArray;
+  public get outputSemiProductsArray(): UntypedFormArray {
+    return this.form.get('outputSemiProducts') as UntypedFormArray;
   }
 
-  private get outputFinalProductControl(): FormControl {
-    return this.form.get('outputFinalProduct') as FormControl;
+  private get outputFinalProductControl(): UntypedFormControl {
+    return this.form.get('outputFinalProduct') as UntypedFormControl;
   }
 
-  private get repackedOutputFinalProductsControl(): FormControl {
-    return this.form.get('repackedOutputFinalProducts') as FormControl;
+  private get repackedOutputFinalProductsControl(): UntypedFormControl {
+    return this.form.get('repackedOutputFinalProducts') as UntypedFormControl;
   }
 
-  private get maxOutputFinalProductsWeightControl(): FormControl {
-    return this.form.get('maxOutputWeight') as FormControl;
+  private get maxOutputFinalProductsWeightControl(): UntypedFormControl {
+    return this.form.get('maxOutputWeight') as UntypedFormControl;
   }
 
-  private get inputSemiProductControl(): FormControl {
-    return this.form.get('inputSemiProduct') as FormControl;
+  private get inputSemiProductControl(): UntypedFormControl {
+    return this.form.get('inputSemiProduct') as UntypedFormControl;
   }
 
   ngOnInit(): void {
@@ -169,10 +171,10 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     // Initialize codebook service for final products for the selected company
     this.finalProductsForCompanyCodebook = new FinalProductsForCompanyService(this.finalProductController, this.companyId);
 
-    this.evidenceDocInputForm = new FormControl(null);
-    this.evidenceFieldInputForm = new FormControl(null);
-    this.supportedFacilitiesInputForm = new FormControl(null);
-    this.outputSemiProductInputForm = new FormControl(null);
+    this.evidenceDocInputForm = new UntypedFormControl(null);
+    this.evidenceFieldInputForm = new UntypedFormControl(null);
+    this.supportedFacilitiesInputForm = new UntypedFormControl(null);
+    this.outputSemiProductInputForm = new UntypedFormControl(null);
 
     this.initInitialData().then(
         () => {
@@ -231,36 +233,36 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   finalizeForm() {
 
     if (!this.form.contains('outputSemiProducts')) {
-      this.form.addControl('outputSemiProducts', new FormArray([]));
+      this.form.addControl('outputSemiProducts', new UntypedFormArray([]));
     }
 
     if (!this.form.contains('requiredEvidenceFields')) {
-      this.form.addControl('requiredEvidenceFields', new FormArray([]));
+      this.form.addControl('requiredEvidenceFields', new UntypedFormArray([]));
     }
 
     if (!this.form.contains('requiredDocumentTypes')) {
-      this.form.addControl('requiredDocumentTypes', new FormArray([]));
+      this.form.addControl('requiredDocumentTypes', new UntypedFormArray([]));
     }
 
     if (!this.form.contains('supportedFacilities')) {
-      this.form.addControl('supportedFacilities', new FormArray([]));
+      this.form.addControl('supportedFacilities', new UntypedFormArray([]));
     }
 
     if (!this.form.contains('translations')) {
-      this.form.addControl('translations', new FormArray([]));
+      this.form.addControl('translations', new UntypedFormArray([]));
     }
 
     // Create form controls
     const translations = this.form.get('translations').value;
     this.form.removeControl('translations');
-    this.form.addControl('translations', new FormArray([]));
+    this.form.addControl('translations', new UntypedFormArray([]));
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
       const validators = lang === 'EN' ? [Validators.required] : [];
-      (this.form.get('translations') as FormArray).push(new FormGroup({
-        language: new FormControl(lang),
-        name: new FormControl(translation ? translation.name : '', validators),
-        description: new FormControl(translation ? translation.description : '', validators)
+      (this.form.get('translations') as UntypedFormArray).push(new UntypedFormGroup({
+        language: new UntypedFormControl(lang),
+        name: new UntypedFormControl(translation ? translation.name : '', validators),
+        description: new UntypedFormControl(translation ? translation.description : '', validators)
       }));
     }
 
@@ -394,7 +396,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
 
   async addSelectedEvidenceDoc(doc: ApiProcessingEvidenceType) {
     if (!doc) { return; }
-    const formArray = this.form.get('requiredDocumentTypes') as FormArray;
+    const formArray = this.form.get('requiredDocumentTypes') as UntypedFormArray;
 
     // If selected element is already present in array, clear input field
     if (formArray.value.some(x => x.id === doc.id)) {
@@ -403,7 +405,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     }
 
     // Add selected element to array
-    formArray.push(new FormControl({
+    formArray.push(new UntypedFormControl({
       ...doc,
       mandatory: false,
       requiredOnQuote: false,
@@ -422,7 +424,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
 
   async removeEvidenceDoc(doc: ApiProcessingEvidenceType) {
     if (!doc) { return; }
-    const formArray = this.form.get('requiredDocumentTypes') as FormArray;
+    const formArray = this.form.get('requiredDocumentTypes') as UntypedFormArray;
     const index = (formArray.value as ApiProcessingEvidenceType[]).findIndex(x => x.id === doc.id);
     if (index >= 0) {
       formArray.removeAt(index);
@@ -431,13 +433,13 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   }
 
   private removeAllEvidenceDocs() {
-    const formArray = this.form.get('requiredDocumentTypes') as FormArray;
+    const formArray = this.form.get('requiredDocumentTypes') as UntypedFormArray;
     formArray.clear();
   }
 
   async addSelectedEvidenceField(field: ApiProcessingEvidenceField) {
     if (!field) { return; }
-    const formArray = this.form.get('requiredEvidenceFields') as FormArray;
+    const formArray = this.form.get('requiredEvidenceFields') as UntypedFormArray;
 
     // If selected element is already present in array, clear input field
     if (formArray.value.some(x => x.id === field.id)) {
@@ -446,7 +448,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     }
 
     // Add selected element to array
-    formArray.push(new FormControl({
+    formArray.push(new UntypedFormControl({
       ...field,
       mandatory: false,
       requiredOnQuote: false
@@ -459,7 +461,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
 
   async removeEvidenceField(field: ApiProcessingEvidenceField) {
     if (!field) { return; }
-    const formArray = this.form.get('requiredEvidenceFields') as FormArray;
+    const formArray = this.form.get('requiredEvidenceFields') as UntypedFormArray;
     const index = (formArray.value as ApiProcessingEvidenceField[]).findIndex(x => x.id === field.id);
     if (index >= 0) {
       formArray.removeAt(index);
@@ -468,14 +470,14 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   }
 
   private removeAllEvidenceFields() {
-    const formArray = this.form.get('requiredEvidenceFields') as FormArray;
+    const formArray = this.form.get('requiredEvidenceFields') as UntypedFormArray;
     formArray.clear();
   }
 
   async addSelectedSupportedFacility(facility: ApiFacility) {
 
     if (!facility) { return; }
-    const formArray = this.form.get('supportedFacilities') as FormArray;
+    const formArray = this.form.get('supportedFacilities') as UntypedFormArray;
 
     // If selected facility is already present in array, clear input field
     if (formArray.value.some(x => x.id === facility.id)) {
@@ -484,7 +486,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
     }
 
     // Add selected element to array
-    formArray.push(new FormControl({...facility}));
+    formArray.push(new UntypedFormControl({...facility}));
     formArray.markAsDirty();
 
     // Clear input field
@@ -494,7 +496,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   async removeSupportedFacility(facility: ApiFacility) {
 
     if (!facility) { return; }
-    const formArray = this.form.get('supportedFacilities') as FormArray;
+    const formArray = this.form.get('supportedFacilities') as UntypedFormArray;
     const index = (formArray.value as ApiFacility[]).findIndex(x => x.id === facility.id);
     if (index >= 0) {
       formArray.removeAt(index);
@@ -609,7 +611,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
   async saveProcessingAction() {
     this.submitted = true;
 
-    const englishTranslation = (this.form.get('translations') as FormArray).controls
+    const englishTranslation = (this.form.get('translations') as UntypedFormArray).controls
       .find(translation => translation.get('language').value === 'EN');
     if (englishTranslation?.invalid) {
       this.selectedLanguage = 'EN';

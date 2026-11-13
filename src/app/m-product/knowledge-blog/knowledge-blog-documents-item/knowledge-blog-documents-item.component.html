@@ -7,54 +7,53 @@
   [disableDelete]="disableDelete">
 
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div>
-          <a *ngIf="contentObject?.storageKey" (click)="onDownload(); $event.stopPropagation()">
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
-          </a>
-          {{contentObject.name}}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          <div>
+            @if (contentObject?.storageKey) {
+              <a (click)="onDownload(); $event.stopPropagation()">
+                <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
+              </a>
+            }
+            {{contentObject.name}}
+          </div>
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-        <h4 class="sp-subform-title" i18n-label="@@knowledgeBlogDocument.subform.title">Documents
-        </h4>
-
-        <ng-container>
-          <attachment-uploader
-            allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-            allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-            mode="simpleAsTextField"
-            label="Documents (PDF, PNG, JPG and JPEG)"
-            i18n-label="@@knowledgeBlogDocument.attachment-uploader.label"
-            i18n-allowedMimeTypeErrorMessage="@@knowledgeBlogDocument.attachment-uploader.allowedMimeTypeErrorMessage"
-            [attachmentUploaderId]="'knowledgeBlogDocument'+listEditorManagerPosition"
-            [form]="this.form"
-            [readOnly]="this.form.disabled">
-            <attachment-uploader-content i18n="@@knowledgeBlogDocument.attachment-uploader.content">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <h4 class="sp-subform-title" i18n-label="@@knowledgeBlogDocument.subform.title">Documents
+          </h4>
+          <ng-container>
+            <attachment-uploader
+              allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+              mode="simpleAsTextField"
+              label="Documents (PDF, PNG, JPG and JPEG)"
+              i18n-label="@@knowledgeBlogDocument.attachment-uploader.label"
+              i18n-allowedMimeTypeErrorMessage="@@knowledgeBlogDocument.attachment-uploader.allowedMimeTypeErrorMessage"
+              [attachmentUploaderId]="'knowledgeBlogDocument'+listEditorManagerPosition"
+              [form]="this.form"
+              [readOnly]="this.form.disabled">
+              <attachment-uploader-content i18n="@@knowledgeBlogDocument.attachment-uploader.content">
               Upload document
             </attachment-uploader-content>
-          </attachment-uploader>
-
-        </ng-container>
-
-
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+            </attachment-uploader>
+          </ng-container>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

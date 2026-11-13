@@ -1,14 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormControl, AbstractControl } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'tinymce-textarea',
     templateUrl: './tinymce-textarea.component.html',
-    styleUrls: ['./tinymce-textarea.component.scss']
+    styleUrls: ['./tinymce-textarea.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TinymceTextareaComponent implements OnInit {
     @Input()
-    formControlInput: FormControl = null;
+    formControlInput: UntypedFormControl = null;
 
     @Input()
     label = null;

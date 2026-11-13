@@ -1,72 +1,68 @@
 <div class="modal-container self-onboarding-checklist-modal">
-    <div class="modal-header cursor-pointer" (click)="closeChecklist()">
-        <div>
-            <span i18n="@@selfOnboarding.getStartedChecklist.header">Get started checklist</span>
-        </div>
-        <div>
-            <img src="/assets/icons/icon-chevron-down.svg" alt="Chevron down image">
-        </div>
+  <div class="modal-header cursor-pointer" (click)="closeChecklist()">
+    <div>
+      <span i18n="@@selfOnboarding.getStartedChecklist.header">Get started checklist</span>
     </div>
-
-    <div class="modal-body" *ngIf="companyOnboardingState != null">
-
-        <div class="checklist-item">
-            <div class="checklist-item-checkbox">
-                <checkbox-input [checked]="true"
-                                [disabled]="true"
-                                class="self-onboarding-checklist-checkbox"></checkbox-input>
-            </div>
-            <div class="checklist-item-label disabled"
-                 i18n="@@selfOnboarding.getStartedChecklist.item.createAccount">Create an account</div>
-        </div>
-
-        <div class="checklist-item">
-            <div class="checklist-item-checkbox">
-                <checkbox-input [checked]="selfOnboardingStatus.get('hasProduct').value"
-                                [disabled]="true"
-                                class="self-onboarding-checklist-checkbox"></checkbox-input>
-            </div>
-            <div class="checklist-item-label"
-                 [class.disabled]="selfOnboardingStatus.get('hasProduct').value"
-                 i18n="@@selfOnboarding.getStartedChecklist.item.addAProduct"
-                 (click)="startAddProductWizard()">Add a product</div>
-        </div>
-
-        <div class="checklist-item">
-            <div class="checklist-item-checkbox">
-                <checkbox-input [checked]="selfOnboardingStatus.get('hasFacility').value"
-                                [disabled]="true"
-                                class="self-onboarding-checklist-checkbox"></checkbox-input>
-            </div>
-            <div class="checklist-item-label"
-                 [class.disabled]="selfOnboardingStatus.get('hasFacility').value"
-                 i18n="@@selfOnboarding.getStartedChecklist.item.addFacility"
-                 (click)="startAddFacilityWizard()">Add your first facility</div>
-        </div>
-
-        <div class="checklist-item">
-            <div class="checklist-item-checkbox">
-                <checkbox-input [checked]="selfOnboardingStatus.get('hasProcessingAction').value"
-                                [disabled]="true"
-                                class="self-onboarding-checklist-checkbox"></checkbox-input>
-            </div>
-            <div class="checklist-item-label"
-                 [class.disabled]="selfOnboardingStatus.get('hasProcessingAction').value"
-                 i18n="@@selfOnboarding.getStartedChecklist.item.addProcessingAction"
-                 (click)="startAddProcessingActionWizard()">Add your first processing action</div>
-        </div>
-
-        <div class="checklist-item">
-            <div class="checklist-item-checkbox">
-                <checkbox-input [checked]="selfOnboardingStatus.get('hasFarmers').value"
-                                [disabled]="true"
-                                class="self-onboarding-checklist-checkbox"></checkbox-input>
-            </div>
-            <div class="checklist-item-label"
-                 [class.disabled]="selfOnboardingStatus.get('hasFarmers').value"
-                 i18n="@@selfOnboarding.getStartedChecklist.item.addFarmers"
-                 (click)="startAddFarmersWizard()">Add your farmers</div>
-        </div>
-
+    <div>
+      <img src="/assets/icons/icon-chevron-down.svg" alt="Chevron down image">
     </div>
+  </div>
+
+  @if (companyOnboardingState != null) {
+    <div class="modal-body">
+      <div class="checklist-item">
+        <div class="checklist-item-checkbox">
+          <checkbox-input [checked]="true"
+            [disabled]="true"
+          class="self-onboarding-checklist-checkbox"></checkbox-input>
+        </div>
+        <div class="checklist-item-label disabled"
+        i18n="@@selfOnboarding.getStartedChecklist.item.createAccount">Create an account</div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-item-checkbox">
+          <checkbox-input [checked]="selfOnboardingStatus.get('hasProduct').value"
+            [disabled]="true"
+          class="self-onboarding-checklist-checkbox"></checkbox-input>
+        </div>
+        <div class="checklist-item-label"
+          [class.disabled]="selfOnboardingStatus.get('hasProduct').value"
+          i18n="@@selfOnboarding.getStartedChecklist.item.addAProduct"
+        (click)="startAddProductWizard()">Add a product</div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-item-checkbox">
+          <checkbox-input [checked]="selfOnboardingStatus.get('hasFacility').value"
+            [disabled]="true"
+          class="self-onboarding-checklist-checkbox"></checkbox-input>
+        </div>
+        <div class="checklist-item-label"
+          [class.disabled]="selfOnboardingStatus.get('hasFacility').value"
+          i18n="@@selfOnboarding.getStartedChecklist.item.addFacility"
+        (click)="startAddFacilityWizard()">Add your first facility</div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-item-checkbox">
+          <checkbox-input [checked]="selfOnboardingStatus.get('hasProcessingAction').value"
+            [disabled]="true"
+          class="self-onboarding-checklist-checkbox"></checkbox-input>
+        </div>
+        <div class="checklist-item-label"
+          [class.disabled]="selfOnboardingStatus.get('hasProcessingAction').value"
+          i18n="@@selfOnboarding.getStartedChecklist.item.addProcessingAction"
+        (click)="startAddProcessingActionWizard()">Add your first processing action</div>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-item-checkbox">
+          <checkbox-input [checked]="selfOnboardingStatus.get('hasFarmers').value"
+            [disabled]="true"
+          class="self-onboarding-checklist-checkbox"></checkbox-input>
+        </div>
+        <div class="checklist-item-label"
+          [class.disabled]="selfOnboardingStatus.get('hasFarmers').value"
+          i18n="@@selfOnboarding.getStartedChecklist.item.addFarmers"
+        (click)="startAddFarmersWizard()">Add your farmers</div>
+      </div>
+    </div>
+  }
 </div>

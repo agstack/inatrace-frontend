@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 // import { Intercom } from 'ng-intercom'; ---- uncomment if needed
-import { Angulartics2GoogleGlobalSiteTag } from 'angulartics2/gst';
-import { Angulartics2Facebook } from 'angulartics2/facebook';
+import { Angulartics2Facebook, Angulartics2GoogleGlobalSiteTag } from 'angulartics2';
 import { environment } from 'src/environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
 

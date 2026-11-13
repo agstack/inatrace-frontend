@@ -1,24 +1,32 @@
 <div class="row" style="min-height: 2.5rem; margin-bottom: 0.5rem;">
   <div class="col-9">
-    <label *ngIf="label" [class.ab-closed-label]="this.hideField$ | async">{{label}}</label>
-    <ng-container *ngIf="_internalShowField$ | async">
+    @if (label) {
+      <label [class.ab-closed-label]="this.hideField$ | async">{{label}}</label>
+    }
+    @if (_internalShowField$ | async) {
       <ng-content></ng-content>
-    </ng-container>
+    }
     <!-- <ng-container *ngIf="_internalDoNotShowField$ | async">
-      <label class="mb-3 mt-4">{{label}}</label>
-    </ng-container> -->
-  </div>
-  <div *ngIf="!nonClosable" class="col-3 align-items-end" style="padding-right: 2rem;">
-    <button class="bg-transparent border-0 shadow-none float-right px-0"
+    <label class="mb-3 mt-4">{{label}}</label>
+  </ng-container> -->
+</div>
+@if (!nonClosable) {
+  <div class="col-3 align-items-end" style="padding-right: 2rem;">
+    <button class="bg-transparent border-0 shadow-none float-end px-0"
       (click)="toggleField()">
-        <fa-icon *ngIf="this.hideField$.value==true"
+      @if (this.hideField$.value==true) {
+        <fa-icon
           class="btn-icon-invisible"
           [icon]="faEyeSlash">
         </fa-icon>
-        <fa-icon *ngIf="this.hideField$.value==false"
+      }
+      @if (this.hideField$.value==false) {
+        <fa-icon
           class="btn-icon-visible"
           [icon]="faEye">
         </fa-icon>
+      }
     </button>
   </div>
+}
 </div>

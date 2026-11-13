@@ -1,4 +1,4 @@
-import { ValidatorFn, FormArray, FormGroup } from '@angular/forms';
+import { ValidatorFn, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface PagedSearchResults<T> {
@@ -18,13 +18,13 @@ export interface CodebookHelperService<T> {
     getAllCandidates(): Observable<Array<T>>;
     initializeCodebook(): void;
     formatter(): (x:T) => string;
-    addElement(arr: FormArray, el: T): void;
-    removeElement(arr: FormArray, index: number): void;
+    addElement(arr: UntypedFormArray, el: T): void;
+    removeElement(arr: UntypedFormArray, index: number): void;
     // makeEmpty(grp: FormGroupTyped<T>): void;
     // isEmpty(grp: FormGroupTyped<T>): boolean;
     // clearArray(arr: FormArrayTyped<T>): void;
     // setArray(arr: FormArrayTyped<T>, arrt: T[]): void;
-    formGenerator(): (x: T, validators?: Array<ValidatorFn>) => FormGroup; // (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl;
+    formGenerator(): (x: T, validators?: Array<ValidatorFn>) => UntypedFormGroup; // (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl;
     // isMultipleChoice(): boolean;
     allowDuplicateSelection(): boolean;
     valid(model: T, input: string): boolean;

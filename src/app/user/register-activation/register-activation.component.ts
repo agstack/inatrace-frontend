@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-register-activation',
-  templateUrl: './register-activation.component.html',
-  styleUrls: ['./register-activation.component.scss']
+    selector: 'app-register-activation',
+    templateUrl: './register-activation.component.html',
+    styleUrls: ['./register-activation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class RegisterActivationComponent implements OnInit {
 

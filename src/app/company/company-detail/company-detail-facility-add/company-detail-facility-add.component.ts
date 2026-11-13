@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { defaultEmptyObject, generateFormFromMetadata } from '../../../../shared/utils';
 import { ApiFacility } from '../../../../api/model/apiFacility';
@@ -30,31 +30,33 @@ import { CompanyControllerService } from '../../../../api/api/companyController.
 import LanguageEnum = ApiFacilityTranslation.LanguageEnum;
 
 @Component({
-  selector: 'app-company-detail-facility-add',
-  templateUrl: './company-detail-facility-add.component.html',
-  styleUrls: ['./company-detail-facility-add.component.scss']
+    selector: 'app-company-detail-facility-add',
+    templateUrl: './company-detail-facility-add.component.html',
+    styleUrls: ['./company-detail-facility-add.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
 
   public edit: boolean;
   public title: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted = false;
   public companyId: string;
 
   semiProductsForValueChainsService: SemiProductsForValueChainsService;
 
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChainsForm = new FormControl(null);
+  valueChainsForm = new UntypedFormControl(null);
   valueChains: Array<ApiValueChain> = [];
-  selectedCompanyValueChainsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   codebookStatus = EnumSifrant.fromObject(this.publiclyVisible);
-  semiProductsForm = new FormControl(null);
+  semiProductsForm = new UntypedFormControl(null);
   semiProducts: Array<ApiSemiProduct> = [];
 
   finalProductsForCompanyCodebook: FinalProductsForCompanyService;
-  finalProductForm = new FormControl(null);
+  finalProductForm = new UntypedFormControl(null);
   finalProducts: Array<ApiFinalProduct> = [];
 
   faTimes = faTimes;
@@ -125,7 +127,7 @@ export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
   initializeNew() {
     this.title = $localize `:@@productLabelStockFacilityModal.newFacility.newTitle:New facility`;
     this.form = generateFormFromMetadata(ApiFacility.formMetadata(), this.emptyObject(), ApiFacilityValidationScheme);
-    (this.form as FormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
+    (this.form as UntypedFormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
     this.finalizeForm();
     this.registerValueChainSubs();
   }
@@ -137,7 +139,7 @@ export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
     this.facilityControllerService.getFacilityDetail(facilityId).pipe(first()).subscribe(res => {
 
       this.form = generateFormFromMetadata(ApiFacility.formMetadata(), res.data, ApiFacilityValidationScheme);
-      (this.form as FormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
+      (this.form as UntypedFormGroup).setControl('valueChains', this.selectedCompanyValueChainsControl);
 
       this.valueChains = res.data.facilityValueChains ? res.data.facilityValueChains : [];
       this.semiProducts = res.data.facilitySemiProductList;
@@ -300,8 +302,8 @@ export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
     return result === 'ok';
   }
 
-  get fLoc(): FormGroup {
-    return this.form.controls.facilityLocation as FormGroup;
+  get fLoc(): UntypedFormGroup {
+    return this.form.controls.facilityLocation as UntypedFormGroup;
   }
 
   ngOnDestroy() {
@@ -316,18 +318,18 @@ export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
 
   finalizeForm() {
     if (!this.form.contains('translations')) {
-      this.form.addControl('translations', new FormArray([]));
+      this.form.addControl('translations', new UntypedFormArray([]));
     }
 
     const translations = this.form.get('translations').value;
     this.form.removeControl('translations');
-    this.form.addControl('translations', new FormArray([]));
+    this.form.addControl('translations', new UntypedFormArray([]));
 
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
-      (this.form.get('translations') as FormArray).push(new FormGroup({
-        name: new FormControl(translation ? translation.name : ''),
-        language: new FormControl(lang)
+      (this.form.get('translations') as UntypedFormArray).push(new UntypedFormGroup({
+        name: new UntypedFormControl(translation ? translation.name : ''),
+        language: new UntypedFormControl(lang)
       }));
     }
   }

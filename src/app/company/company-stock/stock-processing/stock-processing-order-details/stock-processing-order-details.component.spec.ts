@@ -1,4 +1,4 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
@@ -33,16 +33,16 @@ describe('StockProcessingOrderDetailsComponent save failures', () => {
       null,
       null
     );
-    component.procOrderGroup = new FormGroup({
-      processingAction: new FormControl({
+    component.procOrderGroup = new UntypedFormGroup({
+      processingAction: new UntypedFormControl({
         type: ApiProcessingAction.TypeEnum.PROCESSING,
         repackedOutputFinalProducts: false,
         requiredEvidenceFields: []
       }),
-      inputTransactions: new FormArray([new FormControl({ id: 100 })]),
-      targetStockOrders: new FormArray([new FormGroup({
-        id: new FormControl(200),
-        requiredProcEvidenceFieldGroup: new FormControl({})
+      inputTransactions: new UntypedFormArray([new UntypedFormControl({ id: 100 })]),
+      targetStockOrders: new UntypedFormArray([new UntypedFormGroup({
+        id: new UntypedFormControl(200),
+        requiredProcEvidenceFieldGroup: new UntypedFormControl({})
       })])
     });
     (component as any).input = {

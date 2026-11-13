@@ -1,116 +1,117 @@
 <app-authorised-layout>
-    <app-company-left-panel></app-company-left-panel>
+  <app-company-left-panel></app-company-left-panel>
 
-    <div class="main">
-        <div class="main-inside-top content-element">
-            <div class="d-flex justify-content-between content-element--row1">
-                <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.collectors">Collectors</div>
-                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="addCollector()" i18n="@@productLabelStakeholders.button.newCollector">
+  <div class="main">
+    <div class="main-inside-top content-element">
+      <div class="d-flex justify-content-between content-element--row1">
+        <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.collectors">Collectors</div>
+        <button class="btn btn-solid round btn-table-new content-element--btn" (click)="addCollector()" i18n="@@productLabelStakeholders.button.newCollector">
                     <span>+ Add collector</span>
                 </button>
-            </div>
+      </div>
 
-            <div class="d-flex justify-content-between content-element--row2">
-                <div>
-                    <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfCollectors">List of collectors</div>
-                    <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingCollectors">Showing {{ showing }}/{{ collectorCount }}</div>
-                </div>
-
-                <app-search-textinput
-                        [form]="searchNameCollectors"
-                        (valueChange)="onSearchInput($event)"
-                        [items]="items"
-                        byCategory="true"
-                        [searchCategory]="this.byCategory"
-                        (categoryChange)="onCategoryChange($event)">
-                </app-search-textinput>
-            </div>
+      <div class="d-flex justify-content-between content-element--row2">
+        <div>
+          <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfCollectors">List of collectors</div>
+          <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingCollectors">Showing {{ showing }}/{{ collectorCount }}</div>
         </div>
 
-        <ng-container *ngIf="collector$ | async as collectors">
-            <div class="main-inside-main">
-                <table *ngIf="collectors && collectors.items && collectors.items.length > 0; else noCollectors" class="af-table">
+        <app-search-textinput
+          [form]="searchNameCollectors"
+          (valueChange)="onSearchInput($event)"
+          [items]="items"
+          byCategory="true"
+          [searchCategory]="this.byCategory"
+          (categoryChange)="onCategoryChange($event)">
+        </app-search-textinput>
+      </div>
+    </div>
 
-                    <thead *ngIf="showRwanda">
-                    <tr scope="col" result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <thead *ngIf="showHonduras">
-                    <tr scope="col" result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <thead *ngIf="!showRwanda && !showHonduras">
-                    <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-
-                    <tbody>
-                    <tr *ngFor="let collector of collectors.items">
-                        <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{ collector.name }}</span></td>
-                        <td [attr.data-label]="sortOptions[1].name"><span>{{ collector.surname }}</span></td>
-                        <td [attr.data-label]="sortOptions[2].name"><span>{{ collector.gender }}</span></td>
-                        <td [attr.data-label]="sortOptions[3].name"><span>{{ collector.id }}</span></td>
-
-                        <ng-container *ngIf="showRwanda">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ collector.location.address.village }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ collector.location.address.cell }}</span>
-                            </td>
-                        </ng-container>
-
-                        <ng-container *ngIf="showHonduras">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ collector.location.address.hondurasMunicipality }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ collector.location.address.hondurasVillage }}</span>
-                            </td>
-                        </ng-container>
-
-                        <ng-container *ngIf="!showRwanda && !showHonduras">
-                            <td [attr.data-label]="sortOptions[4].name">
-                                <span>{{ collector.location.address.city }}</span>
-                            </td>
-                            <td [attr.data-label]="sortOptions[5].name">
-                                <span>{{ collector.location.address.state }}</span>
-                            </td>
-                        </ng-container>
-
-                        <td [attr.data-label]="sortOptions[6].name">
-                                <span>
-                                <a i18n="@@productLabelStakeholdersCollectors.tableCol.edit"
-                                   (click)="editCollector(collector.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+    @if (collector$ | async; as collectors) {
+      <div class="main-inside-main">
+        @if (collectors && collectors.items && collectors.items.length > 0) {
+          <table class="af-table">
+            @if (showRwanda) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            @if (showHonduras) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            @if (!showRwanda && !showHonduras) {
+              <thead>
+                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+              </thead>
+            }
+            <tbody>
+              @for (collector of collectors.items; track collector) {
+                <tr>
+                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{ collector.name }}</span></td>
+                  <td [attr.data-label]="sortOptions[1].name"><span>{{ collector.surname }}</span></td>
+                  <td [attr.data-label]="sortOptions[2].name"><span>{{ collector.gender }}</span></td>
+                  <td [attr.data-label]="sortOptions[3].name"><span>{{ collector.id }}</span></td>
+                  @if (showRwanda) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ collector.location.address.village }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ collector.location.address.cell }}</span>
+                    </td>
+                  }
+                  @if (showHonduras) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ collector.location.address.hondurasMunicipality }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ collector.location.address.hondurasVillage }}</span>
+                    </td>
+                  }
+                  @if (!showRwanda && !showHonduras) {
+                    <td [attr.data-label]="sortOptions[4].name">
+                      <span>{{ collector.location.address.city }}</span>
+                    </td>
+                    <td [attr.data-label]="sortOptions[5].name">
+                      <span>{{ collector.location.address.state }}</span>
+                    </td>
+                  }
+                  <td [attr.data-label]="sortOptions[6].name">
+                    <span>
+                      <a i18n="@@productLabelStakeholdersCollectors.tableCol.edit"
+                        (click)="editCollector(collector.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Edit
                                 </a>
-                                <a i18n="@@productLabelStakeholdersCollectors.tableCol.delete"
-                                   (click)="deleteCollector(collector.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+                      <a i18n="@@productLabelStakeholdersCollectors.tableCol.delete"
+                        (click)="deleteCollector(collector.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Delete
                                 </a>
-                              </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-                <ngb-pagination
-                        [(page)]="page"
-                        [pageSize]="pageSize"
-                        [collectionSize]="collectors.count"
-                        (pageChange)="onPageChange($event)"
-                        [maxSize]="7"
-                        [rotate]="true"></ngb-pagination>
-            </div>
-        </ng-container>
-        <ng-template #noCollectors>
-            <div class="no-list-results" i18n="@@productLabelStakeholdersCollectors.noCollectors">
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="no-list-results" i18n="@@productLabelStakeholdersCollectors.noCollectors">
                 No collectors found
             </div>
-        </ng-template>
-    </div>
+        }
+      </div>
+      <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="collectors.count"
+          (pageChange)="onPageChange($event)"
+          [maxSize]="7"
+        [rotate]="true"></ngb-pagination>
+      </div>
+    }
+  </div>
 </app-authorised-layout>

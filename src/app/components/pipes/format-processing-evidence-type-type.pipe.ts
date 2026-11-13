@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'formatProcessingEvidenceTypeType'
+    name: 'formatProcessingEvidenceTypeType',
+    standalone: false
 })
 export class FormatProcessingEvidenceTypeTypePipe implements PipeTransform {
 

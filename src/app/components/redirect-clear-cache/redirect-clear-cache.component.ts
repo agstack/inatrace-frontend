@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-redirect-clear-cache',
-  templateUrl: './redirect-clear-cache.component.html',
-  styleUrls: ['./redirect-clear-cache.component.scss']
+    selector: 'app-redirect-clear-cache',
+    templateUrl: './redirect-clear-cache.component.html',
+    styleUrls: ['./redirect-clear-cache.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class RedirectClearCacheComponent implements OnInit {
 

@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { AboutAppInfoService } from './about-app-info.service';
@@ -8,6 +9,7 @@ describe('AboutAppInfoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       imports: TESTING_IMPORTS,
       providers: TESTING_PROVIDERS
     });

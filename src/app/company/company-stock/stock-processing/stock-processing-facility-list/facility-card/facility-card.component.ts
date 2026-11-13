@@ -1,13 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiFacility } from '../../../../../../api/model/apiFacility';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import TypeEnum = ApiProcessingAction.TypeEnum;
 
 @Component({
-  selector: 'app-facility-card',
-  templateUrl: './facility-card.component.html',
-  styleUrls: ['./facility-card.component.scss']
+    selector: 'app-facility-card',
+    templateUrl: './facility-card.component.html',
+    styleUrls: ['./facility-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FacilityCardComponent implements OnInit {
 
@@ -88,12 +90,16 @@ export class FacilityCardComponent implements OnInit {
 
   private async semiAndFinalProductsIncluded() {
 
-    for (const item of this.facility.facilitySemiProductList) {
-      this.description += item.name + ', ';
+    for (const item of this.facility.facilitySemiProductList || []) {
+      if (item?.name) {
+        this.description += item.name + ', ';
+      }
     }
 
-    for (const item of this.facility.facilityFinalProducts) {
-      this.description += `${item.name} (${item.product.name})` + ', ';
+    for (const item of this.facility.facilityFinalProducts || []) {
+      if (item?.name) {
+        this.description += `${item.name}${item.product?.name ? ` (${item.product.name})` : ''}` + ', ';
+      }
     }
 
     if (this.description.length > 0) {
@@ -115,7 +121,7 @@ export class FacilityCardComponent implements OnInit {
         continue;
       }
 
-      const facilitySemiProd = this.facility.facilitySemiProductList.find(fsp => fsp.id === action.inputSemiProduct?.id);
+      const facilitySemiProd = (this.facility.facilitySemiProductList || []).find(fsp => fsp.id === action.inputSemiProduct?.id);
       if (facilitySemiProd) {
         this.menuOptions.push({
           id: action.id,
@@ -123,7 +129,7 @@ export class FacilityCardComponent implements OnInit {
         });
       }
 
-      const facilityFinalProd = this.facility.facilityFinalProducts.find(ffp => ffp.id === action.inputFinalProduct?.id);
+      const facilityFinalProd = (this.facility.facilityFinalProducts || []).find(ffp => ffp.id === action.inputFinalProduct?.id);
       if (facilityFinalProd) {
         this.menuOptions.push({
           id: action.id,

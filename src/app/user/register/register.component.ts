@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { EmailValidator } from 'src/shared/validation';
 import { UserControllerService } from 'src/api/api/userController.service';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
@@ -7,9 +7,11 @@ import { Router } from "@angular/router";
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class RegisterComponent implements OnInit {
 
@@ -25,12 +27,12 @@ export class RegisterComponent implements OnInit {
     this._registerErrorStatus$ = new BehaviorSubject<string>("");
   }
 
-  registerForm = new FormGroup({
-    name: new FormControl(null, [Validators.required]),
-    surname: new FormControl(null, [Validators.required]),
-    email: new FormControl(null, [Validators.required, EmailValidator()]),
-    password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-    condition: new FormControl(null, [this.conditionConfirmation.bind(this)])
+  registerForm = new UntypedFormGroup({
+    name: new UntypedFormControl(null, [Validators.required]),
+    surname: new UntypedFormControl(null, [Validators.required]),
+    email: new UntypedFormControl(null, [Validators.required, EmailValidator()]),
+    password: new UntypedFormControl(null, [Validators.required, Validators.minLength(8)]),
+    condition: new UntypedFormControl(null, [this.conditionConfirmation.bind(this)])
   })
 
   conditionConfirmation(control: AbstractControl): ValidationErrors | null {

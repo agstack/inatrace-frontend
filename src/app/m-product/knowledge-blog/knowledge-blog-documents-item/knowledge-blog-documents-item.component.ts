@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faStamp } from '@fortawesome/free-solid-svg-icons';
 import { FileSaverService } from 'ngx-filesaver';
@@ -11,9 +11,11 @@ import { GlobalEventManagerService } from 'src/app/core/global-event-manager.ser
 import { defaultEmptyObject, generateFormFromMetadata } from 'src/shared/utils';
 
 @Component({
-  selector: 'app-knowledge-blog-documents-item',
-  templateUrl: './knowledge-blog-documents-item.component.html',
-  styleUrls: ['./knowledge-blog-documents-item.component.scss']
+    selector: 'app-knowledge-blog-documents-item',
+    templateUrl: './knowledge-blog-documents-item.component.html',
+    styleUrls: ['./knowledge-blog-documents-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class KnowledgeBlogDocumentsItemComponent extends GenericEditableItemComponent<ApiKnowledgeBlogPart> {
 
@@ -34,7 +36,7 @@ export class KnowledgeBlogDocumentsItemComponent extends GenericEditableItemComp
 
   faStamp = faStamp;
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiDocument.formMetadata(), value)
   }
 
@@ -43,9 +45,9 @@ export class KnowledgeBlogDocumentsItemComponent extends GenericEditableItemComp
     return defaultEmptyObject(obj) as ApiDocument
   }
 
-  static emptyObjectFormFactory(): () => FormControl {
+  static emptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      let f = new FormControl(KnowledgeBlogDocumentsItemComponent.createEmptyObject())
+      let f = new UntypedFormControl(KnowledgeBlogDocumentsItemComponent.createEmptyObject())
       return f
     }
   }

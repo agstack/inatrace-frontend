@@ -15,22 +15,26 @@
           <div class="af-form-element">
             <div class="af-row">
               <div class="af-c12">
-                <single-choice *ngIf="facilityCodebook"
-                               label="Selected facility"
-                               i18n-label="@@ordersAllOrders.selectedFacility.singleChoice.label"
-                               [formControlInput]="facilityForStockOrderForm"
-                               [codebookService]="facilityCodebook"
-                               (onChange)="facilityChanged($event)"
-                               style="min-width: 150px;">
-                </single-choice>
+                @if (facilityCodebook) {
+                  <single-choice
+                    label="Selected facility"
+                    i18n-label="@@ordersAllOrders.selectedFacility.singleChoice.label"
+                    [formControlInput]="facilityForStockOrderForm"
+                    [codebookService]="facilityCodebook"
+                    (onChange)="facilityChanged($event)"
+                    style="min-width: 150px;">
+                  </single-choice>
+                }
 
-                <single-choice *ngIf="facilityForStockOrderForm.value"
-                               label="Selected SKU"
-                               i18n-label="@@ordersAllOrders.selectedSKU.singleChoice.label"
-                               [formControlInput]="semiProductFrom"
-                               [codebookService]="semiProductsInFacilityCodebook"
-                               (onChange)="selectSemiProduct($event)">
-                </single-choice>
+                @if (facilityForStockOrderForm.value) {
+                  <single-choice
+                    label="Selected SKU"
+                    i18n-label="@@ordersAllOrders.selectedSKU.singleChoice.label"
+                    [formControlInput]="semiProductFrom"
+                    [codebookService]="semiProductsInFacilityCodebook"
+                    (onChange)="selectSemiProduct($event)">
+                  </single-choice>
+                }
               </div>
             </div>
           </div>
@@ -44,13 +48,15 @@
         </div>
 
         <div class="d-flex align-items-top">
-          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-            <div *ngIf="openOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@ordersAllOrders.filter.openOnly.filter">Open only
+          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+            @if (openOnly) {
+              <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@ordersAllOrders.filter.openOnly.filter">Open only
               <div style="margin-left: 0.5rem;" (click)="setOpenOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                 </fa-icon>
               </div>
             </div>
+            }
 
             <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@ordersAllOrders.filter.placeholder">
               <div class="button-icon">
@@ -67,15 +73,16 @@
         </div>
       </div>
 
-      <app-company-orders-list
-          *ngIf="companyId != null"
+      @if (companyId != null) {
+        <app-company-orders-list
           (countAll)="onCount($event)"
           [facilityId$]="selectedFacilityId$"
           (showing)="onShow($event)"
           [semiProductId$]="semiProductId$"
           [companyId]="companyId"
           [openOnly$]="openOnly$">
-      </app-company-orders-list>
+        </app-company-orders-list>
+      }
 
     </div>
   </div>

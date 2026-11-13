@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-improved.service';
 import { ProductLabelStakeholdersComponent } from '../product-label-stakeholders.component';
 import { AuthService } from '../../../../core/auth.service';
-import { AbstractControl, FormArray } from '@angular/forms';
+import { AbstractControl, UntypedFormArray } from '@angular/forms';
 import { ListEditorManager } from '../../../../shared/list-editor/list-editor-manager';
 import { ApiProductDataSharingAgreement } from '../../../../../api/model/apiProductDataSharingAgreement';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-stakeholders-value-chain',
-  templateUrl: './stakeholders-value-chain.component.html',
-  styleUrls: ['./stakeholders-value-chain.component.scss']
+    selector: 'app-stakeholders-value-chain',
+    templateUrl: './stakeholders-value-chain.component.html',
+    styleUrls: ['./stakeholders-value-chain.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StakeholdersValueChainComponent extends ProductLabelStakeholdersComponent implements OnInit {
 
@@ -34,7 +36,7 @@ export class StakeholdersValueChainComponent extends ProductLabelStakeholdersCom
   }
 
   get dataSharingAgreementsControls(): AbstractControl[] {
-    return (this.productForm.get('dataSharingAgreements') as FormArray).controls;
+    return (this.productForm.get('dataSharingAgreements') as UntypedFormArray).controls;
   }
 
   async ngOnInit(): Promise<void> {
