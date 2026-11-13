@@ -11,7 +11,7 @@
     <app-accordion>
       @for (faq of faqs; track faq; let i = $index) {
         <app-accordion-panel
-          [htmlTitle]="$safeNavigationMigration(faq?.question)"
+          [htmlTitle]="faq?.question"
           [showArrow]="true"
           [panelId]="i"
           [masterMode]="true">

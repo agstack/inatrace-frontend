@@ -100,7 +100,7 @@
                   @if (history.processingOrder?.processingAction) {
                     <tr>
                       <th i18n="@@orderHistoryView.tableCol.processingAction">Processing action</th>
-                      <td>{{ history.processingOrder?.processingAction?.name }} ({{ $safeNavigationMigration(history.processingOrder?.processingAction?.type) | formatProcessingActionType }})</td>
+                      <td>{{ history.processingOrder?.processingAction?.name }} ({{ history.processingOrder?.processingAction?.type | formatProcessingActionType }})</td>
                     </tr>
                   }
                   @if (history.processingOrder && history.processingOrder.processingAction?.type === 'PROCESSING' && history.processingOrder.targetStockOrders.length > 1) {

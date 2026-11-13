@@ -53,7 +53,7 @@
               </div>
               <div class="af-c12">
                 <label class="mt-2 mb-0" i18n="@@map.modal.geoId.title">Geo-ID:</label>
-                @if ($any($safeNavigationMigration(this.form.get('geoId')?.value))) {
+                @if ($any(this.form.get('geoId')?.value)) {
                   <div>
                     <label class="geoid-content pe-1">{{ this.form.get('geoId').value }}&nbsp;
                       <fa-icon class="copy-icon" [icon]="faCopy" (click)="geoId.select(); copyToClipboard();"></fa-icon>

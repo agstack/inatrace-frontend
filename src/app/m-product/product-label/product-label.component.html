@@ -334,9 +334,7 @@
                   <div class="col-1 px-0">
                   </div>
                   <div class="col-11 px-0" i18n="@@productLabel.companySection.subtitle">
-                  <p>If you want to edit company details, please first save all changes and proceed to the @if (productForm?.get('company.id')?.value) {
-<a [routerLink]="['/', 'companies', $safeNavigationMigration(productForm.get('company.id')?.value)]" style="font-size: 1rem; text-decoration: underline;">company section</a>
-}. Please note that company information will change on all of your products.</p>
+                  <p>If you want to edit company details, please first save all changes and proceed to the <a [routerLink]="productForm.get('company.id')?.value ? ['/', 'companies', productForm.get('company.id')?.value] : []" style="font-size: 1rem; text-decoration: underline;">company section</a>. Please note that company information will change on all of your products.</p>
                 </div>
                 </div>
                 @for (element of companyElements; track element) {

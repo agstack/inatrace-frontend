@@ -15,7 +15,7 @@
               }
               @if (!sortOptions[1].hide) {
                 <td [attr.data-label]="sortOptions[1].name">
-                  <span>{{ $safeNavigationMigration(pa?.type) | formatProcessingActionType }}</span>
+                  <span>{{ pa?.type | formatProcessingActionType }}</span>
                 </td>
               }
               @if (!sortOptions[2].hide) {

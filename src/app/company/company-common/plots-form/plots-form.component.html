@@ -26,7 +26,7 @@
     (plotGeoIdChange)="updateFormGeoId($event)"
     (geoIdOpenChange)="openGeoIdWhisp($event)"
     [pin]="pin"
-    [farmerId]="$safeNavigationMigration(form.get('id')?.value)"
+    [farmerId]="form.get('id')?.value"
     [initialLat]="initialLat"
     [initialLng]="initialLng"
     [plotCoordinatesManager]="plotCoordinatesManager">

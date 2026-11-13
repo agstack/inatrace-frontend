@@ -26,7 +26,7 @@
                         label="Select date from"
                         i18n-label="@@companyDashboardComponent.datepicker.deliveryDateFrom.label"
                         [form]="deliveriesForm.get('from')"
-                        [invalid]="$safeNavigationMigration(deliveriesForm.get('from')?.invalid)"
+                        [invalid]="deliveriesForm.get('from')?.invalid"
                         (onChange)="onFilterDateRangeChange()"
                         style="width: 150px; margin-left: 1rem;">
                       </app-datepicker>
@@ -34,7 +34,7 @@
                         label="Select date to"
                         i18n-label="@@companyDashboardComponent.datepicker.deliveryDateTo.label"
                         [form]="deliveriesForm.get('to')"
-                        [invalid]="$safeNavigationMigration(deliveriesForm.get('to')?.invalid)"
+                        [invalid]="deliveriesForm.get('to')?.invalid"
                         (onChange)="onFilterDateRangeChange()"
                         style="width: 150px; margin-left: 1rem;">
                       </app-datepicker>
@@ -135,7 +135,7 @@
                         i18-typeToSearchText="@@companyDashboardComponent.singleChoice.semiProduct.enterSearchTerm"
                         typeToSearchText="Enter search term"
                         class="custom labelPlaceholder"
-                        [disabled]="$safeNavigationMigration(this.facilities?.length) < 1"
+                        [disabled]="this.facilities?.length < 1"
                         style="border:none">
                       </ng-select>
                     </div>
@@ -289,17 +289,17 @@
                       @for (field of evidenceFields; track field; let i = $index) {
                         @if (field?.type === 'DATE') {
                           <app-datepicker
-                            [label]="$safeNavigationMigration(field?.label)"
-                            [form]="processingEvidenceInputField($safeNavigationMigration(field?.fieldName))"
-                            [invalid]="processingEvidenceInputField($safeNavigationMigration(field?.fieldName)).invalid"
+                            [label]="field?.label"
+                            [form]="processingEvidenceInputField(field?.fieldName)"
+                            [invalid]="processingEvidenceInputField(field?.fieldName).invalid"
                             (onChange)="refreshProcessingPerformanceData()"
                             style="width: 150px;">
                           </app-datepicker>
                         }
                         @if (field?.type !== 'DATE') {
                           <textinput
-                            [form]="processingEvidenceInputField($safeNavigationMigration(field?.fieldName))"
-                            [label]="$safeNavigationMigration(field?.label)"
+                            [form]="processingEvidenceInputField(field?.fieldName)"
+                            [label]="field?.label"
                             (onBlur)="refreshProcessingPerformanceData()"
                             style="width: 100%">
                           </textinput>

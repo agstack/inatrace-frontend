@@ -245,7 +245,7 @@
                       step="0.01"
                       [smallInput]="true"
                       [form]="$any(outputSemiProductForm.get('maxOutputWeight'))"
-                      [suffix]="$safeNavigationMigration(outputSemiProductForm.get('measurementUnitType').value?.label)"
+                      [suffix]="outputSemiProductForm.get('measurementUnitType').value?.label"
                       [isInvalid]="submitted && outputSemiProductForm.get('maxOutputWeight').invalid">
                       @if (submitted) {
                         @if (outputSemiProductForm.get('maxOutputWeight').errors; as errors) {

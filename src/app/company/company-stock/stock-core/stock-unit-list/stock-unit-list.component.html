@@ -106,7 +106,7 @@
                   }
                   @if (this.pageListingMode === 'PURCHASE_ORDERS') {
                     <a i18n="@@productLabelPurchaseOrder.tableCol.farmerProfile"
-                      (click)="farmerProfile($safeNavigationMigration(order.producerUserCustomer?.id))"
+                      (click)="farmerProfile(order.producerUserCustomer?.id)"
                       class="company-action"
                       [class.enabled-action]="true">
                 Farmer profile

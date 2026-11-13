@@ -150,8 +150,8 @@
           [mapId]="'map-viewer'"
           [plots]="companyPlots"
           [plotCoordinates]="[]"
-          [initialLat]="$safeNavigationMigration(selectedCompany?.headquarters?.country?.latitude)"
-          [initialLng]="$safeNavigationMigration(selectedCompany?.headquarters?.country?.longitude)"
+          [initialLat]="selectedCompany?.headquarters?.country?.latitude"
+          [initialLng]="selectedCompany?.headquarters?.country?.longitude"
           (geoIdOpenChange)="openGeoIdWhisp($event)">
         </app-map>
       </div>
