@@ -1,78 +1,81 @@
 <app-authorised-layout>
-    <app-company-left-panel></app-company-left-panel>
+  <app-company-left-panel></app-company-left-panel>
 
-    <div class="main">
-        <div class="main-inside-top content-element">
-            <div class="d-flex justify-content-between content-element--row1">
-                <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.customers">Customers</div>
-                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="addCustomer()" i18n="@@productLabelStakeholders.button.newCustomer">
+  <div class="main">
+    <div class="main-inside-top content-element">
+      <div class="d-flex justify-content-between content-element--row1">
+        <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.customers">Customers</div>
+        <button class="btn btn-solid round btn-table-new content-element--btn" (click)="addCustomer()" i18n="@@productLabelStakeholders.button.newCustomer">
                     <span>+ Add customer</span>
                 </button>
-            </div>
+      </div>
 
-            <div class="d-flex justify-content-between content-element--row2">
-                <div>
-                    <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfCustomers">List of customers</div>
-                    <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingCustomers">Showing {{ showing }}/{{ customerCount }}</div>
-                </div>
-
-                <app-search-textinput
-                        [form]="searchNameCustomers"
-                        (valueChange)="onSearchInput($event)"
-                        [items]="items"
-                        byCategory="true"
-                        [searchCategory]="this.byCategory"
-                        (categoryChange)="onCategoryChange($event)">
-                </app-search-textinput>
-            </div>
+      <div class="d-flex justify-content-between content-element--row2">
+        <div>
+          <div class="sub-title-page content-element--subtitle" i18n="@@productLabelStakeholders.subTitle.listOfCustomers">List of customers</div>
+          <div class="counting-page content-element--counting" i18n="@@productLabelStakeholders.subTitle.showingCustomers">Showing {{ showing }}/{{ customerCount }}</div>
         </div>
 
-        <ng-container *ngIf="customer$ | async as customers">
-            <div class="main-inside-main">
-                <table *ngIf="customers && customers.items && customers.items.length > 0; else noCustomers" class="af-table">
-                    <thead>
-                        <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let customer of customers.items">
-                        <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{customer.name}}</span></td>
-                        <td [attr.data-label]="sortOptions[1].name"><span>{{customer.contact}}</span></td>
-                        <td [attr.data-label]="sortOptions[2].name"><span>{{customer.email}}</span></td>
-                        <td [attr.data-label]="sortOptions[3].name">
-                                <span>
-                                <a i18n="@@productLabelStakeholdersCustomers.tableCol.edit"
-                                   (click)="editCustomer(customer.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+        <app-search-textinput
+          [form]="searchNameCustomers"
+          (valueChange)="onSearchInput($event)"
+          [items]="items"
+          byCategory="true"
+          [searchCategory]="this.byCategory"
+          (categoryChange)="onCategoryChange($event)">
+        </app-search-textinput>
+      </div>
+    </div>
+
+    @if (customer$ | async; as customers) {
+      <div class="main-inside-main">
+        @if (customers && customers.items && customers.items.length > 0) {
+          <table class="af-table">
+            <thead>
+              <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+            </thead>
+            <tbody>
+              @for (customer of customers.items; track customer) {
+                <tr>
+                  <td [attr.data-label]="sortOptions[0].name"><span>{{customer.name}}</span></td>
+                  <td [attr.data-label]="sortOptions[1].name"><span>{{customer.contact}}</span></td>
+                  <td [attr.data-label]="sortOptions[2].name"><span>{{customer.email}}</span></td>
+                  <td [attr.data-label]="sortOptions[3].name">
+                    <span>
+                      <a i18n="@@productLabelStakeholdersCustomers.tableCol.edit"
+                        (click)="editCustomer(customer.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Edit
                                 </a>
-                                <a i18n="@@productLabelStakeholdersCustomers.tableCol.delete"
-                                   (click)="deleteCustomer(customer.id)"
-                                   class="company-action"
-                                   [class.enabled-action]="true">
+                      <a i18n="@@productLabelStakeholdersCustomers.tableCol.delete"
+                        (click)="deleteCustomer(customer.id)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                                   Delete
                                 </a>
-                              </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-                <ngb-pagination
-                        [(page)]="page"
-                        [pageSize]="pageSize"
-                        [collectionSize]="customers.count"
-                        (pageChange)="onPageChange($event)"
-                        [maxSize]="7"
-                        [rotate]="true"></ngb-pagination>
-            </div>
-        </ng-container>
-        <ng-template #noCustomers>
-            <div class="no-list-results" i18n="@@productLabelStakeholdersCustomers.noCustomers">
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="no-list-results" i18n="@@productLabelStakeholdersCustomers.noCustomers">
                 No customers found
             </div>
-        </ng-template>
-    </div>
+        }
+      </div>
+      <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="customers.count"
+          (pageChange)="onPageChange($event)"
+          [maxSize]="7"
+        [rotate]="true"></ngb-pagination>
+      </div>
+    }
+  </div>
 
 </app-authorised-layout>

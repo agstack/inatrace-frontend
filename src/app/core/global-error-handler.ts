@@ -45,7 +45,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         message: string = $localize`:@@globalErrorHandler.message:Error`,
         title: string = $localize`:@@globalErrorHandler.title:Error`,
         closeButtonText: string = $localize`:@@globalErrorHandler.closeButtonText:Close`,
-        dismissable: boolean= false,
+        dismissable= false,
         closeCallback: () => void = () => window.location.reload()
     ){
         const modalRef = this.modalService.open(ErrorModalComponent, { centered: true });

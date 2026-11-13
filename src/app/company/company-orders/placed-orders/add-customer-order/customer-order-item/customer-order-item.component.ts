@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GenericEditableItemComponent } from '../../../../../shared/generic-editable-item/generic-editable-item.component';
 import { ApiStockOrder } from '../../../../../../api/model/apiStockOrder';
 import { GlobalEventManagerService } from '../../../../../core/global-event-manager.service';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { generateFormFromMetadata } from '../../../../../../shared/utils';
 import { ApiProcessingOrderValidationScheme, ApiStockOrderValidationScheme } from './validation';
 import { CompanyFinalProductQuoteOrderActionsService } from '../../../../../shared-services/company-final-product-quote-order-actions.service';
@@ -18,9 +18,11 @@ import { map, startWith } from 'rxjs/operators';
 import { CurrencyCodesService } from '../../../../../shared-services/currency-codes.service';
 
 @Component({
-  selector: 'app-customer-order-item',
-  templateUrl: './customer-order-item.component.html',
-  styleUrls: ['./customer-order-item.component.scss']
+    selector: 'app-customer-order-item',
+    templateUrl: './customer-order-item.component.html',
+    styleUrls: ['./customer-order-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CustomerOrderItemComponent extends GenericEditableItemComponent<ApiStockOrder> implements OnInit, OnDestroy {
 
@@ -172,7 +174,7 @@ export class CustomerOrderItemComponent extends GenericEditableItemComponent<Api
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
 
     const form = generateFormFromMetadata(ApiStockOrder.formMetadata(), value, ApiStockOrderValidationScheme);
     form.setControl('processingOrder', generateFormFromMetadata(ApiProcessingOrder.formMetadata(), {}, ApiProcessingOrderValidationScheme));

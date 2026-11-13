@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 import { Subscription } from 'rxjs';
 import _ from 'lodash-es';
@@ -8,14 +8,16 @@ import { GlobalEventManagerService } from '../../core/global-event-manager.servi
 import { EnumSifrant } from '../../shared-services/enum-sifrant';
 
 @Component({
-  selector: 'app-geoaddress-form',
-  templateUrl: './geoaddress-form.component.html',
-  styleUrls: ['./geoaddress-form.component.scss']
+    selector: 'app-geoaddress-form',
+    templateUrl: './geoaddress-form.component.html',
+    styleUrls: ['./geoaddress-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GeoaddressFormComponent implements OnInit, OnDestroy {
 
   @Input()
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   @Input()
   submitted = false;
@@ -245,7 +247,7 @@ export class GeoaddressFormComponent implements OnInit, OnDestroy {
     this.form.get('longitude').markAsDirty();
   }
 
-  dblClick(event: google.maps.MouseEvent) {
+  dblClick(event: google.maps.MapMouseEvent) {
     if (this.marker) {
       this.updateMarkerLocation(event.latLng.toJSON());
     } else {

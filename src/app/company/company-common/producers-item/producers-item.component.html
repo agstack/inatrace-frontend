@@ -6,63 +6,70 @@
   [formControlInput]="originalFormControl"
   [disableDelete]="disableDelete">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="(contentObject.company && contentObject.company.name && contentObject.userCustomerType) || (contentObject.company && contentObject.company.id && contentObject.userCustomerType)">
-          {{name}}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if ((contentObject.company && contentObject.company.name && contentObject.userCustomerType) || (contentObject.company && contentObject.company.id && contentObject.userCustomerType)) {
+            <div>
+              {{name}}
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-
-        <single-choice
-          label="Customer of"
-          i18n-label="@@producersItem.label.customer"
-          [formControlInput]="$any(form.get('company.id'))"
-          [codebookService]="codebookCoop"
-          [isInvalidChoice]="submitted && form.get('company.id').invalid"
-          [readonly]="readonly">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('company.id').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@producersItem.textinput.customer.error">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <single-choice
+            label="Customer of"
+            i18n-label="@@producersItem.label.customer"
+            [formControlInput]="$any(form.get('company.id'))"
+            [codebookService]="codebookCoop"
+            [isInvalidChoice]="submitted && form.get('company.id').invalid"
+            [readonly]="readonly">
+            @if (submitted) {
+              @if (form.get('company.id').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@producersItem.textinput.customer.error">
                 Cooperative is required
               </div>
-            </div>
-          </ng-container>
-
-        </single-choice>
-
-        <single-choice
-          label="Role"
-          i18n-label="@@producersItem.label.role"
-          [formControlInput]="$any(form.get('userCustomerType'))"
-          [codebookService]="codebookRoles"
-          [isInvalidChoice]="submitted && form.get('userCustomerType').invalid"
-          [readonly]="true">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('userCustomerType').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@producersItem.textinput.role.error">
+                  }
+                </div>
+              }
+            }
+          </single-choice>
+          <single-choice
+            label="Role"
+            i18n-label="@@producersItem.label.role"
+            [formControlInput]="$any(form.get('userCustomerType'))"
+            [codebookService]="codebookRoles"
+            [isInvalidChoice]="submitted && form.get('userCustomerType').invalid"
+            [readonly]="true">
+            @if (submitted) {
+              @if (form.get('userCustomerType').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@producersItem.textinput.role.error">
                 Role is required
               </div>
-            </div>
-          </ng-container>
-
-        </single-choice>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                  }
+                </div>
+              }
+            }
+          </single-choice>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

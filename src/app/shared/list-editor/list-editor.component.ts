@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChildren, QueryList, TemplateRef, ViewChild, ElementRef, ViewChildren, Optional, Host } from '@angular/core';
+import { Component, OnInit, Input, ContentChildren, QueryList, TemplateRef, ViewChild, ElementRef, ViewChildren, Optional, Host, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 import { LinkDirective } from '../directives/link.directive';
 // import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
@@ -11,7 +11,7 @@ import {
     keyframes,
 } from '@angular/animations';
 import { faHandMiddleFinger, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { AbstractControl, FormGroup, FormArray } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, UntypedFormArray } from '@angular/forms';
 import { ClosableComponent } from '../closable/closable.component';
 import { Subscription } from 'rxjs';
 import { Subject } from 'rxjs/internal/Subject';
@@ -32,14 +32,8 @@ import { Subject } from 'rxjs/internal/Subject';
             state('open', style({
                 opacity: '1'
             })),
-            transition(
-                'closed=>open',
-                animate("200ms")
-            ),
-            transition(
-                'open=>closed',
-                animate('200ms ease-out')
-            )
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
         ]),
         trigger('expandCollapse2', [
             state('closed', style({
@@ -52,14 +46,8 @@ import { Subject } from 'rxjs/internal/Subject';
             state('open', style({
                 opacity: '1'
             })),
-            transition(
-                'closed=>open',
-                animate("200ms")
-            ),
-            transition(
-                'open=>closed',
-                animate('200ms ease-out')
-            )
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
         ]),
         trigger('expandCollapse3', [
             state('closed', style({
@@ -72,19 +60,14 @@ import { Subject } from 'rxjs/internal/Subject';
             state('open', style({
                 opacity: '1'
             })),
-            transition(
-                'closed=>open',
-                animate("200ms")
-            ),
-            transition(
-                'open=>closed',
-                animate('200ms ease-out')
-            )
+            transition('closed=>open', animate("200ms")),
+            transition('open=>closed', animate('200ms ease-out'))
         ]),
-
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ListEditorComponent implements OnInit {
+export class ListEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     label: string;
 
@@ -95,7 +78,7 @@ export class ListEditorComponent implements OnInit {
     headerTemplate: TemplateRef<any>;
 
     @Input()
-    formArray: FormArray;
+    formArray: UntypedFormArray;
 
     @Input()
     headerFormatter: (any) => string
@@ -125,7 +108,7 @@ export class ListEditorComponent implements OnInit {
     listEditorManager = null;
 
     @Input()
-    disabled: boolean = false;
+    disabled = false;
 
     @Input()
     canAdd = true
@@ -139,7 +122,7 @@ export class ListEditorComponent implements OnInit {
     @ContentChildren(LinkDirective)
     links: QueryList<LinkDirective>;
 
-    open: number = -1
+    open = -1
 
     constructor(
       @Optional() @Host() public closable: ClosableComponent
@@ -307,13 +290,13 @@ export class ListEditorComponent implements OnInit {
 
     formattedMessageForHeader(i: number) {
         if (this.headerFormatter) {
-            return this.headerFormatter((this.formArray.controls[i] as FormGroup).getRawValue());
+            return this.headerFormatter((this.formArray.controls[i] as UntypedFormGroup).getRawValue());
         }
     }
 
     contentObject(i: number): any {
         // TODO: what if not FormGroup?
-        return (this.formArray.at(i) as FormGroup).getRawValue()
+        return (this.formArray.at(i) as UntypedFormGroup).getRawValue()
     }
 
     itemHeaderComponent(): TemplateRef<any> {
@@ -321,7 +304,7 @@ export class ListEditorComponent implements OnInit {
     }
 
     get textPrazno() {
-        let emptyText = $localize`:@@listEditor.emptyText:Empty`
+        const emptyText = $localize`:@@listEditor.emptyText:Empty`
         if(this.isDisabled()) {
           return emptyText;  // Prevedljivo
         }

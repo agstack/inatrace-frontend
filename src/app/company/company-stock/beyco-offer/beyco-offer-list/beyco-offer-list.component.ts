@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {ApiBeycoCoffeeVariety} from '../../../../../api/model/apiBeycoCoffeeVariety';
 import {ApiBeycoCoffeeQuality} from '../../../../../api/model/apiBeycoCoffeeQuality';
 import {ApiBeycoCoffeeGrade} from '../../../../../api/model/apiBeycoCoffeeGrade';
@@ -18,16 +18,18 @@ import { switchMap } from 'rxjs/operators';
 import { getBeycoOfferErrorMessage } from './beyco-offer-error';
 
 @Component({
-  selector: 'app-beyco-offer-list',
-  templateUrl: './beyco-offer-list.component.html',
-  styleUrls: ['./beyco-offer-list.component.scss']
+    selector: 'app-beyco-offer-list',
+    templateUrl: './beyco-offer-list.component.html',
+    styleUrls: ['./beyco-offer-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BeycoOfferListComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  generalForm: FormGroup;
-  coffeeInfoForms: FormGroup[] = [];
+  generalForm: UntypedFormGroup;
+  coffeeInfoForms: UntypedFormGroup[] = [];
 
   private companyId = null;
 
@@ -42,7 +44,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
   readonly Incoterms = ApiBeycoOrderCoffees.IncotermsEnum;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private beycoOrderService: BeycoOrderControllerService,
     private route: ActivatedRoute,
     private router: Router,
@@ -100,8 +102,8 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     }
   }
 
-  fc(form: FormGroup, fieldName: string): FormControl {
-    return form.get(fieldName) as FormControl;
+  fc(form: UntypedFormGroup, fieldName: string): UntypedFormControl {
+    return form.get(fieldName) as UntypedFormControl;
   }
 
   submit() {
@@ -148,7 +150,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
         );
   }
 
-  buildGeneralForm(fieldValues: ApiBeycoOrderFields): FormGroup {
+  buildGeneralForm(fieldValues: ApiBeycoOrderFields): UntypedFormGroup {
     return this.fb.group({
       title: [fieldValues?.title, [Validators.required, Validators.maxLength(70)]],
       availableAt: [fieldValues?.availableAt, Validators.required],
@@ -159,12 +161,12 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     });
   }
 
-  buildCoffeeInfoForm(coffee: ApiBeycoOrderCoffees): FormGroup {
+  buildCoffeeInfoForm(coffee: ApiBeycoOrderCoffees): UntypedFormGroup {
     return this.fb.group({
       title: [coffee?.coffee.name, { disabled: true }],
       name: [coffee?.coffee.name, Validators.required],
-      quantity: [coffee?.coffee.quantity, [Validators.required, Validators.min(0), Validators.max(999999999999999999)]],
-      price: [coffee?.price, [Validators.required, Validators.min(0), Validators.max(999999999999999999)]],
+      quantity: [coffee?.coffee.quantity, [Validators.required, Validators.min(0), Validators.max(Number.MAX_SAFE_INTEGER)]],
+      price: [coffee?.price, [Validators.required, Validators.min(0), Validators.max(Number.MAX_SAFE_INTEGER)]],
       priceUnit: [coffee?.priceUnit, Validators.required],
       currency: [coffee?.currency, Validators.required],
       harvestAt: [coffee?.coffee.harvestAt, Validators.required],
@@ -240,7 +242,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     return apiObj;
   }
 
-  isSpecialityCoffee(value: number, form: FormGroup) {
+  isSpecialityCoffee(value: number, form: UntypedFormGroup) {
     if (value >= 80) {
       const qualitySegmentsControl = form.get('qualitySegments');
       if (!qualitySegmentsControl.value) {
@@ -253,7 +255,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     }
   }
 
-  validateScreenSizes: ValidatorFn = (form: FormGroup) => {
+  validateScreenSizes: ValidatorFn = (form: UntypedFormGroup) => {
     const minScreenSize = form.get('minScreenSize').value;
     const maxScreenSize = form.get('maxScreenSize').value;
 
@@ -285,7 +287,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     return x.value.split(/(?=[A-Z])|(\d+)/).join(' ').toUpperCase();
   }
 
-  resetValidatorOnCustomVariety(coffeeForm: FormGroup) {
+  resetValidatorOnCustomVariety(coffeeForm: UntypedFormGroup) {
     if (coffeeForm.get('varieties').value?.includes('Other')) {
       coffeeForm.get('customVariety').setValidators(Validators.required);
     } else {
@@ -294,7 +296,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     coffeeForm.get('customVariety').updateValueAndValidity();
   }
 
-  resetValidatorOnQualityDescription(coffeeForm: FormGroup) {
+  resetValidatorOnQualityDescription(coffeeForm: UntypedFormGroup) {
     if (coffeeForm.get('grades').value?.includes('Other')) {
       coffeeForm.get('additionalQualityDescriptors').setValidators(Validators.required);
     } else {
@@ -303,7 +305,7 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     coffeeForm.get('additionalQualityDescriptors').updateValueAndValidity();
   }
 
-  resetValidatorOnCustomIncoterms(coffeeForm: FormGroup) {
+  resetValidatorOnCustomIncoterms(coffeeForm: UntypedFormGroup) {
     if (coffeeForm.get('incoterms').value === 'Other') {
       coffeeForm.get('customIncoterms').setValidators(Validators.required);
     } else {

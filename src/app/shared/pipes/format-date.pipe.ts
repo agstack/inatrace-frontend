@@ -5,7 +5,8 @@ import { formatDate } from '@angular/common';
 export type FormatDateStyle = 'date' | 'time' | 'datetime' | 'datetimedesc';
 
 @Pipe({
-    name: 'formatDate'
+    name: 'formatDate',
+    standalone: false
 })
 export class FormatDatePipe implements PipeTransform {
 

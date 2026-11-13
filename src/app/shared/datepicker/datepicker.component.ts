@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { NgbDateParserFormatter, NgbDatepickerConfig, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,9 @@ import { NgbDateCustomParserFormatter } from './dateformat';
     providers: [
         NgbDatepickerConfig,
         { provide: NgbDateParserFormatter, useClass: NgbDateCustomParserFormatter }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DatepickerComponent implements OnInit, OnDestroy {
 

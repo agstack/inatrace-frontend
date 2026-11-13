@@ -1,94 +1,104 @@
 <main class="af-b2c-main">
-    <h1 [style.color]="b2cSettings.headingColor"
-        [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-        i18n="@@frontPage.fair-prices.title">Fair prices</h1>
+  <h1 [style.color]="b2cSettings.headingColor"
+    [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+  i18n="@@frontPage.fair-prices.title">Fair prices</h1>
 
-    <p *ngIf="producerPriceGraphic" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ producerPriceGraphicText }}</p>
+  @if (producerPriceGraphic) {
+    <p [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ producerPriceGraphicText }}</p>
+  }
 
-    <div *ngIf="producerPriceGraphic" class="af-graph-wrapper" style>
-        <div class="af-graph">
-
-            <div class="af-graph-row af-graph-row--top" style="height: 220px;">
-                <div class="af-graph-col">
-                  <span class="af-graph-bar"
-                        [style.height]="worldMarketPriceHeight + 'px'"
-                        [style.background-color]="b2cSettings.secondaryColor">
-                    <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.worldMarketPrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
-                  </span>
-                </div>
-                <div class="af-graph-col">
-                  <span class="af-graph-bar"
-                        [style.height]="fairTradePriceHeight + 'px'"
-                        [style.background-color]="b2cSettings.secondaryColor">
-                    <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.fairTradePrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
-                  </span>
-                </div>
-                <div class="af-graph-col">
-                  <span class="af-graph-bar"
-                        [style.height]="productPriceHeight + 'px'"
-                        [style.background-color]="b2cSettings.primaryColor">
-                    <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.productPrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
-                  </span>
-                </div>
-            </div>
-            <div class="af-graph-row af-graph-row--bottom">
-                <div class="af-graph-col">
-                    <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ label1 }}</span>
-                </div>
-                <div class="af-graph-col">
-                    <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ label2 }}</span>
-                </div>
-                <div class="af-graph-col">
-                    <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ productName }}</span>
-                </div>
-            </div>
+  @if (producerPriceGraphic) {
+    <div class="af-graph-wrapper" style>
+      <div class="af-graph">
+        <div class="af-graph-row af-graph-row--top" style="height: 220px;">
+          <div class="af-graph-col">
+            <span class="af-graph-bar"
+              [style.height]="worldMarketPriceHeight + 'px'"
+              [style.background-color]="b2cSettings.secondaryColor">
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.worldMarketPrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+            </span>
+          </div>
+          <div class="af-graph-col">
+            <span class="af-graph-bar"
+              [style.height]="fairTradePriceHeight + 'px'"
+              [style.background-color]="b2cSettings.secondaryColor">
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.fairTradePrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+            </span>
+          </div>
+          <div class="af-graph-col">
+            <span class="af-graph-bar"
+              [style.height]="productPriceHeight + 'px'"
+              [style.background-color]="b2cSettings.primaryColor">
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.productPrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+            </span>
+          </div>
         </div>
+        <div class="af-graph-row af-graph-row--bottom">
+          <div class="af-graph-col">
+            <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ label1 }}</span>
+          </div>
+          <div class="af-graph-col">
+            <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ label2 }}</span>
+          </div>
+          <div class="af-graph-col">
+            <span class="af-graph-label" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ productName }}</span>
+          </div>
+        </div>
+      </div>
     </div>
+  }
 
-    <p *ngIf="producerPriceGraphic" [innerHTML]="desc" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"></p>
+  @if (producerPriceGraphic) {
+    <p [innerHTML]="desc" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"></p>
+  }
 
-    <h1 *ngIf="farmerPriceGraphic" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ title2 }} {{ productName }}</h1>
+  @if (farmerPriceGraphic) {
+    <h1 [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ title2 }} {{ productName }}</h1>
+  }
 
-    <div *ngIf="farmerPriceGraphic" class="af-stgraph-wrapper">
-        <div class="af-stgraph">
-
-            <div class="af-stgraph-row af-stgraph-row--top"
-                 [style.height]="increaseOfCoffeeHeight + 'px'">
-                <div class="af-stgraph-col">
-                  <span class="af-stgraph-description" i18n="@@frontPage.fair-prices.barChart.label1Farmers"
-                        [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">
+  @if (farmerPriceGraphic) {
+    <div class="af-stgraph-wrapper">
+      <div class="af-stgraph">
+        <div class="af-stgraph-row af-stgraph-row--top"
+          [style.height]="increaseOfCoffeeHeight + 'px'">
+          <div class="af-stgraph-col">
+            <span class="af-stgraph-description" i18n="@@frontPage.fair-prices.barChart.label1Farmers"
+              [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">
                     Price paid if sold as {{ productName }}
                   </span>
-                </div>
-                <div class="af-stgraph-col">
-                  <span class="af-stgraph-bar" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
-                        [style.background-color]="b2cSettings.primaryColor">
-                    <span class="af-stgraph-bar-number">{{ this.increaseOfCoffee }}</span>
-                  </span>
-                </div>
-            </div>
-            <div class="af-stgraph-row af-stgraph-row--middle"
-                 [style.height]="farmGateAveragePriceHeight + 'px'">
-                <div class="af-stgraph-col">
-                  <span class="af-stgraph-description" i18n="@@frontPage.fair-prices.barChart.label2Farmers"
-                        [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">
+          </div>
+          <div class="af-stgraph-col">
+            <span class="af-stgraph-bar" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"
+              [style.background-color]="b2cSettings.primaryColor">
+              <span class="af-stgraph-bar-number">{{ this.increaseOfCoffee }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="af-stgraph-row af-stgraph-row--middle"
+          [style.height]="farmGateAveragePriceHeight + 'px'">
+          <div class="af-stgraph-col">
+            <span class="af-stgraph-description" i18n="@@frontPage.fair-prices.barChart.label2Farmers"
+              [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">
                     Average price paid if not sold as {{ productName }}
                   </span>
-                </div>
-                <div class="af-stgraph-col">
-                    <span class="af-stgraph-bar af-stgraph-bar--gray">
-                        <span class="af-stgraph-bar-number">${{ this.farmGateAveragePrice }}</span>
-                    </span>
-                </div>
-            </div>
-            <div class="af-stgraph-row af-graph-row--bottom">
-                <div class="af-stgraph-col">
-                    <span class="af-stgraph-label"
-                          [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ title2 }} {{ productName }}</span>
-                </div>
-            </div>
+          </div>
+          <div class="af-stgraph-col">
+            <span class="af-stgraph-bar af-stgraph-bar--gray">
+              <span class="af-stgraph-bar-number">${{ this.farmGateAveragePrice }}</span>
+            </span>
+          </div>
         </div>
+        <div class="af-stgraph-row af-graph-row--bottom">
+          <div class="af-stgraph-col">
+            <span class="af-stgraph-label"
+            [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''">{{ title2 }} {{ productName }}</span>
+          </div>
+        </div>
+      </div>
     </div>
+  }
 
-    <p *ngIf="farmerPriceGraphic" [innerHTML]="descPricing" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"></p>
+  @if (farmerPriceGraphic) {
+    <p [innerHTML]="descPricing" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''"></p>
+  }
 </main>

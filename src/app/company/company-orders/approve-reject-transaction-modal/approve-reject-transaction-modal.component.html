@@ -1,49 +1,61 @@
-<div class="modal-container" *ngIf="approveRejectForm">
-  <div class="modal-header">
-    <h4 class="modal-title sp-faq-modal-title">{{ title }}</h4>
-  </div>
-  <div class="modal-body">
-
-    <div class="d-flex-column align-items-center">
-      <ng-container *ngIf="approveRejectForm.controls.length> 0">
-        <div *ngFor="let item of approveRejectForm.controls; index as i">
-          <div class="d-flex justify-content-between" *ngIf="item.value.status === 'PENDING'">
+@if (approveRejectForm) {
+  <div class="modal-container">
+    <div class="modal-header">
+      <h4 class="modal-title sp-faq-modal-title">{{ title }}</h4>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex-column align-items-center">
+        @if (approveRejectForm.controls.length> 0) {
+          @for (item of approveRejectForm.controls; track item; let i = $index) {
             <div>
-              <div [ngClass]="setColor(item)">{{ item.value.sourceStockOrder?.internalLotNumber }} </div>
-              <div [ngClass]="setColor(item)">{{ item.get('outputQuantity').value }} {{ item.value.inputMeasureUnitType?.label }}</div>
-              <textinput *ngIf="!item.value.approved"
-                         [textarea]="true"
-                         [form]="item.get('rejectComment')"
-                         [label]="null">
-              </textinput>
+              @if (item.value.status === 'PENDING') {
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <div [ngClass]="setColor(item)">{{ item.value.sourceStockOrder?.internalLotNumber }} </div>
+                    <div [ngClass]="setColor(item)">{{ item.get('outputQuantity').value }} {{ item.value.inputMeasureUnitType?.label }}</div>
+                    @if (!item.value.approved) {
+                      <textinput
+                        [textarea]="true"
+                        [form]="item.get('rejectComment')"
+                        [label]="null">
+                      </textinput>
+                    }
+                  </div>
+                  @if (item.value.approved) {
+                    <div (click)="rejectTransaction(item)">
+                      <fa-icon
+                        class="approved cursor-pointer"
+                        [icon]="faCheck">
+                      </fa-icon>
+                    </div>
+                  }
+                  @if (!item.value.approved) {
+                    <div (click)="approveTransaction(item)">
+                      <fa-icon
+                        class="del-icon cursor-pointer"
+                        [icon]="faTimes">
+                      </fa-icon>
+                    </div>
+                  }
+                </div>
+              }
             </div>
-            <div *ngIf="item.value.approved" (click)="rejectTransaction(item)">
-              <fa-icon
-                      class="approved cursor-pointer"
-                      [icon]="faCheck">
-              </fa-icon>
-            </div>
-            <div *ngIf="!item.value.approved" (click)="approveTransaction(item)">
-              <fa-icon
-                      class="del-icon cursor-pointer"
-                      [icon]="faTimes">
-              </fa-icon>
-            </div>
-
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="approveRejectForm.controls.length == 0" i18n="@@rejectTransaction.modal.approved.all">
+          }
+        }
+        @if (approveRejectForm.controls.length === 0) {
+          <ng-container i18n="@@rejectTransaction.modal.approved.all">
         All approved
       </ng-container>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outlined" (click)="cancel()" i18n="@@rejectTransaction.modal.button.cancel">
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outlined" (click)="cancel()" i18n="@@rejectTransaction.modal.button.cancel">
         <span>Cancel</span>
       </button>
-      <button type="button" class="btn" [class.disabled]="!checkValidity" (click)="onConfirm()" i18n="@@rejectTransaction.modal.button.confirm">
+        <button type="button" class="btn" [class.disabled]="!checkValidity" (click)="onConfirm()" i18n="@@rejectTransaction.modal.button.confirm">
         <span>Confirm</span>
       </button>
+      </div>
     </div>
   </div>
-</div>
+}

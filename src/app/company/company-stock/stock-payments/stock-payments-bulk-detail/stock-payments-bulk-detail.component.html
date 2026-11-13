@@ -1,276 +1,290 @@
 <app-authorised-layout>
-    <div *ngIf="payingCompany != null && bulkPaymentForm" class="af-layout--authorised">
-
-        <div class="af-form-wrapper">
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12 d-flex justify-content-between">
-                    <div class="title-page content-element--title">{{title}}</div>
-                    <app-last-seen-tag *ngIf="this.update"
-                                       [dateFormat]="bulkPaymentForm.get('creationTimestamp').value"
-                                       [identifier]="createdBy">
-                    </app-last-seen-tag>
-                </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@productLabelStockBulkPayments.section.basicInfo">Basic information</h2>
-
-                    <div class="af-form-element">
-
-                        <!-- Payment date (formal) -->
-                        <div class="af-row">
-                            <div class="af-c4">
-                                <app-datepicker
-                                        label="Payment date"
-                                        i18n-label="@@productLabelStockBulkPayments.datepicker.date.label"
-                                        [form]="bulkPaymentForm.get('formalCreationTime')"
-                                        [invalid]="submitted && bulkPaymentForm.get('formalCreationTime').invalid"
-                                        [disabled]="this.update">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="bulkPaymentForm.get('formalCreationTime').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required" i18n="@@productLabelStockBulkPayments.datepicker.date.error">
+  @if (payingCompany != null && bulkPaymentForm) {
+    <div class="af-layout--authorised">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12 d-flex justify-content-between">
+            <div class="title-page content-element--title">{{title}}</div>
+            @if (this.update) {
+              <app-last-seen-tag
+                [dateFormat]="bulkPaymentForm.get('creationTimestamp').value"
+                [identifier]="createdBy">
+              </app-last-seen-tag>
+            }
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@productLabelStockBulkPayments.section.basicInfo">Basic information</h2>
+            <div class="af-form-element">
+              <!-- Payment date (formal) -->
+              <div class="af-row">
+                <div class="af-c4">
+                  <app-datepicker
+                    label="Payment date"
+                    i18n-label="@@productLabelStockBulkPayments.datepicker.date.label"
+                    [form]="bulkPaymentForm.get('formalCreationTime')"
+                    [invalid]="submitted && bulkPaymentForm.get('formalCreationTime').invalid"
+                    [disabled]="this.update">
+                    @if (submitted) {
+                      @if (bulkPaymentForm.get('formalCreationTime').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@productLabelStockBulkPayments.datepicker.date.error">
                                                 Payment date is required
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </app-datepicker>
-                            </div>
+                          }
                         </div>
-
-                        <!-- Paying company -->
-                        <textinput
-                                [form]="payableFromForm"
-                                label="Payable from"
-                                style="width: 100%"
-                                i18n-label="@@productLabelStockBulkPayments.textinput.payableFromForm.label"
-                                [readOnly]=true>
-                        </textinput>
-
-                        <!-- Nice tree - Company, Collector, Farmer -->
-                        <div class="af-row" style="margin-bottom: 16px; margin-top: 16px;">
-                            <div class="af-c1 af-ustwo--withfriends">
-                                <div class="af-ustwo" i18n="@@productLabelStockBulkPayments.textinput.payableTo.or">or</div>
-                                <div class="af-ustwo" i18n="@@productLabelStockBulkPayments.textinput.payableTo.or">or</div>
-                            </div>
-                            <div class="af-c2">
-                                <div class="af-ustwo-line1" i18n="@@productLabelStockBulkPayments.textinput.payableTo.company">Company</div>
-                                <div class="af-ustwo-line2" i18n="@@productLabelStockBulkPayments.textinput.payableTo.collector">Collector</div>
-                                <div class="af-ustwo-line3" i18n="@@productLabelStockBulkPayments.textinput.payableTo.farmer">Farmer</div>
-                            </div>
-                            <div class="af-c9">
-                                <span style="display: block; margin-bottom: 0.25rem; height: 0;"></span>
-                                <textinput style="width: 100%;"
-                                           [form]="payableToCompany"
-                                           [readOnly]=true>
-                                </textinput>
-                                <span style="display: block; margin-bottom: 0.5rem; height: 1px; line-height: 1px;"></span>
-                                <textinput style="width: 100%;"
-                                           [form]="payableToCollector"
-                                           [readOnly]=true>
-                                </textinput>
-                                <span style="display: block; margin-bottom: 0.5rem; height: 1px; line-height: 1px;"></span>
-                                <textinput style="width: 100%;"
-                                           [form]="payableToFarmer"
-                                           [readOnly]=true>
-                                </textinput>
-                            </div>
-                        </div>
-
-                        <!-- Payment purpose -->
-                        <single-choice
-                                label="Payment purpose"
-                                i18n-label="@@productLabelStockBulkPayments.label.paymentPurpose"
-                                [formControlInput]="$any(bulkPaymentForm.get('paymentPurposeType'))"
-                                [codebookService]="paymentPurposeTypesCodebook"
-                                [isInvalidChoice]="submitted && bulkPaymentForm.get('paymentPurposeType').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="bulkPaymentForm.get('paymentPurposeType').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockBulkPayments.textinput.paymentPurpose.error">
+                      }
+                    }
+                  </app-datepicker>
+                </div>
+              </div>
+              <!-- Paying company -->
+              <textinput
+                [form]="payableFromForm"
+                label="Payable from"
+                style="width: 100%"
+                i18n-label="@@productLabelStockBulkPayments.textinput.payableFromForm.label"
+                [readOnly]=true>
+              </textinput>
+              <!-- Nice tree - Company, Collector, Farmer -->
+              <div class="af-row" style="margin-bottom: 16px; margin-top: 16px;">
+                <div class="af-c1 af-ustwo--withfriends">
+                  <div class="af-ustwo" i18n="@@productLabelStockBulkPayments.textinput.payableTo.or">or</div>
+                  <div class="af-ustwo" i18n="@@productLabelStockBulkPayments.textinput.payableTo.or">or</div>
+                </div>
+                <div class="af-c2">
+                  <div class="af-ustwo-line1" i18n="@@productLabelStockBulkPayments.textinput.payableTo.company">Company</div>
+                  <div class="af-ustwo-line2" i18n="@@productLabelStockBulkPayments.textinput.payableTo.collector">Collector</div>
+                  <div class="af-ustwo-line3" i18n="@@productLabelStockBulkPayments.textinput.payableTo.farmer">Farmer</div>
+                </div>
+                <div class="af-c9">
+                  <span style="display: block; margin-bottom: 0.25rem; height: 0;"></span>
+                  <textinput style="width: 100%;"
+                    [form]="payableToCompany"
+                    [readOnly]=true>
+                  </textinput>
+                  <span style="display: block; margin-bottom: 0.5rem; height: 1px; line-height: 1px;"></span>
+                  <textinput style="width: 100%;"
+                    [form]="payableToCollector"
+                    [readOnly]=true>
+                  </textinput>
+                  <span style="display: block; margin-bottom: 0.5rem; height: 1px; line-height: 1px;"></span>
+                  <textinput style="width: 100%;"
+                    [form]="payableToFarmer"
+                    [readOnly]=true>
+                  </textinput>
+                </div>
+              </div>
+              <!-- Payment purpose -->
+              <single-choice
+                label="Payment purpose"
+                i18n-label="@@productLabelStockBulkPayments.label.paymentPurpose"
+                [formControlInput]="$any(bulkPaymentForm.get('paymentPurposeType'))"
+                [codebookService]="paymentPurposeTypesCodebook"
+                [isInvalidChoice]="submitted && bulkPaymentForm.get('paymentPurposeType').invalid">
+                @if (submitted) {
+                  @if (bulkPaymentForm.get('paymentPurposeType').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockBulkPayments.textinput.paymentPurpose.error">
                                         Payment purpose is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-
-                        <!-- Payment description -->
-                        <textinput
-                                label="Payment description"
-                                i18n-label="@@productLabelStockBulkPayments.textinput.paymentDescription.label"
-                                style="width: 100%"
-                                [form]="$any(bulkPaymentForm.get('paymentDescription'))"
-                                [textarea]="true"
-                                [isInvalid]="submitted && bulkPaymentForm.get('paymentDescription').invalid"
-                                [readOnly]=this.update>
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="bulkPaymentForm.get('paymentDescription').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n-label="@@productLabelStockBulkPayments.textinput.paymentDescription.error">
-                                        <span>
-                                          Payment description is required
-                                        </span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <!-- Total amount -->
-                        <textinput
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                label="Total amount paid"
-                                placeholder="Enter total amount paid"
-                                i18n-placeholder="@@productLabelStockBulkPayments.textinput.amount.placeholder"
-                                style="width: 100%"
-                                [label]="getCurrencyString(stringWithoutUnits.totalAmountLabel)"
-                                [form]="$any(bulkPaymentForm.get('totalAmount'))"
-                                [isInvalid]="submitted && bulkPaymentForm.get('totalAmount').invalid"
-                                [value]="setTotalAmountToBePaid()"
-                                [readOnly]="true">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="bulkPaymentForm.get('totalAmount').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockBulkPayments.textinput.amount.error">
+                      }
+                    </div>
+                  }
+                }
+              </single-choice>
+              <!-- Payment description -->
+              <textinput
+                label="Payment description"
+                i18n-label="@@productLabelStockBulkPayments.textinput.paymentDescription.label"
+                style="width: 100%"
+                [form]="$any(bulkPaymentForm.get('paymentDescription'))"
+                [textarea]="true"
+                [isInvalid]="submitted && bulkPaymentForm.get('paymentDescription').invalid"
+                [readOnly]=this.update>
+                @if (submitted) {
+                  @if (bulkPaymentForm.get('paymentDescription').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n-label="@@productLabelStockBulkPayments.textinput.paymentDescription.error">
+                          <span>
+                            Payment description is required
+                          </span>
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <!-- Total amount -->
+              <textinput
+                type="number"
+                min="0"
+                step="0.01"
+                label="Total amount paid"
+                placeholder="Enter total amount paid"
+                i18n-placeholder="@@productLabelStockBulkPayments.textinput.amount.placeholder"
+                style="width: 100%"
+                [label]="getCurrencyString(stringWithoutUnits.totalAmountLabel)"
+                [form]="$any(bulkPaymentForm.get('totalAmount'))"
+                [isInvalid]="submitted && bulkPaymentForm.get('totalAmount').invalid"
+                [value]="setTotalAmountToBePaid()"
+                [readOnly]="true">
+                @if (submitted) {
+                  @if (bulkPaymentForm.get('totalAmount').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockBulkPayments.textinput.amount.error">
                                         Total amount is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <!-- Additional cost -->
-                        <ng-container *ngIf="bulkType === BulkType.PO">
-                            <textinput
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    label="Additional costs"
-                                    placeholder="Enter additional costs"
-                                    i18n-placeholder="@@productLabelStockBulkPayments.textinput.additionalCosts.placeholder"
-                                    style="width: 100%"
-                                    [label]="getCurrencyString(stringWithoutUnits.additionalCostsLabel)"
-                                    [form]="$any(bulkPaymentForm.get('additionalCost'))"
-                                    [readOnly]=this.update>
-                            </textinput>
-
-                            <textinput
-                                    label="Description of additional costs"
-                                    i18n-label="@@productLabelStockBulkPayments.textinput.additionalCostDescription.label"
-                                    style="width: 100%"
-                                    [form]="$any(bulkPaymentForm.get('additionalCostDescription'))"
-                                    [textarea]="true"
-                                    [isInvalid]="submitted && bulkPaymentForm.get('additionalCostDescription').invalid"
-                                    [readOnly]=this.update>
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="bulkPaymentForm.get('additionalCostDescription').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n-label="@@productLabelStockBulkPayments.textinput.additionalCostDescription.error">
-                                            Description is required
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </textinput>
-                        </ng-container>
-
-                        <!-- Receipt number -->
-                        <textinput
-                                [form]="$any(bulkPaymentForm.get('receiptNumber'))"
-                                label="Receipt number"
-                                style="width: 100%"
-                                placeholder="Enter receipt number"
-                                i18n-label="@@productLabelStockBulkPayments.textinput.receiptNumber.label"
-                                i18n-placeholder="@@productLabelStockBulkPayments.textinput.receiptNumber.placeholder"
-                                [isInvalid]="submitted && bulkPaymentForm.get('receiptNumber').invalid"
-                                [readOnly]=this.update>
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="bulkPaymentForm.get('receiptNumber').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockBulkPayments.textinput.receiptNumber.error">
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+              <!-- Additional cost -->
+              @if (bulkType === BulkType.PO) {
+                <textinput
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  label="Additional costs"
+                  placeholder="Enter additional costs"
+                  i18n-placeholder="@@productLabelStockBulkPayments.textinput.additionalCosts.placeholder"
+                  style="width: 100%"
+                  [label]="getCurrencyString(stringWithoutUnits.additionalCostsLabel)"
+                  [form]="$any(bulkPaymentForm.get('additionalCost'))"
+                  [readOnly]=this.update>
+                </textinput>
+                <textinput
+                  label="Description of additional costs"
+                  i18n-label="@@productLabelStockBulkPayments.textinput.additionalCostDescription.label"
+                  style="width: 100%"
+                  [form]="$any(bulkPaymentForm.get('additionalCostDescription'))"
+                  [textarea]="true"
+                  [isInvalid]="submitted && bulkPaymentForm.get('additionalCostDescription').invalid"
+                  [readOnly]=this.update>
+                  @if (submitted) {
+                    @if (bulkPaymentForm.get('additionalCostDescription').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n-label="@@productLabelStockBulkPayments.textinput.additionalCostDescription.error">
+                            Description is required
+                          </div>
+                        }
+                      </div>
+                    }
+                  }
+                </textinput>
+              }
+              <!-- Receipt number -->
+              <textinput
+                [form]="$any(bulkPaymentForm.get('receiptNumber'))"
+                label="Receipt number"
+                style="width: 100%"
+                placeholder="Enter receipt number"
+                i18n-label="@@productLabelStockBulkPayments.textinput.receiptNumber.label"
+                i18n-placeholder="@@productLabelStockBulkPayments.textinput.receiptNumber.placeholder"
+                [isInvalid]="submitted && bulkPaymentForm.get('receiptNumber').invalid"
+                [readOnly]=this.update>
+                @if (submitted) {
+                  @if (bulkPaymentForm.get('receiptNumber').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockBulkPayments.textinput.receiptNumber.error">
                                         Receipt number is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
+                      }
                     </div>
-                </div>
-
-                <!-- Only for new bulk payments -->
-                <div class="af-form-block--c6" *ngIf="!this.update">
-                    <h2 i18n="@@productLabelStockBulkPayments.section.purchaseOrders">Purchase orders to be paid</h2>
-
-                    <div class="af-form-element">
-                        <div *ngFor="let purchaseOrder of purchaseItems.controls; index as idx">
-                            <div class="row">
-                                <div class="col-11">
-
-                                    <textinput label="Name"
-                                               i18n-label="@@productLabelStockBulkPayments.textinput.origin.name"
-                                               [form]="$any(purchaseOrder.get('identifier'))"
-                                               [readOnly]="true">
-                                    </textinput>
-
-                                    <div class="row">
-                                        <div class="col">
-                                            <ng-container *ngIf="this.bulkType === BulkType.PO">
-                                                <textinput type="number"
-                                                           label="Cost"
-                                                           [label]="getCurrencyString(stringWithoutUnits.costLabel)"
-                                                           [form]="$any(purchaseOrder.get('cost'))"
-                                                           [readOnly]="true">
-                                                </textinput>
-                                            </ng-container>
-                                        </div>
-                                        <div class="col">
-                                            <ng-container *ngIf="this.bulkType === BulkType.PO">
-                                                <textinput type="number"
-                                                           label="Balance"
-                                                           [label]="getCurrencyString(stringWithoutUnits.balanceLabel)"
-                                                           [form]="$any(purchaseOrder.get('balance'))"
-                                                           [readOnly]="true">
-                                                </textinput>
-                                            </ng-container>
-                                        </div>
-                                        <div class="col">
-                                            <textinput type="number"
-                                                       label="Paying"
-                                                       [label]="getCurrencyString(stringWithoutUnits.payingLabel)"
-                                                       [form]="$any(purchaseOrder.get('paid'))"
-                                                       [isInvalid]="purchaseOrder.invalid">
-                                            </textinput>
-                                            <div *ngIf="purchaseOrder.errors as errors" class="sc-invalid-feedback" i18n="@@productLabelStockBulkPayments.textinput.paying.error">
+                  }
+                }
+              </textinput>
+            </div>
+          </div>
+          <!-- Only for new bulk payments -->
+          @if (!this.update) {
+            <div class="af-form-block--c6">
+              <h2 i18n="@@productLabelStockBulkPayments.section.purchaseOrders">Purchase orders to be paid</h2>
+              <div class="af-form-element">
+                @for (purchaseOrder of purchaseItems.controls; track purchaseOrder; let idx = $index) {
+                  <div>
+                    <div class="row">
+                      <div class="col-11">
+                        <textinput label="Name"
+                          i18n-label="@@productLabelStockBulkPayments.textinput.origin.name"
+                          [form]="$any(purchaseOrder.get('identifier'))"
+                          [readOnly]="true">
+                        </textinput>
+                        <div class="row">
+                          <div class="col">
+                            @if (this.bulkType === BulkType.PO) {
+                              <textinput type="number"
+                                label="Cost"
+                                [label]="getCurrencyString(stringWithoutUnits.costLabel)"
+                                [form]="$any(purchaseOrder.get('cost'))"
+                                [readOnly]="true">
+                              </textinput>
+                            }
+                          </div>
+                          <div class="col">
+                            @if (this.bulkType === BulkType.PO) {
+                              <textinput type="number"
+                                label="Balance"
+                                [label]="getCurrencyString(stringWithoutUnits.balanceLabel)"
+                                [form]="$any(purchaseOrder.get('balance'))"
+                                [readOnly]="true">
+                              </textinput>
+                            }
+                          </div>
+                          <div class="col">
+                            <textinput type="number"
+                              label="Paying"
+                              [label]="getCurrencyString(stringWithoutUnits.payingLabel)"
+                              [form]="$any(purchaseOrder.get('paid'))"
+                              [isInvalid]="purchaseOrder.invalid">
+                            </textinput>
+                            @if (purchaseOrder.errors; as errors) {
+                              <div class="sc-invalid-feedback" i18n="@@productLabelStockBulkPayments.textinput.paying.error">
                                                 Should be less than or equal to balance
                                             </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-1">
-                                    <div style="margin-top: 1.75rem; cursor: pointer" (click)="removeItem(idx)">
-                                        <fa-icon class="del-icon"
-                                                 [icon]="faTrashAlt">
-                                        </fa-icon>
-                                    </div>
-                                </div>
-                            </div>
+                            }
+                          </div>
                         </div>
+                      </div>
+                      <div class="col-1">
+                        <div style="margin-top: 1.75rem; cursor: pointer" (click)="removeItem(idx)">
+                          <fa-icon class="del-icon"
+                            [icon]="faTrashAlt">
+                          </fa-icon>
+                        </div>
+                      </div>
                     </div>
-
-                    <!-- List of collectors and farmers with no bank account number provided -->
-                    <ng-container *ngIf="purchaseItemsNoBankAccount.value.length > 0">
-                        <h2 i18n="@@productLabelStockBulkPayments.section.purchaseOrdersNoBankAccount">Purchase orders cannot be paid</h2>
-                        <div class="af-form-element">
-                            <div *ngFor="let purchaseOrder of purchaseItemsNoBankAccount.controls; index as idx">
-                                <div class="row">
-                                    <div class="col">
-                                        <textinput label="Name"
-                                                   i18n-label="@@productLabelStockBulkPayments.textinput.origin.name"
-                                                   [form]="$any(purchaseOrder.get('identifier'))"
-                                                   [readOnly]="true">
-                                        </textinput>
-                                    </div>
-                                    <div class="col">
-                                        <div *ngIf="purchaseOrder.get('preferredWayOfPayment')?.value === PreferredWayOfPayment.CASHVIACOLLECTOR"
-                                             class="sc-invalid-feedback"
-                                             i18n="@@productLabelStockBulkPayments.noBankAccount"
-                                             style="margin-top: 1.8rem">
+                  </div>
+                }
+              </div>
+              <!-- List of collectors and farmers with no bank account number provided -->
+              @if (purchaseItemsNoBankAccount.value.length > 0) {
+                <h2 i18n="@@productLabelStockBulkPayments.section.purchaseOrdersNoBankAccount">Purchase orders cannot be paid</h2>
+                <div class="af-form-element">
+                  @for (purchaseOrder of purchaseItemsNoBankAccount.controls; track purchaseOrder; let idx = $index) {
+                    <div>
+                      <div class="row">
+                        <div class="col">
+                          <textinput label="Name"
+                            i18n-label="@@productLabelStockBulkPayments.textinput.origin.name"
+                            [form]="$any(purchaseOrder.get('identifier'))"
+                            [readOnly]="true">
+                          </textinput>
+                        </div>
+                        <div class="col">
+                          @if (purchaseOrder.get('preferredWayOfPayment')?.value === PreferredWayOfPayment.CASHVIACOLLECTOR) {
+                            <div
+                              class="sc-invalid-feedback"
+                              i18n="@@productLabelStockBulkPayments.noBankAccount"
+                              style="margin-top: 1.8rem">
                                             Recipient
                                             <a [routerLink]="['/my-collectors', 'edit', purchaseOrder.value.representativeOfProducerUserCustomer.id]">
                                                 {{purchaseOrder.value.representativeOfProducerUserCustomer.name}}
@@ -279,10 +293,12 @@
                                             </a>
                                             bank account is missing
                                         </div>
-                                        <div *ngIf="purchaseOrder.get('preferredWayOfPayment')?.value !== PreferredWayOfPayment.CASHVIACOLLECTOR"
-                                             class="sc-invalid-feedback"
-                                             i18n="@@productLabelStockBulkPayments.noBankAccount"
-                                             style="margin-top: 1.8rem">
+                          }
+                          @if (purchaseOrder.get('preferredWayOfPayment')?.value !== PreferredWayOfPayment.CASHVIACOLLECTOR) {
+                            <div
+                              class="sc-invalid-feedback"
+                              i18n="@@productLabelStockBulkPayments.noBankAccount"
+                              style="margin-top: 1.8rem">
                                             Recipient
                                             <a [routerLink]="['/my-farmers', 'edit', purchaseOrder.value.producerUserCustomer.id]">
                                                 {{purchaseOrder.value.producerUserCustomer.name}}
@@ -291,81 +307,86 @@
                                             </a>
                                             bank account is missing
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                          }
                         </div>
-                    </ng-container>
-                </div>
-
-                <div class="af-form-block--c6" *ngIf="this.update">
-                    <h2 i18n="@@productLabelStockBulkPayments.section.payments">Payments</h2>
-                    <div class="af-form-element">
-
-                        <list-editor *ngIf="paymentsListManager"
-                                     label="List of payments"
-                                     i18n-label="@@productLabelStockBulkPayments.list-editor.payments.label"
-                                     [listEditorManager]="paymentsListManager"
-                                     [canAdd]="false">
-                            <list-editor-items>
-                                <div *ngFor="let item of paymentsForm.controls; let i=index;">
-                                    <app-stock-payments-item
-                                            title=null
-                                            [paymentForm]="$any(item)"
-                                            [formControlInput]="$any(item)"
-                                            [isOpen]="paymentsListManager.isOpen(i)"
-                                            [listEditorManager]="this.paymentsListManager"
-                                            [listEditorManagerPosition]="i"
-                                            [disableDelete]="true">
-                                    </app-stock-payments-item>
-                                </div>
-                            </list-editor-items>
-                        </list-editor>
-
+                      </div>
                     </div>
+                  }
                 </div>
+              }
             </div>
-
-            <ng-container>
-                <div class="af-form-row">
-                    <div class="af-form-block--c12">
-                        <h2 i18n="@@productLabelStockBulkPayments.section.additionalProofs">Additional proofs</h2>
-
-                        <div class="af-form-element">
-                            <list-editor *ngIf="additionalProofsListManager"
-                                         label="List of additional proofs"
-                                         addText="Add document"
-                                         i18n-label="@@productLabelStockBulkPayments.list-editor.additionalProofs.label"
-                                         i18n-addText="@@productLabelStockBulkPayments.list-editor.additionalProofs.addText"
-                                         [listEditorManager]="additionalProofsListManager"
-                                         [canAdd]="true"
-                                         [invalid]="submitted && bulkPaymentForm.get('additionalProofs').invalid"
-                                         [disabled]="this.update">
-                                <list-editor-items>
-                                    <div *ngFor="let item of additionalProofsForm.controls; let i=index;">
-                                        <app-additional-proof-item
-                                                title=null
-                                                [formControlInput]="$any(item)"
-                                                [isOpen]="additionalProofsListManager.isOpen(i)"
-                                                [listEditorManager]="this.additionalProofsListManager"
-                                                [listEditorManagerPosition]="i">
-                                        </app-additional-proof-item>
-                                    </div>
-                                </list-editor-items>
-                            </list-editor>
+          }
+          @if (this.update) {
+            <div class="af-form-block--c6">
+              <h2 i18n="@@productLabelStockBulkPayments.section.payments">Payments</h2>
+              <div class="af-form-element">
+                @if (paymentsListManager) {
+                  <list-editor
+                    label="List of payments"
+                    i18n-label="@@productLabelStockBulkPayments.list-editor.payments.label"
+                    [listEditorManager]="paymentsListManager"
+                    [canAdd]="false">
+                    <list-editor-items>
+                      @for (item of paymentsForm.controls; track item; let i = $index) {
+                        <div>
+                          <app-stock-payments-item
+                            title=null
+                            [paymentForm]="$any(item)"
+                            [formControlInput]="$any(item)"
+                            [isOpen]="paymentsListManager.isOpen(i)"
+                            [listEditorManager]="this.paymentsListManager"
+                            [listEditorManagerPosition]="i"
+                            [disableDelete]="true">
+                          </app-stock-payments-item>
                         </div>
-
-                    </div>
-                </div>
-            </ng-container>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-
-                    <div class="af-bottom-buttons" i18n="@@productLabelStockBulkPayments.modal.footer.buttons">
-                        <button class="btn btn-outlined mr-2"
+                      }
+                    </list-editor-items>
+                  </list-editor>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        <ng-container>
+          <div class="af-form-row">
+            <div class="af-form-block--c12">
+              <h2 i18n="@@productLabelStockBulkPayments.section.additionalProofs">Additional proofs</h2>
+              <div class="af-form-element">
+                @if (additionalProofsListManager) {
+                  <list-editor
+                    label="List of additional proofs"
+                    addText="Add document"
+                    i18n-label="@@productLabelStockBulkPayments.list-editor.additionalProofs.label"
+                    i18n-addText="@@productLabelStockBulkPayments.list-editor.additionalProofs.addText"
+                    [listEditorManager]="additionalProofsListManager"
+                    [canAdd]="true"
+                    [invalid]="submitted && bulkPaymentForm.get('additionalProofs').invalid"
+                    [disabled]="this.update">
+                    <list-editor-items>
+                      @for (item of additionalProofsForm.controls; track item; let i = $index) {
+                        <div>
+                          <app-additional-proof-item
+                            title=null
+                            [formControlInput]="$any(item)"
+                            [isOpen]="additionalProofsListManager.isOpen(i)"
+                            [listEditorManager]="this.additionalProofsListManager"
+                            [listEditorManagerPosition]="i">
+                          </app-additional-proof-item>
+                        </div>
+                      }
+                    </list-editor-items>
+                  </list-editor>
+                }
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons" i18n="@@productLabelStockBulkPayments.modal.footer.buttons">
+                        <button class="btn btn-outlined me-2"
                                 type="button"
-                                data-dismiss="modal"
+                                data-bs-dismiss="modal"
                                 (click)="dismiss()">
                             <span>Cancel</span>
                         </button>
@@ -376,10 +397,9 @@
                             <span>Save</span>
                         </button>
                     </div>
-
-                </div>
-            </div>
-
+          </div>
         </div>
+      </div>
     </div>
+  }
 </app-authorised-layout>

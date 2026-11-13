@@ -1,8 +1,8 @@
-<ng-container *ngIf="document">
-    <ng-container *ngIf="document.get('type').value === 'FILE'">
-        {{ document.get('name').value ? document.get('name').value : document.get('description').value }}
-    </ng-container>
-    <ng-container *ngIf="document.get('type').value === 'LINK'">
-        <a [href]="document.get('link').value" target="_blank">{{ document.get('link').value }}</a>
-    </ng-container>
-</ng-container>
+@if (document) {
+  @if (document.get('type').value === 'FILE') {
+    {{ document.get('name').value ? document.get('name').value : document.get('description').value }}
+  }
+  @if (document.get('type').value === 'LINK') {
+    <a [href]="document.get('link').value" target="_blank">{{ document.get('link').value }}</a>
+  }
+}

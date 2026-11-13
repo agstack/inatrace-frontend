@@ -1,12 +1,14 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'bottom-buttons',
-  templateUrl: './bottom-buttons.component.html',
-  styleUrls: ['./bottom-buttons.component.scss']
+    selector: 'bottom-buttons',
+    templateUrl: './bottom-buttons.component.html',
+    styleUrls: ['./bottom-buttons.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BottomButtonsComponent implements OnInit {
 
@@ -23,7 +25,7 @@ export class BottomButtonsComponent implements OnInit {
   updateButton = false
 
   @Input()
-  form: FormGroup = null
+  form: UntypedFormGroup = null
 
   // Either we use form or fields 'changed' and 'invalid'
   @Input()
@@ -63,7 +65,7 @@ export class BottomButtonsComponent implements OnInit {
   onSubmitMessage: string = $localize`:@@bottomButoms.message.onSubmit:Do you want to submit an application?`
 
   @Input()
-  customBackFn: boolean = false; //In case of nested forms, such as product label
+  customBackFn = false; //In case of nested forms, such as product label
 
   @Output() onBack = new EventEmitter<boolean>();
   @Output() onValidate = new EventEmitter<boolean>();
@@ -94,7 +96,7 @@ export class BottomButtonsComponent implements OnInit {
     this.lastPress = 'BACK'
     if (!this.isBack()) return;
     if ((this.form && this.form.dirty) || (!this.form && this.changed)) {
-      let result = await this.globalEventsManager.openMessageModal({
+      const result = await this.globalEventsManager.openMessageModal({
         type: 'warning',
         title: $localize`:@@bottomButoms.back.error.title:Changes not saved!`,
         message: $localize`:@@bottomButoms.back.error.message:The form contains unsaved changes that will be discarded.`,
@@ -175,7 +177,7 @@ export class BottomButtonsComponent implements OnInit {
           }
       )
     } else if (!this.ignoreOnSubmitDirty) {
-      let result = await this.globalEventsManager.openMessageModal({
+      const result = await this.globalEventsManager.openMessageModal({
           type: 'warning',
           message: this.onSubmitMessage
       });

@@ -8,83 +8,80 @@
 
       <div class="col">
 
-        <ng-container *ngIf="feedbacks$ | async as feedbacks">
-
+        @if (feedbacks$ | async; as feedbacks) {
           <div class="main-inside-top content-element">
             <div class="d-flex justify-content-between content-element--row1">
               <div class="title-page content-element--title" i18n="@@productLabelFeedback.title.feedbacks">Feedbacks</div>
             </div>
-
             <div class="d-flex justify-content-between content-element--row2">
               <div>
                 <div class="sub-title-page content-element--subtitle" i18n="@@productLabelFeedback.subTitle.listOfFeedbacks">List of feedbacks</div>
                 <div class="counting-page content-element--counting" i18n="@@productLabelFeedback.subTitle.showing" style="margin-top: 0px;">Showing {{showedFeedbacks}}/{{allFeedbacks}}</div>
               </div>
-
               <div class="d-flex align-items-top">
-                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-
+                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
                   <button class="af-actions-btn" (click)="downloadFeedbacks()">
                     <span class="af-actions-btn-label" i18n="@@productLabelFeedback.button.downloadfeedbackEmails">Download emails</span>
                   </button>
                 </div>
               </div>
-
             </div>
-
           </div>
-
-
-
           <div class="main-inside-main">
-            <table *ngIf="feedbacks && feedbacks.items && feedbacks.items.length> 0" class="af-table">
-              <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let feedback of feedbacks.items">
-                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{feedback.email}}</span></td>
-                  <td [attr.data-label]="sortOptions[1].name"><span>{{feedback.questionnaireAnswers.gender}}</span></td>
-                  <td [attr.data-label]="sortOptions[2].name"><span>{{feedback.questionnaireAnswers.age}}</span></td>
-                  <td [attr.data-label]="sortOptions[3].name"><span>{{feedback.feedback}}</span></td>
-                  <td [attr.data-label]="sortOptions[4].name"><span>{{setBoolean(feedback.gdprConsent)}}</span></td>
-                  <td [attr.data-label]="sortOptions[5].name">
-                    <span>
-                      <!-- <a i18n="@@productLabelFeedback.tableCol.delete"
-                      (click)="deleteFeedback(feedback)"
-                      class="company-action"
-                      [class.enabled-action]="true">
-                      Delete
-                    </a> -->
-                      <a i18n="@@productLabelFeedback.tableCol.view"
-                        (click)="viewFeedback(feedback)"
-                        class="company-action"
-                        [class.enabled-action]="true">
+            @if (feedbacks && feedbacks.items && feedbacks.items.length> 0) {
+              <table class="af-table">
+                <thead>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (feedback of feedbacks.items; track feedback) {
+                    <tr>
+                      <td [attr.data-label]="sortOptions[0].name"><span>{{feedback.email}}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span>{{feedback.questionnaireAnswers.gender}}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name"><span>{{feedback.questionnaireAnswers.age}}</span></td>
+                      <td [attr.data-label]="sortOptions[3].name"><span>{{feedback.feedback}}</span></td>
+                      <td [attr.data-label]="sortOptions[4].name"><span>{{setBoolean(feedback.gdprConsent)}}</span></td>
+                      <td [attr.data-label]="sortOptions[5].name">
+                        <span>
+                          <!-- <a i18n="@@productLabelFeedback.tableCol.delete"
+                          (click)="deleteFeedback(feedback)"
+                          class="company-action"
+                          [class.enabled-action]="true">
+                          Delete
+                        </a> -->
+                        <a i18n="@@productLabelFeedback.tableCol.view"
+                          (click)="viewFeedback(feedback)"
+                          class="company-action"
+                          [class.enabled-action]="true">
                         View
                       </a>
-                    </span>
-                  </td>
-                </tr>
+                      </span>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
-            <div *ngIf="feedbacks && feedbacks.items && feedbacks.items.length == 0" class="no-list-results" i18n="@@productLabelFeedback.noFeedbacks">
+          }
+          @if (feedbacks && feedbacks.items && feedbacks.items.length === 0) {
+            <div class="no-list-results" i18n="@@productLabelFeedback.noFeedbacks">
               No feedbacks found
             </div>
-          </div>
-          <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-            <ngb-pagination
-              [(page)]="page"
-              [pageSize]="pageSize"
-              [collectionSize]="feedbacks.count"
-              (pageChange)="onPageChange($event)"
-              [maxSize]="7"
-              [rotate]="true">
-            </ngb-pagination>
-          </div>
-        </ng-container>
+          }
+        </div>
+        <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+          <ngb-pagination
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="feedbacks.count"
+            (pageChange)="onPageChange($event)"
+            [maxSize]="7"
+            [rotate]="true">
+          </ngb-pagination>
+        </div>
+      }
 
 
-      </div>
     </div>
   </div>
+</div>
 </app-authorised-layout>

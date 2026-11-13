@@ -1,13 +1,13 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { APP_BASE_HREF, registerLocaleData } from '@angular/common';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import localeRw from '@angular/common/locales/rw';
 import localeEs from '@angular/common/locales/es';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, provideZoneChangeDetection } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -16,7 +16,6 @@ import {
     NgbTimepickerModule,
     NgbTooltipModule
 } from '@ng-bootstrap/ng-bootstrap';
-import { QRCodeModule } from 'angular2-qrcode';
 import { Angulartics2Module } from 'angulartics2';
 import { EllipsisModule } from 'ngx-ellipsis';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
@@ -59,8 +58,6 @@ import { TypeListComponent } from './settings/type-list/type-list.component';
 import { UserDetailComponent } from './user/user-detail/user-detail.component';
 import { UserHomeComponent } from './user/user-home/user-home.component';
 import { UserListComponent } from './user/user-list/user-list.component';
-import * as Hammer from 'hammerjs';
-import { ChartsModule } from 'ng2-charts';
 import { CompanyDetailTabManagerComponent } from './company/company-detail/company-detail-tab-manager/company-detail-tab-manager.component';
 import { CompanyUserRoleComponent } from './company/company-user-role/company-user-role.component';
 import { ValueChainListComponent } from './value-chain/value-chain-list/value-chain-list.component';
@@ -88,14 +85,6 @@ import { ChecklistAddProcessingActionSuccessModalComponent } from './user/self-o
 import { ChecklistAddFarmersSuccessModalComponent } from './user/self-onboarding-checklist-modal/checklist-add-farmers-success-modal/checklist-add-farmers-success-modal.component';
 import { GuidedTourSuccessModalComponent } from './user/self-onboarding-checklist-modal/guided-tour-success-modal/guided-tour-success-modal.component';
 
-export class HammerConfig extends HammerGestureConfig {
-  buildHammer(element: HTMLElement) {
-    return new Hammer(element, {
-      touchAction: 'pan-y'
-    });
-  }
-}
-
 registerLocaleData(localeDe);
 registerLocaleData(localeRw);
 registerLocaleData(localeEs);
@@ -106,68 +95,66 @@ export function getConfiguration(): Configuration {
   });
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RegisterComponent,
-    UserHomeComponent,
-    CompanyDashboardComponent,
-    ConfirmEmailComponent,
-    UserListComponent,
-    UserDetailComponent,
-    CompanyListComponent,
-    CompanyDetailComponent,
-    RegisterActivationComponent,
-    ResetPasswordComponent,
-    ResetPasswordRequestComponent,
-    LandingPageComponent,
-    CookieBannerComponent,
-    ClearCookieConsentComponent,
-    CookieManagementModalComponent,
-    CookiesPageComponent,
-    PrivacyPageComponent,
-    TermsAndConditionsPageComponent,
-    SystemLeftPanelComponent,
-    SettingsComponent,
-    KnowledgeBlogFrontComponent,
-    TypeDetailModalComponent,
-    TypeListComponent,
-    SelectedUserCompanyModalComponent,
-    SettingsAdditionalComponent,
-    SettingsTypesComponent,
-    CompanyDetailTabManagerComponent,
-    CompanyUserRoleComponent,
-    ValueChainListComponent,
-    ValueChainDetailComponent,
-    ValueChainConfigItemComponent,
-    CompanyDetailUsersComponent,
-    CompanyDetailFacilitiesComponent,
-    CompanyDetailFacilityAddComponent,
-    CompanyDetailProcessingActionsDetailComponent,
-    CompanyProcessingActionsComponent,
-    CompanyDetailProcessingActionsListComponent,
-    CurrencyListComponent,
-    SelfOnboardingWelcomeModalComponent,
-    SelfOnboardingChecklistModalComponent,
-    SelfOnboardingAssistantModalComponent,
-    ChecklistAddProductSuccessModalComponent,
-    CompanyDetailFacilityAddWizardComponent,
-    CompanyDetailProcessingActionsAddWizardComponent,
-    ChecklistAddFacilitySuccessModalComponent,
-    ChecklistAddProcessingActionSuccessModalComponent,
-    ChecklistAddFarmersSuccessModalComponent,
-    GuidedTourSuccessModalComponent
-  ],
-    imports: [
-        ApiModule.forRoot(getConfiguration),
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        RegisterComponent,
+        UserHomeComponent,
+        CompanyDashboardComponent,
+        ConfirmEmailComponent,
+        UserListComponent,
+        UserDetailComponent,
+        CompanyListComponent,
+        CompanyDetailComponent,
+        RegisterActivationComponent,
+        ResetPasswordComponent,
+        ResetPasswordRequestComponent,
+        LandingPageComponent,
+        CookieBannerComponent,
+        ClearCookieConsentComponent,
+        CookieManagementModalComponent,
+        CookiesPageComponent,
+        PrivacyPageComponent,
+        TermsAndConditionsPageComponent,
+        SystemLeftPanelComponent,
+        SettingsComponent,
+        KnowledgeBlogFrontComponent,
+        TypeDetailModalComponent,
+        TypeListComponent,
+        SelectedUserCompanyModalComponent,
+        SettingsAdditionalComponent,
+        SettingsTypesComponent,
+        CompanyDetailTabManagerComponent,
+        CompanyUserRoleComponent,
+        ValueChainListComponent,
+        ValueChainDetailComponent,
+        ValueChainConfigItemComponent,
+        CompanyDetailUsersComponent,
+        CompanyDetailFacilitiesComponent,
+        CompanyDetailFacilityAddComponent,
+        CompanyDetailProcessingActionsDetailComponent,
+        CompanyProcessingActionsComponent,
+        CompanyDetailProcessingActionsListComponent,
+        CurrencyListComponent,
+        SelfOnboardingWelcomeModalComponent,
+        SelfOnboardingChecklistModalComponent,
+        SelfOnboardingAssistantModalComponent,
+        ChecklistAddProductSuccessModalComponent,
+        CompanyDetailFacilityAddWizardComponent,
+        CompanyDetailProcessingActionsAddWizardComponent,
+        ChecklistAddFacilitySuccessModalComponent,
+        ChecklistAddProcessingActionSuccessModalComponent,
+        ChecklistAddFarmersSuccessModalComponent,
+        GuidedTourSuccessModalComponent
+    ],
+    exports: [],
+    bootstrap: [AppComponent], imports: [ApiModule.forRoot(getConfiguration),
         BrowserModule,
         AppRoutingModule,
         ToastrModule.forRoot({
             maxOpened: 1,
             autoDismiss: true
         }),
-        HttpClientModule,
         Angulartics2Module.forRoot({
             gst: {
                 trackingIds: [environment.googleAnalyticsId]
@@ -184,47 +171,41 @@ export function getConfiguration(): Configuration {
         NgxPageScrollModule,
         ContentsModule,
         EllipsisModule,
-        QRCodeModule,
         BrowserAnimationsModule,
         NgbTimepickerModule,
         NgbDropdownModule,
         NgbPaginationModule,
         GoogleMapsModule,
         DragDropModule,
-        HammerModule,
-        ChartsModule,
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts')
         }),
         CompanyCommonModule,
-        NgbTooltipModule
-    ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LanguageInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
-    {
-      // see LanguageCodeHelper for source
-      provide: APP_BASE_HREF, useFactory: () => {
-        return `/${ LanguageCodeHelper.getCurrentLocale() }/`;
-      }
-    },
-    {
-      provide: LOCALE_ID, useFactory: () => LanguageCodeHelper.getCurrentLocale()
-    },
-    {
-      provide: HAMMER_GESTURE_CONFIG,
-      useClass: HammerConfig
-    }
-  ],
-  exports: [],
-  bootstrap: [AppComponent]
-})
+        NgbTooltipModule], providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: LanguageInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
+        {
+            // see LanguageCodeHelper for source
+            provide: APP_BASE_HREF, useFactory: () => {
+                return `/${LanguageCodeHelper.getCurrentLocale()}/`;
+            }
+        },
+        {
+            provide: LOCALE_ID, useFactory: () => LanguageCodeHelper.getCurrentLocale()
+        },
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        // The application predates zoneless change detection: its components update template
+        // state from RxJS subscriptions and timers, which does not schedule a check on its own.
+        // Keep the zone-based scheduler until those components are migrated to signals or
+        // ChangeDetectorRef.markForCheck().
+        provideZoneChangeDetection(),
+    ] })
 export class AppModule { }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, Host } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, Host, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { ContentsDirective } from '../contents.directive';
 import { takeUntil } from 'rxjs/operators';
@@ -20,15 +20,13 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
             state('active', style({
                 opacity: '1'
             })),
-            transition(
-                '*<=>*',
-                animate('500ms ease-out')
-            )
+            transition('*<=>*', animate('500ms ease-out'))
         ]),
-    ]
-
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ParentContentLinkComponent implements OnInit {
+export class ParentContentLinkComponent implements OnInit, OnDestroy {
 
     ngUnsubscribe: Subject<void> = new Subject<void>();
 

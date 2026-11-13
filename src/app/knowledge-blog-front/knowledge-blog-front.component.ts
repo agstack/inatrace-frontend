@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
 
 @Component({
-  selector: 'app-knowledge-blog-front',
-  templateUrl: './knowledge-blog-front.component.html',
-  styleUrls: ['./knowledge-blog-front.component.scss']
+    selector: 'app-knowledge-blog-front',
+    templateUrl: './knowledge-blog-front.component.html',
+    styleUrls: ['./knowledge-blog-front.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class KnowledgeBlogFrontComponent implements OnInit {
 
@@ -33,7 +35,7 @@ export class KnowledgeBlogFrontComponent implements OnInit {
 
 
     if (this.knowledgeBlogId) {
-      let resp = await this.productController.getProductKnowledgeBlog(this.knowledgeBlogId).pipe(take(1)).toPromise();
+      const resp = await this.productController.getProductKnowledgeBlog(this.knowledgeBlogId).pipe(take(1)).toPromise();
       this.knowledgeBlogData = resp.data;
       if (this.knowledgeBlogData.youtubeUrl) this.youtubeUrl = this.checkExternalLink(this.knowledgeBlogData.youtubeUrl)
     }

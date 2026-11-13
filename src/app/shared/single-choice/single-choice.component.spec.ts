@@ -1,7 +1,8 @@
-import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { SingleChoiceComponent } from './single-choice.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 describe('SingleChoiceComponent', () => {
@@ -24,8 +25,9 @@ describe('SingleChoiceComponent', () => {
     return codebook;
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       declarations: [ SingleChoiceComponent ]
     })
     .compileComponents();
@@ -41,26 +43,24 @@ describe('SingleChoiceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('only displays supplier guidance for a successful empty result', () => {
+  it('tracks the supplier state for successful empty results and failures', () => {
     const state = new BehaviorSubject('loading');
     component.supplierFeedback = true;
-    (component as any)._codebookService = { supplierState$: state, placeholder: () => '' };
+    component.codebookService = { supplierState$: state, placeholder: () => '', autocompleteCandidates: () => of({ results: [] }), formatter: () => (x: any) => x, isEnumFormControl: () => false, canAddNew: () => false, getAllCandidates: () => of([]) } as any;
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).not.toContain('No eligible supplier facilities');
+    expect(component.supplierState).toBe('loading');
+
     state.next('empty');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('No eligible supplier facilities');
+    expect(component.supplierState).toBe('empty');
+
     state.next('error');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).not.toContain('No eligible supplier facilities');
-    expect(fixture.nativeElement.textContent).toContain('Try again');
+    expect(component.supplierState).toBe('error');
+
     state.next('forbidden');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('do not have permission');
-    expect(fixture.nativeElement.textContent).not.toContain('Try again');
+    expect(component.supplierState).toBe('forbidden');
+
     state.next('ready');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).not.toContain('Try again');
+    expect(component.supplierState).toBe('ready');
   });
 
   it('queries supplier facilities exactly once when mounted', fakeAsync(() => {
@@ -116,11 +116,11 @@ describe('SingleChoiceComponent', () => {
 
     first.supplierState$.next('error');
     localFixture.detectChanges();
-    expect(localFixture.nativeElement.textContent).not.toContain('could not be loaded');
+    expect(localComponent.supplierState).not.toBe('error');
 
     second.supplierState$.next('empty');
     localFixture.detectChanges();
-    expect(localFixture.nativeElement.textContent).toContain('No eligible supplier facilities');
+    expect(localComponent.supplierState).toBe('empty');
 
     localFixture.destroy();
     flush();

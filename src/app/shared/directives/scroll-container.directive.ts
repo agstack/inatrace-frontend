@@ -1,7 +1,8 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  selector: '[appScrollContainer]'
+    selector: '[appScrollContainer]',
+    standalone: false
 })
 export class ScrollContainerDirective {
 

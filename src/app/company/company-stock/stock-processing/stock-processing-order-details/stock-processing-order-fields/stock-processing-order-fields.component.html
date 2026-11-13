@@ -1,77 +1,99 @@
-<div class="{{ rowClass }}" *ngIf="showRow">
-  <div class="{{ colClass }}">
-
-    <textinput *ngIf="fieldInfo.type === 'PRICE' || fieldInfo.type === 'EXCHANGE_RATE'"
-               type="number"
-               min="0"
-               step="0.01"
-               [form]="$any(formGroup.get(fieldInfo.fieldName))"
-               [label]="fieldInfo.label"
-               style="width: 100%"
-               [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required">
-            Field '{{ fieldInfo.fieldName }}' is required
-          </div>
-        </div>
-      </ng-container>
-    </textinput>
-
-    <textinput *ngIf="fieldInfo.type === 'NUMBER' || fieldInfo.type === 'INTEGER'"
-               type="number"
-               [step]="fieldInfo.type === 'INTEGER' ? 1 : 'any'"
-               [form]="$any(formGroup.get(fieldInfo.fieldName))"
-               [label]="fieldInfo.label"
-               style="width: 100%"
-               [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@processingOrder.evidenceField.required.error">
+@if (showRow) {
+  <div class="{{ rowClass }}">
+    <div class="{{ colClass }}">
+      @if (fieldInfo.type === 'PRICE' || fieldInfo.type === 'EXCHANGE_RATE') {
+        <textinput
+          type="number"
+          min="0"
+          step="0.01"
+          [form]="$any(formGroup.get(fieldInfo.fieldName))"
+          [label]="fieldInfo.label"
+          style="width: 100%"
+          [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+          @if (submitted) {
+            @if (formGroup.get(fieldInfo.fieldName).errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div>
+                    Field '{{ fieldInfo.fieldName }}' is required
+                  </div>
+                }
+              </div>
+            }
+          }
+        </textinput>
+      }
+      @if (fieldInfo.type === 'NUMBER' || fieldInfo.type === 'INTEGER') {
+        <textinput
+          type="number"
+          [step]="fieldInfo.type === 'INTEGER' ? 1 : 'any'"
+          [form]="$any(formGroup.get(fieldInfo.fieldName))"
+          [label]="fieldInfo.label"
+          style="width: 100%"
+          [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+          @if (submitted) {
+            @if (formGroup.get(fieldInfo.fieldName).errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@processingOrder.evidenceField.required.error">
             Field is required
           </div>
-          <div *ngIf="errors.integer" i18n="@@processingOrder.evidenceField.integer.error">
+                }
+                @if (errors.integer) {
+                  <div i18n="@@processingOrder.evidenceField.integer.error">
             Field must be a whole number
           </div>
-        </div>
-      </ng-container>
-    </textinput>
-
-    <textinput *ngIf="fieldInfo.type === 'STRING'"
-               [form]="$any(formGroup.get(fieldInfo.fieldName))"
-               [label]="fieldInfo.label"
-               style="width: 100%"
-               [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
-          Field '{{ fieldInfo.label }}' is required
-        </div>
-      </ng-container>
-    </textinput>
-
-    <app-datepicker *ngIf="fieldInfo.type === 'DATE'"
-                    [form]="formGroup.get(fieldInfo.fieldName)"
-                    [label]="fieldInfo.label"
-                    [invalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
-          Field '{{ fieldInfo.label }}' is required
-        </div>
-      </ng-container>
-    </app-datepicker>
-
-    <textinput *ngIf="fieldInfo.type === 'TEXT'"
-               style="width: 100%"
-               [textarea]="true"
-               [form]="$any(formGroup.get(fieldInfo.fieldName))"
-               [label]="fieldInfo.label"
-               [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="formGroup.get(fieldInfo.fieldName).errors as errors" class="sc-invalid-feedback">
-          Field '{{ fieldInfo.label }}' is required
-        </div>
-      </ng-container>
-    </textinput>
-
+                }
+              </div>
+            }
+          }
+        </textinput>
+      }
+      @if (fieldInfo.type === 'STRING') {
+        <textinput
+          [form]="$any(formGroup.get(fieldInfo.fieldName))"
+          [label]="fieldInfo.label"
+          style="width: 100%"
+          [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+          @if (submitted) {
+            @if (formGroup.get(fieldInfo.fieldName).errors; as errors) {
+              <div class="sc-invalid-feedback">
+                Field '{{ fieldInfo.label }}' is required
+              </div>
+            }
+          }
+        </textinput>
+      }
+      @if (fieldInfo.type === 'DATE') {
+        <app-datepicker
+          [form]="formGroup.get(fieldInfo.fieldName)"
+          [label]="fieldInfo.label"
+          [invalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+          @if (submitted) {
+            @if (formGroup.get(fieldInfo.fieldName).errors; as errors) {
+              <div class="sc-invalid-feedback">
+                Field '{{ fieldInfo.label }}' is required
+              </div>
+            }
+          }
+        </app-datepicker>
+      }
+      @if (fieldInfo.type === 'TEXT') {
+        <textinput
+          style="width: 100%"
+          [textarea]="true"
+          [form]="$any(formGroup.get(fieldInfo.fieldName))"
+          [label]="fieldInfo.label"
+          [isInvalid]="submitted && formGroup.get(fieldInfo.fieldName).invalid">
+          @if (submitted) {
+            @if (formGroup.get(fieldInfo.fieldName).errors; as errors) {
+              <div class="sc-invalid-feedback">
+                Field '{{ fieldInfo.label }}' is required
+              </div>
+            }
+          }
+        </textinput>
+      }
+    </div>
   </div>
-</div>
+}

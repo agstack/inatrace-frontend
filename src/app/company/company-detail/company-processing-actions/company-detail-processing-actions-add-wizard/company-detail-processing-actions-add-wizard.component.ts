@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from "@angular/router";
 import { ApiEnumWithLabelString, EnumSifrant } from "../../../../shared-services/enum-sifrant";
 import { ApiProcessingAction } from "../../../../../api/model/apiProcessingAction";
 import { take } from "rxjs/operators";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { CompanyValueChainsService } from "../../../../shared-services/company-value-chains.service";
 import { ApiValueChain } from "../../../../../api/model/apiValueChain";
@@ -26,9 +26,11 @@ import { ProcessingActionControllerService } from "../../../../../api/api/proces
 import { SelfOnboardingService } from "../../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-company-detail-processing-actions-add-wizard',
-  templateUrl: './company-detail-processing-actions-add-wizard.component.html',
-  styleUrls: ['./company-detail-processing-actions-add-wizard.component.scss', '../../company-detail.component.scss']
+    selector: 'app-company-detail-processing-actions-add-wizard',
+    templateUrl: './company-detail-processing-actions-add-wizard.component.html',
+    styleUrls: ['./company-detail-processing-actions-add-wizard.component.scss', '../../company-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit {
 
@@ -40,39 +42,39 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
   selectedProcActionType: ApiProcessingAction.TypeEnum;
 
   // Step 2
-  procActionNameControl = new FormControl(null, Validators.required);
+  procActionNameControl = new UntypedFormControl(null, Validators.required);
 
   // Step 3
-  procActionLOTNameControl = new FormControl(null, Validators.required);
+  procActionLOTNameControl = new UntypedFormControl(null, Validators.required);
 
   // Step 4
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChains: Array<ApiValueChain> = [];
-  valueChainsForm = new FormControl(null);
-  selectedCompanyValueChainsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  valueChains: ApiValueChain[] = [];
+  valueChainsForm = new UntypedFormControl(null);
+  selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   // Step 5
-  selectedInputSemiProductControl = new FormControl(null, Validators.required);
+  selectedInputSemiProductControl = new UntypedFormControl(null, Validators.required);
   semiProductsForValueChainsService: SemiProductsForValueChainsService;
 
   // Step 6 - FINAL_PROCESSING case (one output final product)
-  selectedOutputFinalProductControl = new FormControl(null, Validators.required);
+  selectedOutputFinalProductControl = new UntypedFormControl(null, Validators.required);
   finalProductsForCompanyCodebook: FinalProductsForCompanyService;
 
   // Step 6 - PROCESSING case (multiple output semi-products)
-  outputSemiProducts: Array<ApiValueChain> = [];
-  outputSemiProductControl = new FormControl(null);
-  selectedOutputSemiProductsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  outputSemiProducts: ApiValueChain[] = [];
+  outputSemiProductControl = new UntypedFormControl(null);
+  selectedOutputSemiProductsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   // Step 7 - step only shown if selected proc. action type is GENERATE_QR_CODE
-  qrCodeForFinalProductControl = new FormControl(null, Validators.required);
+  qrCodeForFinalProductControl = new UntypedFormControl(null, Validators.required);
 
   // Step 8
   supportedFacilitiesService: CompanyFacilitiesService;
   facilities: ApiFacility[] = [];
   selectedProcActionFacilities: ApiFacility[] = [];
 
-  currentStep: number = 1;
+  currentStep = 1;
 
   @Input()
   companyId: string;
@@ -261,7 +263,7 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
 
   createNewProcessingAction() {
 
-    let processingAction: ApiProcessingAction = {
+    const processingAction: ApiProcessingAction = {
       company: {
         id: Number(this.companyId)
       },

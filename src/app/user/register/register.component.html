@@ -6,66 +6,84 @@
         <div class="login-title" i18n="@@register.title">Create an account</div>
         <div class="login-big-spacer"></div>
 
-        <textinput [form]="$any(registerForm.get('name'))" label="First name" style="width: 100%" placeholder="Enter your first name" class="register-text-left"
+        <textinput [form]="$any(registerForm.get('name'))" label="First name" style="width: 100%" placeholder="Enter your first name" class="register-text-start"
           biggerTextInput="true"
           i18n-label="@@register.textinput.firstname.label"
           i18n-placeholder="@@register.textinput.firstname.placeholder"
           [isInvalid]="submitted && registerForm.get('name').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="registerForm.get('name').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@register.textinput.firstname.error">
+          @if (submitted) {
+            @if (registerForm.get('name').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@register.textinput.firstname.error">
                 First name is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
         <div class="login-small-spacer"></div>
         <div class="login-small-spacer"></div>
-        <textinput [form]="$any(registerForm.get('surname'))" label="Last name" style="width: 100%" placeholder="Enter your last name" class="register-text-left"
+        <textinput [form]="$any(registerForm.get('surname'))" label="Last name" style="width: 100%" placeholder="Enter your last name" class="register-text-start"
           biggerTextInput="true"
           i18n-label="@@register.textinput.surname.label"
           i18n-placeholder="@@register.textinput.surname.placeholder"
           [isInvalid]="submitted && registerForm.get('surname').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="registerForm.get('surname').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@register.textinput.surname.error">
+          @if (submitted) {
+            @if (registerForm.get('surname').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@register.textinput.surname.error">
                 Last name is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
         <div class="login-small-spacer"></div>
         <div class="login-small-spacer"></div>
-        <textinput [form]="$any(registerForm.get('email'))" label="E-mail" style="width: 100%" placeholder="Enter your e-mail" class="register-text-left"
+        <textinput [form]="$any(registerForm.get('email'))" label="E-mail" style="width: 100%" placeholder="Enter your e-mail" class="register-text-start"
           biggerTextInput="true"
           i18n-label="@@register.textinput.email.label"
           i18n-placeholder="@@register.textinput.email.placeholder"
           [isInvalid]="submitted && registerForm.get('email').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="registerForm.get('email').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@register.textinput.email.errorRequired">
+          @if (submitted) {
+            @if (registerForm.get('email').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@register.textinput.email.errorRequired">
                 E-mail is required
               </div>
-              <div *ngIf="errors.wrongEmail" i18n="@@register.textinput.email.errorRequired">
+                }
+                @if (errors.wrongEmail) {
+                  <div i18n="@@register.textinput.email.errorRequired">
                 E-mail is in the wrong format
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
         <div class="login-small-spacer"></div>
         <div class="login-small-spacer"></div>
-        <textinput [form]="$any(registerForm.get('password'))" label="Password" style="width: 100%" placeholder="Enter your password" class="register-text-left"
+        <textinput [form]="$any(registerForm.get('password'))" label="Password" style="width: 100%" placeholder="Enter your password" class="register-text-start"
           biggerTextInput="true"
           i18n-label="@@register.textinput.password.label"
           i18n-placeholder="@@register.textinput.password.placeholder"
           type="password" [isInvalid]="submitted && registerForm.get('password').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="registerForm.get('password').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required || errors.minlength" i18n="@@register.textinput.password.error">
+          @if (submitted) {
+            @if (registerForm.get('password').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required || errors.minlength) {
+                  <div i18n="@@register.textinput.password.error">
                 Password must contain at least 8 characters
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
 
         <checkbox-input #conditionEl [form]="$any(registerForm.get('condition'))"
@@ -73,57 +91,69 @@
           <checkbox-input-rich-label i18n="@@register.checkbox-input">
           </checkbox-input-rich-label>
           <checkbox-input-errors>
-            <ng-container *ngIf="submitted">
-              <div *ngIf="registerForm.get('condition').errors as errors" class="sc-invalid-feedback register-text-left">
-                <div *ngIf="errors.conditionsNotConfirmed" i18n="@@register.checkbox-input.error" style="padding-bottom: 2rem;">
+            @if (submitted) {
+              @if (registerForm.get('condition').errors; as errors) {
+                <div class="sc-invalid-feedback register-text-start">
+                  @if (errors.conditionsNotConfirmed) {
+                    <div i18n="@@register.checkbox-input.error" style="padding-bottom: 2rem;">
                   You have to agree with conditions
                 </div>
-              </div>
-            </ng-container>
+                  }
+                </div>
+              }
+            }
           </checkbox-input-errors>
         </checkbox-input>
 
-        <div *ngIf="!(submitted && registerForm.get('condition').errors && registerForm.get('condition').errors.conditionsNotConfirmed)" style="margin-top:-2.5rem; margin-left: 2.2rem">
-          <span i18n="@@register.checkbox-input.conditions.pretext">Yes, I agree with
+        @if (!(submitted && registerForm.get('condition').errors && registerForm.get('condition').errors.conditionsNotConfirmed)) {
+          <div style="margin-top:-2.5rem; margin-left: 2.2rem">
+            <span i18n="@@register.checkbox-input.conditions.pretext">Yes, I agree with
           </span>&nbsp;<a target="_blank" href="https://www.nachhaltige-agrarlieferketten.org/en/privacy/"><span i18n="@@register.checkbox-input.conditions.link">your conditions</span></a>
-        </div>
+            </div>
+          }
 
-        <div *ngIf="submitted && registerForm.get('condition').errors && registerForm.get('condition').errors.conditionsNotConfirmed" style="margin-top:-6.7rem; margin-left: 2.2rem">
-          <span i18n="@@register.checkbox-input.conditions.pretext">Yes, I agree with
+          @if (submitted && registerForm.get('condition').errors && registerForm.get('condition').errors.conditionsNotConfirmed) {
+            <div style="margin-top:-6.7rem; margin-left: 2.2rem">
+              <span i18n="@@register.checkbox-input.conditions.pretext">Yes, I agree with
           </span>&nbsp;<a target="_blank" href="https://www.nachhaltige-agrarlieferketten.org/en/privacy/"><span i18n="@@register.checkbox-input.conditions.link">your conditions</span></a>
-        </div>
+              </div>
+            }
 
-        <div class="login-medium-spacer"></div>
+            <div class="login-medium-spacer"></div>
 
-        <div style="margin-top:1rem">
-          <a [routerLink]="['/', 'login']" i18n="@@register.link.alreadyRegistered"><span class="login-forgot-password">Already registered? Login</span></a>
-        </div>
+            <div style="margin-top:1rem">
+              <a [routerLink]="['/', 'login']" i18n="@@register.link.alreadyRegistered"><span class="login-forgot-password">Already registered? Login</span></a>
+            </div>
 
-        <div class="login-small-spacer"></div>
-        <div class="login-small-spacer"></div>
-        <div class="login-small-spacer"></div>
-        <div class="login-small-spacer"></div>
-        <button class="btn btn-register" (click)="onSubmit()" i18n="@@register.button.register">
+            <div class="login-small-spacer"></div>
+            <div class="login-small-spacer"></div>
+            <div class="login-small-spacer"></div>
+            <div class="login-small-spacer"></div>
+            <button class="btn btn-register" (click)="onSubmit()" i18n="@@register.button.register">
           <span>Register</span>
         </button>
-      </div>
-    </div>
-    <div class="col-sm-0 col-lg-6" style="background-color: rgba(247,247,247,0.56); border-radius: 32px;">
+          </div>
+        </div>
+        <div class="col-sm-0 col-lg-6" style="background-color: rgba(247,247,247,0.56); border-radius: 32px;">
 
-      <div class="login-right-side-text">
-        Make agricultural supply chains transparent and fair with INATrace
-      </div>
-      <div class="login-right-side-subtext">
+          <div class="login-right-side-text">
+            Make agricultural supply chains transparent and fair with INATrace
+          </div>
+          <div class="login-right-side-subtext">
 
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div *ngIf="_registerErrorStatus$.value === 'INVALID_REQUEST'" i18n="@@register.error.userExists">
+      @if (_registerErrorStatus$.value === 'INVALID_REQUEST') {
+        <div i18n="@@register.error.userExists">
     User already exists
   </div>
-  <div *ngIf="!!_registerErrorStatus$.value && _registerErrorStatus$.value != 'INVALID_REQUEST'" i18n="@@register.error.somethingWentWrong">
+      }
+      @if (!!_registerErrorStatus$.value && _registerErrorStatus$.value !== 'INVALID_REQUEST') {
+        <div i18n="@@register.error.somethingWentWrong">
     Something went wrong during register
   </div>
+      }
 
-</div>
+    </div>

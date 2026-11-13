@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CodebookTranslations } from 'src/app/shared-services/codebook-translations';
 
 @Pipe({
-  name: 'translateCodebook'
+    name: 'translateCodebook',
+    standalone: false
 })
 export class TranslateCodebookPipe implements PipeTransform {
 

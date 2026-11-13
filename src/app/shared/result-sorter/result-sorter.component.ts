@@ -1,12 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { SortOption, SortOrder, SortKeyAndOrder } from './result-sorter-types';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'tr[result-sorter]',
     templateUrl: './result-sorter.component.html',
-    styleUrls: ['./result-sorter.component.scss']
+    styleUrls: ['./result-sorter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ResultSorterComponent implements OnInit {
 
@@ -14,13 +16,13 @@ export class ResultSorterComponent implements OnInit {
     sortOptions: SortOption[] = []
 
     @Input()
-    defaultSortingIndex: number = 0;
+    defaultSortingIndex = 0;
 
     @Input()
     defaultSortOrder: SortOrder = 'ASC';
 
     @Input()
-    cbChecked: FormControl;
+    cbChecked: UntypedFormControl;
 
     @Output()
     sortByKey = new EventEmitter<SortKeyAndOrder>();
@@ -49,7 +51,7 @@ export class ResultSorterComponent implements OnInit {
     }
 
     emitState() {
-        let state = {
+        const state = {
             key: this.sortOptions[this.oznacen].key,
             sortOrder: this.sortOrder,
             checked: this.cbChecked ? this.cbChecked.value : null

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { NavigationEnd, Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { PublicControllerService } from 'src/api/api/publicController.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { startWith, debounceTime, tap, switchMap, map, shareReplay, filter, take, catchError } from 'rxjs/operators';
 import { ApiPaginatedResponseApiProductLabelFeedback } from 'src/api/model/apiPaginatedResponseApiProductLabelFeedback';
 import { ProductControllerService } from 'src/api/api/productController.service';
@@ -13,11 +13,13 @@ import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-impr
 import { FeedbackModalComponent } from 'src/app/m-product/product-label-feedback-page/feedback-modal/feedback-modal.component';
 
 @Component({
-  selector: 'app-product-label-feedback-page',
-  templateUrl: './product-label-feedback-page.component.html',
-  styleUrls: ['./product-label-feedback-page.component.scss']
+    selector: 'app-product-label-feedback-page',
+    templateUrl: './product-label-feedback-page.component.html',
+    styleUrls: ['./product-label-feedback-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ProductLabelFeedbackPageComponent implements OnInit {
+export class ProductLabelFeedbackPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
@@ -41,8 +43,8 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   faTimes = faTimes;
   faFilter = faFilter;
   routerSub: Subscription;
-  searchName = new FormControl(null);
-  searchStatus = new FormControl('');
+  searchName = new UntypedFormControl(null);
+  searchStatus = new UntypedFormControl('');
 
   reloadPing$ = new BehaviorSubject<boolean>(false);
   pagingParams$ = new BehaviorSubject({});
@@ -187,13 +189,13 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
   ]
 
   async deleteFeedback(feedback) {
-    let result = await this.globalEventsManager.openMessageModal({
+    const result = await this.globalEventsManager.openMessageModal({
       type: 'warning',
       message: $localize`:@@productLabelFeedback.deleteFeedback.error.message:Are you sure you want to delete the feedback?`,
       options: { centered: true }
     });
     if (result != "ok") return
-    let res = await this.productController.deleteProductLabelFeedback(feedback.id).pipe(take(1)).toPromise();
+    const res = await this.productController.deleteProductLabelFeedback(feedback.id).pipe(take(1)).toPromise();
     if (res && res.status == 'OK') {
       this.reloadPage()
     }
@@ -255,7 +257,7 @@ export class ProductLabelFeedbackPageComponent implements OnInit {
     }
 
     let csv = "Email" + ',' + '\n';
-    for (let item of feedbacks) {
+    for (const item of feedbacks) {
       if (item.email) {
         csv += item.email + ',' + '\n';
       }

@@ -1,10 +1,10 @@
 import { SimpleValidationScheme } from '../../../../interfaces/Validation';
 import { ApiPayment } from '../../../../api/model/apiPayment';
-import { FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { multiFieldValidator } from '../../../../shared/validation';
 import PaymentPurposeTypeEnum = ApiPayment.PaymentPurposeTypeEnum;
 
-function atLeastOnePayableTo(control: FormGroup): ValidationErrors | null {
+function atLeastOnePayableTo(control: UntypedFormGroup): ValidationErrors | null {
     const toCompany = control.value && control.value['recipientCompany'];
     const toFarmer = control.value && control.value['recipientUserCustomer'];
     return toCompany == null && toFarmer == null
@@ -12,7 +12,7 @@ function atLeastOnePayableTo(control: FormGroup): ValidationErrors | null {
         : null;
 }
 
-function onlyOnePayableTo(control: FormGroup): ValidationErrors | null {
+function onlyOnePayableTo(control: UntypedFormGroup): ValidationErrors | null {
     const toCompany = control.value && control.value['recipientOrganizationId'];
     const toFarmer = control.value && control.value['recipientUserCustomerId'];
     return toCompany != null && toFarmer != null
@@ -20,7 +20,7 @@ function onlyOnePayableTo(control: FormGroup): ValidationErrors | null {
         : null;
 }
 
-function requireReceiptDocument(control: FormGroup): ValidationErrors | null {
+function requireReceiptDocument(control: UntypedFormGroup): ValidationErrors | null {
     const paymentPurposeType = control.value && control.value['paymentPurposeType'];
     const receiptDocument = control.value && control.value['receiptDocument'];
     return paymentPurposeType === PaymentPurposeTypeEnum.FIRSTINSTALLMENT && !receiptDocument

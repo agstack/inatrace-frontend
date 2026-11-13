@@ -6,153 +6,158 @@
   [formControlInput]="originalFormControl"
   [disableDelete]="disableDelete">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div>
-          {{ name }}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          <div>
+            {{ name }}
+          </div>
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-
-        <ng-container *ngIf="!selectPlotType; else selectNewPlotType">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          @if (!selectPlotType) {
             <div class="af-row mt-2">
-                <div class="af-c12">
-                    <button *ngIf="mapEditable && plotType == 'boundaries'" class="btn mr-2" (click)="showHidePlot()" i18n="@@plotsItem.action.showHidePlotArea">Show/hide plot area</button>
-
-                    <button *ngIf="mapEditable && plotType == 'boundaries'" class="btn mr-2" [disabled]="!plotCoordinates?.length" (click)="undoLastPoint()" i18n="@@plotsItem.action.undoLastPoint">Undo last point</button>
-
-                    <button *ngIf="mapEditable" class="btn" (click)="deletePlot()" i18n="@@plotsItem.action.deletePlot">Delete plot</button>
-                </div>
-
-                <div class="af-c12">
-                    <label i18n="@@plotsItem.header.text">Plot coordinates</label>
-                </div>
-
-                <div class="af-c12">
-                    <app-map *ngIf="isOpen && tagOpened" style="width: 100%; display: block;"
-                             [plotCoordinatesManager]="plotCoordinatesManager"
-                             [(plotCoordinates)]="plotCoordinates"
-                             (plotCoordinatesChange)="updateFormCoordinates($event)"
-                             [showPlotSubject]="showPlotSubject"
-                             [editable]="mapEditable"
-                             [mapId]="'item-map' + listEditorManagerPosition"
-                             [initialLat]="initialLat"
-                             [initialLng]="initialLng"
-                             [editMode]="true">
-                    </app-map>
-                </div>
-
-                <div class="af-c12">
-                    <label class="mt-2 mb-0" i18n="@@map.modal.geoId.title">Geo-ID:</label>
-                    <ng-container *ngIf="$any(this.form.get('geoId')?.value); else noGeoId">
-                        <div>
-                            <label class="geoid-content pr-1">{{ this.form.get('geoId').value }}&nbsp;
-                                <fa-icon class="copy-icon" [icon]="faCopy" (click)="geoId.select(); copyToClipboard();"></fa-icon>
-                            </label>
-                            <input #geoId value="{{ this.form.get('geoId').value }}" class="offscreen">
-                        </div>
-                    </ng-container>
-                    <ng-template #noGeoId>
-                        <label>&nbsp;/</label>
-                    </ng-template>
-                    <textinput
-                            [form]="$any(this.form.get('plotName'))"
-                            label="Plot name"
-                            [isInvalid]="submitted && form.get('plotName').invalid"
-                            style="width: 100%"
-                            placeholder="Enter plot name"
-                            i18n-label="@@collectorDetail.textinput.plotName.label"
-                            i18n-placeholder="@@collectorDetail.textinput.plotName.placeholder">
-                    </textinput>
-                    <single-choice
-                            label="Crop"
-                            i18n-label="@@collectorDetail.textinput.crop.label"
-                            [formControlInput]="$any(this.form.get('crop'))"
-                            [codebookService]="productTypesCodebook"
-                            [isInvalidChoice]="submitted && form.get('crop').invalid">
-                        <ng-container *ngIf="submitted">
-                            <div *ngIf="form.get('crop').errors as errors" class="sc-invalid-feedback">
-                                <div *ngIf="errors.required" i18n-title="@@collectorDetail.list-editor.productTypes.error">
-                                    <span>Product types are required</span>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </single-choice>
-                    <textinput
-                            [form]="$any(this.form.get('numberOfPlants'))"
-                            label="Number of plants"
-                            style="width: 100%"
-                            placeholder="Enter number of plants"
-                            i18n-label="@@collectorDetail.textinput.numberOfPlants.label"
-                            i18n-placeholder="@@collectorDetail.textinput.numberOfPlants.placeholder">
-                    </textinput>
-                    <textinput
-                            *ngIf="plotType == 'boundaries' || null"
-                            readOnly="true"
-                            [form]="$any(this.form.get('size'))"
-                            label="Size"
-                            style="width: 100%"
-                            placeholder="Enter size"
-                            i18n-label="@@collectorDetail.textinput.size.label"
-                            i18n-placeholder="@@collectorDetail.textinput.size.placeholder">
-                    </textinput>
-                    <textinput
-                            *ngIf="plotType == 'boundaries' || null"
-                            readOnly="true"
-                            [form]="$any(this.form.get('unit'))"
-                            label="Unit"
-                            style="width: 100%"
-                            placeholder="Enter unit"
-                            i18n-label="@@collectorDetail.textinput.unit.label"
-                            i18n-placeholder="@@collectorDetail.textinput.unit.placeholder">
-                    </textinput>
-                    <app-datepicker
-                            [form]="$any(this.form.get('organicStartOfTransition'))"
-                            label="Start transition to organic"
-                            style="width: 100%"
-                            i18n-label="@@collectorDetail.textinput.startTransitionToOrganic.label">
-                    </app-datepicker>
-                    <label class="pt-2 pr-2" i18n="@@collectorDetail.textinput.lastUpdate.label">Last update:</label>
-                    <ng-container *ngIf="$any(this.form.get('lastUpdated')); else noLastUpdated">
-                        <label class="pt-2">{{ this.form.get('lastUpdated').value | date: 'yyyy-MM-dd hh:mm' }}</label>
-                    </ng-container>
-                    <ng-template #noLastUpdated>
-                        <label>/</label>
-                    </ng-template>
-                </div>
-
+              <div class="af-c12">
+                @if (mapEditable && plotType === 'boundaries') {
+                  <button class="btn me-2" (click)="showHidePlot()" i18n="@@plotsItem.action.showHidePlotArea">Show/hide plot area</button>
+                }
+                @if (mapEditable && plotType === 'boundaries') {
+                  <button class="btn me-2" [disabled]="!plotCoordinates?.length" (click)="undoLastPoint()" i18n="@@plotsItem.action.undoLastPoint">Undo last point</button>
+                }
+                @if (mapEditable) {
+                  <button class="btn" (click)="deletePlot()" i18n="@@plotsItem.action.deletePlot">Delete plot</button>
+                }
+              </div>
+              <div class="af-c12">
+                <label i18n="@@plotsItem.header.text">Plot coordinates</label>
+              </div>
+              <div class="af-c12">
+                @if (isOpen && tagOpened) {
+                  <app-map style="width: 100%; display: block;"
+                    [plotCoordinatesManager]="plotCoordinatesManager"
+                    [(plotCoordinates)]="plotCoordinates"
+                    (plotCoordinatesChange)="updateFormCoordinates($event)"
+                    [showPlotSubject]="showPlotSubject"
+                    [editable]="mapEditable"
+                    [mapId]="'item-map' + listEditorManagerPosition"
+                    [initialLat]="initialLat"
+                    [initialLng]="initialLng"
+                    [editMode]="true">
+                  </app-map>
+                }
+              </div>
+              <div class="af-c12">
+                <label class="mt-2 mb-0" i18n="@@map.modal.geoId.title">Geo-ID:</label>
+                @if ($any(this.form.get('geoId')?.value)) {
+                  <div>
+                    <label class="geoid-content pe-1">{{ this.form.get('geoId').value }}&nbsp;
+                      <fa-icon class="copy-icon" [icon]="faCopy" (click)="geoId.select(); copyToClipboard();"></fa-icon>
+                    </label>
+                    <input #geoId value="{{ this.form.get('geoId').value }}" class="offscreen">
+                  </div>
+                } @else {
+                  <label>&nbsp;/</label>
+                }
+                <textinput
+                  [form]="$any(this.form.get('plotName'))"
+                  label="Plot name"
+                  [isInvalid]="submitted && form.get('plotName').invalid"
+                  style="width: 100%"
+                  placeholder="Enter plot name"
+                  i18n-label="@@collectorDetail.textinput.plotName.label"
+                  i18n-placeholder="@@collectorDetail.textinput.plotName.placeholder">
+                </textinput>
+                <single-choice
+                  label="Crop"
+                  i18n-label="@@collectorDetail.textinput.crop.label"
+                  [formControlInput]="$any(this.form.get('crop'))"
+                  [codebookService]="productTypesCodebook"
+                  [isInvalidChoice]="submitted && form.get('crop').invalid">
+                  @if (submitted) {
+                    @if (form.get('crop').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n-title="@@collectorDetail.list-editor.productTypes.error">
+                            <span>Product types are required</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+                <textinput
+                  [form]="$any(this.form.get('numberOfPlants'))"
+                  label="Number of plants"
+                  style="width: 100%"
+                  placeholder="Enter number of plants"
+                  i18n-label="@@collectorDetail.textinput.numberOfPlants.label"
+                  i18n-placeholder="@@collectorDetail.textinput.numberOfPlants.placeholder">
+                </textinput>
+                @if (plotType === 'boundaries' || null) {
+                  <textinput
+                    readOnly="true"
+                    [form]="$any(this.form.get('size'))"
+                    label="Size"
+                    style="width: 100%"
+                    placeholder="Enter size"
+                    i18n-label="@@collectorDetail.textinput.size.label"
+                    i18n-placeholder="@@collectorDetail.textinput.size.placeholder">
+                  </textinput>
+                }
+                @if (plotType === 'boundaries' || null) {
+                  <textinput
+                    readOnly="true"
+                    [form]="$any(this.form.get('unit'))"
+                    label="Unit"
+                    style="width: 100%"
+                    placeholder="Enter unit"
+                    i18n-label="@@collectorDetail.textinput.unit.label"
+                    i18n-placeholder="@@collectorDetail.textinput.unit.placeholder">
+                  </textinput>
+                }
+                <app-datepicker
+                  [form]="$any(this.form.get('organicStartOfTransition'))"
+                  label="Start transition to organic"
+                  style="width: 100%"
+                  i18n-label="@@collectorDetail.textinput.startTransitionToOrganic.label">
+                </app-datepicker>
+                <label class="pt-2 pe-2" i18n="@@collectorDetail.textinput.lastUpdate.label">Last update:</label>
+                @if ($any(this.form.get('lastUpdated'))) {
+                  <label class="pt-2">{{ this.form.get('lastUpdated').value | date: 'yyyy-MM-dd hh:mm' }}</label>
+                } @else {
+                  <label>/</label>
+                }
+              </div>
             </div>
-        </ng-container>
-          <ng-template #selectNewPlotType>
-              <div class="select-plot-type-message">
-                  <span i18n="@@collectorDetail.drawPlot.selectPlotType.label">Select if you want to draw a plot with boundaries od add a single point</span>
-              </div>
-              <div class="select-plot-type-container">
-                  <button (click)="setPlotType('boundaries')" class="btn mr-4">
-                      <span i18n="@@collectorDetail.drawPlot.boundaries.button">Boundaries</span>
-                  </button>
-                  <button class="btn mr-2" (click)="setPlotType('single_point')">
-                      <span i18n="@@collectorDetail.drawPlot.singlePoint.button">Single point</span>
-                  </button>
-              </div>
-          </ng-template>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          } @else {
+            <div class="select-plot-type-message">
+              <span i18n="@@collectorDetail.drawPlot.selectPlotType.label">Select if you want to draw a plot with boundaries od add a single point</span>
+            </div>
+            <div class="select-plot-type-container">
+              <button (click)="setPlotType('boundaries')" class="btn me-4">
+                <span i18n="@@collectorDetail.drawPlot.boundaries.button">Boundaries</span>
+              </button>
+              <button class="btn me-2" (click)="setPlotType('single_point')">
+                <span i18n="@@collectorDetail.drawPlot.singlePoint.button">Single point</span>
+              </button>
+            </div>
+          }
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
           <mini-buttons
-                  [cancelButtonOnly]="selectPlotType"
-                  (onSave)="savePlot()"
-                  (onCancel)="cancel()"
-                  [error]="submitted && form.invalid">
+            [cancelButtonOnly]="selectPlotType"
+            (onSave)="savePlot()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
           </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

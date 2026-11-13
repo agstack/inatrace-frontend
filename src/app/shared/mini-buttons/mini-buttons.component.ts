@@ -1,9 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'mini-buttons',
     templateUrl: './mini-buttons.component.html',
-    styleUrls: ['./mini-buttons.component.scss']
+    styleUrls: ['./mini-buttons.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MiniButtonsComponent implements OnInit {
 

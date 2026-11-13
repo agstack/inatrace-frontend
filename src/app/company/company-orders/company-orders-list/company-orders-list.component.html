@@ -1,105 +1,140 @@
-<ng-container *ngIf="orders$ | async as orders">
+@if (orders$ | async; as orders) {
   <div class="main-inside-main">
-    <table *ngIf="orders && orders.items && orders.items.length> 0" class="af-table af-checkbox--small">
-      <thead>
-      <tr result-sorter
-          [sortOptions]="sortOptions"
-          [cbChecked]="cbCheckedAll"
-          [defaultSortingIndex]="7"
+    @if (orders && orders.items && orders.items.length> 0) {
+      <table class="af-table af-checkbox--small">
+        <thead>
+          <tr result-sorter
+            [sortOptions]="sortOptions"
+            [cbChecked]="cbCheckedAll"
+            [defaultSortingIndex]="7"
           (sortByKey)="changeSort($event)"></tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let order of orders.items; index as i">
-        <td *ngIf="!sortOptions[0].hide" [attr.data-label]="sortOptions[0].name"><span>{{ order.deliveryTime | date: 'yyyy-MM-dd' }}</span></td>
-        <td *ngIf="!sortOptions[1].hide" [attr.data-label]="sortOptions[1].name"><span>
-          <ng-container *ngIf="order.semiProduct">
-            {{ order.semiProduct.name }}
-          </ng-container>
-          <ng-container *ngIf="order.finalProduct">
-            {{ order.finalProduct.name }} ({{ order.finalProduct.product.name }})
-          </ng-container>
-        </span></td>
-        <td *ngIf="!sortOptions[2].hide" [attr.data-label]="sortOptions[2].name"><span>{{ order.facility?.company?.name }}</span></td>
-        <td *ngIf="!sortOptions[3].hide" [attr.data-label]="sortOptions[3].name"><span>{{ order.consumerCompanyCustomer?.name }}</span></td>
-        <td *ngIf="!sortOptions[4].hide" [attr.data-label]="sortOptions[4].name">
-          <span *ngIf="order.productOrder; else noProductOrder">{{ order.productOrder.orderId }}</span>
-          <ng-template #noProductOrder>
-            <span>{{ order.orderId ? order.orderId : '/' }}</span>
-          </ng-template>
-        </td>
-        <td *ngIf="!sortOptions[5].hide" [attr.data-label]="sortOptions[5].name"><span>{{ order.facility?.name }}</span></td>
-        <td *ngIf="!sortOptions[6].hide" [attr.data-label]="sortOptions[6].name"><span>{{ order.quoteFacility?.company?.name }} ({{ order.quoteFacility?.name }})</span></td>
-        <td *ngIf="!sortOptions[7].hide" [attr.data-label]="sortOptions[7].name"><span>{{ order.totalQuantity }} / {{ order.fulfilledQuantity }}</span></td>
-        <td *ngIf="!sortOptions[8].hide" [attr.data-label]="sortOptions[8].name"><span>{{ order.measureUnitType?.label }}</span></td>
-        <td *ngIf="!sortOptions[9].hide" [attr.data-label]="sortOptions[9].name"><span>{{ kgsOf(order) }}</span></td>
-        <td *ngIf="!sortOptions[10].hide" [attr.data-label]="sortOptions[10].name"><span>{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</span></td>
-        <td [attr.data-label]="sortOptions[11].name">
-            <span>
-              <a i18n="@@productLabelPurchaseOrder.tableCol.edit"
-                 (click)="edit(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+        </thead>
+        <tbody>
+          @for (order of orders.items; track order; let i = $index) {
+            <tr>
+              @if (!sortOptions[0].hide) {
+                <td [attr.data-label]="sortOptions[0].name"><span>{{ order.deliveryTime | date: 'yyyy-MM-dd' }}</span></td>
+              }
+              @if (!sortOptions[1].hide) {
+                <td [attr.data-label]="sortOptions[1].name"><span>
+                  @if (order.semiProduct) {
+                    {{ order.semiProduct.name }}
+                  }
+                  @if (order.finalProduct) {
+                    {{ order.finalProduct.name }} ({{ order.finalProduct.product.name }})
+                  }
+                </span></td>
+              }
+              @if (!sortOptions[2].hide) {
+                <td [attr.data-label]="sortOptions[2].name"><span>{{ order.facility?.company?.name }}</span></td>
+              }
+              @if (!sortOptions[3].hide) {
+                <td [attr.data-label]="sortOptions[3].name"><span>{{ order.consumerCompanyCustomer?.name }}</span></td>
+              }
+              @if (!sortOptions[4].hide) {
+                <td [attr.data-label]="sortOptions[4].name">
+                  @if (order.productOrder) {
+                    <span>{{ order.productOrder.orderId }}</span>
+                  } @else {
+                    <span>{{ order.orderId ? order.orderId : '/' }}</span>
+                  }
+                </td>
+              }
+              @if (!sortOptions[5].hide) {
+                <td [attr.data-label]="sortOptions[5].name"><span>{{ order.facility?.name }}</span></td>
+              }
+              @if (!sortOptions[6].hide) {
+                <td [attr.data-label]="sortOptions[6].name"><span>{{ order.quoteFacility?.company?.name }} ({{ order.quoteFacility?.name }})</span></td>
+              }
+              @if (!sortOptions[7].hide) {
+                <td [attr.data-label]="sortOptions[7].name"><span>{{ order.totalQuantity }} / {{ order.fulfilledQuantity }}</span></td>
+              }
+              @if (!sortOptions[8].hide) {
+                <td [attr.data-label]="sortOptions[8].name"><span>{{ order.measureUnitType?.label }}</span></td>
+              }
+              @if (!sortOptions[9].hide) {
+                <td [attr.data-label]="sortOptions[9].name"><span>{{ kgsOf(order) }}</span></td>
+              }
+              @if (!sortOptions[10].hide) {
+                <td [attr.data-label]="sortOptions[10].name"><span>{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</span></td>
+              }
+              <td [attr.data-label]="sortOptions[11].name">
+                <span>
+                  <a i18n="@@productLabelPurchaseOrder.tableCol.edit"
+                    (click)="edit(order)"
+                    class="company-action"
+                    [class.enabled-action]="true">
                 Edit
               </a>
-              <a i18n="@@productLabelPurchaseOrder.tableCol.view"
-                 (click)="history(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  <a i18n="@@productLabelPurchaseOrder.tableCol.view"
+                    (click)="history(order)"
+                    class="company-action"
+                    [class.enabled-action]="true">
                 View
               </a>
-              <a *ngIf="this.orderType === 'PLACED'"
-                 i18n="@@productLabelPurchaseOrder.tableCol.approveRejectOrder"
-                 (click)="approveReject(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  @if (this.orderType === 'PLACED') {
+                    <a
+                      i18n="@@productLabelPurchaseOrder.tableCol.approveRejectOrder"
+                      (click)="approveReject(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                 Approve/Reject
               </a>
-              <a i18n="@@productLabelPurchaseOrder.tableCol.payment"
-                 *ngIf="this.orderType === 'PLACED'"
-                 (click)="payment(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  }
+                  @if (this.orderType === 'PLACED') {
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.payment"
+                      (click)="payment(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                 Add payment
               </a>
-              <a *ngIf="canDelete(order)"
-                 i18n="@@productLabelPurchaseOrder.tableCol.delete"
-                 (click)="delete(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  }
+                  @if (canDelete(order)) {
+                    <a
+                      i18n="@@productLabelPurchaseOrder.tableCol.delete"
+                      (click)="delete(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                 Delete
               </a>
-              <a i18n="@@productLabelPurchaseOrder.tableCol.qr"
-                 *ngIf="orderType == 'PLACED' && order.qrCodeTag"
-                 (click)="openQRCodes(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  }
+                  @if (orderType === 'PLACED' && order.qrCodeTag) {
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.qr"
+                      (click)="openQRCodes(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                 QR
               </a>
-              <a i18n="@@productLabelPurchaseOrder.tableCol.exportGeoData"
-                 *ngIf="orderType == 'PLACED'"
-                 (click)="exportGeoData(order)"
-                 class="company-action"
-                 [class.enabled-action]="true">
+                  }
+                  @if (orderType === 'PLACED') {
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.exportGeoData"
+                      (click)="exportGeoData(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                 Export Geo Data
               </a>
-            </span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div *ngIf="orders && orders.items && orders.items.length == 0" class="no-list-results" i18n="@@productLabelPurchaseOrder.noOrders">
+                  }
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @if (orders && orders.items && orders.items.length === 0) {
+      <div class="no-list-results" i18n="@@productLabelPurchaseOrder.noOrders">
       No orders found
     </div>
+    }
   </div>
-
   <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
     <ngb-pagination
-            [(page)]="page"
-            [pageSize]="pageSize"
-            [collectionSize]="orders.count"
-            (pageChange)="onPageChange($event)"
-            [maxSize]="7"
-            [rotate]="true">
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="orders.count"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="7"
+      [rotate]="true">
     </ngb-pagination>
   </div>
-</ng-container>
+}

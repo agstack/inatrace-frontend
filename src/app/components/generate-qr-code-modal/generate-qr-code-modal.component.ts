@@ -1,17 +1,19 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { environment } from 'src/environments/environment';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FinalProductLabelsService } from '../../shared-services/final-product-labels.service';
 import { ApiFinalProduct } from '../../../api/model/apiFinalProduct';
 import { Subscription } from 'rxjs';
 import { ApiProductLabelBase } from '../../../api/model/apiProductLabelBase';
 
 @Component({
-  selector: 'app-generate-qr-code-modal',
-  templateUrl: './generate-qr-code-modal.component.html',
-  styleUrls: ['./generate-qr-code-modal.component.scss']
+    selector: 'app-generate-qr-code-modal',
+    templateUrl: './generate-qr-code-modal.component.html',
+    styleUrls: ['./generate-qr-code-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GenerateQRCodeModalComponent implements OnInit, OnDestroy {
 
@@ -26,8 +28,8 @@ export class GenerateQRCodeModalComponent implements OnInit, OnDestroy {
   qrCodeSize = 200;
   qrCodeString: string = null;
 
-  finalProductNameForm = new FormControl({ value: null, disabled: true });
-  finalProductLabelForm = new FormControl(null);
+  finalProductNameForm = new UntypedFormControl({ value: null, disabled: true });
+  finalProductLabelForm = new UntypedFormControl(null);
   finalProductLabelsCodebook: FinalProductLabelsService;
 
   finalProdLabelSubs: Subscription;

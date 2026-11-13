@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { generateFormFromMetadata } from 'src/shared/utils';
@@ -8,9 +8,11 @@ import { ApiTransaction } from '../../../../api/model/apiTransaction';
 import { TransactionControllerService } from '../../../../api/api/transactionController.service';
 
 @Component({
-  selector: 'app-reject-transaction-modal',
-  templateUrl: './approve-reject-transaction-modal.component.html',
-  styleUrls: ['./approve-reject-transaction-modal.component.scss']
+    selector: 'app-reject-transaction-modal',
+    templateUrl: './approve-reject-transaction-modal.component.html',
+    styleUrls: ['./approve-reject-transaction-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ApproveRejectTransactionModalComponent implements OnInit {
 
@@ -27,7 +29,7 @@ export class ApproveRejectTransactionModalComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
 
-  approveRejectForm: FormArray = new FormArray([]);
+  approveRejectForm: UntypedFormArray = new UntypedFormArray([]);
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -45,7 +47,7 @@ export class ApproveRejectTransactionModalComponent implements OnInit {
       for (const item of resp.data.items) {
         if (item.status === 'PENDING') {
           const form = generateFormFromMetadata(ApiTransaction.formMetadata(), item);
-          form.addControl('approved', new FormControl(true));
+          form.addControl('approved', new UntypedFormControl(true));
           this.approveRejectForm.push(form);
         }
       }

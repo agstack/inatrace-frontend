@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { generateFormFromMetadata } from 'src/shared/utils';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ApiUserCustomerCooperativeValidationScheme } from '../../company-collectors/company-collectors-details/validation';
 import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
 import { GenericEditableItemComponent } from 'src/app/shared/generic-editable-item/generic-editable-item.component';
@@ -10,9 +10,11 @@ import { ApiUserCustomerCooperative } from '../../../../api/model/apiUserCustome
 import UserCustomerTypeEnum = ApiUserCustomerCooperative.UserCustomerTypeEnum;
 
 @Component({
-  selector: 'app-producers-item',
-  templateUrl: './producers-item.component.html',
-  styleUrls: ['./producers-item.component.scss']
+    selector: 'app-producers-item',
+    templateUrl: './producers-item.component.html',
+    styleUrls: ['./producers-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProducersItemComponent extends GenericEditableItemComponent<ApiUserCustomerCooperative> implements OnInit {
 
@@ -67,7 +69,7 @@ export class ProducersItemComponent extends GenericEditableItemComponent<ApiUser
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiUserCustomerCooperative.formMetadata(), value, ApiUserCustomerCooperativeValidationScheme);
   }
 

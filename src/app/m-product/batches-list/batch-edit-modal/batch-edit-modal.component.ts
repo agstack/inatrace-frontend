@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiProductLabelBatch } from 'src/api/model/apiProductLabelBatch';
 import { ActiveCompaniesService } from 'src/app/shared-services/active-companies.service';
@@ -7,9 +7,11 @@ import { generateFormFromMetadata } from 'src/shared/utils';
 import { ApiProductLabelBatchValidationScheme } from './validation';
 
 @Component({
-  selector: 'app-batch-edit-modal',
-  templateUrl: './batch-edit-modal.component.html',
-  styleUrls: ['./batch-edit-modal.component.scss']
+    selector: 'app-batch-edit-modal',
+    templateUrl: './batch-edit-modal.component.html',
+    styleUrls: ['./batch-edit-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BatchEditModalComponent implements OnInit {
   // @Input()
@@ -27,9 +29,9 @@ export class BatchEditModalComponent implements OnInit {
   @Input()
   batch: ApiProductLabelBatch = null;
 
-  form: FormGroup;
-  saveTextButton: string = "Save";
-  createTextButton: string = "Create";
+  form: UntypedFormGroup;
+  saveTextButton = "Save";
+  createTextButton = "Create";
 
 
   constructor(

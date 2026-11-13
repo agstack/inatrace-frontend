@@ -1,19 +1,27 @@
 <div class="modal-header">
-  <div class="icon-div icon-{{type}}" *ngIf="icons[type]">
-    <fa-icon [icon]="icons[type]" size="2x"></fa-icon>
-  </div>
+  @if (icons[type]) {
+    <div class="icon-div icon-{{type}}">
+      <fa-icon [icon]="icons[type]" size="2x"></fa-icon>
+    </div>
+  }
   <h4 class="modal-title">{{ title || messageLabels.titles[type] }}</h4>
-  <button *ngIf="dismissable" type="button" class="close" aria-label="Close" (click)="activeModal.close('cancel')">
-    <span aria-hidden="true"><fa-icon [icon]="faTimes" size="xs"></fa-icon></span>
-  </button>
+  @if (dismissable) {
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close('cancel')">
+      <span aria-hidden="true"><fa-icon [icon]="faTimes" size="xs"></fa-icon></span>
+    </button>
+  }
   <!-- To keep title on the left -->
-  <button *ngIf="!dismissable" class="close">
-  </button>
+  @if (!dismissable) {
+    <button class="btn-close">
+    </button>
+  }
 </div>
 <div class="modal-body" [innerHTML]="message"></div>
 <div class="modal-footer">
-  <button *ngFor="let btn of buttons" type="button" class="btn btn-outlined {{buttonClasses[btn]}}" (click)="activeModal.close(btn)"
-    [attr.ngbAutofocus]="btn === focusButton ? 'true' : null">
-    <span>{{buttonTitles[btn]}}</span>
-  </button>
+  @for (btn of buttons; track btn) {
+    <button type="button" class="btn btn-outlined {{buttonClasses[btn]}}" (click)="activeModal.close(btn)"
+      [attr.ngbAutofocus]="btn === focusButton ? 'true' : null">
+      <span>{{buttonTitles[btn]}}</span>
+    </button>
+  }
 </div>

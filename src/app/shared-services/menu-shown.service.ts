@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class MenuShownService {
-    private menuShownSubject: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private menuShownSubject = new BehaviorSubject<boolean>(false);
 
     public menuShown$ = this.menuShownSubject.asObservable();
 

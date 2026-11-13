@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { StockCoreTabComponent } from '../../stock-core/stock-core-tab/stock-core-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
@@ -11,9 +11,11 @@ import { SelfOnboardingService } from "../../../../shared-services/self-onboardi
 import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-stock-processing-tab',
-  templateUrl: './stock-processing-tab.component.html',
-  styleUrls: ['./stock-processing-tab.component.scss']
+    selector: 'app-stock-processing-tab',
+    templateUrl: './stock-processing-tab.component.html',
+    styleUrls: ['./stock-processing-tab.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockProcessingTabComponent extends StockCoreTabComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -55,14 +57,14 @@ export class StockProcessingTabComponent extends StockCoreTabComponent implement
     this.subs = this.selfOnboardingService.guidedTourStep$.subscribe(step => {
 
       setTimeout(() => {
-        this.procActionsTitleTooltip.close();
-        this.facilityListTooltip.close();
+        this.procActionsTitleTooltip?.close();
+        this.facilityListTooltip?.close();
       }, 50)
 
       if (step === 5) {
-        setTimeout(() => this.procActionsTitleTooltip.open(), 50);
+        setTimeout(() => this.procActionsTitleTooltip?.open(), 50);
       } else if (step === 6) {
-        setTimeout(() => this.facilityListTooltip.open(), 50);
+        setTimeout(() => this.facilityListTooltip?.open(), 50);
       }
     });
   }

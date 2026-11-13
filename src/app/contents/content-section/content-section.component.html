@@ -3,28 +3,34 @@
     #parent
     class="row"
     style="position: relative;">
-    <div *ngIf="spacingNedded" class="col-sm-0 col-lg-1"></div>
+    @if (spacingNedded) {
+      <div class="col-sm-0 col-lg-1"></div>
+    }
     <div class="d-flex d-flex-column">
       <h5
         #sideTitle
-        class="col-11 pl-lg-0 content-title"
+        class="col-11 ps-lg-0 content-title"
         [class.active-title]="isActive"
         [style.margin-top]="marginTop"
         [class.sc-invalid-section-text]="error$ | async">{{title || data?.title}}
       </h5>
 
-      <div *ngIf="titleIcon" (click)="onIconClick()">
-        <span class="dot">
-          <fa-icon
-            class="title-icon"
-            icon={{titleIcon}}
-            size="xs">
-          </fa-icon>
-        </span>
-      </div>
+      @if (titleIcon) {
+        <div (click)="onIconClick()">
+          <span class="dot">
+            <fa-icon
+              class="title-icon"
+              icon={{titleIcon}}
+              size="xs">
+            </fa-icon>
+          </span>
+        </div>
+      }
 
     </div>
-    <div *ngIf="data" class="content-comment" [innerHTML]="data.comment" routeTransformer></div>
+    @if (data) {
+      <div class="content-comment" [innerHTML]="data.comment" routeTransformer></div>
+    }
   </div>
   <div class="content-section"
     [class.active-content]="isActive"

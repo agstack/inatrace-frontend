@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { SortOrder } from '../../../shared/result-sorter/result-sorter-types';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
@@ -9,9 +9,11 @@ import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-company-customers-list',
-  templateUrl: './company-customers-list.component.html',
-  styleUrls: ['./company-customers-list.component.scss']
+    selector: 'app-company-customers-list',
+    templateUrl: './company-customers-list.component.html',
+    styleUrls: ['./company-customers-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyCustomersListComponent implements OnInit {
 
@@ -22,7 +24,7 @@ export class CompanyCustomersListComponent implements OnInit {
   showing;
   customerCount;
 
-  searchNameCustomers = new FormControl('');
+  searchNameCustomers = new UntypedFormControl('');
   byCategory = 'BY_NAME';
 
   customer$;

@@ -5,7 +5,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbDropdownModule, NgbPaginationModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { QRCodeModule } from 'angular2-qrcode';
 import { EllipsisModule } from 'ngx-ellipsis';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { ContentsModule } from '../contents/contents.module';
@@ -71,7 +70,6 @@ import { QrCodeRedirectComponent } from './qr-code-redirect/qr-code-redirect.com
     NgxPageScrollModule,
     ContentsModule,
     EllipsisModule,
-    QRCodeModule,
     NgbTimepickerModule,
     NgbDropdownModule,
     NgbPaginationModule,

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CompanyDetailTabManagerComponent } from '../company-detail-tab-manager/company-detail-tab-manager.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilityControllerService } from '../../../../api/api/facilityController.service';
@@ -20,9 +20,11 @@ import {
 } from '../company-detail-facility-add-wizard/company-detail-facility-add-wizard.component';
 
 @Component({
-  selector: 'app-company-detail-facilities',
-  templateUrl: './company-detail-facilities.component.html',
-  styleUrls: ['./company-detail-facilities.component.scss']
+    selector: 'app-company-detail-facilities',
+    templateUrl: './company-detail-facilities.component.html',
+    styleUrls: ['./company-detail-facilities.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailFacilitiesComponent extends CompanyDetailTabManagerComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -133,9 +135,9 @@ export class CompanyDetailFacilitiesComponent extends CompanyDetailTabManagerCom
 
     this.subscriptions = this.selfOnboardingService.addFacilityCurrentStep$.subscribe(step => {
       if (step === 3) {
-        this.addFacilityButtonTooltip.open();
+        this.addFacilityButtonTooltip?.open();
       } else {
-        this.addFacilityButtonTooltip.close();
+        this.addFacilityButtonTooltip?.close();
       }
     });
   }

@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, EventEmitter, Input, Output, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { CodebookHelperService } from 'src/interfaces/CodebookHelperService';
 import { Subscription, Subscriber } from 'rxjs';
 import { uuidv4 } from 'src/shared/utils';
@@ -7,23 +7,25 @@ import { uuidv4 } from 'src/shared/utils';
 @Component({
     selector: 'checkbox-group-multi-choice',
     templateUrl: './checkbox-group-multi-choice.component.html',
-    styleUrls: ['./checkbox-group-multi-choice.component.scss']
+    styleUrls: ['./checkbox-group-multi-choice.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CheckboxGroupMultiChoiceComponent implements OnInit, OnDestroy {
 
-    _formArray: FormArray = null;
+    _formArray: UntypedFormArray = null;
 
-    @Input() set formArray(value: FormArray) {
+    @Input() set formArray(value: UntypedFormArray) {
         this._formArray = value;
         this.resubscribe()
     }
 
-    get formArray(): FormArray {
+    get formArray(): UntypedFormArray {
         return this._formArray
     }
 
     @Input()
-    useForm: boolean = false;
+    useForm = false;
 
     _form = null;
 
@@ -132,19 +134,19 @@ export class CheckboxGroupMultiChoiceComponent implements OnInit, OnDestroy {
             if (this.useForm && this.form) {
                 this.form.setValue(this.codebookService.isEnumFormControl() ? selection.id : selection)
             } else {
-                let pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
+                const pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
                 if (pos >= 0) return
-                let data = this.codebookService.isEnumFormControl()
+                const data = this.codebookService.isEnumFormControl()
                     ? selection.id
                     : selection;
-                this.formArray.push(new FormControl(data))
+                this.formArray.push(new UntypedFormControl(data))
             }
             this.checkboxes[i].selected = true
         } else {
             if (this.useForm && this.form) {
                 this.form.setValue(null)   // ALEN: prej je bilo "" - mora biti null
             } else {
-                let pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
+                const pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
                 if (pos < 0) return
                 this.formArray.removeAt(pos)
             }

@@ -1,708 +1,732 @@
 <app-authorised-layout>
-    <app-system-left-panel
-            [isAdmin]="isAdmin"
-            i18n="@@companyDetailTranslate.navTitle"
-            title="System">
+  <app-system-left-panel
+    [isAdmin]="isAdmin"
+    i18n="@@companyDetailTranslate.navTitle"
+    title="System">
     </app-system-left-panel>
 
+  @if (prepared) {
     <div [class.main]="isAdmin" [class.company-profile]="!isAdmin"
-         *ngIf="prepared">
-
-        <div class="af-form-wrapper">
-
-            <!-- Top row -->
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="title-page content-element--title">{{ title }}</div>
-                </div>
-            </div>
-            <!-- END: Top row -->
-
-            <!-- Second row -->
-            <div class="af-form-row">
-
-                <!-- Left column -->
-                <div class="af-form-block--c6">
-
-                    <!-- Basic information -->
-                    <h2 i18n="@@companyDetailProcessingActions.section0.translations">Basic information</h2>
-                    <div class="af-form-element">
-
-                        <label i18n="@@companyDetailProcessingActions.valueChains">Value chains</label>
-                        <div class="af-form-element">
-
-                            <small i18n="@@companyDetailProcessingActions.valueChains.select.label">
+      >
+      <div class="af-form-wrapper">
+        <!-- Top row -->
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">{{ title }}</div>
+          </div>
+        </div>
+        <!-- END: Top row -->
+        <!-- Second row -->
+        <div class="af-form-row">
+          <!-- Left column -->
+          <div class="af-form-block--c6">
+            <!-- Basic information -->
+            <h2 i18n="@@companyDetailProcessingActions.section0.translations">Basic information</h2>
+            <div class="af-form-element">
+              <label i18n="@@companyDetailProcessingActions.valueChains">Value chains</label>
+              <div class="af-form-element">
+                <small i18n="@@companyDetailProcessingActions.valueChains.select.label">
                                 Select value chain
                             </small>
-
-                            <single-choice
-                              [formControlInput]="valueChainsForm"
-                              [codebookService]="companyValueChainsCodebook"
-                              (onChange)="addSelectedValueChain($event)">
-                                <ng-container *ngIf="submitted">
-                                     <div *ngIf="selectedCompanyValueChainsControl.errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required"
-                                             i18n="@@companyDetailProcessingActions.singleChoice.valueChains.error">
+                <single-choice
+                  [formControlInput]="valueChainsForm"
+                  [codebookService]="companyValueChainsCodebook"
+                  (onChange)="addSelectedValueChain($event)">
+                  @if (submitted) {
+                    @if (selectedCompanyValueChainsControl.errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div
+                            i18n="@@companyDetailProcessingActions.singleChoice.valueChains.error">
                                             <span>
                                               At least one value chain is required
                                             </span>
                                         </div>
-                                     </div>
-                                </ng-container>
-                            </single-choice>
-                            <div *ngFor="let sp of this.valueChains; index as idx">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <div>{{ sp.name }}</div>
-                                    <div (click)="deleteValueChain(idx)" class="cursor-pointer">
-                                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <single-choice
-                                label="Action type"
-                                i18n-label="@@companyDetailProcessingActions.singleChoice.type.label"
-                                [formControlInput]="$any(form.get('type'))"
-                                [codebookService]="codebookProcessingTransaction"
-                                [isInvalidChoice]="submitted && form.get('type').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('type').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.type.error.required">
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+                @for (sp of this.valueChains; track sp; let idx = $index) {
+                  <div>
+                    <div class="d-flex justify-content-between mb-1">
+                      <div>{{ sp.name }}</div>
+                      <div (click)="deleteValueChain(idx)" class="cursor-pointer">
+                        <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+              <single-choice
+                label="Action type"
+                i18n-label="@@companyDetailProcessingActions.singleChoice.type.label"
+                [formControlInput]="$any(form.get('type'))"
+                [codebookService]="codebookProcessingTransaction"
+                [isInvalidChoice]="submitted && form.get('type').invalid">
+                @if (submitted) {
+                  @if (form.get('type').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@companyDetailProcessingActions.singleChoice.type.error.required">
                                         Type is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-
-                        <!-- If we have Shipment or Transfer proc. action show dropdown if this action involves Final product -->
-                        <single-choice
-                                *ngIf="form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER'"
-                                label="Final product action"
-                                i18n-label="@@companyDetailProcessingActions.singleChoice.finalProductAction.label"
-                                [formControlInput]="$any(form.get('finalProductAction'))"
-                                [enumFormatter]="finalProductActionFormatter"
-                                [booleanTrue]="booleanTrue"
-                                [booleanFalse]="booleanFalse"
-                                [isInvalidChoice]="submitted && form.get('finalProductAction').invalid">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('finalProductAction').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.finalProductAction.error.required">
+                      }
+                    </div>
+                  }
+                }
+              </single-choice>
+              <!-- If we have Shipment or Transfer proc. action show dropdown if this action involves Final product -->
+              @if (form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER') {
+                <single-choice
+                  label="Final product action"
+                  i18n-label="@@companyDetailProcessingActions.singleChoice.finalProductAction.label"
+                  [formControlInput]="$any(form.get('finalProductAction'))"
+                  [enumFormatter]="finalProductActionFormatter"
+                  [booleanTrue]="booleanTrue"
+                  [booleanFalse]="booleanFalse"
+                  [isInvalidChoice]="submitted && form.get('finalProductAction').invalid">
+                  @if (submitted) {
+                    @if (form.get('finalProductAction').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@companyDetailProcessingActions.singleChoice.finalProductAction.error.required">
                                         Type is required
                                     </div>
-                                </div>
-                            </ng-container>
-                        </single-choice>
-
-                        <!-- If we have Generate QR code proc. action, we have Final product selection for which the QR code will be generated -->
-                        <!-- TODO: check this if needed -->
-<!--                        <ng-container *ngIf="form.get('type').value === 'GENERATE_QR_CODE'">-->
-<!--                            <single-choice-->
-<!--                                    label="QR code for final product"-->
-<!--                                    i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"-->
-<!--                                    [formControlInput]="$any(form.get('qrCodeForFinalProduct'))"-->
-<!--                                    [codebookService]="finalProductsForCompanyCodebook"-->
-<!--                                    [isInvalidChoice]="submitted && form.get('qrCodeForFinalProduct').invalid">-->
-<!--                                <ng-container *ngIf="submitted">-->
-<!--                                    <div *ngIf="form.get('qrCodeForFinalProduct').errors as errors" class="sc-invalid-feedback">-->
-<!--                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required">-->
-<!--                                            QR code for final product is required-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </ng-container>-->
-<!--                            </single-choice>-->
-<!--                        </ng-container>-->
-
-                        <!-- If we have Shipment, Transfer or Generate QR code proc. action of semi-products (both input and output are the same) -->
-                        <ng-container
-                          *ngIf="!form.get('finalProductAction').value && (form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER' || form.get('type').value === 'GENERATE_QR_CODE')">
-                            <single-choice
-                                    label="Select semi-product"
-                                    i18n-label="@@companyDetailProcessingActions.singleChoice.semiProduct.label"
-                                    [formControlInput]="$any(form.get('inputSemiProduct'))"
-                                    [codebookService]="semiProductsForValueChainsService"
-                                    [isInvalidChoice]="submitted && form.get('inputSemiProduct').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="form.get('inputSemiProduct').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.semiProduct.error.required">
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              }
+              <!-- If we have Generate QR code proc. action, we have Final product selection for which the QR code will be generated -->
+              <!-- TODO: check this if needed -->
+              <!--                        <ng-container *ngIf="form.get('type').value === 'GENERATE_QR_CODE'">-->
+              <!--                            <single-choice-->
+              <!--                                    label="QR code for final product"-->
+              <!--                                    i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"-->
+              <!--                                    [formControlInput]="$any(form.get('qrCodeForFinalProduct'))"-->
+              <!--                                    [codebookService]="finalProductsForCompanyCodebook"-->
+              <!--                                    [isInvalidChoice]="submitted && form.get('qrCodeForFinalProduct').invalid">-->
+              <!--                                <ng-container *ngIf="submitted">-->
+              <!--                                    <div *ngIf="form.get('qrCodeForFinalProduct').errors as errors" class="sc-invalid-feedback">-->
+              <!--                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required">-->
+              <!--                                            QR code for final product is required-->
+            <!--                                        </div>-->
+          <!--                                    </div>-->
+        <!--                                </ng-container>-->
+      <!--                            </single-choice>-->
+    <!--                        </ng-container>-->
+    <!-- If we have Shipment, Transfer or Generate QR code proc. action of semi-products (both input and output are the same) -->
+    @if (!form.get('finalProductAction').value && (form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER' || form.get('type').value === 'GENERATE_QR_CODE')) {
+      <single-choice
+        label="Select semi-product"
+        i18n-label="@@companyDetailProcessingActions.singleChoice.semiProduct.label"
+        [formControlInput]="$any(form.get('inputSemiProduct'))"
+        [codebookService]="semiProductsForValueChainsService"
+        [isInvalidChoice]="submitted && form.get('inputSemiProduct').invalid">
+        @if (submitted) {
+          @if (form.get('inputSemiProduct').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@companyDetailProcessingActions.singleChoice.semiProduct.error.required">
                                             Semi-product is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </single-choice>
-                        </ng-container>
-
-                        <!-- If we have Generate QR code proc. action, we have Final product selection for which the QR code will be generated -->
-                        <ng-container *ngIf="form.get('type').value === 'GENERATE_QR_CODE'">
-                            <single-choice
-                                    label="QR code for final product"
-                                    i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"
-                                    [formControlInput]="$any(form.get('qrCodeForFinalProduct'))"
-                                    [codebookService]="finalProductsForCompanyCodebook"
-                                    [isInvalidChoice]="submitted && form.get('qrCodeForFinalProduct').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="form.get('qrCodeForFinalProduct').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required">
+              }
+            </div>
+          }
+        }
+      </single-choice>
+    }
+    <!-- If we have Generate QR code proc. action, we have Final product selection for which the QR code will be generated -->
+    @if (form.get('type').value === 'GENERATE_QR_CODE') {
+      <single-choice
+        label="QR code for final product"
+        i18n-label="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.label"
+        [formControlInput]="$any(form.get('qrCodeForFinalProduct'))"
+        [codebookService]="finalProductsForCompanyCodebook"
+        [isInvalidChoice]="submitted && form.get('qrCodeForFinalProduct').invalid">
+        @if (submitted) {
+          @if (form.get('qrCodeForFinalProduct').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@companyDetailProcessingActions.singleChoice.qrCodeForFinalProduct.error.required">
                                             QR code for final product is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </single-choice>
-                        </ng-container>
-
-                        <!-- If we have Shipment or Transfer prc. action of Final products (both input and output) -->
-                        <ng-container *ngIf="form.get('finalProductAction').value && (form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER')">
-                            <single-choice
-                                    label="Select final product"
-                                    i18n-label="@@companyDetailProcessingActions.singleChoice.finalProduct.label"
-                                    [formControlInput]="$any(form.get('inputFinalProduct'))"
-                                    [codebookService]="finalProductsForCompanyCodebook"
-                                    [isInvalidChoice]="submitted && form.get('inputFinalProduct').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="form.get('inputFinalProduct').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.finalProduct.error.required">
+              }
+            </div>
+          }
+        }
+      </single-choice>
+    }
+    <!-- If we have Shipment or Transfer prc. action of Final products (both input and output) -->
+    @if (form.get('finalProductAction').value && (form.get('type').value === 'SHIPMENT' || form.get('type').value === 'TRANSFER')) {
+      <single-choice
+        label="Select final product"
+        i18n-label="@@companyDetailProcessingActions.singleChoice.finalProduct.label"
+        [formControlInput]="$any(form.get('inputFinalProduct'))"
+        [codebookService]="finalProductsForCompanyCodebook"
+        [isInvalidChoice]="submitted && form.get('inputFinalProduct').invalid">
+        @if (submitted) {
+          @if (form.get('inputFinalProduct').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@companyDetailProcessingActions.singleChoice.finalProduct.error.required">
                                             Final product is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                            </single-choice>
-                        </ng-container>
-
-                        <ng-container *ngIf="form.get('type').value === 'PROCESSING' || form.get('type').value === 'FINAL_PROCESSING'">
-                            <single-choice
-                                    label="Select input semi-product"
-                                    i18n-label="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.label"
-                                    [formControlInput]="$any(form.get('inputSemiProduct'))"
-                                    [codebookService]="semiProductsForValueChainsService"
-                                    [isInvalidChoice]="submitted && form.get('inputSemiProduct').invalid">
-                                <ng-container *ngIf="submitted">
-                                    <div *ngIf="form.get('inputSemiProduct').errors as errors" class="sc-invalid-feedback">
-                                        <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.error.required">
+              }
+            </div>
+          }
+        }
+      </single-choice>
+    }
+    @if (form.get('type').value === 'PROCESSING' || form.get('type').value === 'FINAL_PROCESSING') {
+      <single-choice
+        label="Select input semi-product"
+        i18n-label="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.label"
+        [formControlInput]="$any(form.get('inputSemiProduct'))"
+        [codebookService]="semiProductsForValueChainsService"
+        [isInvalidChoice]="submitted && form.get('inputSemiProduct').invalid">
+        @if (submitted) {
+          @if (form.get('inputSemiProduct').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@companyDetailProcessingActions.singleChoice.inputSemiProduct.error.required">
                                             Input semi-product is required
                                         </div>
-                                    </div>
-                                </ng-container>
-                                <div *ngIf="!semiProductsForValueChainsService">
-                                    <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
-                                </div>
-                            </single-choice>
-
-                            <!-- If action type is processing, we can have selected multiple output semi-products -->
-                            <ng-container *ngIf="form.get('type').value === 'PROCESSING'">
-                                <label i18n="@@companyDetailProcessingActions.outputSemiProducts.title">Output semi-products</label>
-                                <div class="af-form-element output-semi-products">
-
-                                    <ng-container *ngIf="semiProductsForValueChainsService">
-                                        <small i18n="@@companyDetailProcessingActions.outputSemiProducts.select.label">
+              }
+            </div>
+          }
+        }
+        @if (!semiProductsForValueChainsService) {
+          <div>
+            <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
+          </div>
+        }
+      </single-choice>
+      <!-- If action type is processing, we can have selected multiple output semi-products -->
+      @if (form.get('type').value === 'PROCESSING') {
+        <label i18n="@@companyDetailProcessingActions.outputSemiProducts.title">Output semi-products</label>
+        <div class="af-form-element output-semi-products">
+          @if (semiProductsForValueChainsService) {
+            <small i18n="@@companyDetailProcessingActions.outputSemiProducts.select.label">
                                             Select output semi-product.
                                         </small>
-
-                                        <single-choice
-                                          [formControlInput]="outputSemiProductInputForm"
-                                          [codebookService]="semiProductsForValueChainsService"
-                                          (onChange)="addSelectedOutputSemiProduct($event)">
-                                        </single-choice>
-
-                                        <ng-container *ngIf="outputSemiProductsArray?.length > 0">
-
-                                            <div class="af-row mb-1">
-                                                <div class="af-c5"></div>
-                                                <div class="af-c2">
-                                                    <small i18n="@@companyDetailProcessingActions.outputSemiProducts.field.repackedOutput.label">Repacked</small>
-                                                </div>
-                                                <div class="af-c4">
-                                                    <small i18n="@@companyDetailProcessingActions.outputSemiProducts.field.maxOutputWeight.label">Max output weight</small>
-                                                </div>
-                                                <div class="af-c1"></div>
-                                            </div>
-
-                                            <div *ngFor="let outputSemiProductForm of outputSemiProductsArray.controls; index as i"
-                                                 class="af-row mb-1">
-                                                <div class="af-c5">{{ outputSemiProductForm.get('name')?.value }}</div>
-                                                <div class="af-c2">
-                                                    <checkbox-input [noBottomMargin]="true"
-                                                                    [inTable]="true"
-                                                                    [form]="$any(outputSemiProductForm.get('repackedOutput'))"
-                                                                    (onClick)="repackOutputSemiProductChecked(i)">
-                                                    </checkbox-input>
-                                                </div>
-                                                <div class="af-c4">
-                                                    <textinput
-                                                            type="number"
-                                                            step="0.01"
-                                                            [smallInput]="true"
-                                                            [form]="$any(outputSemiProductForm.get('maxOutputWeight'))"
-                                                            [suffix]="outputSemiProductForm.get('measurementUnitType').value?.label"
-                                                            [isInvalid]="submitted && outputSemiProductForm.get('maxOutputWeight').invalid">
-                                                        <ng-container *ngIf="submitted">
-                                                            <div *ngIf="outputSemiProductForm.get('maxOutputWeight').errors as errors" class="sc-invalid-feedback">
-                                                                <div *ngIf="errors.required">
-                                                                    <span i18n="@@companyDetailProcessingActions.field.maxOutputWeight.error">Incorrect max output weight.</span>
-                                                                </div>
-                                                            </div>
-                                                        </ng-container>
-                                                    </textinput>
-                                                </div>
-                                                <div class="af-c1 d-flex justify-content-end cursor-pointer"
-                                                     (click)="removeOutputSemiProduct(i)">
-                                                    <fa-icon
-                                                            class="del-icon"
-                                                            [icon]="faTimes"></fa-icon>
-                                                </div>
-                                            </div>
-                                        </ng-container>
-
-                                        <ng-container *ngIf="submitted">
-                                            <div *ngIf="form.get('outputSemiProducts').errors as errors"
-                                                 class="sc-invalid-feedback">
-                                                <div *ngIf="errors.atLeastOneIsRequired"
-                                                     i18n="@@companyDetailProcessingActions.outputSemiProducts.error.atLeastOneIsRequired">
+            <single-choice
+              [formControlInput]="outputSemiProductInputForm"
+              [codebookService]="semiProductsForValueChainsService"
+              (onChange)="addSelectedOutputSemiProduct($event)">
+            </single-choice>
+            @if (outputSemiProductsArray?.length > 0) {
+              <div class="af-row mb-1">
+                <div class="af-c5"></div>
+                <div class="af-c2">
+                  <small i18n="@@companyDetailProcessingActions.outputSemiProducts.field.repackedOutput.label">Repacked</small>
+                </div>
+                <div class="af-c4">
+                  <small i18n="@@companyDetailProcessingActions.outputSemiProducts.field.maxOutputWeight.label">Max output weight</small>
+                </div>
+                <div class="af-c1"></div>
+              </div>
+              @for (outputSemiProductForm of outputSemiProductsArray.controls; track outputSemiProductForm; let i = $index) {
+                <div
+                  class="af-row mb-1">
+                  <div class="af-c5">{{ outputSemiProductForm.get('name')?.value }}</div>
+                  <div class="af-c2">
+                    <checkbox-input [noBottomMargin]="true"
+                      [inTable]="true"
+                      [form]="$any(outputSemiProductForm.get('repackedOutput'))"
+                      (onClick)="repackOutputSemiProductChecked(i)">
+                    </checkbox-input>
+                  </div>
+                  <div class="af-c4">
+                    <textinput
+                      type="number"
+                      step="0.01"
+                      [smallInput]="true"
+                      [form]="$any(outputSemiProductForm.get('maxOutputWeight'))"
+                      [suffix]="outputSemiProductForm.get('measurementUnitType').value?.label"
+                      [isInvalid]="submitted && outputSemiProductForm.get('maxOutputWeight').invalid">
+                      @if (submitted) {
+                        @if (outputSemiProductForm.get('maxOutputWeight').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div>
+                                <span i18n="@@companyDetailProcessingActions.field.maxOutputWeight.error">Incorrect max output weight.</span>
+                              </div>
+                            }
+                          </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                  <div class="af-c1 d-flex justify-content-end cursor-pointer"
+                    (click)="removeOutputSemiProduct(i)">
+                    <fa-icon
+                      class="del-icon"
+                    [icon]="faTimes"></fa-icon>
+                  </div>
+                </div>
+              }
+            }
+            @if (submitted) {
+              @if (form.get('outputSemiProducts').errors; as errors) {
+                <div
+                  class="sc-invalid-feedback">
+                  @if (errors.atLeastOneIsRequired) {
+                    <div
+                      i18n="@@companyDetailProcessingActions.outputSemiProducts.error.atLeastOneIsRequired">
                                                     At least one output semi-product is required
                                                 </div>
-                                            </div>
-                                        </ng-container>
-                                    </ng-container>
-                                    <ng-container *ngIf="!semiProductsForValueChainsService">
-                                        <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
-                                    </ng-container>
-
-                                </div>
-                            </ng-container>
-
-                            <ng-container *ngIf="form.get('type').value === 'FINAL_PROCESSING'">
-                                <single-choice
-                                        label="Select output final product"
-                                        i18n-label="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.label"
-                                        [formControlInput]="$any(form.get('outputFinalProduct'))"
-                                        [codebookService]="finalProductsForCompanyCodebook"
-                                        [isInvalidChoice]="submitted && form.get('outputFinalProduct').invalid">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="form.get('outputFinalProduct').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required" i18n="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.error.required">
+                  }
+                </div>
+              }
+            }
+          }
+          @if (!semiProductsForValueChainsService) {
+            <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
+          }
+        </div>
+      }
+      @if (form.get('type').value === 'FINAL_PROCESSING') {
+        <single-choice
+          label="Select output final product"
+          i18n-label="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.label"
+          [formControlInput]="$any(form.get('outputFinalProduct'))"
+          [codebookService]="finalProductsForCompanyCodebook"
+          [isInvalidChoice]="submitted && form.get('outputFinalProduct').invalid">
+          @if (submitted) {
+            @if (form.get('outputFinalProduct').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@companyDetailProcessingActions.singleChoice.outputFinalProduct.error.required">
                                                 Output final product is required
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </single-choice>
-
-                                <div class="d-flex">
-                                    <div class="af-c6">
-                                        <single-choice
-                                                label="Repacked outputs"
-                                                i18n-label="@@companyDetailProcessingActions.singleChoice.repackedOutputFinalProducts.label"
-                                                [formControlInput]="$any(form.get('repackedOutputFinalProducts'))"
-                                                [enumFormatter]="repackedOutputFinalProductsFormatter"
-                                                [booleanTrue]="booleanTrue"
-                                                [booleanFalse]="booleanFalse"
-                                                (onChange)="repackedOutputFinalProductsSet($event)">
-                                        </single-choice>
-                                    </div>
-                                    <div class="af-c6 center">
-                                        <textinput
-                                                [label]="maxOutputFinalProductQuantityLabel"
-                                                placeholder="Enter max output quantity"
-                                                i18n-placeholder="@@companyDetailProcessingActions.field.maxOutputWeight.placeholder"
-                                                type="number"
-                                                step="0.01"
-                                                [form]="$any(form.get('maxOutputWeight'))"
-                                                [isInvalid]="submitted && form.get('maxOutputWeight').invalid">
-                                            <ng-container *ngIf="submitted">
-                                                <div *ngIf="form.get('maxOutputWeight').errors as errors" class="sc-invalid-feedback">
-                                                    <div *ngIf="errors.required" i18n-label="@@companyDetailProcessingActions.field.maxOutputWeight.error">
-                                                        <span>Max output weight is required</span>
-                                                    </div>
-                                                </div>
-                                            </ng-container>
-                                        </textinput>
-                                    </div>
-                                </div>
-                            </ng-container>
-
-                            <textinput
-                                    *ngIf="form.get('type').value === 'PROCESSING'"
-                                    [label]="estimatedOutputQuantityLabel"
-                                    placeholder="Enter estimated output quantity"
-                                    i18n-placeholder="@@companyDetailProcessingActions.textInput.estimatedOutputQuantity.placeholder"
-                                    type="number"
-                                    step="0.01"
-                                    [form]="$any(form.get('estimatedOutputQuantityPerUnit'))">
-                            </textinput>
-                        </ng-container>
-
-                        <textinput
-                                label="Internal lot name prefix"
-                                placeholder="Enter prefix"
-                                i18n-label="@@companyDetailProcessingActions.textInput.prefix.label"
-                                i18n-placeholder="@@companyDetailProcessingActions.textInput.prefix.helpText"
-                                [form]="$any(form.get('prefix'))"
-                                [isInvalid]="submitted && form.get('prefix').invalid"
-                                style="width: 100%">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('prefix').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n-label="@@companyDetailProcessingActions.textInput.prefix.error">
-                                        <span>
-                                          Alias for the process is required
-                                        </span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                        <textinput
-                            label="Sort order"
-                            placeholder="Enter sort order"
-                            i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.label"
-                            i18n-placeholder="@@companyDetailProcessingActions.textInput.sortOrder.placeholder"
-                            [form]="$any(form.get('sortOrder'))"
-                            [isInvalid]="submitted && form.get('sortOrder').invalid"
-                            style="width: 100%">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="form.get('sortOrder').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.error.required">
-                                        <span>
-                                            Sort order is required
-                                        </span>
-                                    </div>
-                                    <div *ngIf="errors.pattern" i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.error.pattern">
-                                        <span>
-                                            Sort order must be a number
-                                        </span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-                    </div>
-                    <!-- END: Basic information -->
-
-                    <!-- Supported facilities -->
-                    <h2 i18n="@@companyDetailProcessingActions.supportedFacilities">Facilities where this process starts</h2>
-                    <div class="af-form-element">
-
-                        <small i18n="@@companyDetailProcessingActions.hint.supportedFacilities">
+                }
+              </div>
+            }
+          }
+        </single-choice>
+        <div class="d-flex">
+          <div class="af-c6">
+            <single-choice
+              label="Repacked outputs"
+              i18n-label="@@companyDetailProcessingActions.singleChoice.repackedOutputFinalProducts.label"
+              [formControlInput]="$any(form.get('repackedOutputFinalProducts'))"
+              [enumFormatter]="repackedOutputFinalProductsFormatter"
+              [booleanTrue]="booleanTrue"
+              [booleanFalse]="booleanFalse"
+              (onChange)="repackedOutputFinalProductsSet($event)">
+            </single-choice>
+          </div>
+          <div class="af-c6 center">
+            <textinput
+              [label]="maxOutputFinalProductQuantityLabel"
+              placeholder="Enter max output quantity"
+              i18n-placeholder="@@companyDetailProcessingActions.field.maxOutputWeight.placeholder"
+              type="number"
+              step="0.01"
+              [form]="$any(form.get('maxOutputWeight'))"
+              [isInvalid]="submitted && form.get('maxOutputWeight').invalid">
+              @if (submitted) {
+                @if (form.get('maxOutputWeight').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@companyDetailProcessingActions.field.maxOutputWeight.error">
+                        <span>Max output weight is required</span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          </div>
+        </div>
+      }
+      @if (form.get('type').value === 'PROCESSING') {
+        <textinput
+          [label]="estimatedOutputQuantityLabel"
+          placeholder="Enter estimated output quantity"
+          i18n-placeholder="@@companyDetailProcessingActions.textInput.estimatedOutputQuantity.placeholder"
+          type="number"
+          step="0.01"
+          [form]="$any(form.get('estimatedOutputQuantityPerUnit'))">
+        </textinput>
+      }
+    }
+    <textinput
+      label="Internal lot name prefix"
+      placeholder="Enter prefix"
+      i18n-label="@@companyDetailProcessingActions.textInput.prefix.label"
+      i18n-placeholder="@@companyDetailProcessingActions.textInput.prefix.helpText"
+      [form]="$any(form.get('prefix'))"
+      [isInvalid]="submitted && form.get('prefix').invalid"
+      style="width: 100%">
+      @if (submitted) {
+        @if (form.get('prefix').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@companyDetailProcessingActions.textInput.prefix.error">
+                <span>
+                  Alias for the process is required
+                </span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </textinput>
+    <textinput
+      label="Sort order"
+      placeholder="Enter sort order"
+      i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.label"
+      i18n-placeholder="@@companyDetailProcessingActions.textInput.sortOrder.placeholder"
+      [form]="$any(form.get('sortOrder'))"
+      [isInvalid]="submitted && form.get('sortOrder').invalid"
+      style="width: 100%">
+      @if (submitted) {
+        @if (form.get('sortOrder').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.error.required">
+                <span>
+                  Sort order is required
+                </span>
+              </div>
+            }
+            @if (errors.pattern) {
+              <div i18n-label="@@companyDetailProcessingActions.textInput.sortOrder.error.pattern">
+                <span>
+                  Sort order must be a number
+                </span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </textinput>
+  </div>
+  <!-- END: Basic information -->
+  <!-- Supported facilities -->
+  <h2 i18n="@@companyDetailProcessingActions.supportedFacilities">Facilities where this process starts</h2>
+  <div class="af-form-element">
+    <small i18n="@@companyDetailProcessingActions.hint.supportedFacilities">
                             Add facilities where this processing action starts.
                         </small>
-
-                        <div class="spacer-title-section"></div>
-
-                        <div class="search-field" *ngIf="supportedFacilitiesService">
-                            <single-choice
-                                    [formControlInput]="supportedFacilitiesInputForm"
-                                    [codebookService]="supportedFacilitiesService"
-                                    (onChange)="addSelectedSupportedFacility($event)">
-                            </single-choice>
-                        </div>
-
-                        <div class="spacer-title-section"></div>
-
-                        <ng-container *ngIf="this.form.get('supportedFacilities')">
-                            <div *ngFor="let facility of this.form.get('supportedFacilities').value; index as i" class="d-flex justify-content-between">
-                                <div>{{facility?.name}}</div>
-                                <div class="cursor-pointer" (click)="removeSupportedFacility(facility)">
-                                    <fa-icon
-                                            class="del-icon"
-                                            [icon]="faTimes"></fa-icon>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <!-- END: Supported facilities -->
-
-                </div>
-
-                <!-- Right column -->
-                <div class="af-form-block--c6">
-
-                    <!-- Translations -->
-                    <h2 i18n="@@companyDetailProcessingActions.section1.translations">Translations</h2>
-                    <div class="af-form-element">
-
-                        <small i18n="@@companyDetailProcessingActions.hint.translations">
+    <div class="spacer-title-section"></div>
+    @if (supportedFacilitiesService) {
+      <div class="search-field">
+        <single-choice
+          [formControlInput]="supportedFacilitiesInputForm"
+          [codebookService]="supportedFacilitiesService"
+          (onChange)="addSelectedSupportedFacility($event)">
+        </single-choice>
+      </div>
+    }
+    <div class="spacer-title-section"></div>
+    @if (this.form.get('supportedFacilities')) {
+      @for (facility of this.form.get('supportedFacilities').value; track facility; let i = $index) {
+        <div class="d-flex justify-content-between">
+          <div>{{facility?.name}}</div>
+          <div class="cursor-pointer" (click)="removeSupportedFacility(facility)">
+            <fa-icon
+              class="del-icon"
+            [icon]="faTimes"></fa-icon>
+          </div>
+        </div>
+      }
+    }
+  </div>
+  <!-- END: Supported facilities -->
+</div>
+<!-- Right column -->
+<div class="af-form-block--c6">
+  <!-- Translations -->
+  <h2 i18n="@@companyDetailProcessingActions.section1.translations">Translations</h2>
+  <div class="af-form-element">
+    <small i18n="@@companyDetailProcessingActions.hint.translations">
                             Specify name in English and add translations for all used languages.
                         </small>
-
-                        <div class="spacer-title-section"></div>
-
-                        <div class="af-row">
-                            <div class="af-c12">
-                                <div class="d-flex af-translation-language">
-                                    <div (click)="selectLanguage('EN')"
+    <div class="spacer-title-section"></div>
+    <div class="af-row">
+      <div class="af-c12">
+        <div class="d-flex af-translation-language">
+          <div (click)="selectLanguage('EN')"
                                          [ngClass]="selectedLanguage === 'EN'
                                             ? 'af-translation-language--selected'
                                             : (submitted && this.form.get('translations').errors && this.form.get('translations').errors.required
                                                 ? 'af-translation-language--error'
                                                 : '')">
-                                        <img src="../../../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
-                                        <span>EN</span>
-                                    </div>
-                                    <div (click)="selectLanguage('DE')"
-                                         [ngClass]="selectedLanguage === 'DE' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
-                                        <span>DE</span>
-                                    </div>
-                                    <div (click)="selectLanguage('RW')"
-                                         [ngClass]="selectedLanguage === 'RW' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
-                                        <span>RW</span>
-                                    </div>
-                                    <div (click)="selectLanguage('ES')"
-                                         [ngClass]="selectedLanguage === 'ES' ? 'af-translation-language--selected' : ''">
-                                        <img src="../../../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
-                                        <span>ES</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="spacer-title-section"></div>
-
-                        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-                            <ng-container *ngIf="translation.value.language === selectedLanguage">
-
-                                <textinput
-                                        label="Name of process"
-                                        placeholder="Enter name"
-                                        i18n-label="@@companyDetailProcessingActions.textInput.name.label"
-                                        i18n-placeholder="@@companyDetailProcessingActions.textInput.name.helpText"
-                                        [form]="$any(this.form.get('translations.' + i + '.name'))"
-                                        [isInvalid]="submitted && this.form.get('translations.' + i + '.name').invalid"
-                                        style="width: 100%">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="this.form.get('translations.' + i + '.name').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required"
-                                                 i18n="@@companyDetailProcessingActions.textInput.name.error">
+            <img src="../../../../../assets/icons/icon-flag--united-kingdom.svg" alt="Select EN lang">
+            <span>EN</span>
+          </div>
+          <div (click)="selectLanguage('DE')"
+            [ngClass]="selectedLanguage === 'DE' ? 'af-translation-language--selected' : ''">
+            <img src="../../../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
+            <span>DE</span>
+          </div>
+          <div (click)="selectLanguage('RW')"
+            [ngClass]="selectedLanguage === 'RW' ? 'af-translation-language--selected' : ''">
+            <img src="../../../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
+            <span>RW</span>
+          </div>
+          <div (click)="selectLanguage('ES')"
+            [ngClass]="selectedLanguage === 'ES' ? 'af-translation-language--selected' : ''">
+            <img src="../../../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
+            <span>ES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacer-title-section"></div>
+    @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+      @if (translation.value.language === selectedLanguage) {
+        <textinput
+          label="Name of process"
+          placeholder="Enter name"
+          i18n-label="@@companyDetailProcessingActions.textInput.name.label"
+          i18n-placeholder="@@companyDetailProcessingActions.textInput.name.helpText"
+          [form]="$any(this.form.get('translations.' + i + '.name'))"
+          [isInvalid]="submitted && this.form.get('translations.' + i + '.name').invalid"
+          style="width: 100%">
+          @if (submitted) {
+            @if (this.form.get('translations.' + i + '.name').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div
+                    i18n="@@companyDetailProcessingActions.textInput.name.error">
                                                 <span>
                                                   Name of process is required
                                                 </span>
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-
-                                <textinput
-                                        label="Description"
-                                        placeholder="..."
-                                        helpText="Enter short processing action description."
-                                        i18n-label="@@companyDetailProcessingActions.textInput.description.label"
-                                        i18n-helpText="@@companyDetailProcessingActions.textInput.description.helpText"
-                                        [form]="$any(this.form.get('translations.' + i + '.description'))"
-                                        [textarea]="true"
-                                        [isInvalid]="submitted && this.form.get('translations.' + i + '.description').invalid"
-                                        style="width: 100%">
-                                    <ng-container *ngIf="submitted">
-                                        <div *ngIf="this.form.get('translations.' + i + '.description').errors as errors" class="sc-invalid-feedback">
-                                            <div *ngIf="errors.required"
-                                                 i18n="@@companyDetailProcessingActions.textInput.description.error">
+                }
+              </div>
+            }
+          }
+        </textinput>
+        <textinput
+          label="Description"
+          placeholder="..."
+          helpText="Enter short processing action description."
+          i18n-label="@@companyDetailProcessingActions.textInput.description.label"
+          i18n-helpText="@@companyDetailProcessingActions.textInput.description.helpText"
+          [form]="$any(this.form.get('translations.' + i + '.description'))"
+          [textarea]="true"
+          [isInvalid]="submitted && this.form.get('translations.' + i + '.description').invalid"
+          style="width: 100%">
+          @if (submitted) {
+            @if (this.form.get('translations.' + i + '.description').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div
+                    i18n="@@companyDetailProcessingActions.textInput.description.error">
                                                 <span>
                                                   Description is required
                                                 </span>
                                             </div>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </ng-container>
-                        </ng-container>
-
-                        <textinput
-                                label="Public timeline label"
-                                placeholder="Enter timeline label"
-                                i18n-label="@@companyDetailProcessingActions.textInput.publicTimelineLabel.label"
-                                i18n-placeholder="@@companyDetailProcessingActions.textInput.publicTimelineLabel.helpText"
-                                [form]="$any(this.form.get('publicTimelineLabel'))"
-                                [isInvalid]="submitted && this.form.get('publicTimelineLabel').invalid"
-                                style="width: 100%">
-                            <ng-container *ngIf="submitted">
-                                <div *ngIf="this.form.get('publicTimelineLabel').errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n-label="@@companyDetailProcessingActions.textInput.publicTimelineLabel.error">
-                                        <span>
-                                          Public timeline label
-                                        </span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </textinput>
-
-                    </div>
-                    <!-- END: Translations -->
-
-                </div>
-            </div>
-
-            <!-- Third row -->
-            <div class="af-form-row">
-
-                <!-- Left column -->
-                <div class="af-form-block--c6">
-
-                    <!-- Processing evidence fields -->
-                    <h2 i18n="@@companyDetailProcessingActions.section2.translations">Processing Evidence Fields</h2>
-                    <div class="af-form-element">
-
-                        <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceFields">
+                }
+              </div>
+            }
+          }
+        </textinput>
+      }
+    }
+    <textinput
+      label="Public timeline label"
+      placeholder="Enter timeline label"
+      i18n-label="@@companyDetailProcessingActions.textInput.publicTimelineLabel.label"
+      i18n-placeholder="@@companyDetailProcessingActions.textInput.publicTimelineLabel.helpText"
+      [form]="$any(this.form.get('publicTimelineLabel'))"
+      [isInvalid]="submitted && this.form.get('publicTimelineLabel').invalid"
+      style="width: 100%">
+      @if (submitted) {
+        @if (this.form.get('publicTimelineLabel').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n-label="@@companyDetailProcessingActions.textInput.publicTimelineLabel.error">
+                <span>
+                  Public timeline label
+                </span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </textinput>
+  </div>
+  <!-- END: Translations -->
+</div>
+</div>
+<!-- Third row -->
+<div class="af-form-row">
+  <!-- Left column -->
+  <div class="af-form-block--c6">
+    <!-- Processing evidence fields -->
+    <h2 i18n="@@companyDetailProcessingActions.section2.translations">Processing Evidence Fields</h2>
+    <div class="af-form-element">
+      <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceFields">
                             Add processing evidence fields that have to be specified after this processing action has been performed.
                         </small>
-
-                        <div class="spacer-title-section"></div>
-
-                        <div class="search-field" *ngIf="processingEvidenceFieldService">
-                            <single-choice
-                                    [formControlInput]="evidenceFieldInputForm"
-                                    [codebookService]="processingEvidenceFieldService"
-                                    (onChange)="addSelectedEvidenceField($event)">
-                            </single-choice>
-                        </div>
-                        <div *ngIf="!processingEvidenceFieldService">
-                            <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
-                        </div>
-
-                        <div class="spacer-title-section"></div>
-
-                        <ng-container *ngIf="this.form.get('requiredEvidenceFields').value.length > 0">
-                            <div class="af-row pl-3 pr-3 mb-1">
-                                <div class="af-c5"></div>
-                                <div>
-                                    <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceFields.checkBox">
+      <div class="spacer-title-section"></div>
+      @if (processingEvidenceFieldService) {
+        <div class="search-field">
+          <single-choice
+            [formControlInput]="evidenceFieldInputForm"
+            [codebookService]="processingEvidenceFieldService"
+            (onChange)="addSelectedEvidenceField($event)">
+          </single-choice>
+        </div>
+      }
+      @if (!processingEvidenceFieldService) {
+        <div>
+          <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
+        </div>
+      }
+      <div class="spacer-title-section"></div>
+      @if (this.form.get('requiredEvidenceFields').value.length > 0) {
+        <div class="af-row ps-3 pe-3 mb-1">
+          <div class="af-c5"></div>
+          <div>
+            <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceFields.checkBox">
                                         mandatory / required on quote
                                     </small>
-                                </div>
-                            </div>
-                        </ng-container>
-
-                        <ng-container *ngIf="this.form.get('requiredEvidenceFields')">
-                            <div *ngFor="let field of this.form.get('requiredEvidenceFields').value; index as i">
-                                <div class="af-row pl-3 pr-3 mb-1">
-                                    <div class="af-c6 d-flex align-items-center">{{field?.label}}</div>
-                                    <div class="af-c5 d-flex align-items-center">
-                                        <checkbox-input
-                                                [noBottomMargin]="true"
-                                                [inTable]="true"
-                                                (onClick)="cbSelectedSP(field, i, 'mandatory')"
-                                                [checked]="field.mandatory">
-                                        </checkbox-input>
-                                        <checkbox-input
-                                                [noBottomMargin]="true"
-                                                class="ml-1"
-                                                [inTable]="true"
-                                                (onClick)="cbSelectedSP(field, i, 'quote')"
-                                                [checked]="field.requiredOnQuote">
-                                        </checkbox-input>
-                                    </div>
-                                    <div class="af-c1 d-flex align-items-center" (click)="removeEvidenceField(field)">
-                                        <fa-icon
-                                                class="del-icon"
-                                                [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-
-                    <!-- END: Processing evidence fields -->
-                </div>
-
-                <!-- Right column -->
-                <div class="af-form-block--c6">
-
-                    <!-- Processing evidence documents -->
-                    <h2 i18n="@@companyDetailProcessingActions.section3.translations">Processing Evidence Documents</h2>
-                    <div class="af-form-element">
-
-                        <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceDocuments">
+          </div>
+        </div>
+      }
+      @if (this.form.get('requiredEvidenceFields')) {
+        @for (field of this.form.get('requiredEvidenceFields').value; track field; let i = $index) {
+          <div>
+            <div class="af-row ps-3 pe-3 mb-1">
+              <div class="af-c6 d-flex align-items-center">{{field?.label}}</div>
+              <div class="af-c5 d-flex align-items-center">
+                <checkbox-input
+                  [noBottomMargin]="true"
+                  [inTable]="true"
+                  (onClick)="cbSelectedSP(field, i, 'mandatory')"
+                  [checked]="field.mandatory">
+                </checkbox-input>
+                <checkbox-input
+                  [noBottomMargin]="true"
+                  class="ms-1"
+                  [inTable]="true"
+                  (onClick)="cbSelectedSP(field, i, 'quote')"
+                  [checked]="field.requiredOnQuote">
+                </checkbox-input>
+              </div>
+              <div class="af-c1 d-flex align-items-center" (click)="removeEvidenceField(field)">
+                <fa-icon
+                  class="del-icon"
+                [icon]="faTimes"></fa-icon>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+    <!-- END: Processing evidence fields -->
+  </div>
+  <!-- Right column -->
+  <div class="af-form-block--c6">
+    <!-- Processing evidence documents -->
+    <h2 i18n="@@companyDetailProcessingActions.section3.translations">Processing Evidence Documents</h2>
+    <div class="af-form-element">
+      <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceDocuments">
                             Add processing evidence documents that have to be specified after this processing action has been performed.
                         </small>
-
-                        <div class="spacer-title-section"></div>
-
-                        <div class="search-field" *ngIf="processingEvidenceTypeService">
-                            <single-choice
-                                    [formControlInput]="evidenceDocInputForm"
-                                    [codebookService]="processingEvidenceTypeService"
-                                    (onChange)="addSelectedEvidenceDoc($event)">
-                            </single-choice>
-                        </div>
-                        <div *ngIf="!processingEvidenceTypeService">
-                            <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
-                        </div>
-
-                        <div class="spacer-title-section"></div>
-
-                        <ng-container *ngIf="this.form.get('requiredDocumentTypes').value.length > 0">
-                            <div class="af-row pl-3 pr-3 mb-1">
-                                <div class="af-c3"></div>
-                                <div>
-                                    <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceDocuments.checkBox">
+      <div class="spacer-title-section"></div>
+      @if (processingEvidenceTypeService) {
+        <div class="search-field">
+          <single-choice
+            [formControlInput]="evidenceDocInputForm"
+            [codebookService]="processingEvidenceTypeService"
+            (onChange)="addSelectedEvidenceDoc($event)">
+          </single-choice>
+        </div>
+      }
+      @if (!processingEvidenceTypeService) {
+        <div>
+          <small><em i18n="@@companyDetailProcessingActions.hint.selectValueChain">Please select at least one value chain</em></small>
+        </div>
+      }
+      <div class="spacer-title-section"></div>
+      @if (this.form.get('requiredDocumentTypes').value.length > 0) {
+        <div class="af-row ps-3 pe-3 mb-1">
+          <div class="af-c3"></div>
+          <div>
+            <small i18n="@@companyDetailProcessingActions.hint.processingEvidenceDocuments.checkBox">
                                         mandatory / required on quote / required in a group on quote
                                     </small>
-                                </div>
-                            </div>
-                        </ng-container>
-
-                        <ng-container *ngIf="this.form.get('requiredDocumentTypes')">
-                            <div *ngFor="let doc of this.form.get('requiredDocumentTypes').value; index as i">
-                                <div class="af-row pl-3 pr-3 mb-1">
-                                    <div class="af-c6 d-flex align-items-center">{{doc?.label}}</div>
-                                    <div class="af-c5 d-flex align-items-center">
-                                        <checkbox-input
-                                                [noBottomMargin]="true"
-                                                [inTable]="true"
-                                                (onClick)="cbSelectedSP(doc, i, 'mandatory')"
-                                                [checked]="doc.mandatory">
-                                        </checkbox-input>
-                                        <checkbox-input
-                                                [noBottomMargin]="true"
-                                                class="ml-1"
-                                                [inTable]="true"
-                                                (onClick)="cbSelectedSP(doc, i, 'quote')"
-                                                [checked]="doc.requiredOnQuote">
-                                        </checkbox-input>
-                                        <checkbox-input
-                                                class="ml-1"
-                                                [noBottomMargin]="true"
-                                                [inTable]="true"
-                                                (onClick)="groupDecided(doc)"
-                                                [checked]="!!doc.requiredOneOfGroupIdForQuote">
-                                        </checkbox-input>
-
-                                        <input *ngIf="doc.requiredOneOfGroupIdForQuote != null"
-                                               class="form-control text-input labelPlaceholder ml-3"
-                                               style="max-width: 5rem;"
-                                               [ngModel]="doc.requiredOneOfGroupIdForQuote"
-                                               (ngModelChange)="changeRequiredOneOf($event, doc)">
-                                    </div>
-                                    <div class="af-c1 d-flex align-items-center" (click)="removeEvidenceDoc(doc)">
-                                        <fa-icon
-                                                class="del-icon"
-                                                [icon]="faTimes"></fa-icon>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-
-                    <!-- END: Processing evidence documents -->
-                </div>
+          </div>
+        </div>
+      }
+      @if (this.form.get('requiredDocumentTypes')) {
+        @for (doc of this.form.get('requiredDocumentTypes').value; track doc; let i = $index) {
+          <div>
+            <div class="af-row ps-3 pe-3 mb-1">
+              <div class="af-c6 d-flex align-items-center">{{doc?.label}}</div>
+              <div class="af-c5 d-flex align-items-center">
+                <checkbox-input
+                  [noBottomMargin]="true"
+                  [inTable]="true"
+                  (onClick)="cbSelectedSP(doc, i, 'mandatory')"
+                  [checked]="doc.mandatory">
+                </checkbox-input>
+                <checkbox-input
+                  [noBottomMargin]="true"
+                  class="ms-1"
+                  [inTable]="true"
+                  (onClick)="cbSelectedSP(doc, i, 'quote')"
+                  [checked]="doc.requiredOnQuote">
+                </checkbox-input>
+                <checkbox-input
+                  class="ms-1"
+                  [noBottomMargin]="true"
+                  [inTable]="true"
+                  (onClick)="groupDecided(doc)"
+                  [checked]="!!doc.requiredOneOfGroupIdForQuote">
+                </checkbox-input>
+                @if (doc.requiredOneOfGroupIdForQuote != null) {
+                  <input
+                    class="form-control text-input labelPlaceholder ms-3"
+                    style="max-width: 5rem;"
+                    [ngModel]="doc.requiredOneOfGroupIdForQuote"
+                    (ngModelChange)="changeRequiredOneOf($event, doc)">
+                }
+              </div>
+              <div class="af-c1 d-flex align-items-center" (click)="removeEvidenceDoc(doc)">
+                <fa-icon
+                  class="del-icon"
+                [icon]="faTimes"></fa-icon>
+              </div>
             </div>
-
-            <!-- Bottom row -->
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="af-bottom-buttons">
-                        <button class="btn btn-outlined mr-2"
-                                type="button"
-                                i18n="@@companyDetailProcessingActions.button.cancel"
-                                (click)="goBack()">
+          </div>
+        }
+      }
+    </div>
+    <!-- END: Processing evidence documents -->
+  </div>
+</div>
+<!-- Bottom row -->
+<div class="af-form-row">
+  <div class="af-form-block--c12">
+    <div class="af-bottom-buttons">
+      <button class="btn btn-outlined me-2"
+        type="button"
+        i18n="@@companyDetailProcessingActions.button.cancel"
+        (click)="goBack()">
                             <span>Cancel</span>
                         </button>
-                        <button class="btn mr-2"
-                                type="button"
-                                i18n="@@companyDetailProcessingActions.button.save"
-                                (click)="saveProcessingAction()">
+      <button class="btn me-2"
+        type="button"
+        i18n="@@companyDetailProcessingActions.button.save"
+        (click)="saveProcessingAction()">
                             <span>Save</span>
                         </button>
-                    </div>
-                </div>
-            </div>
-            <!-- END: Bottom row -->
-
-        </div>
     </div>
+  </div>
+</div>
+<!-- END: Bottom row -->
+</div>
+</div>
+}
 </app-authorised-layout>

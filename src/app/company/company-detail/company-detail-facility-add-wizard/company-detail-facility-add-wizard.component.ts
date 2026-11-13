@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveFacilityTypeService } from '../../../shared-services/active-facility-types.service';
 import { ApiFacilityType } from '../../../../api/model/apiFacilityType';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { CompanyValueChainsService } from "../../../shared-services/company-value-chains.service";
 import { CompanyControllerService } from "../../../../api/api/companyController.service";
@@ -27,9 +27,11 @@ import { FacilityControllerService } from "../../../../api/api/facilityControlle
 import { SelfOnboardingService } from "../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-company-detail-facility-add-wizard',
-  templateUrl: './company-detail-facility-add-wizard.component.html',
-  styleUrls: ['./company-detail-facility-add-wizard.component.scss', '../company-detail.component.scss']
+    selector: 'app-company-detail-facility-add-wizard',
+    templateUrl: './company-detail-facility-add-wizard.component.html',
+    styleUrls: ['./company-detail-facility-add-wizard.component.scss', '../company-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailFacilityAddWizardComponent implements OnInit {
 
@@ -40,26 +42,26 @@ export class CompanyDetailFacilityAddWizardComponent implements OnInit {
   selectedFacilityType: ApiFacilityType;
 
   // Step 2
-  facilityNameControl = new FormControl(null, Validators.required);
+  facilityNameControl = new UntypedFormControl(null, Validators.required);
 
   // Step 3
   collectionFacility = false;
 
   // Step 4
-  mayInvolveCollectors = new FormControl(false);
-  mayContainOrganic = new FormControl(false);
-  mayContainWomenOnly = new FormControl(false);
-  ableToDocumentTare = new FormControl(false);
-  priceDeductionDamage = new FormControl(false);
-  weightDeductionDamage = new FormControl(false);
-  priceDeterminedLater = new FormControl(false);
-  isPublic = new FormControl(false);
+  mayInvolveCollectors = new UntypedFormControl(false);
+  mayContainOrganic = new UntypedFormControl(false);
+  mayContainWomenOnly = new UntypedFormControl(false);
+  ableToDocumentTare = new UntypedFormControl(false);
+  priceDeductionDamage = new UntypedFormControl(false);
+  weightDeductionDamage = new UntypedFormControl(false);
+  priceDeterminedLater = new UntypedFormControl(false);
+  isPublic = new UntypedFormControl(false);
 
   // Step 5
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChains: Array<ApiValueChain> = [];
-  valueChainsForm = new FormControl(null);
-  selectedCompanyValueChainsControl = new FormControl(null, [ListNotEmptyValidator()]);
+  valueChains: ApiValueChain[] = [];
+  valueChainsForm = new UntypedFormControl(null);
+  selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   // Step 6
   semiProductsForValueChainsService: SemiProductsForValueChainsService;
@@ -75,7 +77,7 @@ export class CompanyDetailFacilityAddWizardComponent implements OnInit {
   facilityLocationParentForm = generateFormFromMetadata(ApiFacility.formMetadata(), this.emptyObject(), ApiFacilityValidationScheme);
   submittedFacilityLocationForm = false;
 
-  currentStep: number = 1;
+  currentStep = 1;
 
   @Input()
   companyId: string;
@@ -211,7 +213,7 @@ export class CompanyDetailFacilityAddWizardComponent implements OnInit {
 
     this.submittedFacilityLocationForm = true;
 
-    const facilityLocationForm = this.facilityLocationParentForm.get('facilityLocation') as FormGroup;
+    const facilityLocationForm = this.facilityLocationParentForm.get('facilityLocation') as UntypedFormGroup;
     if (facilityLocationForm.valid) {
       this.createNewFacility(facilityLocationForm.value);
     }

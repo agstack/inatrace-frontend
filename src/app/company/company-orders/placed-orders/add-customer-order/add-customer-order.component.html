@@ -1,168 +1,184 @@
 <app-authorised-layout>
-  <div class="af-form-wrapper" *ngIf="form">
-
-    <div class="af-form-row">
-      <div class="af-form-block--c12 d-flex justify-content-between">
-        <div class="title-page content-element--title">{{ title }} <span>{{ form.get('id').value }}</span></div>
+  @if (form) {
+    <div class="af-form-wrapper">
+      <div class="af-form-row">
+        <div class="af-form-block--c12 d-flex justify-content-between">
+          <div class="title-page content-element--title">{{ title }} <span>{{ form.get('id').value }}</span></div>
+        </div>
       </div>
-    </div>
-
-    <div class="af-form-row">
-      <div class="af-form-block--c6">
-        <div class="af-form-element">
-
-          <div class="af-row">
-            <div class="af-c12">
-              <textinput
-                      label="Order ID"
-                      i18n-label="@@globalOrderEdit.textinput.orderID.label"
-                      [form]="$any(form.get('orderId'))"
-                      style="width: 100%"
-                      placeholder="Enter id"
-                      i18n-placeholder="@@globalOrderEdit.textinput.orderID.placeholder"
-                      [isInvalid]="submitted && form.get('orderId').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="form.get('orderId').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@globalOrderEdit.textinput.orderID.error.required">
+      <div class="af-form-row">
+        <div class="af-form-block--c6">
+          <div class="af-form-element">
+            <div class="af-row">
+              <div class="af-c12">
+                <textinput
+                  label="Order ID"
+                  i18n-label="@@globalOrderEdit.textinput.orderID.label"
+                  [form]="$any(form.get('orderId'))"
+                  style="width: 100%"
+                  placeholder="Enter id"
+                  i18n-placeholder="@@globalOrderEdit.textinput.orderID.placeholder"
+                  [isInvalid]="submitted && form.get('orderId').invalid">
+                  @if (submitted) {
+                    @if (form.get('orderId').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@globalOrderEdit.textinput.orderID.error.required">
                       Order ID is required
                     </div>
-                  </div>
-                </ng-container>
-              </textinput>
+                        }
+                      </div>
+                    }
+                  }
+                </textinput>
+              </div>
             </div>
-          </div>
-
-          <div class="af-row">
-            <div class="af-c12">
-              <single-choice
-                      label="Customer"
-                      i18n-label="@@globalOrderEdit.textinput.customer.label"
-                      [formControlInput]="$any(form.get('customer'))"
-                      [codebookService]="companyCustomerCodebook"
-                      style="min-width: 150px;"
-                      [isInvalidChoice]="submitted && form.get('customer').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="form.get('customer').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@globalOrderEdit.textinput.customer.error.required">
+            <div class="af-row">
+              <div class="af-c12">
+                <single-choice
+                  label="Customer"
+                  i18n-label="@@globalOrderEdit.textinput.customer.label"
+                  [formControlInput]="$any(form.get('customer'))"
+                  [codebookService]="companyCustomerCodebook"
+                  style="min-width: 150px;"
+                  [isInvalidChoice]="submitted && form.get('customer').invalid">
+                  @if (submitted) {
+                    @if (form.get('customer').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@globalOrderEdit.textinput.customer.error.required">
                       Customer is required
                     </div>
-                  </div>
-                </ng-container>
-              </single-choice>
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              </div>
             </div>
-          </div>
-
-          <div class="af-row">
-            <div class="af-c12">
-              <single-choice
-                      *ngIf="outputFacilitiesCodebook"
-                      label="Order to"
-                      i18n-label="@@stockOrderItem.outputFacilityForm.label"
-                      [formControlInput]="outputFacilityForm"
-                      [codebookService]="outputFacilitiesCodebook"
-                      style="min-width: 150px;"
-                      [isInvalidChoice]="submitted && outputFacilityForm.invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="outputFacilityForm.errors as errors" class="sc-invalid-feedback" i18n="@@stockOrderItem.outputFacilityForm.error.required">
+            <div class="af-row">
+              <div class="af-c12">
+                @if (outputFacilitiesCodebook) {
+                  <single-choice
+                    label="Order to"
+                    i18n-label="@@stockOrderItem.outputFacilityForm.label"
+                    [formControlInput]="outputFacilityForm"
+                    [codebookService]="outputFacilitiesCodebook"
+                    style="min-width: 150px;"
+                    [isInvalidChoice]="submitted && outputFacilityForm.invalid">
+                    @if (submitted) {
+                      @if (outputFacilityForm.errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@stockOrderItem.outputFacilityForm.error.required">
                     Output facility is required
                   </div>
-                </ng-container>
-              </single-choice>
+                      }
+                    }
+                  </single-choice>
+                }
+              </div>
             </div>
-          </div>
-
-          <div class="af-row">
-            <div class="af-c12">
-              <checkbox-input
-                      [form]="$any(form.get('requiredWomensOnly'))"
-                      style="margin-bottom: 1rem; margin-top: -1rem;">
-                <checkbox-input-rich-label>
-                  <span i18n="@@globalOrderEdit.checkbox.womensCoffee.label">Women's only</span>
-                </checkbox-input-rich-label>
-              </checkbox-input>
+            <div class="af-row">
+              <div class="af-c12">
+                <checkbox-input
+                  [form]="$any(form.get('requiredWomensOnly'))"
+                  style="margin-bottom: 1rem; margin-top: -1rem;">
+                  <checkbox-input-rich-label>
+                    <span i18n="@@globalOrderEdit.checkbox.womensCoffee.label">Women's only</span>
+                  </checkbox-input-rich-label>
+                </checkbox-input>
+              </div>
             </div>
-          </div>
-
-          <div class="af-row">
-            <div class="af-c12">
-              <checkbox-input
-                      [form]="$any(form.get('requiredOrganic'))"
-                      style="margin-bottom: 1rem; margin-top: -1rem;">
-                <checkbox-input-rich-label>
-                  <span i18n="@@globalOrderEdit.checkbox.requiredOrganic.label">Organic only</span>
-                </checkbox-input-rich-label>
-              </checkbox-input>
+            <div class="af-row">
+              <div class="af-c12">
+                <checkbox-input
+                  [form]="$any(form.get('requiredOrganic'))"
+                  style="margin-bottom: 1rem; margin-top: -1rem;">
+                  <checkbox-input-rich-label>
+                    <span i18n="@@globalOrderEdit.checkbox.requiredOrganic.label">Organic only</span>
+                  </checkbox-input-rich-label>
+                </checkbox-input>
+              </div>
             </div>
-          </div>
-
-          <div class="af-row">
-            <div class="af-c4">
-              <app-datepicker
-                      label="Latest date of delivery"
-                      i18n-label="@@globalOrderEdit.datepicker.latestDateOfDelivery.label"
-                      [form]="form.get('deliveryDeadline')"
-                      [invalid]="submitted && form.get('deliveryDeadline').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="form.get('deliveryDeadline').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@globalOrderEdit.datepicker.latestDateOfDelivery.error.required">
+            <div class="af-row">
+              <div class="af-c4">
+                <app-datepicker
+                  label="Latest date of delivery"
+                  i18n-label="@@globalOrderEdit.datepicker.latestDateOfDelivery.label"
+                  [form]="form.get('deliveryDeadline')"
+                  [invalid]="submitted && form.get('deliveryDeadline').invalid">
+                  @if (submitted) {
+                    @if (form.get('deliveryDeadline').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@globalOrderEdit.datepicker.latestDateOfDelivery.error.required">
                       Latest delivery date is required
                     </div>
-                  </div>
-                </ng-container>
-              </app-datepicker>
-            </div>
-          </div>
-
-          <div class="af-row" *ngIf="outputFacility && form.get('orderId').value">
-            <div class="af-c12">
-              <list-editor *ngIf="stockOrdersListManager"
-                           label="List of order items"
-                           [listEditorManager]="stockOrdersListManager"
-                           addText="Add order item"
-                           [canAdd]="true"
-                           i18n-label="@@globalOrderEdit.list-editor.orderItems.label"
-                           i18n-addText="@@globalOrderEdit.list-editor.orderItems.addText"
-                           [invalid]="submitted && form.get('items')?.invalid">
-                <list-editor-items>
-                  <div *ngFor="let item of orderItemsFormArray.controls; let i=index;">
-                    <app-customer-order-item
-                            [title]="null"
-                            [outputFacility]="outputFacility"
-                            [formControlInput]="$any(item)"
-                            [globalOrderId]="form.get('orderId').value"
-                            [isOpen]="stockOrdersListManager.isOpen(i)"
-                            [listEditorManager]="this.stockOrdersListManager"
-                            [companyId]="companyId"
-                            [listEditorManagerPosition]="i">
-                    </app-customer-order-item>
-                  </div>
-                </list-editor-items>
-                <list-editor-errors>
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('items').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.minLengthArray" i18n-title="@@globalOrderEdit.list-editor.stockOrders.error.oneItemRequired">
-                          <span>
-                            At least on item is required.
-                          </span>
+                        }
                       </div>
-                    </div>
-                  </ng-container>
-                </list-editor-errors>
-              </list-editor>
+                    }
+                  }
+                </app-datepicker>
+              </div>
             </div>
+            @if (outputFacility && form.get('orderId').value) {
+              <div class="af-row">
+                <div class="af-c12">
+                  @if (stockOrdersListManager) {
+                    <list-editor
+                      label="List of order items"
+                      [listEditorManager]="stockOrdersListManager"
+                      addText="Add order item"
+                      [canAdd]="true"
+                      i18n-label="@@globalOrderEdit.list-editor.orderItems.label"
+                      i18n-addText="@@globalOrderEdit.list-editor.orderItems.addText"
+                      [invalid]="submitted && form.get('items')?.invalid">
+                      <list-editor-items>
+                        @for (item of orderItemsFormArray.controls; track item; let i = $index) {
+                          <div>
+                            <app-customer-order-item
+                              [title]="null"
+                              [outputFacility]="outputFacility"
+                              [formControlInput]="$any(item)"
+                              [globalOrderId]="form.get('orderId').value"
+                              [isOpen]="stockOrdersListManager.isOpen(i)"
+                              [listEditorManager]="this.stockOrdersListManager"
+                              [companyId]="companyId"
+                              [listEditorManagerPosition]="i">
+                            </app-customer-order-item>
+                          </div>
+                        }
+                      </list-editor-items>
+                      <list-editor-errors>
+                        @if (submitted) {
+                          @if (form.get('items').errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.minLengthArray) {
+                                <div i18n-title="@@globalOrderEdit.list-editor.stockOrders.error.oneItemRequired">
+                                  <span>
+                                    At least on item is required.
+                                  </span>
+                                </div>
+                              }
+                            </div>
+                          }
+                        }
+                      </list-editor-errors>
+                    </list-editor>
+                  }
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="af-form-row">
-      <div class="af-form-block--c6">
-        <div class="af-bottom-buttons" i18n="@@globalOrderEdit.footer.buttons">
-          <button class="btn btn-outlined mr-2" data-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
-          <button class="btn mr-2" type="button" (click)="saveProductOrder()"><span>Save</span></button>
+      <div class="af-form-row">
+        <div class="af-form-block--c6">
+          <div class="af-bottom-buttons" i18n="@@globalOrderEdit.footer.buttons">
+          <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
+          <button class="btn me-2" type="button" (click)="saveProductOrder()"><span>Save</span></button>
+        </div>
         </div>
       </div>
     </div>
-
-  </div>
+  }
 </app-authorised-layout>

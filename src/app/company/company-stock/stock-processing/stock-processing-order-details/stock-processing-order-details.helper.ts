@@ -1,4 +1,4 @@
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ApiStockOrderEvidenceFieldValue } from '../../../../../api/model/apiStockOrderEvidenceFieldValue';
 import { ApiProcessingAction } from '../../../../../api/model/apiProcessingAction';
 import { ApiStockOrderEvidenceTypeValue } from '../../../../../api/model/apiStockOrderEvidenceTypeValue';
@@ -23,24 +23,24 @@ export class StockProcessingOrderDetailsHelper {
     return Number.isInteger(numericValue) ? null : {integer: true};
   }
 
-  public static setFormControlValidators(formGroup: FormGroup, formControlName: string, validators: ValidatorFn[]) {
+  public static setFormControlValidators(formGroup: UntypedFormGroup, formControlName: string, validators: ValidatorFn[]) {
     formGroup.get(formControlName).setValidators(validators);
     formGroup.get(formControlName).updateValueAndValidity();
   }
 
-  public static async setRequiredProcessingEvidence(action: ApiProcessingAction, requiredProcessingEvidenceArray: FormArray) {
+  public static async setRequiredProcessingEvidence(action: ApiProcessingAction, requiredProcessingEvidenceArray: UntypedFormArray) {
 
     requiredProcessingEvidenceArray.clear();
 
     if (action && action.requiredDocumentTypes && action.requiredDocumentTypes.length > 0) {
 
       for (const requiredDocumentType of action.requiredDocumentTypes) {
-        requiredProcessingEvidenceArray.push(new FormGroup({
-          evidenceTypeId: new FormControl(requiredDocumentType.id),
-          evidenceTypeCode: new FormControl(requiredDocumentType.code),
-          evidenceTypeLabel: new FormControl({ value: requiredDocumentType.label, disabled: true }),
-          date: new FormControl(new Date(), requiredDocumentType.mandatory ? Validators.required : null),
-          document: new FormControl(null, requiredDocumentType.mandatory ? Validators.required : null)
+        requiredProcessingEvidenceArray.push(new UntypedFormGroup({
+          evidenceTypeId: new UntypedFormControl(requiredDocumentType.id),
+          evidenceTypeCode: new UntypedFormControl(requiredDocumentType.code),
+          evidenceTypeLabel: new UntypedFormControl({ value: requiredDocumentType.label, disabled: true }),
+          date: new UntypedFormControl(new Date(), requiredDocumentType.mandatory ? Validators.required : null),
+          document: new UntypedFormControl(null, requiredDocumentType.mandatory ? Validators.required : null)
         }));
       }
 
@@ -49,7 +49,7 @@ export class StockProcessingOrderDetailsHelper {
     }
   }
 
-  public static prepareRequiredEvidenceTypeValues(requiredProcessingEvidenceArray: FormArray): ApiStockOrderEvidenceTypeValue[] {
+  public static prepareRequiredEvidenceTypeValues(requiredProcessingEvidenceArray: UntypedFormArray): ApiStockOrderEvidenceTypeValue[] {
 
     const evidenceTypesValues: ApiStockOrderEvidenceTypeValue[] = [];
 
@@ -63,7 +63,7 @@ export class StockProcessingOrderDetailsHelper {
     return evidenceTypesValues;
   }
 
-  public static prepareOtherEvidenceDocuments(otherProcessingEvidenceArray: FormArray): ApiStockOrderEvidenceTypeValue[] {
+  public static prepareOtherEvidenceDocuments(otherProcessingEvidenceArray: UntypedFormArray): ApiStockOrderEvidenceTypeValue[] {
 
     const otherEvidenceDocuments: ApiStockOrderEvidenceTypeValue[] = [];
 
@@ -136,26 +136,26 @@ export class StockProcessingOrderDetailsHelper {
     return Number(value);
   }
 
-  public static loadExistingOtherEvidenceDocuments(firstTSO: FormGroup, otherProcessingEvidenceArray: FormArray) {
+  public static loadExistingOtherEvidenceDocuments(firstTSO: UntypedFormGroup, otherProcessingEvidenceArray: UntypedFormArray) {
 
-    ((firstTSO.get('otherEvidenceDocuments') as FormArray).value as ApiStockOrderEvidenceTypeValue[]).forEach(evidenceTypeValue => {
-      otherProcessingEvidenceArray.push(new FormGroup({
-        formalCreationDate: new FormControl(evidenceTypeValue.date),
-        document: new FormControl(evidenceTypeValue.document),
-        type: new FormGroup({
-          id: new FormControl(evidenceTypeValue.evidenceTypeId),
-          code: new FormControl(evidenceTypeValue.evidenceTypeCode),
-          label: new FormControl(evidenceTypeValue.evidenceTypeLabel)
+    ((firstTSO.get('otherEvidenceDocuments') as UntypedFormArray).value as ApiStockOrderEvidenceTypeValue[]).forEach(evidenceTypeValue => {
+      otherProcessingEvidenceArray.push(new UntypedFormGroup({
+        formalCreationDate: new UntypedFormControl(evidenceTypeValue.date),
+        document: new UntypedFormControl(evidenceTypeValue.document),
+        type: new UntypedFormGroup({
+          id: new UntypedFormControl(evidenceTypeValue.evidenceTypeId),
+          code: new UntypedFormControl(evidenceTypeValue.evidenceTypeCode),
+          label: new UntypedFormControl(evidenceTypeValue.evidenceTypeLabel)
         })
       }));
     });
   }
 
-  public static loadExistingRequiredEvidenceDocuments(firstTSO: FormGroup, requiredProcessingEvidenceArray: FormArray) {
+  public static loadExistingRequiredEvidenceDocuments(firstTSO: UntypedFormGroup, requiredProcessingEvidenceArray: UntypedFormArray) {
 
-    ((firstTSO.get('requiredEvidenceTypeValues') as FormArray).value as ApiStockOrderEvidenceTypeValue[]).forEach(evidenceTypeValue => {
+    ((firstTSO.get('requiredEvidenceTypeValues') as UntypedFormArray).value as ApiStockOrderEvidenceTypeValue[]).forEach(evidenceTypeValue => {
       const evidenceTypeControl = requiredProcessingEvidenceArray.controls
-        .find(control => control.get('evidenceTypeId').value === evidenceTypeValue.evidenceTypeId) as FormGroup;
+        .find(control => control.get('evidenceTypeId').value === evidenceTypeValue.evidenceTypeId) as UntypedFormGroup;
       setTimeout(() => {
         evidenceTypeControl.get('date').setValue(evidenceTypeValue.date);
         evidenceTypeControl.setControl('document', generateFormFromMetadata(ApiDocument.formMetadata(), evidenceTypeValue.document));
@@ -169,9 +169,9 @@ export class StockProcessingOrderDetailsHelper {
     return defaultEmptyObject(obj) as ApiActivityProof;
   }
 
-  public static ApiActivityProofEmptyObjectFormFactory(): () => FormControl {
+  public static ApiActivityProofEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(StockProcessingOrderDetailsHelper.ApiActivityProofCreateEmptyObject(),
+      return new UntypedFormControl(StockProcessingOrderDetailsHelper.ApiActivityProofCreateEmptyObject(),
         ApiActivityProofValidationScheme.validators);
     };
   }

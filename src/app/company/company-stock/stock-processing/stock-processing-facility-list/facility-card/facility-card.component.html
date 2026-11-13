@@ -1,28 +1,46 @@
 <div class="af-card">
 
-  <div *ngIf="menuOptions.length > 0" class="af-popover-wrapper">
-    <div class="af-popover-content">
-      <ul *ngFor="let action of menuOptions">
-        <li (click)="goTo(action.id)">{{ action.name }}</li>
-      </ul>
+  <div class="af-card-section">
+    <div [ngClass]="facilityTypeColor()">
+      <span class="af-card-indicator">&nbsp;</span>
+      <span class="af-card-title">{{ facility.name }}</span>
+      <span class="af-card-subtitle">{{ whereIsIt(facility) }}</span>
+      <div class="af-card-icon">
+        <span [ngClass]="facilityType()"></span>
+      </div>
     </div>
   </div>
 
-    <div class="af-card-section">
-      <div [ngClass]="facilityTypeColor()">
-        <span class="af-card-indicator">&nbsp;</span>
-        <span class="af-card-title">{{ facility.name }}</span>
-        <span class="af-card-subtitle">{{ whereIsIt(facility) }}</span>
-        <div class="af-card-icon">
-          <span [ngClass]="facilityType()"></span>
-        </div>
-      </div>
-    </div>
+  <div class="af-card-section">
+    <div class="af-card-section-content">
+      <span class="af-card-description">{{ description }}</span>
 
-    <div class="af-card-section">
-      <div class="af-card-section-content">
-        <span class="af-card-description">{{ description }}</span>
-      </div>
+      @if (menuOptions.length > 0) {
+        <div
+          class="af-card-actions"
+          ngbDropdown
+          placement="bottom-end"
+          container="body">
+          <button type="button"
+            class="af-card-actions-toggle"
+            ngbDropdownToggle
+            i18n="@@stockProcessingFacilityCard.actions">
+            Actions
+          </button>
+          <div class="dropdown-menu af-card-actions-menu" ngbDropdownMenu>
+            @for (action of menuOptions; track action) {
+              <button
+                type="button"
+                class="dropdown-item"
+                ngbDropdownItem
+                (click)="goTo(action.id)">
+                {{ action.name }}
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
+  </div>
 
 </div>

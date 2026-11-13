@@ -1,36 +1,31 @@
 <app-authorised-layout>
   <app-system-left-panel
-          [isAdmin]="isAdmin"
-          i18n="@@companyDetail.navTitle"
-          title="System">
+    [isAdmin]="isAdmin"
+    i18n="@@companyDetail.navTitle"
+    title="System">
   </app-system-left-panel>
 
-  <div [class.main]="isAdmin" [class.company-profile]="!isAdmin"
-       *ngIf="companyDetailForm"
-       contents
-       [initialValue]=""
-       [submitted]="submitted">
-
-    <div class="af-form-wrapper">
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="title-page content-element--title">
-            {{ title }}<ng-container *ngIf="mode === 'update'"> (<em>{{ companyDetailForm.get('name').value }}</em>)</ng-container>
+  @if (companyDetailForm) {
+    <div [class.main]="isAdmin" [class.company-profile]="!isAdmin"
+      contents
+      [initialValue]=""
+      [submitted]="submitted">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">
+              {{ title }}@if (mode === 'update') {
+              (<em>{{ companyDetailForm.get('name').value }}</em>)
+            }
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
-
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.basicInfo">Basic information</h2>
           <div class="af-form-element">
-
             <p i18n="@@companyDetail.subtitle">Add information about your company including your company name, logo, address, contact information, website and social media URLs.</p>
-
             <div class="spacer-title-section"></div>
-
             <app-closable
               [nonClosable]="true">
               <textinput [form]="$any(companyDetailForm.get('name'))" label="Company name"
@@ -39,17 +34,20 @@
                 i18n-label="@@companyDetail.textinput.companyName.label"
                 i18n-placeholder="@@companyDetail.textinput.companyName.placeholder"
                 [isInvalid]="submitted && companyDetailForm.get('name').invalid">
-                <div *ngIf="submitted && companyDetailForm.get('name').invalid"
-                  class="sc-invalid-feedback">
-                  <div *ngIf="companyDetailForm.get('name').errors.required" i18n="@@companyDetail.textinput.companyName.error">
+                @if (submitted && companyDetailForm.get('name').invalid) {
+                  <div
+                    class="sc-invalid-feedback">
+                    @if (companyDetailForm.get('name').errors.required) {
+                      <div i18n="@@companyDetail.textinput.companyName.error">
                     <span>
                       Company name is required
                     </span>
                   </div>
-                </div>
+                    }
+                  </div>
+                }
               </textinput>
             </app-closable>
-
             <app-closable
               [nonClosable]="true">
               <textinput [form]="$any(companyDetailForm.get('abbreviation'))" label="Company abbreviation"
@@ -59,16 +57,19 @@
                 i18n-label="@@companyDetail.textinput.companyAbbreviation.label"
                 i18n-placeholder="@@companyDetail.textinput.companyAbbreviation.placeholder"
                 [isInvalid]="submitted && companyDetailForm.get('abbreviation').invalid">
-                <div *ngIf="submitted && companyDetailForm.get('abbreviation').invalid" class="sc-invalid-feedback">
-                  <div *ngIf="companyDetailForm.get('abbreviation').errors.minlength || companyDetailForm.get('abbreviation').errors.maxlength" i18n="@@companyDetail.textinput.companyAbbreviation.errorLength">
+                @if (submitted && companyDetailForm.get('abbreviation').invalid) {
+                  <div class="sc-invalid-feedback">
+                    @if (companyDetailForm.get('abbreviation').errors.minlength || companyDetailForm.get('abbreviation').errors.maxlength) {
+                      <div i18n="@@companyDetail.textinput.companyAbbreviation.errorLength">
                     <span>
                       Company abbreviation can be empty or should contain 3-6 characters
                     </span>
                   </div>
-                </div>
+                    }
+                  </div>
+                }
               </textinput>
             </app-closable>
-
             <attachment-uploader
               rootImageUrl="{{rootImageUrl}}"
               allowedMimeType="[image/png', 'image/jpeg']"
@@ -87,24 +88,26 @@
               </attachment-uploader-content>
             </attachment-uploader>
             <small i18n="@@companyDetail.attachment-uploader.companyLogo.small">Upload a high-resolution logo of your company (jpeg, jpg, png)</small>
-            <ng-container *ngIf="submitted">
-              <div *ngIf="companyDetailForm.get('logo').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@companyDetail.attachment-uploader.companyLogo.error">
+            @if (submitted) {
+              @if (companyDetailForm.get('logo').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@companyDetail.attachment-uploader.companyLogo.error">
                   <span>
                     Company logo is required
                   </span>
                 </div>
-              </div>
-            </ng-container>
+                  }
+                </div>
+              }
+            }
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.headquartes">Company headquarters</h2>
           <div class="af-form-element">
-
             <app-closable
               [nonClosable]="true">
               <div class="row">
@@ -115,15 +118,19 @@
                     i18n-label="@@companyDetail.textinput.companyAddress.label"
                     i18n-placeholder="@@companyDetail.textinput.companyAddress.placeholder"
                     [isInvalid]="submitted && companyDetailForm.get('headquarters.address').invalid">
-                    <ng-container *ngIf="submitted">
-                      <div *ngIf="companyDetailForm.get('headquarters.address').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@companyDetail.textinput.companyAddress.error">
+                    @if (submitted) {
+                      @if (companyDetailForm.get('headquarters.address').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <div i18n="@@companyDetail.textinput.companyAddress.error">
                           <span>
                             Address is required
                           </span>
                         </div>
-                      </div>
-                    </ng-container>
+                          }
+                        </div>
+                      }
+                    }
                   </textinput>
                   <textinput [form]="$any(companyDetailForm.get('headquarters.city'))"
                     label="City" style="width: 100%"
@@ -146,15 +153,19 @@
                     i18n-label="@@companyDetail.textinput.companyZip.label"
                     i18n-placeholder="@@companyDetail.textinput.companyZip.placeholder"
                     [isInvalid]="submitted && companyDetailForm.get('headquarters.zip').invalid">
-                    <ng-container *ngIf="submitted">
-                      <div *ngIf="companyDetailForm.get('headquarters.zip').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.maxlength" i18n="@@companyDetail.textinput.companyZip.error">
+                    @if (submitted) {
+                      @if (companyDetailForm.get('headquarters.zip').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.maxlength) {
+                            <div i18n="@@companyDetail.textinput.companyZip.error">
                           <span>
                             Entry exceeds allowed max characters limit
                           </span>
                         </div>
-                      </div>
-                    </ng-container>
+                          }
+                        </div>
+                      }
+                    }
                   </textinput>
                   <single-choice label="Country"
                     i18n-label="@@companyDetail.textinput.companyCountry.label"
@@ -164,16 +175,13 @@
                 </div>
               </div>
             </app-closable>
-
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.description">Company description</h2>
           <div class="af-form-element">
-
             <app-closable
               [nonClosable]="true">
               <textinput [form]="$any(companyDetailForm.get('about'))" label="About company"
@@ -182,23 +190,28 @@
                 i18n-label="@@companyDetail.textinput.companyAbout.label"
                 i18n-helpText="@@companyDetail.textinput.companyAbout.helpText"
                 [isInvalid]="submitted && companyDetailForm.get('about').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="companyDetailForm.get('about').errors as errors" class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyAbout.errors">
-                    <div *ngIf="errors.required">
+                @if (submitted) {
+                  @if (companyDetailForm.get('about').errors; as errors) {
+                    <div class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyAbout.errors">
+                    @if (errors.required) {
+<div>
                       <span>
                         About is required
                       </span>
                     </div>
-                    <div *ngIf="errors.maxlength">
+}
+                    @if (errors.maxlength) {
+<div>
                       <span>
                         Entry exceeds allowed max characters limit
                       </span>
                     </div>
+}
                   </div>
-                </ng-container>
+                  }
+                }
               </textinput>
             </app-closable>
-
             <app-closable>
               <textinput [form]="$any(companyDetailForm.get('manager'))" label="Name of manager / CEO" style="width: 100%"
                 placeholder="Enter name of manager / CEO"
@@ -214,18 +227,24 @@
                 i18n-label="@@companyDetail.textinput.companyEmail.label"
                 i18n-placeholder="@@companyDetail.textinput.companyEmail.placeholder"
                 [isInvalid]="submitted && companyDetailForm.get('email').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="companyDetailForm.get('email').errors as errors" class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyEmail.errors">
-                    <div *ngIf="errors.wrongEmail">
+                @if (submitted) {
+                  @if (companyDetailForm.get('email').errors; as errors) {
+                    <div class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyEmail.errors">
+                    @if (errors.wrongEmail) {
+<div>
                       <span>
                         E-mail is in the wrong format
                       </span>
                     </div>
-                    <div *ngIf="errors.required">
+}
+                    @if (errors.required) {
+<div>
                       E-mail is required
                     </div>
+}
                   </div>
-                </ng-container>
+                  }
+                }
               </textinput>
             </app-closable>
             <app-closable
@@ -235,18 +254,21 @@
                 placeholder="Enter phone number"
                 i18n-label="@@companyDetail.textinput.companyPhone.label"
                 i18n-placeholder="@@companyDetail.textinput.companyPhone.placeholder">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="companyDetailForm.get('phone').errors as errors" class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyPhone.error">
-                    <div *ngIf="errors.required">
+                @if (submitted) {
+                  @if (companyDetailForm.get('phone').errors; as errors) {
+                    <div class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyPhone.error">
+                    @if (errors.required) {
+<div>
                       <span>
                         Phone is required
                       </span>
                     </div>
+}
                   </div>
-                </ng-container>
+                  }
+                }
               </textinput>
             </app-closable>
-
             <app-closable>
               <textinput
                 [form]="$any(companyDetailForm.get('webPage'))"
@@ -257,7 +279,6 @@
                 i18n-placeholder="@@companyDetail.textinput.companyWebPage.placeholder">
               </textinput>
             </app-closable>
-
             <app-closable>
               <textinput [form]="$any(companyDetailForm.get('interview'))" label="Interview"
                 style="width: 100%" [textarea]="true"
@@ -266,23 +287,28 @@
                 i18n-label="@@companyDetail.textinput.companyInterview.label"
                 i18n-helpText="@@companyDetail.textinput.companyInterview.helpText"
                 [isInvalid]="submitted && companyDetailForm.get('interview').invalid">
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="companyDetailForm.get('interview').errors as errors" class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyAbout.errors">
-                    <div *ngIf="errors.required">
+                @if (submitted) {
+                  @if (companyDetailForm.get('interview').errors; as errors) {
+                    <div class="sc-invalid-feedback" i18n="@@companyDetail.textinput.companyAbout.errors">
+                    @if (errors.required) {
+<div>
                       <span>
                         Interview is required
                       </span>
                     </div>
-                    <div *ngIf="errors.maxlength">
+}
+                    @if (errors.maxlength) {
+<div>
                       <span>
                         Entry exceeds allowed max characters limit
                       </span>
                     </div>
+}
                   </div>
-                </ng-container>
+                  }
+                }
               </textinput>
             </app-closable>
-
             <app-closable>
               <list-editor
                 label="Videos"
@@ -296,42 +322,47 @@
                 <list-editor-items>
                   <div cdkDropList
                     (cdkDropListDropped)="videosListManager.onDrop($event)">
-                    <div *ngFor="let item of
-                      companyDetailForm.get('documents')?.controls; let i=index;">
-                      <app-company-document-item
-                        title="Video"
-                        i18n-title="@@companyDetail.list-editor.videos.title"
-                        [formControlInput]="item"
-                        [isOpen]="videosListManager.isOpen(i)"
-                        [listEditorManager]="this.videosListManager"
-                        [listEditorManagerPosition]="i"
-                        category="VIDEO"
-                        *ngIf="!item || !item.value || !item.value.category || item.value.category == 'VIDEO'">
-                      </app-company-document-item>
-                    </div>
+                    @for (item of
+                      companyDetailForm.get('documents')?.controls; track item; let i = $index) {
+                      <div>
+                        @if (!item || !item.value || !item.value.category || item.value.category === 'VIDEO') {
+                          <app-company-document-item
+                            title="Video"
+                            i18n-title="@@companyDetail.list-editor.videos.title"
+                            [formControlInput]="item"
+                            [isOpen]="videosListManager.isOpen(i)"
+                            [listEditorManager]="this.videosListManager"
+                            [listEditorManagerPosition]="i"
+                            category="VIDEO"
+                            >
+                          </app-company-document-item>
+                        }
+                      </div>
+                    }
                   </div>
                 </list-editor-items>
                 <list-editor-errors>
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="companyDetailForm.get('documents').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n-title="@@companyDetail.list-editor.videos.error">
-                        <span>
-                          Videos are required
-                        </span>
+                  @if (submitted) {
+                    @if (companyDetailForm.get('documents').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n-title="@@companyDetail.list-editor.videos.error">
+                            <span>
+                              Videos are required
+                            </span>
+                          </div>
+                        }
                       </div>
-                    </div>
-                  </ng-container>
+                    }
+                  }
                 </list-editor-errors>
               </list-editor>
             </app-closable>
-
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
-
           <h2 i18n="@@companyDetail.section.valueChains">Company value chains</h2>
           <div class="af-form-element">
             <div class="search-field">
@@ -340,49 +371,59 @@
                 [codebookService]="valueChainsCodebook"
                 (onChange)="addSelectedValueChain($event)">
               </single-choice>
-              <div *ngIf="submitted && selectedCompanyValueChainsControl.errors as errors"
-                   class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@companyDetail.textinput.valueChains.error">
+              @if (submitted && selectedCompanyValueChainsControl.errors; as errors) {
+                <div
+                  class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@companyDetail.textinput.valueChains.error">
                     <span>
                       At least one value chain is required
                     </span>
                 </div>
-              </div>
+                  }
+                </div>
+              }
             </div>
-            <div *ngFor="let valueChain of this.valueChains; index as idx">
-              <div class="d-flex justify-content-between pl-3 pr-3 mb-1">
-                <div>{{ valueChain.name }}</div>
-                <div *ngIf="isCompanyAdmin" (click)="deleteValueChain(idx)" class="cursor-pointer">
-                  <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+            @for (valueChain of this.valueChains; track valueChain; let idx = $index) {
+              <div>
+                <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
+                  <div>{{ valueChain.name }}</div>
+                  @if (isCompanyAdmin) {
+                    <div (click)="deleteValueChain(idx)" class="cursor-pointer">
+                      <fa-icon class="del-icon" [icon]="faTimes"></fa-icon>
+                    </div>
+                  }
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.base.currency">Base currency</h2>
           <div class="af-form-element">
             <single-choice label="Currency"
-                           i18n-label="@@companyDetail.currency"
-                           [formControlInput]="$any(companyDetailForm.get('currency'))"
-                           [codebookService]="currencyCodes">
+              i18n-label="@@companyDetail.currency"
+              [formControlInput]="$any(companyDetailForm.get('currency'))"
+              [codebookService]="currencyCodes">
             </single-choice>
-            <ng-container *ngIf="submitted">
-              <div *ngIf="companyDetailForm.get('currency').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-title="@@companyDetail.currency.error">
-                  <span>
-                    Base currency is required
-                  </span>
+            @if (submitted) {
+              @if (companyDetailForm.get('currency').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n-title="@@companyDetail.currency.error">
+                      <span>
+                        Base currency is required
+                      </span>
+                    </div>
+                  }
                 </div>
-              </div>
-            </ng-container>
+              }
+            }
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.beycoIntegration.title">Beyco Integration</h2>
@@ -395,12 +436,10 @@
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.certification">Certification</h2>
           <div class="af-form-element">
-
             <list-editor
               label="Certification"
               [listEditorManager]="certificationListManager"
@@ -413,144 +452,154 @@
               <list-editor-items>
                 <div cdkDropList
                   (cdkDropListDropped)="certificationListManager.onDrop($event)">
-                  <div *ngFor="let item of
-                    companyDetailForm.get('certifications')?.controls; let i=
-                    index;">
-                    <app-certification-and-standard-item
-                      title="Certification"
-                      i18n-title="@@companyDetail.list-editor.certificationsAndStandards.title"
-                      [formControlInput]="item"
-                      [isOpen]="certificationListManager.isOpen(i)"
-                      [listEditorManager]="this.certificationListManager"
-                      [listEditorManagerPosition]="i">
-                    </app-certification-and-standard-item>
-                  </div>
+                  @for (item of
+                    companyDetailForm.get('certifications')?.controls; track item; let i = $index) {
+                    <div>
+                      <app-certification-and-standard-item
+                        title="Certification"
+                        i18n-title="@@companyDetail.list-editor.certificationsAndStandards.title"
+                        [formControlInput]="item"
+                        [isOpen]="certificationListManager.isOpen(i)"
+                        [listEditorManager]="this.certificationListManager"
+                        [listEditorManagerPosition]="i">
+                      </app-certification-and-standard-item>
+                    </div>
+                  }
                 </div>
               </list-editor-items>
               <list-editor-errors>
-                <ng-container *ngIf="submitted">
-                  <div *ngIf="companyDetailForm.get('certifications').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n-title="@@companyDetail.list-editor.certificationsAndStandards.error">
-                      <span>
-                        Certifications are required
-                      </span>
+                @if (submitted) {
+                  @if (companyDetailForm.get('certifications').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n-title="@@companyDetail.list-editor.certificationsAndStandards.error">
+                          <span>
+                            Certifications are required
+                          </span>
+                        </div>
+                      }
                     </div>
-                  </div>
-                </ng-container>
+                  }
+                }
               </list-editor-errors>
             </list-editor>
-
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.productionRecord">Production records</h2>
           <div class="af-form-element">
-
-              <list-editor
-                label="Production records"
-                [listEditorManager]="productionRecordListManager"
-                addText="Add new"
-                [canAdd]="true"
-                i18n-label="@@companyDetail.list-editor.productionRecord.label"
-                i18n-addText="@@companyDetail.list-editor.productionRecord.addText"
+            <list-editor
+              label="Production records"
+              [listEditorManager]="productionRecordListManager"
+              addText="Add new"
+              [canAdd]="true"
+              i18n-label="@@companyDetail.list-editor.productionRecord.label"
+              i18n-addText="@@companyDetail.list-editor.productionRecord.addText"
                 [invalid]="submitted &&
                 companyDetailForm.get('documents')?.invalid">
-                <list-editor-items>
-                  <div cdkDropList
-                    (cdkDropListDropped)="productionRecordListManager.onDrop($event)">
-                    <div *ngFor="let item of
-                      companyDetailForm.get('documents')?.controls; let i=index;">
-                      <app-company-document-item
-                        title="Production record"
-                        i18n-title="@@companyDetail.list-editor.productionRecord.title"
-                        [formControlInput]="item"
-                        [isOpen]="productionRecordListManager.isOpen(i)"
-                        [listEditorManager]="this.productionRecordListManager"
-                        [listEditorManagerPosition]="i"
-                        category="PRODUCTION_RECORD"
-                        *ngIf="!item || !item.value || !item.value.category || item.value.category == 'PRODUCTION_RECORD'">
-                      </app-company-document-item>
+              <list-editor-items>
+                <div cdkDropList
+                  (cdkDropListDropped)="productionRecordListManager.onDrop($event)">
+                  @for (item of
+                    companyDetailForm.get('documents')?.controls; track item; let i = $index) {
+                    <div>
+                      @if (!item || !item.value || !item.value.category || item.value.category === 'PRODUCTION_RECORD') {
+                        <app-company-document-item
+                          title="Production record"
+                          i18n-title="@@companyDetail.list-editor.productionRecord.title"
+                          [formControlInput]="item"
+                          [isOpen]="productionRecordListManager.isOpen(i)"
+                          [listEditorManager]="this.productionRecordListManager"
+                          [listEditorManagerPosition]="i"
+                          category="PRODUCTION_RECORD"
+                          >
+                        </app-company-document-item>
+                      }
                     </div>
-                  </div>
-                </list-editor-items>
-                <list-editor-errors>
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="companyDetailForm.get('documents').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n-title="@@companyDetail.list-editor.productionRecord.error">
-                        <span>
-                          Production records are required
-                        </span>
-                      </div>
+                  }
+                </div>
+              </list-editor-items>
+              <list-editor-errors>
+                @if (submitted) {
+                  @if (companyDetailForm.get('documents').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n-title="@@companyDetail.list-editor.productionRecord.error">
+                          <span>
+                            Production records are required
+                          </span>
+                        </div>
+                      }
                     </div>
-                  </ng-container>
-                </list-editor-errors>
-              </list-editor>
-
+                  }
+                }
+              </list-editor-errors>
+            </list-editor>
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <h2 i18n="@@companyDetail.section.meetTheFarmer">Meet the Farmers</h2>
           <div class="af-form-element">
-
-              <list-editor
-                label="Meet the Farmers"
-                [listEditorManager]="meetTheFarmerListManager"
-                addText="Add new"
-                [canAdd]="true"
-                i18n-label="@@companyDetail.list-editor.meetTheFarmer.label"
-                i18n-addText="@@companyDetail.list-editor.meetTheFarmer.addText"
+            <list-editor
+              label="Meet the Farmers"
+              [listEditorManager]="meetTheFarmerListManager"
+              addText="Add new"
+              [canAdd]="true"
+              i18n-label="@@companyDetail.list-editor.meetTheFarmer.label"
+              i18n-addText="@@companyDetail.list-editor.meetTheFarmer.addText"
                 [invalid]="submitted &&
                 companyDetailForm.get('documents')?.invalid">
-                <list-editor-items>
-                  <div cdkDropList
-                    (cdkDropListDropped)="meetTheFarmerListManager.onDrop($event)">
-                    <div *ngFor="let item of
-                      companyDetailForm.get('documents')?.controls; let i=index;">
-                      <app-company-document-item
-                        title="Meet the Farmer"
-                        i18n-title="@@companyDetail.list-editor.meetTheFarmer.title"
-                        [formControlInput]="item"
-                        [isOpen]="meetTheFarmerListManager.isOpen(i)"
-                        [listEditorManager]="this.meetTheFarmerListManager"
-                        [listEditorManagerPosition]="i"
-                        category="MEET_THE_FARMER"
-                        *ngIf="!item || !item.value || !item.value.category || item.value.category == 'MEET_THE_FARMER'">
-                      </app-company-document-item>
+              <list-editor-items>
+                <div cdkDropList
+                  (cdkDropListDropped)="meetTheFarmerListManager.onDrop($event)">
+                  @for (item of
+                    companyDetailForm.get('documents')?.controls; track item; let i = $index) {
+                    <div>
+                      @if (!item || !item.value || !item.value.category || item.value.category === 'MEET_THE_FARMER') {
+                        <app-company-document-item
+                          title="Meet the Farmer"
+                          i18n-title="@@companyDetail.list-editor.meetTheFarmer.title"
+                          [formControlInput]="item"
+                          [isOpen]="meetTheFarmerListManager.isOpen(i)"
+                          [listEditorManager]="this.meetTheFarmerListManager"
+                          [listEditorManagerPosition]="i"
+                          category="MEET_THE_FARMER"
+                          >
+                        </app-company-document-item>
+                      }
                     </div>
-                  </div>
-                </list-editor-items>
-                <list-editor-errors>
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="companyDetailForm.get('documents').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n-title="@@companyDetail.list-editor.meetTheFarmer.error">
-                        <span>
-                          Meet the Farmers are required
-                        </span>
-                      </div>
+                  }
+                </div>
+              </list-editor-items>
+              <list-editor-errors>
+                @if (submitted) {
+                  @if (companyDetailForm.get('documents').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n-title="@@companyDetail.list-editor.meetTheFarmer.error">
+                          <span>
+                            Meet the Farmers are required
+                          </span>
+                        </div>
+                      }
                     </div>
-                  </ng-container>
-                </list-editor-errors>
-              </list-editor>
-
+                  }
+                }
+              </list-editor-errors>
+            </list-editor>
           </div>
         </div>
       </div>
       <div class="af-form-row">
-
         <div class="af-form-block--c12">
           <h2 i18n="@@semiProductDetail.section.social">Social media</h2>
           <div class="af-form-element">
-
             <p i18n="@@companyDetail.socialMedia.subtitle">Provide the URL links to your social media accounts (Facebook, Instagram, Twitter, YouTube, other)</p>
-
             <div class="spacer-title-section"></div>
-
             <app-closable>
               <textinput
                 [form]="$any(socialMediaForm.get('facebook'))"
@@ -601,15 +650,13 @@
                 style="width: 100%; color: #939393">
               </textinput>
             </app-closable>
-
           </div>
         </div>
       </div>
-
       <div class="af-form-row">
         <div class="af-form-block--c12">
           <div class="af-bottom-buttons">
-            <ng-container *ngIf="mode === 'update'">
+            @if (mode === 'update') {
               <bottom-buttons
                 [changed]="changed"
                 [invalid]="submitted && companyDetailForm.invalid"
@@ -619,8 +666,8 @@
                 [error]="submitted && companyDetailForm.invalid"
                 [success]="submitted && !companyDetailForm.invalid">
               </bottom-buttons>
-            </ng-container>
-            <ng-container *ngIf="mode === 'create'">
+            }
+            @if (mode === 'create') {
               <bottom-buttons
                 [changed]="changed"
                 [invalid]="submitted && companyDetailForm.invalid"
@@ -632,11 +679,11 @@
                 [error]="submitted && companyDetailForm.invalid"
                 [success]="submitted && !companyDetailForm.invalid">
               </bottom-buttons>
-            </ng-container>
+            }
           </div>
         </div>
       </div>
-
     </div>
   </div>
+}
 </app-authorised-layout>

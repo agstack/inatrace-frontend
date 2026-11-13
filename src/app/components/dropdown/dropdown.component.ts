@@ -1,13 +1,15 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fancyNavigate } from 'src/shared/utils';
 
 @Component({
     selector: 'app-dropdown',
     templateUrl: './dropdown.component.html',
-    styleUrls: ['./dropdown.component.scss']
+    styleUrls: ['./dropdown.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class DropdownComponent implements OnInit {
+export class DropdownComponent implements OnInit, OnDestroy {
     @Input() links = []
     @Input() top = false
     @Input() dark = false
@@ -24,7 +26,7 @@ export class DropdownComponent implements OnInit {
     ) {}
 
     open: number = null
-    oldOpen: number = -1
+    oldOpen = -1
 
     toggleDropdown(i) {
         if (this.open === i)
@@ -53,7 +55,7 @@ export class DropdownComponent implements OnInit {
         this.toAutoClose = -1
     }
 
-    toAutoClose: number = -1
+    toAutoClose = -1
 
     delay = 1000
     openDropdown(i) {

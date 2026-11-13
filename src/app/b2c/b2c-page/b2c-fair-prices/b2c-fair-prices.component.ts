@@ -1,13 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
 import GraphicPriceToProducerEnum = ApiBusinessToCustomerSettings.GraphicPriceToProducerEnum;
 import GraphicFarmGatePriceEnum = ApiBusinessToCustomerSettings.GraphicFarmGatePriceEnum;
 
 @Component({
-  selector: 'app-b2c-fair-prices',
-  templateUrl: './b2c-fair-prices.component.html',
-  styleUrls: ['./b2c-fair-prices.component.scss']
+    selector: 'app-b2c-fair-prices',
+    templateUrl: './b2c-fair-prices.component.html',
+    styleUrls: ['./b2c-fair-prices.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cFairPricesComponent implements OnInit {
 

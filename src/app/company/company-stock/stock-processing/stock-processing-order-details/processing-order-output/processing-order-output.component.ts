@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import { ProcessingActionType } from '../../../../../../shared/types';
 import { ApiFinalProduct } from '../../../../../../api/model/apiFinalProduct';
@@ -20,9 +20,11 @@ import { Subscription } from 'rxjs';
 import { StaticSemiProductsService } from '../static-semi-products.service';
 
 @Component({
-  selector: 'app-processing-order-output',
-  templateUrl: './processing-order-output.component.html',
-  styleUrls: ['./processing-order-output.component.scss', '../stock-processing-order-details-common.scss']
+    selector: 'app-processing-order-output',
+    templateUrl: './processing-order-output.component.html',
+    styleUrls: ['./processing-order-output.component.scss', '../stock-processing-order-details-common.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
 
@@ -47,13 +49,13 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
   selectedProcAction: ApiProcessingAction;
 
   @Input()
-  procActionLotPrefixControl: FormControl;
+  procActionLotPrefixControl: UntypedFormControl;
 
   @Input()
   rightSideEnabled: boolean;
 
   @Input()
-  targetStockOrdersArray: FormArray;
+  targetStockOrdersArray: UntypedFormArray;
 
   @Input()
   finalProductOutputFacilitiesCodebook: CompanyFacilitiesForStockUnitProductService;
@@ -65,7 +67,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
   currentOutputFinalProduct: ApiFinalProduct;
 
   @Input()
-  outputFinalProductNameControl: FormControl;
+  outputFinalProductNameControl: UntypedFormControl;
 
   @Input()
   outputSemiProductsCodebook: StaticSemiProductsService;
@@ -94,8 +96,8 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     return this.actionType === 'PROCESSING';
   }
 
-  getTSOGroupRepackedOutputsArray(tsoGroup: AbstractControl): FormArray {
-    return tsoGroup.get('repackedOutputsArray') as FormArray;
+  getTSOGroupRepackedOutputsArray(tsoGroup: AbstractControl): UntypedFormArray {
+    return tsoGroup.get('repackedOutputsArray') as UntypedFormArray;
   }
 
   ngOnInit(): void {
@@ -111,7 +113,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     this.calcRemainingQuantity.emit();
   }
 
-  getOutputFacilityCodebook(tsoGroup: FormGroup): CompanyFacilitiesForStockUnitProductService | null {
+  getOutputFacilityCodebook(tsoGroup: UntypedFormGroup): CompanyFacilitiesForStockUnitProductService | null {
 
     if (this.finalProductOutputFacilitiesCodebook) {
       return this.finalProductOutputFacilitiesCodebook;
@@ -161,7 +163,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     let availableQua = tsoGroup.get('totalQuantity').value;
     const maxAllowedWeight = this.getTSOGroupRepackedMaxWeight(tsoGroup);
 
-    repackedOutputsArray.controls.some((outputStockOrderGroup: FormGroup) => {
+    repackedOutputsArray.controls.some((outputStockOrderGroup: UntypedFormGroup) => {
       outputStockOrderGroup.get('totalQuantity').setValue(Number(availableQua > maxAllowedWeight ? maxAllowedWeight : availableQua).toFixed(2));
       availableQua -= maxAllowedWeight;
       if (availableQua <= 0) {
@@ -203,7 +205,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     }
 
     let repackedSOQuantity = 0;
-    repackedOutputsArray.controls.forEach((soGroup: FormGroup) => {
+    repackedOutputsArray.controls.forEach((soGroup: UntypedFormGroup) => {
       repackedSOQuantity += soGroup.get('totalQuantity').value ? Number(soGroup.get('totalQuantity').value) : 0;
     });
 
@@ -227,12 +229,12 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     }
   }
 
-  private prepareRepackedSOFormGroup(sacNumber: number, tsoGroup: AbstractControl): FormGroup {
+  private prepareRepackedSOFormGroup(sacNumber: number, tsoGroup: AbstractControl): UntypedFormGroup {
 
-    return new FormGroup({
-      id: new FormControl(null),
-      totalQuantity: new FormControl(null, [Validators.required, Validators.max(this.getTSOGroupRepackedMaxWeight(tsoGroup))]),
-      sacNumber: new FormControl(sacNumber, [Validators.required])
+    return new UntypedFormGroup({
+      id: new UntypedFormControl(null),
+      totalQuantity: new UntypedFormControl(null, [Validators.required, Validators.max(this.getTSOGroupRepackedMaxWeight(tsoGroup))]),
+      sacNumber: new UntypedFormControl(sacNumber, [Validators.required])
     });
   }
 
@@ -284,13 +286,13 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     }
   }
 
-  setRequiredFieldsAndListenersForTSO(tsoGroup: FormGroup) {
+  setRequiredFieldsAndListenersForTSO(tsoGroup: UntypedFormGroup) {
 
     // Set validators for specific fields depending on the Processing action type
     switch (this.actionType) {
       case 'PROCESSING':
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'totalQuantity', [Validators.required]);
-      // tslint:disable-next-line:no-switch-case-fall-through
+        // falls through
       case 'GENERATE_QR_CODE':
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'semiProduct', [Validators.required]);
         break;
@@ -298,7 +300,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'totalQuantity', [Validators.required]);
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'deliveryTime', [Validators.required]);
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'quoteFacility', [Validators.required]);
-      // tslint:disable-next-line:no-switch-case-fall-through
+        // falls through
       case 'TRANSFER':
         if (this.selectedProcAction.finalProductAction) {
           StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'finalProduct', [Validators.required]);
@@ -311,7 +313,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'facility', [Validators.required]);
 
     // Clear the required fields form
-    const requiredProcEvidenceFieldGroup = new FormGroup({});
+    const requiredProcEvidenceFieldGroup = new UntypedFormGroup({});
 
     // Set required fields form group
     const evidenceFieldsValues: ApiStockOrderEvidenceFieldValue[] =
@@ -353,7 +355,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
         validators.push(StockProcessingOrderDetailsHelper.integerValidator);
       }
 
-      requiredProcEvidenceFieldGroup.addControl(field.fieldName, new FormControl(value, validators));
+      requiredProcEvidenceFieldGroup.addControl(field.fieldName, new UntypedFormControl(value, validators));
     });
 
     tsoGroup.setControl('requiredProcEvidenceFieldGroup', requiredProcEvidenceFieldGroup);
@@ -387,7 +389,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     this.calcRemainingQuantity.emit();
   }
 
-  private targetStockOrderFinalProductChange(finalProduct: ApiFinalProduct | null, targetStockOrderGroup: FormGroup) {
+  private targetStockOrderFinalProductChange(finalProduct: ApiFinalProduct | null, targetStockOrderGroup: UntypedFormGroup) {
 
     // Remove repacked outputs form array
     targetStockOrderGroup.removeControl('repackedOutputsArray');
@@ -398,7 +400,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
 
       // If selected processing action has set the option to repack output final product, set the form array control
       if (this.selectedProcAction.repackedOutputFinalProducts) {
-        targetStockOrderGroup.addControl('repackedOutputsArray', new FormArray([]));
+        targetStockOrderGroup.addControl('repackedOutputsArray', new UntypedFormArray([]));
       }
 
     } else {
@@ -408,7 +410,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     targetStockOrderGroup.get('totalQuantity').setValue(null);
   }
 
-  private targetStockOrderSemiProductChange(semiProduct: ApiProcessingActionOutputSemiProduct | null, targetStockOrderGroup: FormGroup) {
+  private targetStockOrderSemiProductChange(semiProduct: ApiProcessingActionOutputSemiProduct | null, targetStockOrderGroup: UntypedFormGroup) {
 
     // Remove repacked outputs form array
     targetStockOrderGroup.removeControl('repackedOutputsArray');
@@ -429,7 +431,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
 
       // If output semi-product has set option to repack outputs, add the form array control into the target Stock order
       if (semiProduct.repackedOutput) {
-        targetStockOrderGroup.addControl('repackedOutputsArray', new FormArray([]));
+        targetStockOrderGroup.addControl('repackedOutputsArray', new UntypedFormArray([]));
       }
 
     } else {

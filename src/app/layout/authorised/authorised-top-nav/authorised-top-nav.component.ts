@@ -1,4 +1,4 @@
-import { Component, Host, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Host, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { TabCommunicationService } from 'src/app/shared/tab-communication.service';
 import { delay } from 'rxjs/operators';
@@ -7,9 +7,11 @@ import { AuthorisedLayoutComponent } from '../authorised-layout/authorised-layou
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-authorised-top-nav',
-  templateUrl: './authorised-top-nav.component.html',
-  styleUrls: ['./authorised-top-nav.component.scss']
+    selector: 'app-authorised-top-nav',
+    templateUrl: './authorised-top-nav.component.html',
+    styleUrls: ['./authorised-top-nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AuthorisedTopNavComponent implements OnInit, OnDestroy {
 

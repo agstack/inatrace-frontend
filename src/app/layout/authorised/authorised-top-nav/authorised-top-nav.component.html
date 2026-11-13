@@ -2,33 +2,34 @@
 <div class="d-flex flex-column fixed-top">
   <nav class="navbar navbar-expand-sm custom-navbar-white af-nav">
 
-    <div class="navbar-nav ml-auto af-nav--user">
+    <div class="navbar-nav ms-auto af-nav--user">
       <app-user-box></app-user-box>
     </div>
 
-    <ng-container *ngIf="drobtinice">
+    @if (drobtinice) {
       <div class="drobtinice d-flex af-nav--crumbs">
         <div class="above-sidenav-icon above-sidenav-icon--expanded" (click)=goUp()>
           <span class="above-sidenav-icon-shape above-sidenav-icon-shape--back"></span>
         </div>
         <span class="drobtinice--title">{{drobtiniceTitle}}</span>
       </div>
-    </ng-container>
+    }
 
     <!-- work in progress - update via service -->
-    <ul class="topnav-tabs af-nav--tabs" *ngIf="tabs$ | async as tabs">
-      <ng-container *ngFor="let tab of tabs; let i= index">
-        <li [class.active]="rootTab === i"
-          [class.locked]="isLockedIndex(i)"
-          (click)="setIndex(i)">
-          <a>{{ tab }}
-            <!-- <div [class.active]="selectedIndex === i" class="topnav-tabs-bottom"></div> -->
-            <div [class.active]="rootTab === i" class="topnav-tabs-bottom"></div>
-          </a>
-        </li>
-      </ng-container>
-
-    </ul>
+    @if (tabs$ | async; as tabs) {
+      <ul class="topnav-tabs af-nav--tabs">
+        @for (tab of tabs; track tab; let i = $index) {
+          <li [class.active]="rootTab === i"
+            [class.locked]="isLockedIndex(i)"
+            (click)="setIndex(i)">
+            <a>{{ tab }}
+              <!-- <div [class.active]="selectedIndex === i" class="topnav-tabs-bottom"></div> -->
+              <div [class.active]="rootTab === i" class="topnav-tabs-bottom"></div>
+            </a>
+          </li>
+        }
+      </ul>
+    }
 
   </nav>
 </div>

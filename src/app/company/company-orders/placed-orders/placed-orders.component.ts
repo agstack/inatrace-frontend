@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrdersTabComponent } from '../orders-tab/orders-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilityControllerService } from '../../../../api/api/facilityController.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { setNavigationParameter } from '../../../../shared/utils';
 import { ApiCompanyCustomer } from '../../../../api/model/apiCompanyCustomer';
@@ -14,16 +14,18 @@ import { PlaceQuoteOrderModalComponent } from './place-quote-order-modal/place-q
 import { PlaceQuoteOrderModalResult } from './place-quote-order-modal/model';
 
 @Component({
-  selector: 'app-placed-orders',
-  templateUrl: './placed-orders.component.html',
-  styleUrls: ['./placed-orders.component.scss']
+    selector: 'app-placed-orders',
+    templateUrl: './placed-orders.component.html',
+    styleUrls: ['./placed-orders.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PlacedOrdersComponent extends OrdersTabComponent implements OnInit {
 
   rootTab = 1;
 
   // Controls for company customer dropdown selection component
-  companyCustomerForm = new FormControl(null);
+  companyCustomerForm = new UntypedFormControl(null);
   companyCustomerId = null;
   companyCustomerId$ = new BehaviorSubject<number>(null);
   companyCustomerCodebook: CompanyCustomersService;

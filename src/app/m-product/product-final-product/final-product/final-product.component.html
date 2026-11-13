@@ -1,42 +1,44 @@
 <app-authorised-layout>
-    <app-product-label-left-panel-content>
-    </app-product-label-left-panel-content>
+  <app-product-label-left-panel-content>
+  </app-product-label-left-panel-content>
 
-    <div class="main">
-        <div class="main-inside-top content-element">
+  <div class="main">
+    <div class="main-inside-top content-element">
 
-            <div class="d-flex justify-content-between main-inside-top--row1">
-                <div class="title-page content-element--title"
-                     i18n="@@productLabelFinalProduct.title.finalProducts">
+      <div class="d-flex justify-content-between main-inside-top--row1">
+        <div class="title-page content-element--title"
+          i18n="@@productLabelFinalProduct.title.finalProducts">
                     Final products
                 </div>
-                <button *ngIf="isProductAdmin" class="btn btn-solid round btn-table-new content-element--btn"
-                        (click)="newFinalProduct()">
-                    <span>+ Add</span>
-                </button>
-            </div>
+        @if (isProductAdmin) {
+          <button class="btn btn-solid round btn-table-new content-element--btn"
+            (click)="newFinalProduct()">
+            <span>+ Add</span>
+          </button>
+        }
+      </div>
 
-            <div class="d-flex align-items-start main-inside-top--row2">
-                <div>
-                    <div class="sub-title-page content-element--subtitle"
-                         i18n="@@productLabelFinalProduct.subTitle.listOfFinalProducts">
+      <div class="d-flex align-items-start main-inside-top--row2">
+        <div>
+          <div class="sub-title-page content-element--subtitle"
+            i18n="@@productLabelFinalProduct.subTitle.listOfFinalProducts">
                         List of semi-products
                     </div>
-                    <div class="counting-page content-element--counting"
-                         i18n="@@productLabelFinalProduct.subTitle.showingFinalProducts">
+          <div class="counting-page content-element--counting"
+            i18n="@@productLabelFinalProduct.subTitle.showingFinalProducts">
                         Showing {{ showedFinalProducts }}/{{ allFinalProducts }}
                     </div>
-                </div>
-            </div>
         </div>
-
-        <app-final-product-list
-                [productId]="productId"
-                [listReload]="listReload"
-                [editable]="isProductAdmin"
-                (showing)="onShowFinalProducts($event)"
-                (countAll)="onCountAllFinalProducts($event)">
-        </app-final-product-list>
+      </div>
     </div>
+
+    <app-final-product-list
+      [productId]="productId"
+      [listReload]="listReload"
+      [editable]="isProductAdmin"
+      (showing)="onShowFinalProducts($event)"
+      (countAll)="onCountAllFinalProducts($event)">
+    </app-final-product-list>
+  </div>
 
 </app-authorised-layout>
