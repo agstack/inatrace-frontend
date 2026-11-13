@@ -11,7 +11,7 @@ import { LanguageCodeHelper } from '../language-code-helper';
 })
 export class AuthService {
 
-  private readonly pathsToIgnoreRefresh = ['login', 'p-cd', 'q-cd'];
+  private readonly pathsToIgnoreRefresh = ['login', 'p-cd', 'q-cd', 'q', 'p'];
 
   private readonly userProfileSubject = new ReplaySubject<ApiUserGet | null>(1);
   userProfile$ = this.userProfileSubject.asObservable();
