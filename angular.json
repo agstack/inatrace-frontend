@@ -65,6 +65,11 @@
                 "glob": "**/*",
                 "input": "node_modules/tinymce/icons",
                 "output": "/tinymce/icons/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce/models",
+                "output": "/tinymce/models/"
               }
             ],
             "styles": [
@@ -200,18 +205,6 @@
               "includePaths": [
                 "."
               ]
-            }
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "inatrace-fe:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "inatrace-fe:serve:production"
             }
           }
         },

@@ -10,7 +10,6 @@
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "generate-api": "node generate-api.js",
     "generate-chain-api": "node generate-chain-api.js",
     "generate-farmer-import-api": "node scripts/generate-farmer-import-api.js",
@@ -44,9 +43,9 @@
     "@turf/turf": "^6.5.0",
     "angulartics2": "^14.1.0",
     "bootstrap": "^5.3.9",
-    "echarts": "^5.4.2",
+    "echarts": "^6.1.0",
     "file-saver": "^2.0.2",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.18.1",
     "mapbox-gl": "3.3.0",
     "ng2-file-upload": "^12.0.0",
     "ngx-echarts": "^22.0.0",
@@ -58,7 +57,7 @@
     "qrcode": "^1.5.4",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^7.8.2",
-    "tinymce": "^5.10.9",
+    "tinymce": "^8.10.2",
     "tslib": "^2.9.1",
     "zone.js": "^0.16.3"
   },
@@ -72,30 +71,51 @@
     "@eslint/js": "^10.0.1",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "^4.3.6",
-    "@types/jasminewd2": "~2.0.3",
     "@types/node": "^26.6.6",
     "@types/qrcode": "^1.5.6",
     "angular-eslint": "22.6.0",
-    "api-spec-converter": "^2.11.0",
-    "codelyzer": "^6.0.0",
     "eslint": "^10.12.0",
     "istanbul-lib-instrument": "^6.0.3",
     "jasmine-core": "^4.5.0",
-    "jasmine-spec-reporter": "~5.0.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.3.0",
     "openapi-typescript-angular-generator": "https://github.com/alenabelium/openapi-typescript-angular-generator#v3.4",
-    "protractor": "~7.0.0",
     "replace-in-file": "^5.0.2",
-    "ts-node": "~7.0.0",
-    "tslint": "~6.1.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "8.71.0"
   },
   "engines": {
     "node": ">=26.0.0"
+  },
+  "overrides": {
+    "@eslint/config-array": {
+      "minimatch": "^11.0.8"
+    },
+    "eslint": {
+      "minimatch": "^11.0.8"
+    },
+    "typescript-eslint": {
+      "minimatch": "^11.0.8"
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "minimatch": "^11.0.8"
+    },
+    "@typescript-eslint/parser": {
+      "minimatch": "^11.0.8"
+    },
+    "@typescript-eslint/type-utils": {
+      "minimatch": "^11.0.8"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.8"
+    },
+    "openapi-typescript-angular-generator": {
+      "yargs": {
+        "yargs-parser": "^13.1.2"
+      }
+    }
   }
 }

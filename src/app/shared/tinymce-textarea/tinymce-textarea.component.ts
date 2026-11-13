@@ -38,6 +38,7 @@ export class TinymceTextareaComponent implements OnInit {
     init = {
         base_url: '/tinymce', // Root for resources
         suffix: '.min',       // Suffix to use when loading resources
+        license_key: 'gpl',   // Self-hosted community build
         plugins: 'lists advlist link',
         // selector: 'tinymce-textarea',  // change this value according to your HTML
         content_style: '@import url("https://fonts.googleapis.com/css?family=Signika");.mce-content-body {font-size:1rem;font-family:Signika,Helvetica Neue,sans-serif;color:#495057}',
