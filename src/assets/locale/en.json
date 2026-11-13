@@ -3310,6 +3310,8 @@
     "guidedTour.paymentsSection.addPaymentButton": "Here you add a new payment. Alternatively, you can go to the delivery menu and select 'Add balance payment' from the Action menu.",
     "guidedTour.allStockSection.title": "ALL STOCK",
     "guidedTour.allStockSection.allStockSubmenu": "In the 'all stock' submenu you find all products available in your facilities and can access the batch history, Geo data and generated QR Codes.",
-    "guidedTour.allStockSection.selectFacility": "Here you select the facility your (semi-) product is currently located in."
+    "guidedTour.allStockSection.selectFacility": "Here you select the facility your (semi-) product is currently located in.",
+    "frontPage.unavailable.title": "Product page unavailable",
+    "frontPage.unavailable.message": "This product page could not be loaded. Please try again later."
   }
 }

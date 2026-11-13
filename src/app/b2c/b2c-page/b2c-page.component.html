@@ -15,10 +15,17 @@
       </div>
     }
     @if (!loading) {
-      @if (tab) {
-        <app-b2c-tabs [tab]="tab" [b2cSettings]="b2cSettings" [productName]="productName" [uuid]="uuid" [qrTag]="qrTag"></app-b2c-tabs>
+      @if (dataUnavailable) {
+        <main class="af-b2c-main text-center py-5">
+          <h1 i18n="@@frontPage.unavailable.title">Product page unavailable</h1>
+          <p i18n="@@frontPage.unavailable.message">This product page could not be loaded. Please try again later.</p>
+        </main>
+      } @else {
+        @if (tab) {
+          <app-b2c-tabs [tab]="tab" [b2cSettings]="b2cSettings" [productName]="productName" [uuid]="uuid" [qrTag]="qrTag"></app-b2c-tabs>
+        }
+        <router-outlet></router-outlet>
       }
-      <router-outlet></router-outlet>
     }
   </div>
 
