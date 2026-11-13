@@ -4,7 +4,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr }
 import localeDe from '@angular/common/locales/de';
 import localeRw from '@angular/common/locales/rw';
 import localeEs from '@angular/common/locales/es';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, provideZoneChangeDetection } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { BrowserModule } from '@angular/platform-browser';
@@ -202,5 +202,10 @@ export function getConfiguration(): Configuration {
             provide: LOCALE_ID, useFactory: () => LanguageCodeHelper.getCurrentLocale()
         },
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        // The application predates zoneless change detection: its components update template
+        // state from RxJS subscriptions and timers, which does not schedule a check on its own.
+        // Keep the zone-based scheduler until those components are migrated to signals or
+        // ChangeDetectorRef.markForCheck().
+        provideZoneChangeDetection(),
     ] })
 export class AppModule { }

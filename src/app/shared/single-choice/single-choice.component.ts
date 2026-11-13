@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef, ChangeDetectionStrategy, AfterViewInit, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, combineLatest, timer } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
 import { CodebookHelperService, PagedSearchResults } from 'src/interfaces/CodebookHelperService';
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { isRequired, pripraviSifrant } from 'src/shared/utils';
@@ -274,7 +274,9 @@ export class SingleChoiceComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.autocompleteSelection$ = this.codebookService.autocompleteCandidates(
             this.typeahead$.pipe(
-                debounceTime(200),
+                // Empty emissions come from focus, blur, clear and selection: they ask for the
+                // initial list and must not wait for the typing debounce.
+                debounce((key: string) => timer(key == null ? 0 : 200)),
                 distinctUntilChanged()
             ),
             this.selectedObjects$.pipe(map(x => [])),   // Ne odstranjujemo selectanih v single-choice
