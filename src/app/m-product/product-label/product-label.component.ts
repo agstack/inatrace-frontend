@@ -111,9 +111,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     return this.productForm.get('origin.locations') as UntypedFormArray;
   }
 
-  get isGoogleMapsLoaded() {  // fix of a Google Maps glitch
-    return !!window.google;
-  }
+  isGoogleMapsLoaded = false;
 
   get labelChanged() {
     return (this.visibilityForm && this.visibilityForm.dirty) || this.labelTitleForm.dirty;
@@ -539,6 +537,13 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
   }
 
   ngOnInit(): void {
+
+    // window.google exists before the versioned loader attaches importLibrary and Map;
+    // rendering google-map at that moment makes @angular/google-maps fail to initialise.
+    // The event manager only reports the maps as loaded once the loader is usable.
+    this.unsubscribeList.add(
+      this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(loaded => this.isGoogleMapsLoaded = loaded)
+    );
 
     this.unsubscribeList.add(
       this.authService.userProfile$
