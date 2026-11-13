@@ -137,7 +137,7 @@
                   <div class="sc-invalid-feedback">
                     @if (errors.required) {
                       <div>
-                        @if (actionType != 'SHIPMENT') {
+                        @if (actionType !== 'SHIPMENT') {
                           <span
                           i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.required">Quantity is required</span>
                         } @else {

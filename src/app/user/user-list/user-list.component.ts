@@ -267,12 +267,12 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearValue(form: UntypedFormControl, myUsers: boolean = false) {
+  clearValue(form: UntypedFormControl, myUsers = false) {
     if (myUsers) { form.setValue(false); }
     else { form.setValue(''); }
   }
 
-  showStatus(value: string, userRole: boolean = false) {
+  showStatus(value: string, userRole = false) {
     if (userRole) { this.searchRole.setValue(value); }
     else { this.searchStatus.setValue(value); }
   }

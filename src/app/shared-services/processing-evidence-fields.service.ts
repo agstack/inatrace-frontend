@@ -15,7 +15,7 @@ export class ProcessingEvidenceFieldsService extends GeneralSifrantService<ApiPr
   constructor(
       private codebookService: ProcessingEvidenceFieldControllerService,
       protected codebookTranslations: CodebookTranslations,
-      private valueChainIdList?: Array<number>
+      private valueChainIdList?: number[]
   ) {
     super();
   }
@@ -59,7 +59,7 @@ export class ProcessingEvidenceFieldsService extends GeneralSifrantService<ApiPr
     return $localize`:@@processingEvidenceField.input.placeholder:Select evidence field`;
   }
 
-  private fetchProcessingEvidenceFields(reqParams, valueChainIdList?: Array<number>): Observable<ApiPaginatedResponseApiProcessingEvidenceField> {
+  private fetchProcessingEvidenceFields(reqParams, valueChainIdList?: number[]): Observable<ApiPaginatedResponseApiProcessingEvidenceField> {
     if (valueChainIdList !== null && valueChainIdList !== undefined) {
       return this.codebookService.listProcessingEvidenceFieldsByValueChainsByMap({ valueChainIds: valueChainIdList, ...reqParams });
     } else {

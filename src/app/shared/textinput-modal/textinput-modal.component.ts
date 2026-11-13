@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntypedFormControl } from '@angular/forms';
 
@@ -9,7 +9,7 @@ import { UntypedFormControl } from '@angular/forms';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class TextinputModalComponent implements OnInit {
+export class TextinputModalComponent implements OnInit, AfterViewInit {
     @Input()
     label: string;
 

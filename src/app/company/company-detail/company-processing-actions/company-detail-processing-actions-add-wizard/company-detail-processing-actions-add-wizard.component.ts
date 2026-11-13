@@ -49,7 +49,7 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
 
   // Step 4
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChains: Array<ApiValueChain> = [];
+  valueChains: ApiValueChain[] = [];
   valueChainsForm = new UntypedFormControl(null);
   selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
@@ -62,7 +62,7 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
   finalProductsForCompanyCodebook: FinalProductsForCompanyService;
 
   // Step 6 - PROCESSING case (multiple output semi-products)
-  outputSemiProducts: Array<ApiValueChain> = [];
+  outputSemiProducts: ApiValueChain[] = [];
   outputSemiProductControl = new UntypedFormControl(null);
   selectedOutputSemiProductsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
@@ -74,7 +74,7 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
   facilities: ApiFacility[] = [];
   selectedProcActionFacilities: ApiFacility[] = [];
 
-  currentStep: number = 1;
+  currentStep = 1;
 
   @Input()
   companyId: string;
@@ -263,7 +263,7 @@ export class CompanyDetailProcessingActionsAddWizardComponent implements OnInit 
 
   createNewProcessingAction() {
 
-    let processingAction: ApiProcessingAction = {
+    const processingAction: ApiProcessingAction = {
       company: {
         id: Number(this.companyId)
       },

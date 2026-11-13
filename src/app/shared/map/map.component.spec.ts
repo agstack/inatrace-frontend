@@ -16,7 +16,7 @@ class FakeMap {
   removed = false;
   dragRotate = { disable: () => {} };
   touchZoomRotate = { disableRotation: () => {} };
-  private listeners: { [type: string]: Array<(event?: any) => void> } = {};
+  private listeners: Record<string, ((event?: any) => void)[]> = {};
 
   on(type: string, listener: (event?: any) => void) {
     (this.listeners[type] = this.listeners[type] || []).push(listener);

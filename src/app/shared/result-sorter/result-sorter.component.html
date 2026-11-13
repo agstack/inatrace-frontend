@@ -4,7 +4,7 @@
       @if (!item.hide) {
         <div class="d-flex justify-content-start align-items-center">
           <div
-            [class.sorter-oznacen]="oznacen == i">
+            [class.sorter-oznacen]="oznacen === i">
             {{item.name}}
           </div>
           @if (!item.inactive) {
@@ -20,14 +20,14 @@
                     <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
                   </div>
                 }
-                @if (oznacen == i && sortOrder===this.ASC) {
+                @if (oznacen === i && sortOrder===this.ASC) {
                   <div
                     class="sorter-box"
                     >
                     <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
                   </div>
                 }
-                @if (oznacen == i && sortOrder===this.DESC) {
+                @if (oznacen === i && sortOrder===this.DESC) {
                   <div
                     class="sorter-box"
                     >

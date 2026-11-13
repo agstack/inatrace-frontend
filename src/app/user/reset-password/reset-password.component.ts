@@ -29,7 +29,7 @@ export class ResetPasswordComponent implements OnInit {
     confirmPassword: new UntypedFormControl(null, [Validators.required, Validators.minLength(8)])
   }, [multiFieldValidator(['confirmPassword'], this.passwordsDoNotMatch.bind(this), ['doNotMatch'])])
 
-  submitted: boolean = false;
+  submitted = false;
   _resetPassErrorStatus$: BehaviorSubject<string>;
 
   constructor(

@@ -4,18 +4,18 @@
       <table
         class="af-table af-checkbox--small">
         <thead>
-          <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+          <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
         </thead>
         <tbody>
           @for (bulkPayment of bulkPayments.items; track bulkPayment; let i = $index) {
             <tr>
-              <td scope="row" [attr.data-label]="sortOptions[0].name">
+              <td [attr.data-label]="sortOptions[0].name">
                 <span>{{bulkPayment.receiptNumber}}</span>
               </td>
-              <td scope="row" [attr.data-label]="sortOptions[1].name">
+              <td [attr.data-label]="sortOptions[1].name">
                 <span>{{readablePaymentPurpose(bulkPayment.paymentPurposeType)}}</span>
               </td>
-              <td scope="row" [attr.data-label]="sortOptions[2].name">
+              <td [attr.data-label]="sortOptions[2].name">
                 <span>{{bulkPayment.totalAmount}}</span>
               </td>
               <td [attr.data-label]="sortOptions[3].name">
@@ -36,7 +36,7 @@
         </tbody>
       </table>
     }
-    @if (bulkPayments && bulkPayments.items && bulkPayments.items.length == 0) {
+    @if (bulkPayments && bulkPayments.items && bulkPayments.items.length === 0) {
       <div
         class="no-list-results"
         i18n="@@productLabelBulkPayments.noPayments">

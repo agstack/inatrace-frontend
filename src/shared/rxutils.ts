@@ -22,7 +22,7 @@ export function autoSwitchMap<T, R>(func: (value: T) => Observable<R> | Promise<
 export class UnsubscribeList {
     private static totalSubscriptions = 0;
 
-    private list: Array<Subscription> = [];
+    private list: Subscription[] = [];
 
     public add(subscription: Subscription): void {
         // console.log('Adding subscription');

@@ -39,7 +39,7 @@ export class CountryService extends GeneralCodesService<ApiCountry> {
   }
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiCountry>> {
-    let lkey = key ? key.toLocaleLowerCase() : null
+    const lkey = key ? key.toLocaleLowerCase() : null
     return this.sifrant$.pipe(
       map((allChoices: PagedSearchResults<ApiCountry>) => {
         return {

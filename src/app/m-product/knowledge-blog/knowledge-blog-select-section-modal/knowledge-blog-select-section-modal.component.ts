@@ -12,7 +12,7 @@ import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class KnowledgeBlogSelectSectionModalComponent implements OnInit {
+export class KnowledgeBlogSelectSectionModalComponent implements OnInit, OnDestroy {
 
   @Input()
   dismissable = true;
@@ -54,7 +54,7 @@ export class KnowledgeBlogSelectSectionModalComponent implements OnInit {
   }
 
   get statusList() {
-    let obj = {}
+    const obj = {}
     obj['FAIRNESS'] = $localize`:@@productLabelFrontFeedback.statusList.fairness:Fairness`
     obj['QUALITY'] = $localize`:@@productLabelFrontFeedback.statusList.quality:Quality`
     obj['PROVENANCE'] = $localize`:@@productLabelFrontFeedback.statusList.provenance:Provenance`

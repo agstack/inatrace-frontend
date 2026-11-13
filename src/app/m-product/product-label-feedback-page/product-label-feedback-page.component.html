@@ -31,12 +31,12 @@
             @if (feedbacks && feedbacks.items && feedbacks.items.length> 0) {
               <table class="af-table">
                 <thead>
-                  <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
                 </thead>
                 <tbody>
                   @for (feedback of feedbacks.items; track feedback) {
                     <tr>
-                      <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{feedback.email}}</span></td>
+                      <td [attr.data-label]="sortOptions[0].name"><span>{{feedback.email}}</span></td>
                       <td [attr.data-label]="sortOptions[1].name"><span>{{feedback.questionnaireAnswers.gender}}</span></td>
                       <td [attr.data-label]="sortOptions[2].name"><span>{{feedback.questionnaireAnswers.age}}</span></td>
                       <td [attr.data-label]="sortOptions[3].name"><span>{{feedback.feedback}}</span></td>
@@ -62,7 +62,7 @@
               </tbody>
             </table>
           }
-          @if (feedbacks && feedbacks.items && feedbacks.items.length == 0) {
+          @if (feedbacks && feedbacks.items && feedbacks.items.length === 0) {
             <div class="no-list-results" i18n="@@productLabelFeedback.noFeedbacks">
               No feedbacks found
             </div>

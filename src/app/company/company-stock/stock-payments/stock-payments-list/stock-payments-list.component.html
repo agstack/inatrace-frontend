@@ -10,7 +10,7 @@
             @for (payment of payments.items; track payment; let i = $index) {
               <tr>
                 @if (!sortOptions[0].hide) {
-                  <td scope="row" [attr.data-label]="sortOptions[0].name">
+                  <td [attr.data-label]="sortOptions[0].name">
                     @if (this.currentData[i].paymentStatus === paymentStatusEnum.UNCONFIRMED) {
                       <checkbox-input
                         inTable="true"
@@ -73,7 +73,7 @@
           </tbody>
         </table>
       }
-      @if (payments && payments.items && payments.items.length == 0) {
+      @if (payments && payments.items && payments.items.length === 0) {
         <div class="no-list-results" i18n="@@productLabelPayments.noPayments">
             No payments found
         </div>

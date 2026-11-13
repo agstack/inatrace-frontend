@@ -33,8 +33,8 @@ export class ClearCookieConsentComponent implements OnInit, OnDestroy {
         ).subscribe(val => {
             if ([...this.cookieManagementService.activeCookies, 'ALL', 'CHAT'].indexOf(val.type) < 0) return
             if (['true', 'false', 'null'].indexOf(val.value) < 0) return
-            let type = val.type
-            let value = JSON.parse(val.value)
+            const type = val.type
+            const value = JSON.parse(val.value)
 
             if (type === 'ALL') {
                 this.cookieManagementService.activeCookies.forEach(typ => this.cookieManagementService.consentToCookie(typ, value))

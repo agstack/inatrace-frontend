@@ -292,7 +292,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
     switch (this.actionType) {
       case 'PROCESSING':
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'totalQuantity', [Validators.required]);
-      // tslint:disable-next-line:no-switch-case-fall-through
+        // falls through
       case 'GENERATE_QR_CODE':
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'semiProduct', [Validators.required]);
         break;
@@ -300,7 +300,7 @@ export class ProcessingOrderOutputComponent implements OnInit, OnDestroy {
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'totalQuantity', [Validators.required]);
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'deliveryTime', [Validators.required]);
         StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'quoteFacility', [Validators.required]);
-      // tslint:disable-next-line:no-switch-case-fall-through
+        // falls through
       case 'TRANSFER':
         if (this.selectedProcAction.finalProductAction) {
           StockProcessingOrderDetailsHelper.setFormControlValidators(tsoGroup, 'finalProduct', [Validators.required]);

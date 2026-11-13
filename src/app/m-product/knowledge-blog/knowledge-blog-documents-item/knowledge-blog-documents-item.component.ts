@@ -41,22 +41,22 @@ export class KnowledgeBlogDocumentsItemComponent extends GenericEditableItemComp
   }
 
   static createEmptyObject(): ApiDocument {
-    let obj = ApiDocument.formMetadata();
+    const obj = ApiDocument.formMetadata();
     return defaultEmptyObject(obj) as ApiDocument
   }
 
   static emptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      let f = new UntypedFormControl(KnowledgeBlogDocumentsItemComponent.createEmptyObject())
+      const f = new UntypedFormControl(KnowledgeBlogDocumentsItemComponent.createEmptyObject())
       return f
     }
   }
 
 
   onDownload() {
-    let apiDoc = this.form.value as ApiDocument
+    const apiDoc = this.form.value as ApiDocument
     if (apiDoc && apiDoc.storageKey) {
-      let sub = this.commonController.getDocument(apiDoc.storageKey).subscribe(res => {
+      const sub = this.commonController.getDocument(apiDoc.storageKey).subscribe(res => {
         this.fileSaverService.save(res, apiDoc.name);
         sub.unsubscribe()
       })

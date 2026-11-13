@@ -317,7 +317,7 @@ export class StockPaymentsFormComponent implements OnInit, OnDestroy {
     return totalPaid;
   }
   
-  createPaymentTypes(collector: boolean = false): object {
+  createPaymentTypes(collector = false): object {
     const obj = {};
     
     obj['CASH'] = $localize`:@@paymentForm.paymentTypes.cash:Cash`;

@@ -53,7 +53,7 @@ export class NgbModalImproved {
      * Also see the `NgbModalImprovedOptions` and [`NgbModalOptions`](#/components/modal/api#NgbModalOptions) for the list of supported options.
      */
     public open(content: any, options?: NgbModalImprovedOptions, inputs?: any): NgbModalRef {
-        let opts = options || {};
+        const opts = options || {};
         const modalRef = this.ngbModal.open(content, options);
         if (inputs) {
             Object.assign(modalRef.componentInstance, inputs);

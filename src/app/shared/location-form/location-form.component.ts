@@ -101,12 +101,12 @@ export class LocationFormComponent implements OnInit, OnDestroy {
   }
 
   showRwandaFields() {
-    let country = this.form.get('address.country')?.value as ApiCountry;
+    const country = this.form.get('address.country')?.value as ApiCountry;
     return country && country.code === 'RW';
   }
 
   showHondurasFields() {
-    let country = this.form.get('address.country')?.value as ApiCountry;
+    const country = this.form.get('address.country')?.value as ApiCountry;
     return country && country.code === 'HN';
   }
 

@@ -12,7 +12,7 @@ export class CookieBannerComponent implements OnInit {
     @Output() onAccept = new EventEmitter<boolean>();
 
     @Input()
-    cookieInfoUrl: string = "#"
+    cookieInfoUrl = "#"
 
     constructor() {}
 

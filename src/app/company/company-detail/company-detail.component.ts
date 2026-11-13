@@ -69,7 +69,7 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   valueChainsCodebook: ActiveValueChainService;
   valueChainsForm = new UntypedFormControl(null);
 
-  valueChains: Array<ApiValueChain> = [];
+  valueChains: ApiValueChain[] = [];
   selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   certificationListManager = null;
@@ -280,7 +280,7 @@ export class CompanyDetailComponent extends CompanyDetailTabManagerComponent imp
   }
 
   fillWebPageAndSocialMediaForm(): void {
-    if (!!this.company.webPage) { this._hideWebPageField$.next(false); }
+    if (this.company.webPage) { this._hideWebPageField$.next(false); }
     for (const [key, value] of Object.entries(this.company.mediaLinks)) {
       if (key === 'facebook' && !!value) {
         this._hideFacebookField$.next(false);

@@ -40,7 +40,7 @@ export class FinalProductDetailModalComponent implements OnInit {
 
   productLabelForm = new UntypedFormControl(null);
 
-  productLabels: Array<ApiProductLabelBase> = [];
+  productLabels: ApiProductLabelBase[] = [];
   productLabelsCodebook: ProductLabelsService;
 
   constructor(

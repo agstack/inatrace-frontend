@@ -41,7 +41,7 @@ import { Subscribable, Subscription } from 'rxjs';
 })
 export class AccordionPanelComponent implements OnInit, OnDestroy {
     @Input()
-    startOpen: boolean = false;
+    startOpen = false;
 
     @Input()
     title: string;
@@ -58,7 +58,7 @@ export class AccordionPanelComponent implements OnInit, OnDestroy {
     @Input()
     showArrow = true
 
-    open: boolean = false;
+    open = false;
 
     constructor(@Host() public accordion: AccordionComponent) { }
 

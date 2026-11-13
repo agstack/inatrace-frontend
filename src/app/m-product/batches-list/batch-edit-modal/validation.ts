@@ -19,8 +19,8 @@ function expiryDateBeforeProductionDate(control: UntypedFormGroup): ValidationEr
 
 function atLeastOneDate(control: UntypedFormGroup): ValidationErrors | null {
   if (control.value && (control.value['checkAuthenticity'] == null || !control.value['checkAuthenticity'])) return null;
-  let productionDate = control.value && control.value['productionDate'];
-  let expiryDate = control.value && control.value['expiryDate'];
+  const productionDate = control.value && control.value['productionDate'];
+  const expiryDate = control.value && control.value['expiryDate'];
   return productionDate == null && expiryDate == null
     ? { atLeastOneDate: true }
     : null

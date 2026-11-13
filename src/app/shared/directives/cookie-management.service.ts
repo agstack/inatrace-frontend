@@ -20,12 +20,12 @@ export class CookieManagementService {
   ///////////// FUNKCIJE ZA NALAGANJE IN INICIALIZIRANJE FUNKCIONALNOSTI POVEZANIH S COOKIE-JI
 
   loadGoogleAnalytics(trackingID: string): void {
-    let gaScript = document.createElement('script');
+    const gaScript = document.createElement('script');
     gaScript.setAttribute('async', 'true');
     gaScript.setAttribute('src', `https://www.googletagmanager.com/gtag/js?id=${trackingID}`);
 
-    let gaScript2 = document.createElement('script');
-    gaScript2.innerText = `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag(\'js\', new Date());gtag(\'config\', \'${trackingID}\');`;
+    const gaScript2 = document.createElement('script');
+    gaScript2.innerText = `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${trackingID}');`;
 
     document.documentElement.firstChild.appendChild(gaScript);
     document.documentElement.firstChild.appendChild(gaScript2);
@@ -34,6 +34,7 @@ export class CookieManagementService {
   }
 
   loadFacebookPixelAnalytics(): void {
+    /* eslint-disable prefer-rest-params, prefer-spread, @typescript-eslint/no-unused-expressions */
     (function (f: any, b, e, v, n, t, s) {
       if (f.fbq) return; n = f.fbq = function () {
         n.callMethod ?
@@ -50,6 +51,7 @@ export class CookieManagementService {
       s = b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t, s)
     })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    /* eslint-enable prefer-rest-params, prefer-spread, @typescript-eslint/no-unused-expressions */
     // (window as any).fbq.disablePushState = true; //not recommended, but can be done
     (window as any).fbq('init', environment.facebookPixelId);
     (window as any).fbq('track', 'PageView');
@@ -75,7 +77,7 @@ export class CookieManagementService {
       w.RocketChat = function (c) { w.RocketChat._.push(c) };
       w.RocketChat._ = [];
       w.RocketChat.url = u;
-      var h = d.getElementsByTagName(s)[0],
+      const h = d.getElementsByTagName(s)[0],
         j = d.createElement(s) as any;
       j.async = true; j.src = environment.rocketChatServer + '/rocketchat-livechat.min.js?_=201903270000' //+ Math.random(); //201903270000';
       h.parentNode.insertBefore(j, h);
@@ -93,7 +95,7 @@ export class CookieManagementService {
   }
 
   get activeCookies() {
-    let res = ['GA', 'FB']
+    const res = ['GA', 'FB']
     if (environment.chatApp === 'intercom') {
       res.push('INTERCOM')
     }
@@ -129,7 +131,7 @@ export class CookieManagementService {
   ////// Pomožne funkcije
 
   consentToCookie(type: string, consent: boolean) {
-    let key = this.allCookieKeys[type]
+    const key = this.allCookieKeys[type]
     if (key) {
       if (consent === true) {
         localStorage.setItem(key, 'true')
@@ -151,14 +153,14 @@ export class CookieManagementService {
     // }
     this.loadRocketChat()
     if (this.router.url.startsWith('/p/')) {
-      let labelId = this.route.firstChild.snapshot.params.uuid;
+      const labelId = this.route.firstChild.snapshot.params.uuid;
       this.router.navigate(["/", "q", labelId], { replaceUrl: true })
     }
 
   }
 
   getForKey(key: string) {
-    let kkey = this.allCookieKeys[key]
+    const kkey = this.allCookieKeys[key]
     if (kkey) {
       return JSON.parse(localStorage.getItem(kkey))
     }
@@ -174,7 +176,7 @@ export class CookieManagementService {
   }
 
   isDefinedForKey(key: string) {
-    let val = this.getForKey(key)
+    const val = this.getForKey(key)
     return val === true || val === false
   }
 
@@ -191,8 +193,6 @@ export class CookieManagementService {
   }
 
   // Ruta do statične strani z opisi cookie-jev
-  get cookieInfoUrl() {
-    return 's/cookies'
-  }
+  readonly cookieInfoUrl = 's/cookies';
 
 }

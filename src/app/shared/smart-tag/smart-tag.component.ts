@@ -80,10 +80,10 @@ export class SmartTagComponent implements OnInit {
   faImage = faImage;
   constructor() { }
 
-  _isOpen: boolean = false;
+  _isOpen = false;
 
   @Input() set isOpen(value: boolean) {
-    let oldValue = this._isOpen;
+    const oldValue = this._isOpen;
     this._isOpen = value;
     if (value && !oldValue) {
       this.scrollToTarget();
@@ -101,16 +101,16 @@ export class SmartTagComponent implements OnInit {
   formControlInput?: UntypedFormControl;
 
   @Input()
-  disableEdit: boolean = false
+  disableEdit = false
 
   @Input()
-  disableDelete: boolean = false
+  disableDelete = false
 
   @Input()
-  viewOnly: boolean = false
+  viewOnly = false
 
   @Input()
-  disableRowClick: boolean = false
+  disableRowClick = false
 
   @Output() onView = new EventEmitter<any>();
 
@@ -196,7 +196,7 @@ export class SmartTagComponent implements OnInit {
 
   onEditHandler(trigger) {
     if (this.disableRowClick && trigger === 'fullTag') return;
-    let returnFocusElement = trigger === 'fullTag' ? this.fullTag.first.nativeElement : this.editIcon.first.nativeElement
+    const returnFocusElement = trigger === 'fullTag' ? this.fullTag.first.nativeElement : this.editIcon.first.nativeElement
     this.onEdit.next(returnFocusElement);
   }
 

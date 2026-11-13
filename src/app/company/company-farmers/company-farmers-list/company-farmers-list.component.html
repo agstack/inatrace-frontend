@@ -62,23 +62,23 @@
           <table class="af-table">
             @if (showRwanda) {
               <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
+                <tr result-sorter [sortOptions]="sortOptionsRwanda" (sortByKey)="changeSort($event)"></tr>
               </thead>
             }
             @if (showHonduras) {
               <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
+                <tr result-sorter [sortOptions]="sortOptionsHonduras" (sortByKey)="changeSort($event)"></tr>
               </thead>
             }
             @if (!showRwanda && !showHonduras) {
               <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
               </thead>
             }
             <tbody>
               @for (farmer of farmers.items; track farmer) {
                 <tr>
-                  <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{ farmer.name }}</span></td>
+                  <td [attr.data-label]="sortOptions[0].name"><span>{{ farmer.name }}</span></td>
                   <td [attr.data-label]="sortOptions[1].name"><span>{{ farmer.surname }}</span></td>
                   <td [attr.data-label]="sortOptions[2].name"><span>{{ farmer.gender }}</span></td>
                   <td [attr.data-label]="sortOptions[3].name"><span>{{ farmer.id }}</span></td>

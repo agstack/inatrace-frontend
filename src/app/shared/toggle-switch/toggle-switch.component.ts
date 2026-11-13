@@ -14,7 +14,7 @@ export class ToggleSwitchComponent implements OnInit {
   formControlCheckbox = new UntypedFormControl(false);
 
   @Input()
-  disabled: boolean = false;
+  disabled = false;
 
   constructor() { }
 

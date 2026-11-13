@@ -41,10 +41,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   editMode = false;
 
   @Input()
-  plotCoordinates: Array<ApiPlotCoordinate>;  // used for adding/editing single plot
+  plotCoordinates: ApiPlotCoordinate[];  // used for adding/editing single plot
 
   @Input()
-  plots: Array<ApiPlot>;  // used for viewing multiple plots
+  plots: ApiPlot[];  // used for viewing multiple plots
 
   @Input()
   pin: ApiPlotCoordinate;
@@ -59,7 +59,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   initialLng: number;
 
   @Output()
-  plotCoordinatesChange = new EventEmitter<Array<ApiPlotCoordinate>>();
+  plotCoordinatesChange = new EventEmitter<ApiPlotCoordinate[]>();
 
   @Output()
   plotGeoIdChange = new EventEmitter<ApiPlot>();
@@ -74,7 +74,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   editable: boolean;
   
   subscriptions: Subscription = new Subscription();
-  markers: Array<mapboxgl.Marker> = [];
+  markers: mapboxgl.Marker[] = [];
 
   mapStyle: UntypedFormControl = new UntypedFormControl('satellite-streets-v12');
 
@@ -123,7 +123,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getInitialMapExtremes(coordinates: Array<ApiPlotCoordinate>): [[number, number], [number, number]] {
+  getInitialMapExtremes(coordinates: ApiPlotCoordinate[]): [[number, number], [number, number]] {
 
     let latMin = coordinates[0].latitude;
     let latMax = coordinates[0].latitude;
@@ -140,14 +140,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return [[lngMin - offset, latMin - offset], [lngMax + offset, latMax + offset]];
   }
 
-  setExistingPlots(plots: Array<ApiPlot>) {
+  setExistingPlots(plots: ApiPlot[]) {
 
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
     this.plotCoordinates = [];
 
     // Find the plots that shall be removed
-    const plotsToRemove: Array<ApiPlot> = [];
+    const plotsToRemove: ApiPlot[] = [];
     this.plots.forEach(plot => {
       const existingPlot = plots.find(p => plot.plotName === p.plotName);
       if (existingPlot == null) {
@@ -186,7 +186,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setExistingPlotCoordinates(coordinates: Array<ApiPlotCoordinate>) {
+  setExistingPlotCoordinates(coordinates: ApiPlotCoordinate[]) {
     if (this.markers.length > 0) {
       this.deletePlot();
     }

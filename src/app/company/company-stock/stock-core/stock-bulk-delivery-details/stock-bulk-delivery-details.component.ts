@@ -332,7 +332,7 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
   }
 
 
-  async createBulkPurchaseOrder(close: boolean = true) {
+  async createBulkPurchaseOrder(close = true) {
 
     if (this.updatePOInProgress) {
       return;
@@ -394,8 +394,6 @@ export class StockBulkDeliveryDetailsComponent implements OnInit, OnDestroy {
           this.reloadOrder();
         }
       }
-    } catch (e) {
-      throw e;
     } finally {
       this.updatePOInProgress = false;
       this.globalEventsManager.showLoading(false);

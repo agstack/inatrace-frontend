@@ -25,10 +25,10 @@ export class ImageViewerComponent implements OnInit, OnDestroy {
     height: number = null;
 
     @Input()
-    signInImage: boolean = false;
+    signInImage = false;
 
     @Input()
-    centerVertical: boolean = false;
+    centerVertical = false;
 
     private _fileInfo = null
     @Input() set fileInfo(value: ApiDocument) {
@@ -42,10 +42,10 @@ export class ImageViewerComponent implements OnInit, OnDestroy {
 
 
     @Input()
-    directLink: boolean = true
+    directLink = true
 
     @Input()
-    chainApi: boolean = false;
+    chainApi = false;
 
     constructor(
         private fileService: CommonControllerService,

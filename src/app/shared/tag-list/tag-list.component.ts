@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, of, Subject, merge, fromEvent, combineLatest, BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, filter, switchMap, tap, shareReplay } from 'rxjs/operators';
@@ -42,7 +42,7 @@ import { CodebookHelperService } from 'src/interfaces/CodebookHelperService';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class TagListComponent implements OnInit {
+export class TagListComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
 
@@ -68,7 +68,7 @@ export class TagListComponent implements OnInit {
     // }
 
     @Input()
-    autoCloseOnAdd: boolean = true
+    autoCloseOnAdd = true
 
     @Input()
     codebookService: CodebookHelperService<any>;
@@ -86,7 +86,7 @@ export class TagListComponent implements OnInit {
 
     term: any = null;   // search term
 
-    inputVisible: boolean = false;
+    inputVisible = false;
 
     @ViewChild("newTagInput", { static: false })
     newTagInputField: ElementRef<HTMLInputElement>;
@@ -95,7 +95,7 @@ export class TagListComponent implements OnInit {
 
     formatter = (x: any) => "No format"
 
-    itemSelected: boolean = false;
+    itemSelected = false;
 
     focus$ = new Subject<string>();
     click$ = new Subject<string>();
@@ -106,9 +106,9 @@ export class TagListComponent implements OnInit {
     autocompleteSelection$ = null
     noAutocompleteSelections$ = null // true if autocomplete has no choices
     showNoChoicesWarning$ = null
-    selectedObjects$ = new BehaviorSubject<Array<any>>([]);   // list of currently selected objects
+    selectedObjects$ = new BehaviorSubject<any[]>([]);   // list of currently selected objects
 
-    isNew: boolean = false;   // new object creation mode
+    isNew = false;   // new object creation mode
     constructor() {}
 
 
@@ -141,7 +141,7 @@ export class TagListComponent implements OnInit {
     }
     onDropFormArray(event) {
         // let formArray: FormArray = this.formArray()
-        let ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
+        const ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
         this.formArray.removeAt(event.previousIndex)
         this.formArray.insert(event.currentIndex, ctrl);
         this.formArray.markAsDirty()
@@ -170,7 +170,7 @@ export class TagListComponent implements OnInit {
             map(x => x.results)
         )
         this.noAutocompleteSelections$ = this.autocompleteSelection$.pipe(
-            map((choices: Array<any>) => this.newTagInputField && this.newTagInputField.nativeElement.value.length > 0 && choices.length == 0)
+            map((choices: any[]) => this.newTagInputField && this.newTagInputField.nativeElement.value.length > 0 && choices.length == 0)
         )
         // mora biti v drugem "threadu", če ne dobimo 'ExpressionChangedAfterItHasBeenCheckedError'
         setTimeout(() => {
@@ -191,7 +191,7 @@ export class TagListComponent implements OnInit {
         return true;
     }
 
-    toggleAddTag(visible: boolean = !this.inputVisible) {
+    toggleAddTag(visible = !this.inputVisible) {
         this.modelChoice = null;
         this.newTagInputField.nativeElement.value = null;
         this.inputVisible = visible;

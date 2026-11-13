@@ -37,8 +37,8 @@ export class ListEditorManager<T> {
 
     public addNew(returnFocusElement) {
         if (this.formArray) {
-            let form: UntypedFormControl = this.emptyObjectFactory(this.validationScheme)
-            let oldLength = this.formArray.controls.length
+            const form: UntypedFormControl = this.emptyObjectFactory(this.validationScheme)
+            const oldLength = this.formArray.controls.length
             this.lastNew = oldLength
             this.formArray.push(form)
             this.toggle(oldLength, returnFocusElement)
@@ -48,13 +48,13 @@ export class ListEditorManager<T> {
     returnFocusElement = null
 
     public toggle(i, returnFocusElement) {
-        let doFocus = this.open === i
+        const doFocus = this.open === i
         this.open = this.open == i ? -1 : i
         if (this.isActiveCallback) {
             this.isActiveCallback(this.open >= 0)
         }
         if (doFocus && this.returnFocusElement) {
-            let tmpReturn = this.returnFocusElement
+            const tmpReturn = this.returnFocusElement
             setTimeout(() => {
                 tmpReturn.focus()
             }, 500)
@@ -67,7 +67,7 @@ export class ListEditorManager<T> {
     }
 
     public onDrop(event) {
-        let ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
+        const ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
         this.formArray.removeAt(event.previousIndex)
         this.formArray.insert(event.currentIndex, ctrl);
         this.formArray.markAsDirty()
@@ -88,7 +88,7 @@ export class ListEditorManager<T> {
     public save(i: number) {
         if (this.formArray) {
             this.formArray.markAsDirty()
-            let form = this.formArray.at(i)
+            const form = this.formArray.at(i)
             if (form) {
                 form.markAsDirty()
             }

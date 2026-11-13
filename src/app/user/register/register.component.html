@@ -150,7 +150,7 @@
     User already exists
   </div>
       }
-      @if (!!_registerErrorStatus$.value && _registerErrorStatus$.value != 'INVALID_REQUEST') {
+      @if (!!_registerErrorStatus$.value && _registerErrorStatus$.value !== 'INVALID_REQUEST') {
         <div i18n="@@register.error.somethingWentWrong">
     Something went wrong during register
   </div>

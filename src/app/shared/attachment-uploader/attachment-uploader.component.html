@@ -2,7 +2,7 @@
 <div [ngClass]="{'attachement-uploader-container': useAttachmentUploaderStyle}">
   <div style="display: flex; flex: 1 1 0; justify-content: space-between;"
     ng2FileDrop [uploader]="uploader">
-    @if (this.mode == 'simpleAsTextField') {
+    @if (this.mode === 'simpleAsTextField') {
       <div>
         @if (label && !htmlLabel) {
           <label class="sp-textinput-label"
@@ -17,7 +17,7 @@
         }
       </div>
     }
-    @if (this.mode != 'simpleAsTextField') {
+    @if (this.mode !== 'simpleAsTextField') {
       <div>
         @if (label && !htmlLabel) {
           <label class="sp-textinput-label"
@@ -29,7 +29,7 @@
         }
       </div>
     }
-    @if (this.mode != 'simpleAsTextField') {
+    @if (this.mode !== 'simpleAsTextField') {
       <div style="display: flex;">
         @if (!readOnly) {
           <div class="addbutton" style="white-space: nowrap;"
@@ -62,7 +62,7 @@
         <!-- <div class="drop-icon col-auto hover-pointer" (click)="showContentModal()">
         <fa-icon [icon]="icon" size="4x"></fa-icon>
       </div> -->
-      @if (uploader.queue.length == 0) {
+      @if (uploader.queue.length === 0) {
         <div class="col"
           >
           @switch (uploadState) {
@@ -139,7 +139,7 @@
 <!-- <image-viewer [url]="downloadLinkGenerator(this.identifier())"></image-viewer> -->
 @if (this.mode === 'simple') {
   <div>
-    @if (uploader.queue.length == 0) {
+    @if (uploader.queue.length === 0) {
       <div>
         @switch (uploadState) {
           @case ('start') {
@@ -206,7 +206,7 @@
 
 @if (this.mode === 'simpleAsTextField' && !hideBody) {
   <div>
-    @if (uploader.queue.length == 0) {
+    @if (uploader.queue.length === 0) {
       <div>
         @switch (uploadState) {
           @case ('start') {

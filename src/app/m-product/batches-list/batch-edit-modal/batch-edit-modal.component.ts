@@ -30,8 +30,8 @@ export class BatchEditModalComponent implements OnInit {
   batch: ApiProductLabelBatch = null;
 
   form: UntypedFormGroup;
-  saveTextButton: string = "Save";
-  createTextButton: string = "Create";
+  saveTextButton = "Save";
+  createTextButton = "Create";
 
 
   constructor(

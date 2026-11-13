@@ -17,7 +17,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
     autocompleteMinPrefix = 2;
     maxAllCandidates = 100;
 
-    public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => UntypedFormGroup {
+    public formGenerator(): (x: T, validators?: ValidatorFn[]) => UntypedFormGroup {
         throw new Error('Method not implemented.');
     }
 
@@ -38,7 +38,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
     }
 
     public onTheFlyCodebook(key$: Observable<string>,
-                            selectedObjects$: Observable<Array<T>>,
+                            selectedObjects$: Observable<T[]>,
                             params$: Observable<any>,
                             organizationId?: string): Observable<PagedSearchResults<T>> {
 
@@ -65,7 +65,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
     }
 
     public autocompleteCandidates(key$: Observable<string>,
-                                  selectedObjects$: Observable<Array<T>>,
+                                  selectedObjects$: Observable<T[]>,
                                   params?: Observable<any>, organizationId?: string): Observable<PagedSearchResults<T>> {
 
         let paramStream$ = params;
@@ -76,7 +76,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
             key$,
             this.onTheFlyCodebook(key$, selectedObjects$, paramStream$, organizationId),
             selectedObjects$,
-            (key: string, sifrant: PagedSearchResults<T>, selectedObjects: Array<T>) => {
+            (key: string, sifrant: PagedSearchResults<T>, selectedObjects: T[]) => {
                 const choices = sifrant.results.filter((x: T) =>
                         (this.allowDuplicateSelection()
                             || !(selectedObjects.find(el => this.identifier(el) === this.identifier(x)))
@@ -97,7 +97,7 @@ export class GeneralSifrantService<T> implements CodebookHelperService<T> {
         );
     }
 
-    public getAllCandidates(): Observable<Array<T>> {
+    public getAllCandidates(): Observable<T[]> {
         return this.makeQuery('',
             {
                 offset: 0,

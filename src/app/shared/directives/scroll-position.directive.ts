@@ -1,11 +1,11 @@
-import { Directive, Host, ElementRef, HostListener, EventEmitter, Output, Input } from '@angular/core';
+import { Directive, Host, ElementRef, HostListener, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { ScrollContainerDirective } from './scroll-container.directive';
 
 @Directive({
     selector: '[appScrollPosition]',
     standalone: false
 })
-export class ScrollPositionDirective {
+export class ScrollPositionDirective implements OnInit {
 
   @Input()
   cardWidth = 160;
@@ -33,7 +33,7 @@ export class ScrollPositionDirective {
   }
 
   get canGoRight() {
-    let el = this.elRef.nativeElement
+    const el = this.elRef.nativeElement
     return el.scrollWidth - el.scrollLeft - 10 > this.scrollContainer.width;
   }
 

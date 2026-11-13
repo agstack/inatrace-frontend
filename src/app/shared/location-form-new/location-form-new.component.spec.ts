@@ -1,4 +1,3 @@
-/* tslint:disable:component-selector */
 import { Component, EventEmitter, Input, Output, NO_ERRORS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';

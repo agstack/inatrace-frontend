@@ -59,7 +59,7 @@ export class CompanyDetailFacilityAddWizardComponent implements OnInit {
 
   // Step 5
   companyValueChainsCodebook: CompanyValueChainsService;
-  valueChains: Array<ApiValueChain> = [];
+  valueChains: ApiValueChain[] = [];
   valueChainsForm = new UntypedFormControl(null);
   selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
@@ -77,7 +77,7 @@ export class CompanyDetailFacilityAddWizardComponent implements OnInit {
   facilityLocationParentForm = generateFormFromMetadata(ApiFacility.formMetadata(), this.emptyObject(), ApiFacilityValidationScheme);
   submittedFacilityLocationForm = false;
 
-  currentStep: number = 1;
+  currentStep = 1;
 
   @Input()
   companyId: string;

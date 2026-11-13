@@ -156,7 +156,7 @@
 
   <!-- STEP 6 - Proc action output semi-products or output final product -->
   @if (currentStep === 6) {
-    @if (selectedProcActionType == 'PROCESSING') {
+    @if (selectedProcActionType === 'PROCESSING') {
       <div class="modal-header justify-content-center">
         <h2 class="modal-title text-center"
           i18n="@@selfOnboarding.addProcActionModal.procActionOutputSemiProducts.header">
@@ -197,7 +197,7 @@
         </button>
       </div>
     }
-    @if (selectedProcActionType == 'FINAL_PROCESSING') {
+    @if (selectedProcActionType === 'FINAL_PROCESSING') {
       <div class="modal-header justify-content-center">
         <h2 class="modal-title text-center"
           i18n="@@selfOnboarding.addProcActionModal.procActionOutputFinalProduct.header">
@@ -230,7 +230,7 @@
   }
 
   <!-- STEP 7 - Proc action final product for QR code generation (in case of GENERATE_QR_CODE) -->
-  @if (currentStep === 7 && selectedProcActionType == 'GENERATE_QR_CODE') {
+  @if (currentStep === 7 && selectedProcActionType === 'GENERATE_QR_CODE') {
     <div class="modal-header justify-content-center">
       <h2 class="modal-title text-center"
         i18n="@@selfOnboarding.addProcActionModal.procActionFinalProdForQRCode.header">

@@ -15,13 +15,13 @@ export class FormDetailsLeftPanelComponent implements OnInit {
   title: string = null;
 
   @Input()
-  showIcon: boolean = false;
+  showIcon = false;
 
   @Input()
   goToLink: string = null;
 
   @Input()
-  goToBack: boolean = false;
+  goToBack = false;
 
 
   constructor(

@@ -65,7 +65,7 @@ export class BottomButtonsComponent implements OnInit {
   onSubmitMessage: string = $localize`:@@bottomButoms.message.onSubmit:Do you want to submit an application?`
 
   @Input()
-  customBackFn: boolean = false; //In case of nested forms, such as product label
+  customBackFn = false; //In case of nested forms, such as product label
 
   @Output() onBack = new EventEmitter<boolean>();
   @Output() onValidate = new EventEmitter<boolean>();
@@ -96,7 +96,7 @@ export class BottomButtonsComponent implements OnInit {
     this.lastPress = 'BACK'
     if (!this.isBack()) return;
     if ((this.form && this.form.dirty) || (!this.form && this.changed)) {
-      let result = await this.globalEventsManager.openMessageModal({
+      const result = await this.globalEventsManager.openMessageModal({
         type: 'warning',
         title: $localize`:@@bottomButoms.back.error.title:Changes not saved!`,
         message: $localize`:@@bottomButoms.back.error.message:The form contains unsaved changes that will be discarded.`,
@@ -177,7 +177,7 @@ export class BottomButtonsComponent implements OnInit {
           }
       )
     } else if (!this.ignoreOnSubmitDirty) {
-      let result = await this.globalEventsManager.openMessageModal({
+      const result = await this.globalEventsManager.openMessageModal({
           type: 'warning',
           message: this.onSubmitMessage
       });

@@ -444,7 +444,7 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     this.stockOrderForm.updateValueAndValidity();
   }
 
-  async createOrUpdatePurchaseOrder(close: boolean = true) {
+  async createOrUpdatePurchaseOrder(close = true) {
 
     if (this.updatePOInProgress) {
       return;
@@ -492,8 +492,6 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
           this.reloadOrder();
         }
       }
-    } catch (e) {
-      throw e;
     } finally {
       this.updatePOInProgress = false;
       this.globalEventsManager.showLoading(false);

@@ -13,7 +13,7 @@ export function isNonNegative(control: UntypedFormControl): ValidationErrors | n
 }
 
 export function percentValidator(control: UntypedFormControl): ValidationErrors | null {
-    let val = control.value
+    const val = control.value
     if(!val) return
     if(isNaN(val)) return null
     if(val < 0 || val > 100) return {wrongPercent: true}
@@ -27,12 +27,12 @@ export function javaLongOverflow(control: UntypedFormControl): ValidationErrors 
 
 export function validateEmail(email) {
     if(!email) return true
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
 export function EmailValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): Record<string, any> => {
         return validateEmail(control.value) ? null : {'wrongEmail': true};
     }
 }
@@ -44,14 +44,14 @@ function validateUrl(url, httpsRequired = true) {
         return urlRegExp.test(url) || (!httpsRequired && urlRegExp.test('https://'+url))
 }
 
-export function URLValidator(httpsRequired: boolean = true): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+export function URLValidator(httpsRequired = true): ValidatorFn {
+    return (control: AbstractControl): Record<string, any> => {
         return validateUrl(control.value, httpsRequired) ? null : { 'urlNiValid': true }
     }
 }
 
 export function MinLengthArrayValidator(min: number): ValidatorFn {
-    return (c: AbstractControl): {[key: string]: any} => {
+    return (c: AbstractControl): Record<string, any> => {
         if (c.value.length >= min)
             return null;
         return {'minLengthArray': {length: min}};
@@ -59,9 +59,9 @@ export function MinLengthArrayValidator(min: number): ValidatorFn {
 }
 
 export function minLengthArrayValidatorForField(field: string, min: number): ValidatorFn {
-    return (c: UntypedFormGroup): {[key: string]: any} => {
+    return (c: UntypedFormGroup): Record<string, any> => {
         if (!c.get(field)) return null  // silent fail
-        let value = c.get(field).value
+        const value = c.get(field).value
         if (value.length >= min)
             return null;
         return {'minLengthArray': {length: min}};
@@ -73,11 +73,11 @@ export function MinLengthArrayValidatorForField(field: string, min: number): Val
 }
 
 export function minLengthArrayValidatorForFieldIfField2IsChecked(field: string, field2: string, min: number): ValidatorFn {
-    return (c: UntypedFormGroup): {[key: string]: any} => {
+    return (c: UntypedFormGroup): Record<string, any> => {
         if (!c.get(field2)) return null // silent fail
         if (!c.get(field2).value) return null
         if (!c.get(field)) return null  // silent fail
-        let value = c.get(field).value
+        const value = c.get(field).value
         if (value.length >= min)
             return null;
         return {'minLengthArray': {length: min}};
@@ -90,7 +90,7 @@ export function MinLengthArrayValidatorForFieldIfField2IsChecked(field: string, 
 
 
 export function MaxLengthArrayValidator(max: number): ValidatorFn {
-    return (c: AbstractControl): {[key: string]: any} => {
+    return (c: AbstractControl): Record<string, any> => {
         if (c.value.length < max)
             return null;
         return {'maxLengthArray': {lenght: max}};
@@ -111,19 +111,19 @@ export function maxActiveArrayControls(max: number): ValidatorFn {
 
 function validateUndesrcoreAndCapitals(input) {
   if (!input) return true
-  var re = /^[A-Z_0-9]+$/;
+  const re = /^[A-Z_0-9]+$/;
   return re.test(String(input));
 }
 
 export function UndesrcoreAndCapitalsValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } => {
+  return (control: AbstractControl): Record<string, any> => {
     return validateUndesrcoreAndCapitals(control.value) ? null : { 'wrongInput': true };
   }
 }
 
 export function isEmptyObject(obj) {
     if (!obj) return false;
-    for (let key in obj) {
+    for (const key in obj) {
         return false;
     }
     return true;
@@ -138,7 +138,7 @@ function mergeErrors(control: AbstractControl, parentErrors: any, allParentError
     } else {
         mergedErrors = {}
     }
-    for (let key of allParentErrorKeys) {
+    for (const key of allParentErrorKeys) {
         if (parentErrors && parentErrors[key]) {
             mergedErrors[key] = parentErrors[key]
             change = true
@@ -167,9 +167,9 @@ export type FormGroupValidator = (fg: UntypedFormGroup) => ValidationErrors | nu
 
 export function performMultiFieldValidation(fg: UntypedFormGroup, controlNames: string[], validator: FormGroupValidator, allValidatorErrorKeys: string[]): null {
     if (fg == null) return null;
-    let errors = validator(fg);
-    for (let cn of controlNames) {
-        let control = fg.get(cn);
+    const errors = validator(fg);
+    for (const cn of controlNames) {
+        const control = fg.get(cn);
         if (control) {
             mergeErrors(control, errors, allValidatorErrorKeys)
         }
@@ -184,10 +184,10 @@ export function multiFieldValidator(controlNames: string[], validator: FormGroup
 }
 
 function getAge(dateString) {
-    var today = new Date();
-    var birthDate = new Date(dateString);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
+    const today = new Date();
+    const birthDate = new Date(dateString);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
     }
@@ -195,33 +195,33 @@ function getAge(dateString) {
 }
 
 export function DateOfBirthForMinimalAge(age: number): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        let date = control.value
+    return (control: AbstractControl): Record<string, any> => {
+        const date = control.value
         if (!date) return null
-        let calcAge = getAge(date)
+        const calcAge = getAge(date)
         if (calcAge < age) return {tooYoung: {age: calcAge, minAge: age}}
         return null
     }
 }
 
 export function YearNotInFuture(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        let year = control.value
+    return (control: AbstractControl): Record<string, any> => {
+        const year = control.value
         if (!year) return null
-        var today = new Date();
-        var age = today.getFullYear() - year;
+        const today = new Date();
+        const age = today.getFullYear() - year;
         if (age < 0) return {yearInFuture: true}
         return null
     }
 }
 
 export function DateNotInFuture(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        let dateString = control.value
+    return (control: AbstractControl): Record<string, any> => {
+        const dateString = control.value
         if (!dateString) return null
-        let date = new Date(dateString)
-        let today = new Date()
-        let diff = today.getTime() - date.getTime()
+        const date = new Date(dateString)
+        const today = new Date()
+        const diff = today.getTime() - date.getTime()
         if (diff < 0) {
             return {dateInFuture: true}
         }
@@ -230,15 +230,15 @@ export function DateNotInFuture(): ValidatorFn {
 }
 
 export function DateNotInPast(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        let dateString = control.value
+    return (control: AbstractControl): Record<string, any> => {
+        const dateString = control.value
         if (!dateString) return null
-        let date = new Date(dateString)
+        const date = new Date(dateString)
         date.setHours(12)
-        let dateStr = date.toISOString().slice(0, 10)
-        let today = (new Date())
+        const dateStr = date.toISOString().slice(0, 10)
+        const today = (new Date())
         today.setHours(12)
-        let todayStr = today.toISOString().slice(0, 10)
+        const todayStr = today.toISOString().slice(0, 10)
         if (dateStr < todayStr) {
             return {dateInPast: true}
         }
@@ -247,14 +247,14 @@ export function DateNotInPast(): ValidatorFn {
 }
 
 function functionDatesInOrder(group: UntypedFormGroup, startControlName, endControlName) {
-    let start = group.get(startControlName) && group.get(startControlName).value as string
-    let end = group.get(endControlName) && group.get(endControlName).value as string
+    const start = group.get(startControlName) && group.get(startControlName).value as string
+    const end = group.get(endControlName) && group.get(endControlName).value as string
     if (!start || !end) {
         return null
     }
-    let startDate = new Date(start);
-    let endDate = new Date(end);
-    let diff = endDate.getTime() - startDate.getTime()
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diff = endDate.getTime() - startDate.getTime()
     if (diff < 0) {
         return {startLaterThanEnd: true}
     }
@@ -279,17 +279,17 @@ export function mustBeChecked(control: AbstractControl): ValidationErrors | null
 const tagRegex = /(<([^>]+)>)/ig
 
 export function MinLengthHTMLStripped(minLen: number): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        let text = control.value
+    return (control: AbstractControl): Record<string, any> => {
+        const text = control.value
         if(!text) return null
-        let stripped = text.replace(tagRegex, "");
+        const stripped = text.replace(tagRegex, "");
         return stripped.length >= minLen ? null : {minlength: {requiredLength: minLen}}
     }
 }
 
 export function requiredFieldIfOtherFieldHasValue(control: UntypedFormGroup, field: string, otherField: string, otherFieldValue: any): ValidationErrors | null {
   if(!control || !control.value) return null;
-  let tip = control.value[otherField]
+  const tip = control.value[otherField]
   if(!tip || tip !== otherFieldValue) return null;
   if(!control.value[field]) return {required: true}
   return null;

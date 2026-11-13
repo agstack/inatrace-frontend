@@ -267,7 +267,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.myCompanies.setValue(my);
   }
 
-  clearValue(form: UntypedFormControl, myCompanies: boolean = false) {
+  clearValue(form: UntypedFormControl, myCompanies = false) {
     if (myCompanies) { form.setValue(false); }
     else { form.setValue(''); }
   }

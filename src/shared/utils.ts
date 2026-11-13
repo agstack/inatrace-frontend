@@ -28,9 +28,9 @@ export function defaultIfNull<T>(value: T, defaultValue: T): T {
 /**
  * Extract some keys from object
  */
-export function objectSlice<T extends object>(obj: T, keys: Array<keyof T>): Partial<T> {
-  let result: Partial<T> = {};
-  for (let key of keys) {
+export function objectSlice<T extends object>(obj: T, keys: (keyof T)[]): Partial<T> {
+  const result: Partial<T> = {};
+  for (const key of keys) {
     if (key in obj) {
       result[key] = obj[key];
     }
@@ -39,9 +39,9 @@ export function objectSlice<T extends object>(obj: T, keys: Array<keyof T>): Par
 }
 
 export function pripraviSifrant(obj: any, forceLowercase = false) {
-  let options = []
+  const options = []
   if (Array.isArray(obj)) {
-    for (let key of obj) {
+    for (const key of obj) {
       options.push(
         {
           id: forceLowercase ? (key as string).toLocaleLowerCase() : key,
@@ -54,7 +54,7 @@ export function pripraviSifrant(obj: any, forceLowercase = false) {
 
   // Iz enumov generiranih s pomočjo generatorja
   if (typeof obj === "object") {
-    for (let key in obj) {
+    for (const key in obj) {
       options.push(
         {
           id: forceLowercase ? (key as string).toLocaleLowerCase() : key,
@@ -68,7 +68,7 @@ export function pripraviSifrant(obj: any, forceLowercase = false) {
 
 }
 
-export function removeValidators(form: UntypedFormGroup, fields: Array<string>) {
+export function removeValidators(form: UntypedFormGroup, fields: string[]) {
   fields.forEach(key => {
     form.controls[key].clearValidators()
     form.controls[key].updateValueAndValidity()
@@ -78,7 +78,7 @@ export function removeValidators(form: UntypedFormGroup, fields: Array<string>) 
 export function getParentKey(form: AbstractControl): string {
   if (!form.parent)
     return null
-  for (let key in form.parent.controls) {
+  for (const key in form.parent.controls) {
     if (form.parent.controls[key] == form) {
       return key;
     }
@@ -95,7 +95,7 @@ export function isRequired(form: AbstractControl) {
 }
 
 export function applyValidationScheme(inForm: AbstractControl, valScheme: SimpleValidationScheme<any>) {
-  let form = inForm;
+  const form = inForm;
   // if(valScheme.forceFormControl) {   // transfocija v form control
   //     let key = getParentKey(form) as string;
   //     let value = form.value;
@@ -114,7 +114,7 @@ export function applyValidationScheme(inForm: AbstractControl, valScheme: Simple
   form.setValidators(valScheme.validators)
   if (!form.value) return
   if (valScheme.fields) { // form group
-    for (let key in valScheme.fields) {
+    for (const key in valScheme.fields) {
       if (!(form as UntypedFormGroup).controls[key]) {
         throw Error("Non matching key for validation scheme: " + key)
       }
@@ -131,7 +131,7 @@ export function applyValidationScheme(inForm: AbstractControl, valScheme: Simple
 }
 
 export function duplicateValidationScheme(valScheme: SimpleValidationScheme<any>): SimpleValidationScheme<any> {
-  let dup: any = {
+  const dup: any = {
     validators: [...valScheme.validators],
     forceFormControl: valScheme.forceFormControl,
     forceExpand: valScheme.forceExpand
@@ -141,36 +141,36 @@ export function duplicateValidationScheme(valScheme: SimpleValidationScheme<any>
   }
   if (valScheme.fields) {
     dup.fields = {}
-    for (let key in valScheme.fields) {
+    for (const key in valScheme.fields) {
       dup.fields[key] = duplicateValidationScheme(valScheme.fields[key])
     }
   }
   return dup;
 }
 
-export function setForceFormControl(valScheme: SimpleValidationScheme<any>, value: boolean = true) {
-  let vs = duplicateValidationScheme(valScheme)
+export function setForceFormControl(valScheme: SimpleValidationScheme<any>, value = true) {
+  const vs = duplicateValidationScheme(valScheme)
   vs.forceFormControl = value;
   return vs
 }
 
-export function setForceExpand(valScheme: SimpleValidationScheme<any>, value: boolean = true) {
-  let vs = duplicateValidationScheme(valScheme)
+export function setForceExpand(valScheme: SimpleValidationScheme<any>, value = true) {
+  const vs = duplicateValidationScheme(valScheme)
   vs.forceExpand = value;
   return vs
 }
 
 
 export function generateFormFromMetadata(metadata: any, model: any, valScheme?: SimpleValidationScheme<any>): UntypedFormGroup {
-  let result = new UntypedFormGroup({})
-  for (let varInfo of metadata.vars) {
-    let name = varInfo.name
-    let value = model[varInfo.name]
-    let validators = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].validators
-    let forceFormControl = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].forceFormControl
-    let forceExpand = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].forceExpand
-    let fieldSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name]
-    let arrayElementsSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].arrayElementValidators
+  const result = new UntypedFormGroup({})
+  for (const varInfo of metadata.vars) {
+    const name = varInfo.name
+    const value = model[varInfo.name]
+    const validators = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].validators
+    const forceFormControl = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].forceFormControl
+    const forceExpand = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].forceExpand
+    const fieldSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name]
+    const arrayElementsSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].arrayElementValidators
     if (forceFormControl && forceExpand) {
       throw Error("forceFormControl in forceExpand must not be true at the same time.")
     }
@@ -244,9 +244,9 @@ export function generateFormFromMetadata(metadata: any, model: any, valScheme?: 
 
 
 export function defaultEmptyObject(metadata: any) {
-  let result = {}
-  for (let varInfo of metadata.vars) {
-    let name = varInfo.name
+  const result = {}
+  for (const varInfo of metadata.vars) {
+    const name = varInfo.name
     if (varInfo.isPrimitiveType) {
       result[name] = null
     } else if (varInfo.isListContainer) {
@@ -263,20 +263,20 @@ export function defaultEmptyObject(metadata: any) {
 }
 
 export function formAssign(form: UntypedFormGroup, metadata: any, model: any, valScheme: SimpleValidationScheme<any>) {
-  for (let varInfo of metadata.vars) {
-    let name = varInfo.name
-    let value = model[varInfo.name]
-    let validators = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].validators
-    let forceFormControl = valScheme && valScheme.fields && valScheme.fields[varInfo.name].forceFormControl
-    let fieldSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name]
-    let arrayElementsSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].arrayElementValidators
+  for (const varInfo of metadata.vars) {
+    const name = varInfo.name
+    const value = model[varInfo.name]
+    const validators = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].validators
+    const forceFormControl = valScheme && valScheme.fields && valScheme.fields[varInfo.name].forceFormControl
+    const fieldSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name]
+    const arrayElementsSchema = valScheme && valScheme.fields && valScheme.fields[varInfo.name] && valScheme.fields[varInfo.name].arrayElementValidators
 
     if (forceFormControl || varInfo.isPrimitiveType) {
       form.get(name).setValue(value)
     } else if (varInfo.isListContainer) {
-      let fa = form.get(name) as UntypedFormArray
+      const fa = form.get(name) as UntypedFormArray
       fa.clear()
-      for (let el of value) {
+      for (const el of value) {
         fa.push(generateFormFromMetadata(varInfo.metadata(), el, arrayElementsSchema))
       }
     } else {
@@ -296,9 +296,9 @@ export function formAssign(form: UntypedFormGroup, metadata: any, model: any, va
 }
 
 
-export function getValidatorParameter(validators: Array<any>, parameterName: string, defaultValue: any) {
+export function getValidatorParameter(validators: any[], parameterName: string, defaultValue: any) {
   if (!validators) return defaultValue;
-  let res = validators.find(x => x[0] === parameterName);
+  const res = validators.find(x => x[0] === parameterName);
   if (!res) return defaultValue;
   return res[1];
 }
@@ -309,23 +309,23 @@ export function idEquals(a: any, b: any) {
 
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
 
 export function correctRound2(value: number) {
-  let numericFix = 0.00000000000001
+  const numericFix = 0.00000000000001
   return Number((value + numericFix).toFixed(2))
 }
 
 export function correctRound4(value: number) {
-  let numericFix = 0.00000000000001
+  const numericFix = 0.00000000000001
   return Number((value + numericFix).toFixed(4))
 }
 
 export function correctRound6(value: number) {
-  let numericFix = 0.00000000000001
+  const numericFix = 0.00000000000001
   return Number((value + numericFix).toFixed(6))
 }
 
@@ -354,24 +354,24 @@ export function fancyNavigate(route: ActivatedRoute, router: Router, link: strin
   if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("mailto:")) {
     window.open(link, "_blank");
   } else if (link.startsWith("#")) {   // lokalna ruta na strani
-    let anchor = link.startsWith('#') ? link.substr(1) : link.substr(2);
+    const anchor = link.startsWith('#') ? link.substr(1) : link.substr(2);
     if (/\d/.test(anchor)) {
-      let n = Number(anchor)
+      const n = Number(anchor)
       window.scrollTo({
         top: n,
         left: 0,
         behavior: 'smooth'
       });
     } else {
-      let el = document.getElementsByName(anchor)
+      const el = document.getElementsByName(anchor)
       if (el && el[0]) {
         el[0].scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     }
   } else if (link.startsWith('/#')) {   // navigacija + fragment
-    let anchor = link.substr(2);
+    const anchor = link.substr(2);
     if (route.snapshot.url.length == 0) {    // ali si na landing pagu
-      let el = document.getElementsByName(anchor)
+      const el = document.getElementsByName(anchor)
       if (el && el[0]) {
         el[0].scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
@@ -384,7 +384,7 @@ export function fancyNavigate(route: ActivatedRoute, router: Router, link: strin
 }
 
 export function topInScreen(el) {
-  var rect = el.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
   return (
     rect.top >= 0 &&
     // rect.left >= 0 &&
@@ -394,7 +394,7 @@ export function topInScreen(el) {
 }
 
 export function bottomInScreen(el) {
-  var rect = el.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
   return (
     rect.bottom >= 0 &&
     // rect.left >= 0 &&
@@ -404,7 +404,7 @@ export function bottomInScreen(el) {
 }
 
 export function isElementInViewport(el) {
-  var rect = el.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
@@ -415,7 +415,7 @@ export function isElementInViewport(el) {
 
 
 export function getPath(route: ActivatedRouteSnapshot): string {
-  let pathFromParent = route.pathFromRoot.map(x => {
+  const pathFromParent = route.pathFromRoot.map(x => {
     if (x.url.length > 0) {
       return x.url.map(y => y.path || '').join('/')
     }
@@ -476,7 +476,7 @@ export function camelize(str) {
 }
 
 export function setNavigationParameter(router: Router, route: ActivatedRoute, paramName: string, paramValue: string) {
-  let params = { ...route.snapshot.queryParams }
+  const params = { ...route.snapshot.queryParams }
   if (paramValue) {
     params[paramName] = paramValue
   } else {
@@ -487,8 +487,8 @@ export function setNavigationParameter(router: Router, route: ActivatedRoute, pa
 
 export async function setSelectedIdFieldFromQueryParams(component: any, route: ActivatedRoute, field: string, form: UntypedFormControl, codebook: GeneralSifrantService<any>, setCallback: (val: any) => void) {
   component[field] = route.snapshot.queryParams[field]
-  let entities = await codebook.getAllCandidates().pipe(take(1)).toPromise()
-  let res = entities.find(x => dbKey(x) === component[field])
+  const entities = await codebook.getAllCandidates().pipe(take(1)).toPromise()
+  const res = entities.find(x => dbKey(x) === component[field])
   if (res) {
     form.setValue(res)
     form.updateValueAndValidity()

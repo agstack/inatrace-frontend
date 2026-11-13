@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChildren, ViewChild, Output, EventEmitter, Optional, Host, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, ViewChild, Output, EventEmitter, Optional, Host, ElementRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { UntypedFormControl, AbstractControl, UntypedFormArray } from '@angular/forms';
 import cloneDeep from 'lodash/cloneDeep';
 import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-improved.service';
@@ -18,7 +18,7 @@ import { ClosableComponent } from '../closable/closable.component';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class TextinputComponent implements OnInit {
+export class TextinputComponent implements OnInit, OnDestroy {
 
   @ViewChild('inputfield') input: ElementRef;
 
@@ -135,28 +135,28 @@ export class TextinputComponent implements OnInit {
   modalTitle?: string;
 
   @Input()
-  counter: boolean = false;
+  counter = false;
 
   @Input()
-  autosize: boolean = false;
+  autosize = false;
 
   @Input()
   isInvalid?: boolean = false;
 
   @Input()
-  biggerTextInput: boolean = false;
+  biggerTextInput = false;
 
   @Input()
-  withoutBorder: boolean = false;
+  withoutBorder = false;
 
   @Input()
-  searchInput: boolean = false;
+  searchInput = false;
 
   @Input()
   markRequired?: boolean;
 
   @Input()
-  hideAsterisk: boolean = false;
+  hideAsterisk = false;
 
   @Input()
   maxLength?: number;
@@ -165,13 +165,13 @@ export class TextinputComponent implements OnInit {
   hideCounterForModalView?: boolean = false;
 
   @Input()
-  disabled: boolean = false;
+  disabled = false;
 
   @Input()
   autofocus = false
 
   @Input()
-  readOnly: boolean = false
+  readOnly = false
 
   @Output() itemMatching = new EventEmitter<any>();
 
@@ -182,7 +182,7 @@ export class TextinputComponent implements OnInit {
 
   public model: string = null;
 
-  showAll: boolean = false;
+  showAll = false;
 
   constructor(
     private modalService: NgbModalImproved,
@@ -190,7 +190,7 @@ export class TextinputComponent implements OnInit {
     @Optional() @Host() public closable: ClosableComponent
   ) { }
 
-  numericError: boolean = false;
+  numericError = false;
 
   languages() {
     return this.globalEventsManager.languages()
@@ -292,16 +292,16 @@ export class TextinputComponent implements OnInit {
   }
 
   thousandsSeparator(locale = "sl-SI") {
-    let sep = this.decimalSeparator(locale)
+    const sep = this.decimalSeparator(locale)
     return sep === '.' ? ',' : '.'
   }
 
   parseNumber(value, locale = "sl-SI") {
     if (value.trim() === '') return null
-    let sep = this.decimalSeparator(locale)
-    let sep1000 = this.thousandsSeparator(locale)
+    const sep = this.decimalSeparator(locale)
+    const sep1000 = this.thousandsSeparator(locale)
     if (value.indexOf(sep1000) >= 0) return NaN
-    let cleaned1000 = value.replace(sep1000, '')
+    const cleaned1000 = value.replace(sep1000, '')
     const normalized = cleaned1000.replace(sep, '.');
     // return parseFloat(normalized);
     return Number(normalized)
@@ -327,11 +327,11 @@ export class TextinputComponent implements OnInit {
     //     this.form.setValue(event)   // pusti isto vpisano
     //     this.numericError = true
     // }
-    let thsep = this.thousandsSeparator()
+    const thsep = this.thousandsSeparator()
     if (event.indexOf(thsep) >= 0) {
       this.numericError = true
     }
-    let parsed = this.parseNumber(event)
+    const parsed = this.parseNumber(event)
     if (!isNaN(parsed)) {
       if (event.trim() === "") {
         this.form.setValue(null)
@@ -359,7 +359,7 @@ export class TextinputComponent implements OnInit {
       if (!this.languageFormArray.validator) {
         return false
       }
-      let validator = this.languageFormArray.validator({} as AbstractControl);
+      const validator = this.languageFormArray.validator({} as AbstractControl);
       return (validator && validator.required);
     }
     if (!this.form.validator) {
@@ -379,7 +379,7 @@ export class TextinputComponent implements OnInit {
   }
 
   getSteviloZnakov() {
-    let val = this.getValue()
+    const val = this.getValue()
     if (val) return val.length
     return 0
   }
@@ -500,7 +500,7 @@ export class TextinputComponent implements OnInit {
 
   setForLanguage(language: string, text: string) {
     if (!language) return;
-    let res: Array<any> = this.languageFormArray.controls.filter(x => {
+    const res: any[] = this.languageFormArray.controls.filter(x => {
       return (x as UntypedFormControl).value.key == language
     })
     if (res.length == 0) {
@@ -517,7 +517,7 @@ export class TextinputComponent implements OnInit {
     } else if (res.length > 1) {
       throw Error("languageFormArray ne sme vsebovati večkratnih vnosov za jezik: " + language)
     } else {
-      let fc = (res[0] as UntypedFormControl)
+      const fc = (res[0] as UntypedFormControl)
       if (this.lastLanguage == language) {  // zavedi spremembo samo, če ni bilo spremembe jezika
         fc.setValue(
           {
@@ -542,8 +542,8 @@ export class TextinputComponent implements OnInit {
 
   clearEmptyLanguages() {
     let i = 0;
-    for (let el of this.languageFormArray.controls) {
-      let val = (el as UntypedFormControl).value.value
+    for (const el of this.languageFormArray.controls) {
+      const val = (el as UntypedFormControl).value.value
       if (!val) {
         this.languageFormArray.removeAt(i);
         this.clearEmptyLanguages();
@@ -555,7 +555,7 @@ export class TextinputComponent implements OnInit {
   }
 
   initializeLanguage(language: string) {
-    let res: Array<any> = this.languageFormArray.controls.filter(x => {
+    const res: any[] = this.languageFormArray.controls.filter(x => {
       return (x as UntypedFormControl).value.key == language
     })
     if (res.length > 1) {
@@ -582,9 +582,9 @@ export class TextinputComponent implements OnInit {
   autocompleteSelection$ = null
   noAutocompleteSelections$ = null // true if autocomplete has no choices
   showNoChoicesWarning$ = null
-  selectedObjects$ = new BehaviorSubject<Array<any>>([]);   // list of currently selected objects
+  selectedObjects$ = new BehaviorSubject<any[]>([]);   // list of currently selected objects
 
-  isNew: boolean = false;   // new object creation mode
+  isNew = false;   // new object creation mode
 
   autocompleteMatch$ = null
 
@@ -623,13 +623,13 @@ export class TextinputComponent implements OnInit {
       shareReplay(1)
     )
     this.noAutocompleteSelections$ = this.autocompleteSelection$.pipe(
-      map((choices: Array<any>) => this.inputfield.first && this.inputfield.first.nativeElement.value.length > 0 && choices.length == 0)
+      map((choices: any[]) => this.inputfield.first && this.inputfield.first.nativeElement.value.length > 0 && choices.length == 0)
     )
 
     this.autocompleteMatch$ = combineLatest(
       this.input$,
       this.autocompleteSelection$.pipe(
-        map((x: Array<any>) => {
+        map((x: any[]) => {
           if (x && x.length === 1) return x[0];
           return null
         })

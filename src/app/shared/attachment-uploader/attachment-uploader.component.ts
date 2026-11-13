@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output, Host, Optional, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Host, Optional, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faFile, faFileImage, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
@@ -57,7 +57,7 @@ class AttachmentFileUploader extends FileUploader {
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class AttachmentUploaderComponent implements OnInit {
+export class AttachmentUploaderComponent implements OnInit, OnDestroy {
 
     ////////////////////////////////////
     ///// Fileinfo type specific fields
@@ -70,9 +70,9 @@ export class AttachmentUploaderComponent implements OnInit {
     }
 
     set fileInfo(value) {
-        let changed = false;
-        let prevId = this.form && this.form.value && this.form.value.storageKey
-        let newId = value && value.storageKey
+        const changed = false;
+        const prevId = this.form && this.form.value && this.form.value.storageKey
+        const newId = value && value.storageKey
         this._fileInfo = value
         if (this.form && prevId != newId) {
             this.form.setValue(value)
@@ -124,6 +124,7 @@ export class AttachmentUploaderComponent implements OnInit {
     @Input()
     rootImageUrl: string = null;
 
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('url')
     rootUrl: string = environment.relativeFileUploadUrl//"/api/uploads";
 
@@ -150,7 +151,7 @@ export class AttachmentUploaderComponent implements OnInit {
 
     @Input() set form(value: UntypedFormControl | UntypedFormGroup) {
         this._form = value;
-        let contentValue = value.value
+        const contentValue = value.value
         if (contentValue && contentValue.storageKey) {
             this.fileInfo = contentValue
             this.uploadState = this.arrayMode ? "start" : "ok"
@@ -177,13 +178,13 @@ export class AttachmentUploaderComponent implements OnInit {
     // }
 
     @Input()
-    mode: string = 'drop'
+    mode = 'drop'
 
     @Input()
-    uploadAndForget: boolean = false;
+    uploadAndForget = false;
 
     @Input()
-    attachmentUploaderId: string = "file";
+    attachmentUploaderId = "file";
 
     @Input()
     label = null
@@ -195,7 +196,7 @@ export class AttachmentUploaderComponent implements OnInit {
     invalid = false
 
     @Input()
-    readOnly: boolean = false
+    readOnly = false
 
     @Input()
     allowedMimeType = ['application/pdf', 'image/png', 'image/jpeg']
@@ -210,7 +211,7 @@ export class AttachmentUploaderComponent implements OnInit {
     type: string = null
 
     @Input()
-    arrayMode: boolean = false
+    arrayMode = false
 
     @Input()
     hideBody = false;
@@ -232,7 +233,7 @@ export class AttachmentUploaderComponent implements OnInit {
 
     faPlusCircle = faPlusCircle
 
-    draggingFileOver: boolean = false;
+    draggingFileOver = false;
 
     icon: IconDefinition = faFileUpload;
 
@@ -345,7 +346,7 @@ export class AttachmentUploaderComponent implements OnInit {
             })
         }
 
-        let config = {
+        const config = {
           url: this.rootImageUrl ? this.rootImageUrl : (this.type ? this.rootUrlManualType + this.type : this.rootUrl),
           autoUpload: true,
           removeAfterUpload: true,
@@ -467,7 +468,7 @@ export class AttachmentUploaderComponent implements OnInit {
             })
         } else {
             if (this.mode === 'simpleAsTextField' && this.fileInfo) {
-                let res = await this.fileService.getDocument(this.fileInfo.storageKey).pipe(take(1)).toPromise();
+                const res = await this.fileService.getDocument(this.fileInfo.storageKey).pipe(take(1)).toPromise();
                 if (res) {
                     this.fileSaverService.save(res, this.fileInfo.name);
                 }
@@ -484,7 +485,7 @@ export class AttachmentUploaderComponent implements OnInit {
         let ext = null
         if (n.indexOf('.') < 0) ext = ''
         else ext = n.substring(n.lastIndexOf(".") + 1, n.length)
-        let filename = n.replace(/(.*)\.[^\.]*$/, '$1');
+        let filename = n.replace(/(.*).[^.]*$/, '$1');
         if (filename.length <= len) {
             return n;
         }
@@ -495,12 +496,12 @@ export class AttachmentUploaderComponent implements OnInit {
     onDownload() {
         if (!this.fileInfo) return
         if (this.rootImageUrl) {
-          let subImg = this.fileService.getImage(this.fileInfo.storageKey).subscribe(res => {
+          const subImg = this.fileService.getImage(this.fileInfo.storageKey).subscribe(res => {
             this.fileSaverService.save(res, this.fileInfo.name);
             subImg.unsubscribe();
           })
         } else{
-          let sub = this.fileService.getDocument(this.fileInfo.storageKey).subscribe(res => {
+          const sub = this.fileService.getDocument(this.fileInfo.storageKey).subscribe(res => {
             this.fileSaverService.save(res, this.fileInfo.name);
             sub.unsubscribe()
           })

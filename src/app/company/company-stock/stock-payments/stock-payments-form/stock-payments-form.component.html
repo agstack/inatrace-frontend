@@ -244,7 +244,7 @@
           }
           @if (mode === modeEnum.PURCHASE) {
             <!-- Amount paid to the collector -->
-            @if (paymentForm.get('preferredWayOfPayment')?.value == preferredWayOfPayment.CASHVIACOLLECTOR) {
+            @if (paymentForm.get('preferredWayOfPayment')?.value === preferredWayOfPayment.CASHVIACOLLECTOR) {
               <div class="af-row">
                 <div class="af-c12">
                   <textinput
@@ -271,7 +271,7 @@
               </div>
             }
             <!-- Amount paid to the farmer -->
-            @if (paymentForm.get('preferredWayOfPayment')?.value != preferredWayOfPayment.CASHVIACOLLECTOR) {
+            @if (paymentForm.get('preferredWayOfPayment')?.value !== preferredWayOfPayment.CASHVIACOLLECTOR) {
               <div class="af-row">
                 <div class="af-c12">
                   <textinput

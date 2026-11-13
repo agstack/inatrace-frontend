@@ -48,16 +48,16 @@ export class CompanyDetailFacilityAddComponent implements OnInit, OnDestroy {
 
   companyValueChainsCodebook: CompanyValueChainsService;
   valueChainsForm = new UntypedFormControl(null);
-  valueChains: Array<ApiValueChain> = [];
+  valueChains: ApiValueChain[] = [];
   selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   codebookStatus = EnumSifrant.fromObject(this.publiclyVisible);
   semiProductsForm = new UntypedFormControl(null);
-  semiProducts: Array<ApiSemiProduct> = [];
+  semiProducts: ApiSemiProduct[] = [];
 
   finalProductsForCompanyCodebook: FinalProductsForCompanyService;
   finalProductForm = new UntypedFormControl(null);
-  finalProducts: Array<ApiFinalProduct> = [];
+  finalProducts: ApiFinalProduct[] = [];
 
   faTimes = faTimes;
 

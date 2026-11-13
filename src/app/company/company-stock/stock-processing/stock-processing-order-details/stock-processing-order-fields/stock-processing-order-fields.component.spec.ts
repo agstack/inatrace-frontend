@@ -6,7 +6,6 @@ import { ApiProcessingEvidenceField } from '../../../../../../api/model/apiProce
 import { StockProcessingOrderDetailsHelper } from '../stock-processing-order-details.helper';
 import { StockProcessingOrderFieldsComponent } from './stock-processing-order-fields.component';
 
-// tslint:disable:component-selector
 @Component({
     selector: 'textinput', template: '<ng-content></ng-content>',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -32,7 +31,6 @@ class DatepickerStubComponent {
   @Input() label: string;
   @Input() invalid: boolean;
 }
-// tslint:enable:component-selector
 
 describe('StockProcessingOrderFieldsComponent', () => {
   let component: StockProcessingOrderFieldsComponent;

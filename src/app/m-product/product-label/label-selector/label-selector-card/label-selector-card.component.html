@@ -2,10 +2,10 @@
   class="label-card-wrapper"
   (click)="select(label)">
   <div class="dot-wrapper">
-    @if (label?.status=='PUBLISHED') {
+    @if (label?.status==='PUBLISHED') {
       <div class="dot" [class.dot-active]="isSelected" [class.dot-inactive]="!isSelected"></div>
     }
-    @if (label?.status=='UNPUBLISHED') {
+    @if (label?.status==='UNPUBLISHED') {
       <div class="dot-placeholder"></div>
     }
     <div

@@ -8,7 +8,7 @@
   }
 
   @if (userProfileForm) {
-    <div [class.main]="this.mode != 'userProfileView'" [class.user-profile-view]="this.mode === 'userProfileView'">
+    <div [class.main]="this.mode !== 'userProfileView'" [class.user-profile-view]="this.mode === 'userProfileView'">
       <div class="af-form-wrapper">
         <div class="af-form-row">
           <div class="af-form-block--c12">
@@ -103,27 +103,27 @@
                   <div>
                     <label i18n="@@userDetail.textinput.userAvailableLanguage.label">Available</label>
                     <div class="d-flex af-translation-language">
-                      @if (this.userProfileForm.get('language').value != 'EN') {
+                      @if (this.userProfileForm.get('language').value !== 'EN') {
                         <div (click)="selectLanguage('EN')">
-                          <img src="../../../assets/icons/icon-flag--united-kingdom.svg">
+                          <img alt="" src="../../../assets/icons/icon-flag--united-kingdom.svg">
                           <span>EN</span>
                         </div>
                       }
-                      @if (this.userProfileForm.get('language').value != 'DE') {
+                      @if (this.userProfileForm.get('language').value !== 'DE') {
                         <div (click)="selectLanguage('DE')">
-                          <img src="../../../assets/icons/icon-flag--germany.svg">
+                          <img alt="" src="../../../assets/icons/icon-flag--germany.svg">
                           <span>DE</span>
                         </div>
                       }
-                      @if (this.userProfileForm.get('language').value != 'RW') {
+                      @if (this.userProfileForm.get('language').value !== 'RW') {
                         <div (click)="selectLanguage('RW')">
-                          <img src="../../../assets/icons/icon-flag--rwanda.svg">
+                          <img alt="" src="../../../assets/icons/icon-flag--rwanda.svg">
                           <span>RW</span>
                         </div>
                       }
-                      @if (this.userProfileForm.get('language').value != 'ES') {
+                      @if (this.userProfileForm.get('language').value !== 'ES') {
                         <div (click)="selectLanguage('ES')">
-                          <img src="../../../assets/icons/icon-flag--spain.svg">
+                          <img alt="" src="../../../assets/icons/icon-flag--spain.svg">
                           <span>ES</span>
                         </div>
                       }
@@ -143,12 +143,12 @@
             }
             <div class="af-form-element">
               @if (!loadingUserCompanies) {
-                <div *ngFor="let c of myCompanies index as i">
+                @for (c of myCompanies; track c) {
                   <div class="d-flex justify-content-between ps-3 pe-3 mb-1">
                     <div (click)="setSelectedUserCompany(c)" [class.show-pointer]="this.mode === 'userProfileView'">{{c.companyName}}</div>
                   </div>
-                </div>
-                @if (myCompanies && myCompanies.length == 0) {
+                }
+                @if (myCompanies && myCompanies.length === 0) {
                   <div class="d-flex justify-content-between ps-3 pe-3 mb-1" i18n="@@userDetail.myCompanies.noCompanies">
                 <div>No companies</div>
               </div>

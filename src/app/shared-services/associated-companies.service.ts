@@ -29,10 +29,10 @@ export class AssociatedCompaniesService extends GeneralSifrantService<ApiProduct
   }
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiProductCompany>> {
-    let limit = params && params.limit ? params.limit : this.limit()
-    let tmp = this.productController.getProduct(this.productId).pipe(
+    const limit = params && params.limit ? params.limit : this.limit()
+    const tmp = this.productController.getProduct(this.productId).pipe(
       map(resp => {
-        let data = resp.data
+        const data = resp.data
 
         /*let associatedCompanies = [];
         let buyers = [];
@@ -65,7 +65,7 @@ export class AssociatedCompaniesService extends GeneralSifrantService<ApiProduct
           results = associatedCompanies;
         }*/
 
-        let results = data.associatedCompanies.filter(c => !this.type || c.type == this.type)
+        const results = data.associatedCompanies.filter(c => !this.type || c.type == this.type)
 
         return {
           results: results,
@@ -80,7 +80,7 @@ export class AssociatedCompaniesService extends GeneralSifrantService<ApiProduct
   }
 
   public placeholder(): string {
-    let placeholder = $localize`:@@associatedCompaniesService.input.placehoder:Select client`;
+    const placeholder = $localize`:@@associatedCompaniesService.input.placehoder:Select client`;
     return placeholder;
   }
 

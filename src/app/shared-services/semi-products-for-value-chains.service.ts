@@ -16,7 +16,7 @@ export class SemiProductsForValueChainsService extends GeneralSifrantService<Api
     private codebookService: SemiProductControllerService,
     private codebookTranslations: CodebookTranslations,
 
-    private valueChainIdList?: Array<number>
+    private valueChainIdList?: number[]
   ) {
     super();
   }

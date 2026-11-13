@@ -14,13 +14,13 @@
   <div class="col-3 align-items-end" style="padding-right: 2rem;">
     <button class="bg-transparent border-0 shadow-none float-end px-0"
       (click)="toggleField()">
-      @if (this.hideField$.value==true) {
+      @if (this.hideField$.value===true) {
         <fa-icon
           class="btn-icon-invisible"
           [icon]="faEyeSlash">
         </fa-icon>
       }
-      @if (this.hideField$.value==false) {
+      @if (this.hideField$.value===false) {
         <fa-icon
           class="btn-icon-visible"
           [icon]="faEye">

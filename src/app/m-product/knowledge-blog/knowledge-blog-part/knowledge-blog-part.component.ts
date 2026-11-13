@@ -28,8 +28,8 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
   @Input()
   form: UntypedFormGroup;
   listManager = null;
-  title: string = "";
-  currentType: string = "";
+  title = "";
+  currentType = "";
 
   tempLink = this.router.url.substr(0, this.router.url.lastIndexOf("/"));
   goToLink: string = this.tempLink.substr(0, this.tempLink.lastIndexOf("/"));
@@ -38,7 +38,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
   knowledgeBlogId = this.route.snapshot.params.knowledgeBlogId;
   type = this.route.snapshot.params.type;
   productId = this.route.snapshot.params.id;
-  showPage: boolean = false;
+  showPage = false;
 
   constructor(
     private productController: ProductControllerService,
@@ -55,7 +55,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
   }
 
 
-  get changed(): Boolean {
+  get changed(): boolean {
     return this.form.dirty
   }
 
@@ -72,8 +72,8 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
 
     if (this.knowledgeBlogId) {
       this.showPage = true;
-      let resp = await this.productController.getProductKnowledgeBlog(this.knowledgeBlogId).pipe(take(1)).toPromise();
-      let knowledgeBlogData = resp.data;
+      const resp = await this.productController.getProductKnowledgeBlog(this.knowledgeBlogId).pipe(take(1)).toPromise();
+      const knowledgeBlogData = resp.data;
       this.form = generateFormFromMetadata(ApiKnowledgeBlogPart.formMetadata(), knowledgeBlogData);
     } else {
       this.form = generateFormFromMetadata(ApiKnowledgeBlogPart.formMetadata(), {});
@@ -98,13 +98,13 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
   }
 
   static CreateEmptyObject(): ApiDocument {
-    let obj = ApiDocument.formMetadata();
+    const obj = ApiDocument.formMetadata();
     return defaultEmptyObject(obj) as ApiDocument
   }
 
   static EmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      let f = new UntypedFormControl(KnowledgeBlogPartComponent.CreateEmptyObject())
+      const f = new UntypedFormControl(KnowledgeBlogPartComponent.CreateEmptyObject())
       return f
     }
   }
@@ -129,7 +129,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
         this.globalEventsManager.showLoading(true);
         let data = this.form.value
         data = { type: this.currentType as ApiKnowledgeBlog.TypeEnum, ...data, id: this.knowledgeBlogId };
-        let res = await this.productController.updateProductKnowledgeBlog(data).pipe(take(1)).toPromise()
+        const res = await this.productController.updateProductKnowledgeBlog(data).pipe(take(1)).toPromise()
         if (res && res.status === 'OK') {
           this.form.markAsPristine();
           this.goBack();
@@ -145,7 +145,7 @@ export class KnowledgeBlogPartComponent extends ComponentCanDeactivate implement
         this.globalEventsManager.showLoading(true);
         let data = this.form.value
         data = { type: this.currentType as ApiKnowledgeBlog.TypeEnum, ...data };
-        let res = await this.productController.addProductKnowledgeBlog(this.productId, data).pipe(take(1)).toPromise()
+        const res = await this.productController.addProductKnowledgeBlog(this.productId, data).pipe(take(1)).toPromise()
         if (res && res.status === 'OK') {
           this.form.markAsPristine();
           this.goBack();

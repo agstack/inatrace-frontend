@@ -228,7 +228,7 @@
                   @if (item.orderType === 'PURCHASE_ORDER') {
                     <span>{{ item.identifier }} ({{ item.producerUserCustomer.name }} {{ item.producerUserCustomer.surname }})</span>
                   }
-                  @if (item.orderType != 'PURCHASE_ORDER') {
+                  @if (item.orderType !== 'PURCHASE_ORDER') {
                     <span>{{ item.lotPrefix }} {{ item.identifier }} {{ item.internalLotNumber }}</span>
                     @if (item.qrCodeTag) {
                       <span

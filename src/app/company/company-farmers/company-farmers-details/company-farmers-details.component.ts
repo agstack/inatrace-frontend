@@ -88,7 +88,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
 
   farmerIdPing$ = new BehaviorSubject<number>(this.route.snapshot.params.id);
   productTypesForm = new UntypedFormControl(null);
-  productTypes: Array<ApiProductType> = [];
+  productTypes: ApiProductType[] = [];
   productTypesCodebook: CompanyProductTypesService;
   selectedProductTypesForm = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
@@ -253,7 +253,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     this.companyId = this.company.id;
 
     switch (action) {
-      case 'new':
+      case 'new': {
         this.title = $localize`:@@collectorDetail.newFarmer.title:New farmer`;
         this.update = false;
         // this code sets the default product type, when only 1 is available
@@ -264,7 +264,8 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
           }
         }
         break;
-      case 'update':
+      }
+      case 'update': {
         this.title = $localize`:@@collectorDetail.editFarmer.title:Edit farmer`;
         this.update = true;
         const uc = await this.companyService.getUserCustomer(this.route.snapshot.params.id).pipe(first()).toPromise();
@@ -273,6 +274,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
           this.productTypes = uc.data.productTypes;
         }
         break;
+      }
       default:
         throw Error('Wrong action!');
     }
@@ -564,7 +566,7 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     return result === 'ok';
   }
 
-  async save(stayOnPage: boolean = false) {
+  async save(stayOnPage = false) {
 
     this.submitted = true;
 

@@ -27,7 +27,7 @@ export class MessageModalComponent implements OnInit {
     public message: string;
 
     @Input()
-    public buttons: Array<MessageResultType> = ['cancel', 'ok'];
+    public buttons: MessageResultType[] = ['cancel', 'ok'];
 
     @Input()
     public focusButton: MessageResultType = 'ok';
@@ -36,7 +36,7 @@ export class MessageModalComponent implements OnInit {
      * Show close (x) button at top left
      */
     @Input()
-    public dismissable: boolean = true;
+    public dismissable = true;
 
     @Input()
     buttonTitles: Partial<MessageButtonStringDict> = this.messageLabels.buttons;
@@ -46,7 +46,7 @@ export class MessageModalComponent implements OnInit {
 
     faTimes = faTimes;
 
-    icons: { [key in MessageType]?: IconDefinition } = {
+    icons: Partial<Record<MessageType, IconDefinition>> = {
         info: faInfoCircle,
         question: faQuestionCircle,
         warning: faExclamationTriangle,

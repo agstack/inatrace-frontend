@@ -43,12 +43,12 @@ export class RegisterComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.registerForm.controls; }
 
-  submitted: boolean = false
+  submitted = false
   onSubmit() {
     this._registerErrorStatus$.next("");
     this.submitted = true
     if (!this.registerForm.invalid) {
-      let sub = this.userController.createUser(this.registerForm.value)
+      const sub = this.userController.createUser(this.registerForm.value)
         .subscribe(val => {
           this.router.navigate(['/account-activation']);
           sub.unsubscribe()

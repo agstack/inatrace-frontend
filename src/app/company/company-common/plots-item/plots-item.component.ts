@@ -45,7 +45,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
 
   readonly = false;
 
-  plotCoordinates: Array<ApiPlotCoordinate> = [];
+  plotCoordinates: ApiPlotCoordinate[] = [];
 
   plotShown = true;
   showPlotSubject = new Subject<boolean>();
@@ -136,7 +136,7 @@ export class PlotsItemComponent extends GenericEditableItemComponent<ApiPlot> im
     }
   }
 
-  updateFormCoordinates(coordinates: Array<ApiPlotCoordinate>) {
+  updateFormCoordinates(coordinates: ApiPlotCoordinate[]) {
     const coordinatesFormArray = this.form.get('coordinates') as UntypedFormArray;
     coordinatesFormArray.clear();
 

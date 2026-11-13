@@ -165,8 +165,8 @@ export class BeycoOfferListComponent implements OnInit, OnDestroy {
     return this.fb.group({
       title: [coffee?.coffee.name, { disabled: true }],
       name: [coffee?.coffee.name, Validators.required],
-      quantity: [coffee?.coffee.quantity, [Validators.required, Validators.min(0), Validators.max(999999999999999999)]],
-      price: [coffee?.price, [Validators.required, Validators.min(0), Validators.max(999999999999999999)]],
+      quantity: [coffee?.coffee.quantity, [Validators.required, Validators.min(0), Validators.max(Number.MAX_SAFE_INTEGER)]],
+      price: [coffee?.price, [Validators.required, Validators.min(0), Validators.max(Number.MAX_SAFE_INTEGER)]],
       priceUnit: [coffee?.priceUnit, Validators.required],
       currency: [coffee?.currency, Validators.required],
       harvestAt: [coffee?.coffee.harvestAt, Validators.required],

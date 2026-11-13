@@ -15,17 +15,17 @@ export class RedirectClearCacheComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let stockUrlTempl = 'product-labels/([0-9]+)/stock';
-    let stakeholdersUrlTempl = 'product-labels/([0-9]+)/stakeholders';
+    const stockUrlTempl = 'product-labels/([0-9]+)/stock';
+    const stakeholdersUrlTempl = 'product-labels/([0-9]+)/stakeholders';
     if ((Array.isArray(this.router.url.match(stockUrlTempl)) && "/" + this.router.url.match(stockUrlTempl)[0] == this.router.url)) {
       localStorage.setItem('token', 'clear-cache');
-      let urlArray = this.router.url.split("/");
+      const urlArray = this.router.url.split("/");
       urlArray[0] = "/";
       urlArray.push("purchases");
       this.router.navigate(urlArray);
     } else if ((Array.isArray(this.router.url.match(stakeholdersUrlTempl)) && "/" + this.router.url.match(stakeholdersUrlTempl)[0] == this.router.url)) {
       localStorage.setItem('token', 'clear-cache');
-      let urlArray = this.router.url.split("/");
+      const urlArray = this.router.url.split("/");
       urlArray[0] = "/";
       urlArray.push("value-chain");
       this.router.navigate(urlArray);

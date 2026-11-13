@@ -23,10 +23,10 @@
           @if (!selectPlotType) {
             <div class="af-row mt-2">
               <div class="af-c12">
-                @if (mapEditable && plotType == 'boundaries') {
+                @if (mapEditable && plotType === 'boundaries') {
                   <button class="btn me-2" (click)="showHidePlot()" i18n="@@plotsItem.action.showHidePlotArea">Show/hide plot area</button>
                 }
-                @if (mapEditable && plotType == 'boundaries') {
+                @if (mapEditable && plotType === 'boundaries') {
                   <button class="btn me-2" [disabled]="!plotCoordinates?.length" (click)="undoLastPoint()" i18n="@@plotsItem.action.undoLastPoint">Undo last point</button>
                 }
                 @if (mapEditable) {
@@ -98,7 +98,7 @@
                   i18n-label="@@collectorDetail.textinput.numberOfPlants.label"
                   i18n-placeholder="@@collectorDetail.textinput.numberOfPlants.placeholder">
                 </textinput>
-                @if (plotType == 'boundaries' || null) {
+                @if (plotType === 'boundaries' || null) {
                   <textinput
                     readOnly="true"
                     [form]="$any(this.form.get('size'))"
@@ -109,7 +109,7 @@
                     i18n-placeholder="@@collectorDetail.textinput.size.placeholder">
                   </textinput>
                 }
-                @if (plotType == 'boundaries' || null) {
+                @if (plotType === 'boundaries' || null) {
                   <textinput
                     readOnly="true"
                     [form]="$any(this.form.get('unit'))"

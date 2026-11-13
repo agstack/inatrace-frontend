@@ -1,4 +1,4 @@
-import { Component, Host, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Host, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ContentsSectionDirective } from '../contents-section.directive';
@@ -16,7 +16,7 @@ import { constants } from 'buffer';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class ContentSectionComponent implements OnInit, OnDestroy {
+export class ContentSectionComponent implements OnInit, OnDestroy, OnChanges {
     @Input() title = ""
 
     @Input() scrollId = ''
@@ -129,6 +129,7 @@ export class ContentSectionComponent implements OnInit, OnDestroy {
         // Default (best browser performance): use a margin-top of 0 and position fixed while the user
         // is scrolling.
         // Fallback, when using a custom container: use a calculated margin to simulate a fixed position.
+        // eslint-disable-next-line no-constant-condition
         if (false /*&& !this.scrollingView*/) {
             this.marginTop = '0px';
             this.sticky = true;

@@ -210,7 +210,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
         this.title = $localize`:@@collectorDetail.newCollector.title:New collector`;
         this.update = false;
         break;
-      case 'update':
+      case 'update': {
         this.title = $localize`:@@collectorDetail.editCollector.title:Edit collector`;
         this.update = true;
         const uc = await this.companyService.getUserCustomer(this.route.snapshot.params.id).pipe(first()).toPromise();
@@ -218,6 +218,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
           this.collector = uc.data;
         }
         break;
+      }
       default:
         throw Error('Wrong action!');
     }

@@ -28,15 +28,15 @@ export class CompanyFarmersImportComponent implements OnInit {
 
   faFileExcel = faFileExcel;
   
-  duplicates: Array<ApiUserCustomer> = [];
+  duplicates: ApiUserCustomer[] = [];
 
-  validationErrors: Array<ApiUserCustomerImportRowValidationError> = [];
+  validationErrors: ApiUserCustomerImportRowValidationError[] = [];
 
   importInProgress = false;
   duplicateInProgress = false;
   private importedDocumentId: number;
   selectionDocumentId: number;
-  koboSheets: Array<{id: string, name: string, headers: string[], selected: string}> = [];
+  koboSheets: {id: string, name: string, headers: string[], selected: string}[] = [];
   private koboSelections: string[] = [];
 
   farmerImportTemplateHref = '';

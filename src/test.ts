@@ -1,3 +1,4 @@
+/// <reference types="@angular/localize/init" />
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files.
 
 // Tests run in Angular's development mode by default. The upgrade to Angular 21

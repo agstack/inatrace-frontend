@@ -25,7 +25,7 @@ export class CheckboxGroupMultiChoiceComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    useForm: boolean = false;
+    useForm = false;
 
     _form = null;
 
@@ -134,9 +134,9 @@ export class CheckboxGroupMultiChoiceComponent implements OnInit, OnDestroy {
             if (this.useForm && this.form) {
                 this.form.setValue(this.codebookService.isEnumFormControl() ? selection.id : selection)
             } else {
-                let pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
+                const pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
                 if (pos >= 0) return
-                let data = this.codebookService.isEnumFormControl()
+                const data = this.codebookService.isEnumFormControl()
                     ? selection.id
                     : selection;
                 this.formArray.push(new UntypedFormControl(data))
@@ -146,7 +146,7 @@ export class CheckboxGroupMultiChoiceComponent implements OnInit, OnDestroy {
             if (this.useForm && this.form) {
                 this.form.setValue(null)   // ALEN: prej je bilo "" - mora biti null
             } else {
-                let pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
+                const pos = this.formArray.value.findIndex(x => (this.codebookService.isEnumFormControl() ? x : x.id) === selection.id)
                 if (pos < 0) return
                 this.formArray.removeAt(pos)
             }

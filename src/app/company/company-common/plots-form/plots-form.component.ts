@@ -23,10 +23,10 @@ import {
 })
 export class PlotsFormComponent implements OnInit {
 
-  plotCoordinates: Array<ApiPlotCoordinate> = [];
+  plotCoordinates: ApiPlotCoordinate[] = [];
 
-  plots: Array<ApiPlot> = [];
-  productTypes: Array<ApiProductType> = [];
+  plots: ApiPlot[] = [];
+  productTypes: ApiProductType[] = [];
   plotCoordinatesManager: PlotCoordinatesManagerService = new PlotCoordinatesManagerService();
 
   pin: ApiPlotCoordinate;
@@ -116,7 +116,7 @@ export class PlotsFormComponent implements OnInit {
     );
   }
 
-  updateLonLat(coordinates: Array<ApiPlotCoordinate>) {
+  updateLonLat(coordinates: ApiPlotCoordinate[]) {
     if (coordinates) {
       this.form.get('location.latitude').setValue(coordinates[0].latitude);
       this.form.get('location.longitude').setValue(coordinates[0].longitude);
@@ -133,7 +133,7 @@ export class PlotsFormComponent implements OnInit {
   }
 
   updateFormGeoId(apiPlot: ApiPlot) {
-    const currentPlotsValue = this.form.get('plots').value as Array<ApiPlot>;
+    const currentPlotsValue = this.form.get('plots').value as ApiPlot[];
     currentPlotsValue.forEach(plot => {
       if (plot.id === apiPlot.id) {
         plot.geoId = apiPlot.geoId;

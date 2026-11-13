@@ -98,7 +98,7 @@
                 Delete
               </a>
                   }
-                  @if (orderType == 'PLACED' && order.qrCodeTag) {
+                  @if (orderType === 'PLACED' && order.qrCodeTag) {
                     <a i18n="@@productLabelPurchaseOrder.tableCol.qr"
                       (click)="openQRCodes(order)"
                       class="company-action"
@@ -106,7 +106,7 @@
                 QR
               </a>
                   }
-                  @if (orderType == 'PLACED') {
+                  @if (orderType === 'PLACED') {
                     <a i18n="@@productLabelPurchaseOrder.tableCol.exportGeoData"
                       (click)="exportGeoData(order)"
                       class="company-action"
@@ -121,7 +121,7 @@
         </tbody>
       </table>
     }
-    @if (orders && orders.items && orders.items.length == 0) {
+    @if (orders && orders.items && orders.items.length === 0) {
       <div class="no-list-results" i18n="@@productLabelPurchaseOrder.noOrders">
       No orders found
     </div>

@@ -451,10 +451,10 @@ export const codeToDocumentList: KeyFieldDescription[] = [
 
 
 
-export var codeToFieldInfo: { [key: string]: KeyFieldDescription } = {}
+export const codeToFieldInfo: Record<string, KeyFieldDescription> = {}
 codeToFieldInfoList.forEach(x => codeToFieldInfo[x.id] = x)
 
-export var codeToDocumentInfo: { [key: string]: KeyFieldDescription } = {}
+export const codeToDocumentInfo: Record<string, KeyFieldDescription> = {}
 codeToDocumentList.forEach(x => codeToDocumentInfo[x.id] = x)
 
 @Injectable({

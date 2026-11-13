@@ -16,7 +16,7 @@ export class ResultSorterComponent implements OnInit {
     sortOptions: SortOption[] = []
 
     @Input()
-    defaultSortingIndex: number = 0;
+    defaultSortingIndex = 0;
 
     @Input()
     defaultSortOrder: SortOrder = 'ASC';
@@ -51,7 +51,7 @@ export class ResultSorterComponent implements OnInit {
     }
 
     emitState() {
-        let state = {
+        const state = {
             key: this.sortOptions[this.oznacen].key,
             sortOrder: this.sortOrder,
             checked: this.cbChecked ? this.cbChecked.value : null

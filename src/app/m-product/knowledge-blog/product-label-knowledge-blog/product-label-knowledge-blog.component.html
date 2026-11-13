@@ -51,12 +51,12 @@
             @if (blogs && blogs.items && blogs.items.length> 0) {
               <table class="af-table">
                 <thead>
-                  <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
                 </thead>
                 <tbody>
                   @for (blog of blogs.items; track blog) {
                     <tr>
-                      <td scope="row" [attr.data-label]="sortOptions[0].name"><span>{{blog.title}}</span></td>
+                      <td [attr.data-label]="sortOptions[0].name"><span>{{blog.title}}</span></td>
                       <td [attr.data-label]="sortOptions[1].name"><span>{{blog.date}}</span></td>
                       <td [attr.data-label]="sortOptions[2].name"><span>{{blog.type}}</span></td>
                       <td [attr.data-label]="sortOptions[3].name">
@@ -86,7 +86,7 @@
             </tbody>
           </table>
         }
-        @if (blogs && blogs.items && blogs.items.length == 0) {
+        @if (blogs && blogs.items && blogs.items.length === 0) {
           <div class="no-list-results" i18n="@@productLabelKnowledgeBlog.noFairnessItems">
               No items found
             </div>

@@ -73,7 +73,7 @@ export class CompanyDetailProcessingActionsDetailComponent extends CompanyDetail
 
   companyValueChainsCodebook: CompanyValueChainsService;
   valueChainsForm = new UntypedFormControl(null);
-  valueChains: Array<ApiValueChain> = [];
+  valueChains: ApiValueChain[] = [];
   selectedCompanyValueChainsControl = new UntypedFormControl(null, [ListNotEmptyValidator()]);
 
   languages = ['EN', 'DE', 'RW', 'ES'];

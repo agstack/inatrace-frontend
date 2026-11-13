@@ -78,13 +78,13 @@
             @if (users && users.items && users.items.length> 0) {
               <table class="af-table">
                 <thead>
-                  <tr scope="col" result-sorter [sortOptions]="sortOptions"
+                  <tr result-sorter [sortOptions]="sortOptions"
                   (sortByKey)="changeSort($event)"></tr>
                 </thead>
                 <tbody>
                   @for (user of users.items; track user) {
                     <tr>
-                      <td class="limit-chars" scope="row" [attr.data-label]="sortOptions[0].name"><span>{{user.name}}</span></td>
+                      <td class="limit-chars" [attr.data-label]="sortOptions[0].name"><span>{{user.name}}</span></td>
                       <td class="limit-chars" [attr.data-label]="sortOptions[1].name"><span>{{user.surname}}</span></td>
                       <td class="limit-chars" [attr.data-label]="sortOptions[2].name"><span>{{user.email}}</span></td>
                       <td [attr.data-label]="sortOptions[3].name"><span>{{user.role}}</span></td>
@@ -97,14 +97,14 @@
                           [class.enabled-action]="true">Edit</a>
                           @if (user.status !== 'UNCONFIRMED') {
                             <a i18n="@@userList.tableCol.activate"
-                              (click)="user.status != 'ACTIVE' && activate(user.id)"
+                              (click)="user.status !== 'ACTIVE' && activate(user.id)"
                               class="user-action"
-                              [class.enabled-action]="user.status != 'ACTIVE'"
+                              [class.enabled-action]="user.status !== 'ACTIVE'"
                             [class.disabled-action]="user.status === 'ACTIVE'">Activate</a>
                             <a i18n="@@userList.tableCol.deactivate"
-                              (click)="user.status != 'DEACTIVATED' && deactivate(user.id)"
+                              (click)="user.status !== 'DEACTIVATED' && deactivate(user.id)"
                               class="user-action"
-                              [class.enabled-action]="user.status != 'DEACTIVATED'"
+                              [class.enabled-action]="user.status !== 'DEACTIVATED'"
                             [class.disabled-action]="user.status === 'DEACTIVATED' || isRegionalAdmin">Deactivate</a>
                             @if (isSystemAdmin && user.status === 'ACTIVE') {
                               @if (user.role === 'USER') {
@@ -134,7 +134,7 @@
                 </tbody>
               </table>
             }
-            @if (users && users.items && users.items.length == 0) {
+            @if (users && users.items && users.items.length === 0) {
               <div class="no-list-results" i18n="@@userList.noUsers">
               No users
             </div>
@@ -161,7 +161,7 @@
     </div>
     }
 
-    @if (!!listErrorStatus$.value && listErrorStatus$.value != 'UNAUTHORIZED') {
+    @if (!!listErrorStatus$.value && listErrorStatus$.value !== 'UNAUTHORIZED') {
       <div i18n="@@userList.somethingWentWrong">
       Something went wrong while loading the users.
     </div>

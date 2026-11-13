@@ -16,7 +16,7 @@
         @if (knowledgeBlogData.documents) {
           <div class="list-block">
             @for (item of knowledgeBlogData.documents; track item) {
-              <li [ngClass]="item.contentType == 'application/pdf' ? 'back-img-pdf' : 'back-img-jpg'">
+              <li [ngClass]="item.contentType === 'application/pdf' ? 'back-img-pdf' : 'back-img-jpg'">
                 @if (item.storageKey) {
                   <a class="content-text" href="/api/public/document/{{item.storageKey}}" target="_blank">{{item.name}}</a>
                 }

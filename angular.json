@@ -32,7 +32,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": {
               "base": "dist",
@@ -40,6 +40,7 @@
             },
             "index": "src/index.html",
             "polyfills": [
+              "@angular/localize/init",
               "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.app.json",
@@ -80,8 +81,36 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "."
-              ]
-            }
+              ],
+              "sass": {
+                "silenceDeprecations": [
+                  "import",
+                  "if-function",
+                  "global-builtin",
+                  "color-functions",
+                  "slash-div"
+                ]
+              }
+            },
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "lodash/cloneDeep",
+              "mapbox-gl",
+              "qrcode",
+              "file-saver",
+              "object-assign",
+              "rbush",
+              "earcut",
+              "geojson-rbush",
+              "deep-equal",
+              "geojson-equality",
+              "density-clustering",
+              "skmeans",
+              "polygon-clipping",
+              "turf-jsts",
+              "point-in-polygon",
+              "concaveman"
+            ]
           },
           "configurations": {
             "production": {
@@ -120,7 +149,7 @@
           "defaultConfiguration": ""
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "inatrace-fe:build"
           },
@@ -134,16 +163,19 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "inatrace-fe:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "@angular/localize/init",
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
@@ -154,7 +186,21 @@
             ],
             "scripts": [
               "src/assets/env.template.js"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "sass": {
+                "silenceDeprecations": [
+                  "import",
+                  "if-function",
+                  "global-builtin",
+                  "color-functions",
+                  "slash-div"
+                ]
+              },
+              "includePaths": [
+                "."
+              ]
+            }
           }
         },
         "e2e": {
@@ -167,6 +213,15 @@
             "production": {
               "devServerTarget": "inatrace-fe:serve:production"
             }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
@@ -197,5 +252,10 @@
     "@schematics/angular:resolver": {
       "typeSeparator": "."
     }
+  },
+  "cli": {
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

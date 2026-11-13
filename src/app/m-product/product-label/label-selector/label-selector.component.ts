@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { faChevronLeft, faChevronRight, faPlus, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ApiProductLabelGet } from 'src/api/model/apiProductLabelGet';
@@ -13,7 +13,7 @@ import { UntypedFormControl } from '@angular/forms';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class LabelSelectorComponent implements OnInit {
+export class LabelSelectorComponent implements OnInit, OnDestroy {
 
   appName: string = environment.appName;
   qrCodeSize = 110;
@@ -43,7 +43,7 @@ export class LabelSelectorComponent implements OnInit {
   currentLabelForm: UntypedFormControl;
 
   @Input()
-  changed: Boolean;
+  changed: boolean;
 
   @Input()
   editable = false;
@@ -78,7 +78,7 @@ export class LabelSelectorComponent implements OnInit {
   selectItem(event) {
     if (!event) return;
     let label = event.label
-    let preventEmit = event.preventEmit
+    const preventEmit = event.preventEmit
     if (!label) label = this.currentLabel;
     this.currentLabel = label;
     this.selected = {label: label, selected: event.selected };
@@ -134,13 +134,13 @@ export class LabelSelectorComponent implements OnInit {
 
   delete(label) {
     if(!label) return;
-    let position = this.labels.findIndex(x => x.id === label.id)
+    const position = this.labels.findIndex(x => x.id === label.id)
     this.onDelete.next({label, position})
   }
 
   titleChange(label) {
     if(!label) return;
-    let position = this.labels.findIndex(x => x.id === label.id);
+    const position = this.labels.findIndex(x => x.id === label.id);
     this.onTitleChange.next({ label, position });
   }
 
@@ -159,7 +159,7 @@ export class LabelSelectorComponent implements OnInit {
           }
           return;
         }
-        let item = this.labels.find(x => x.id = val.id)
+        const item = this.labels.find(x => x.id = val.id)
         if(item) {
           if (val.selected != null) this.selectItem({ label: item, preventEmit: val.preventEmit, selected: val.selected })
           else this.selectItem({ label: item, preventEmit: val.preventEmit })

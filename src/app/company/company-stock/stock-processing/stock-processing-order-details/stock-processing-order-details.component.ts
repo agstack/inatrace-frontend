@@ -200,8 +200,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
     if (this.totalInputQuantity) {
 
-      let expectedOutputQuantity;
-      expectedOutputQuantity = this.totalInputQuantity * this.selectedProcAction.estimatedOutputQuantityPerUnit;
+      const expectedOutputQuantity = this.totalInputQuantity * this.selectedProcAction.estimatedOutputQuantityPerUnit;
 
       this.totalOutQuantityRangeLow = Number(expectedOutputQuantity * 0.8);
       this.totalOutQuantityRangeHigh = Math.min(Number(expectedOutputQuantity * 1.2), this.totalInputQuantity);

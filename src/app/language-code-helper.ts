@@ -54,8 +54,7 @@ export abstract class LanguageCodeHelper {
 
     if (storedLocaleId == null) {
       let partialLocaleMatch = null;
-      // tslint:disable-next-line:forin
-      for (const id in LanguageCodeHelper.implementedLocales) {
+           for (const id in LanguageCodeHelper.implementedLocales) {
         const implemetedLocaleId = LanguageCodeHelper.implementedLocales[id];
 
         // Check for stored locale in local storage

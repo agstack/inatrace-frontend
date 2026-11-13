@@ -14,20 +14,20 @@
             <div>
               @if (contentObject?.document?.storageKey) {
                 <a (click)="onDownload(); $event.stopPropagation()">
-                  @if (category == 'MEET_THE_FARMER') {
+                  @if (category === 'MEET_THE_FARMER') {
                     <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faUser" size="1x"></fa-icon>
                   }
-                  @if (category == 'PRODUCTION_RECORD') {
+                  @if (category === 'PRODUCTION_RECORD') {
                     <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faImage" size="1x"></fa-icon>
                   }
                 </a>
               }
-              @if (category == 'VIDEO') {
+              @if (category === 'VIDEO') {
                 <span>
                   <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faYoutube" size="1x"></fa-icon>
                 </span>
               }
-              {{category == 'MEET_THE_FARMER' ? contentObject.name : contentObject.description}}
+              {{category === 'MEET_THE_FARMER' ? contentObject.name : contentObject.description}}
             </div>
           }
         </div>
@@ -40,7 +40,7 @@
         <subform-form>
           <h4 class="sp-subform-title">{{title}}
           </h4>
-          @if (category == 'MEET_THE_FARMER') {
+          @if (category === 'MEET_THE_FARMER') {
             <textinput
               label="Farmer name"
               [form]="form.get('name')"
@@ -85,7 +85,7 @@
               }
             </textinput>
           }
-          @if (category == 'PRODUCTION_RECORD') {
+          @if (category === 'PRODUCTION_RECORD') {
             <textinput
               label="Description"
               [form]="form.get('description')"
@@ -109,7 +109,7 @@
               }
             </textinput>
           }
-          @if (category == 'VIDEO') {
+          @if (category === 'VIDEO') {
             <textinput
               label="Video description"
               [form]="form.get('description')"
@@ -133,7 +133,7 @@
               }
             </textinput>
           }
-          @if (category == 'MEET_THE_FARMER') {
+          @if (category === 'MEET_THE_FARMER') {
             <attachment-uploader
               rootImageUrl="{{rootImageUrl}}"
               allowedMimeType="[image/png', 'image/jpeg']"
@@ -166,7 +166,7 @@
               </attachment-uploader-errors>
             </attachment-uploader>
           }
-          @if (category == 'PRODUCTION_RECORD') {
+          @if (category === 'PRODUCTION_RECORD') {
             <attachment-uploader
               rootImageUrl="{{rootImageUrl}}"
               allowedMimeType="[image/png', 'image/jpeg']"
@@ -199,7 +199,7 @@
               </attachment-uploader-errors>
             </attachment-uploader>
           }
-          @if (category == 'VIDEO') {
+          @if (category === 'VIDEO') {
             <textinput
               label="Link"
               [form]="form.get('link')"
@@ -222,7 +222,7 @@
               }
             </textinput>
           }
-          @if (category == 'MEET_THE_FARMER') {
+          @if (category === 'MEET_THE_FARMER') {
             <textinput
               label="Quote"
               [form]="form.get('quote')"

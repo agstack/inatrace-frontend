@@ -325,7 +325,7 @@
                     @for (item of
                       companyDetailForm.get('documents')?.controls; track item; let i = $index) {
                       <div>
-                        @if (!item || !item.value || !item.value.category || item.value.category == 'VIDEO') {
+                        @if (!item || !item.value || !item.value.category || item.value.category === 'VIDEO') {
                           <app-company-document-item
                             title="Video"
                             i18n-title="@@companyDetail.list-editor.videos.title"
@@ -505,7 +505,7 @@
                   @for (item of
                     companyDetailForm.get('documents')?.controls; track item; let i = $index) {
                     <div>
-                      @if (!item || !item.value || !item.value.category || item.value.category == 'PRODUCTION_RECORD') {
+                      @if (!item || !item.value || !item.value.category || item.value.category === 'PRODUCTION_RECORD') {
                         <app-company-document-item
                           title="Production record"
                           i18n-title="@@companyDetail.list-editor.productionRecord.title"
@@ -559,7 +559,7 @@
                   @for (item of
                     companyDetailForm.get('documents')?.controls; track item; let i = $index) {
                     <div>
-                      @if (!item || !item.value || !item.value.category || item.value.category == 'MEET_THE_FARMER') {
+                      @if (!item || !item.value || !item.value.category || item.value.category === 'MEET_THE_FARMER') {
                         <app-company-document-item
                           title="Meet the Farmer"
                           i18n-title="@@companyDetail.list-editor.meetTheFarmer.title"

@@ -32,7 +32,7 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
   defaultZoom = 2;
   zoomForOnePin = 10;
   bounds: any;
-  isGoogleMapsLoaded: boolean = false;
+  isGoogleMapsLoaded = false;
 
   initialBoundsAuth: any = [];
   initialBoundsOrig: any = [];
@@ -69,7 +69,7 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getStatistics();
 
-    let sub2 = this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(
+    const sub2 = this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(
       loaded => {
         if (loaded) this.isGoogleMapsLoaded = true;
       },
@@ -85,7 +85,7 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
   getStatistics() {
     this.globalEventsManager.showLoading(true);
 
-    let sub = this.productController.getProductLabel(this.id).
+    const sub = this.productController.getProductLabel(this.id).
     subscribe(lab => {
       if(lab.status == "OK") {
         this.getStatistcsData(lab.data.uuid);
@@ -96,7 +96,7 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
   }
 
   getStatistcsData(uuid: string) {
-    let sub = this.productController.getProductLabelAnalytics(uuid)
+    const sub = this.productController.getProductLabelAnalytics(uuid)
     .subscribe(stat => {
       if (stat.status == "OK") {
         this.statistics = stat.data;
@@ -118,9 +118,9 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
       Object.entries(data.authLocations).forEach(
         ([key, value]) => {
           if(key != 'unknown') {
-            let num = value;
-            let pos = key.split(':');
-            let tmp = {
+            const num = value;
+            const pos = key.split(':');
+            const tmp = {
               position: {
                 lat: parseFloat(pos[0]),
                 lng: parseFloat(pos[1])
@@ -137,9 +137,9 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
       Object.entries(data.originLocations).forEach(
         ([key, value]) => {
           if (key != 'unknown') {
-            let num = value;
-            let pos = key.split(':');
-            let tmp = {
+            const num = value;
+            const pos = key.split(':');
+            const tmp = {
               position: {
                 lat: parseFloat(pos[0]),
                 lng: parseFloat(pos[1])
@@ -156,9 +156,9 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
       Object.entries(data.visitsLocations).forEach(
         ([key, value]) => {
           if (key != 'unknown') {
-            let num = value;
-            let pos = key.split(':');
-            let tmp = {
+            const num = value;
+            const pos = key.split(':');
+            const tmp = {
               position: {
                 lat: parseFloat(pos[0]),
                 lng: parseFloat(pos[1])
@@ -181,17 +181,17 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
     if (!this.gMap) return;
     this.bounds = new google.maps.LatLngBounds()
     if(this.locationsForm.get('visitLoc').value) {
-      for (let bound of this.initialBoundsVisit) {
+      for (const bound of this.initialBoundsVisit) {
         this.bounds.extend(bound);
       }
     }
     if (this.locationsForm.get('authLoc').value) {
-      for (let bound of this.initialBoundsAuth) {
+      for (const bound of this.initialBoundsAuth) {
         this.bounds.extend(bound);
       }
     }
     if (this.locationsForm.get('origLoc').value) {
-      for (let bound of this.initialBoundsOrig) {
+      for (const bound of this.initialBoundsOrig) {
         this.bounds.extend(bound);
       }
     }
@@ -200,17 +200,17 @@ export class ProductLabelStatisticsPageComponent implements OnInit, OnDestroy {
       this.gMap.googleMap.setZoom(this.defaultZoom);
       return;
     }
-    let center = this.bounds.getCenter()
-    let offset = 0.02
-    let northEast = new google.maps.LatLng(
+    const center = this.bounds.getCenter()
+    const offset = 0.02
+    const northEast = new google.maps.LatLng(
       center.lat() + offset,
       center.lng() + offset
     )
-    let southWest = new google.maps.LatLng(
+    const southWest = new google.maps.LatLng(
       center.lat() - offset,
       center.lng() - offset
     )
-    let minBounds = new google.maps.LatLngBounds(southWest, northEast)
+    const minBounds = new google.maps.LatLngBounds(southWest, northEast)
     this.gMap.fitBounds(this.bounds.union(minBounds))
 
   }

@@ -4,6 +4,6 @@ export interface SimpleValidationScheme<T> {
         validators: ValidatorFn[];
         forceFormControl?: boolean;
         forceExpand?: boolean;
-        fields?: {[key: string]: SimpleValidationScheme<any>};
+        fields?: Record<string, SimpleValidationScheme<any>>;
         arrayElementValidators?: SimpleValidationScheme<any>;
 }

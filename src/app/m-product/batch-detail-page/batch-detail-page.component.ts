@@ -44,7 +44,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   faTrashAlt = faTrashAlt;
   gInfoWindow = null;
   gMap = null;
-  gInfoWindowText: string = "";
+  gInfoWindowText = "";
   markers: any = [];
   defaultCenter = {
     lat: 5.274054,
@@ -54,14 +54,14 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   zoomForOnePin = 10;
   bounds: any;
   initialBounds: any = [];
-  isGoogleMapsLoaded: boolean = false;
+  isGoogleMapsLoaded = false;
 
   batch: ApiProductLabelBatch = {};
 
   batchDetailForm: UntypedFormGroup;
-  submitted: boolean = false;
+  submitted = false;
   rootImageUrl: string = environment.relativeImageUploadUrlAllSizes;
-  title: string = "";
+  title = "";
 
   subs: Subscription[] = [];
 
@@ -86,7 +86,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
       this.getBatch();
       this.title = $localize`:@@batchDetail.title.edit:Edit batch`;
     }
-    let sub2 = this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(
+    const sub2 = this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(
       loaded => {
         if (loaded) this.isGoogleMapsLoaded = true;
       },
@@ -103,7 +103,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   getBatch(): void {
     this.globalEventsManager.showLoading(true);
     const id = +this.route.snapshot.paramMap.get('batchId');
-    let sub = this.productController.getProductLabelBatch(id)
+    const sub = this.productController.getProductLabelBatch(id)
       .subscribe(batch => {
         this.batch = batch.data;
 
@@ -121,7 +121,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   get mode() {
-    let id = this.route.snapshot.params.batchId;
+    const id = this.route.snapshot.params.batchId;
     return id == null ? 'create' : 'update'
   }
 
@@ -144,8 +144,8 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
     }
 
     this.prepareRequest();
-    let params = this.route.snapshot.params;
-    let res = await this.productController.updateProductLabelBatch({ ...params, ...this.batchDetailForm.value }).pipe(take(1)).toPromise()
+    const params = this.route.snapshot.params;
+    const res = await this.productController.updateProductLabelBatch({ ...params, ...this.batchDetailForm.value }).pipe(take(1)).toPromise()
     if (res && res.status == 'OK' && goBack) {
       this.batchDetailForm.markAsPristine()
       this.goBack()
@@ -165,7 +165,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
     }
 
     this.prepareRequest();
-    let res = await this.productController.createProductLabelBatch(this.batchDetailForm.value).pipe(take(1)).toPromise()
+    const res = await this.productController.createProductLabelBatch(this.batchDetailForm.value).pipe(take(1)).toPromise()
     if (res && res.status == 'OK' && goBack) {
       this.batchDetailForm.markAsPristine()
       this.goBack();
@@ -188,9 +188,9 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   prepareRequest() {
-    let pd = this.batchDetailForm.get('productionDate').value;
+    const pd = this.batchDetailForm.get('productionDate').value;
     if (pd != null) this.batchDetailForm.get('productionDate').setValue(dateISOString(pd));
-    let ed = this.batchDetailForm.get('expiryDate').value;
+    const ed = this.batchDetailForm.get('expiryDate').value;
     if (ed != null) this.batchDetailForm.get('expiryDate').setValue(dateISOString(ed));
     if (this.mode == 'create') this.batchDetailForm.get('labelId').setValue(Number(this.route.snapshot.params.labelId));
   }
@@ -201,7 +201,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   fitBounds() {
     if (this.initialBounds.length == 0) return;
     this.bounds = new google.maps.LatLngBounds()
-    for (let bound of this.initialBounds) {
+    for (const bound of this.initialBounds) {
       this.bounds.extend(bound);
     }
     if (this.bounds.isEmpty()) {
@@ -209,17 +209,17 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
       this.gMap.googleMap.setZoom(this.defaultZoom);
       return;
     }
-    let center = this.bounds.getCenter()
-    let offset = 0.02
-    let northEast = new google.maps.LatLng(
+    const center = this.bounds.getCenter()
+    const offset = 0.02
+    const northEast = new google.maps.LatLng(
       center.lat() + offset,
       center.lng() + offset
     )
-    let southWest = new google.maps.LatLng(
+    const southWest = new google.maps.LatLng(
       center.lat() - offset,
       center.lng() - offset
     )
-    let minBounds = new google.maps.LatLngBounds(southWest, northEast)
+    const minBounds = new google.maps.LatLngBounds(southWest, northEast)
     this.gMap.fitBounds(this.bounds.union(minBounds))
   }
 
@@ -238,8 +238,8 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   initializeOriginLocations(locs): void {
-    let tmp = new UntypedFormArray([]);
-    for (let loc of locs) {
+    const tmp = new UntypedFormArray([]);
+    for (const loc of locs) {
       tmp.push(this.createOrFillOriginLocationsItem(loc, false));
     };
     (this.batchDetailForm as UntypedFormGroup).setControl('locations', tmp);
@@ -248,8 +248,8 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
 
   initializeMarkers(locs): void {
     this.markers = [];
-    for (let loc of locs) {
-      let tmp = {
+    for (const loc of locs) {
+      const tmp = {
         position: {
           lat: loc.latitude,
           lng: loc.longitude
@@ -265,7 +265,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   addOriginLocations(loc) {
-    let tmp = {
+    const tmp = {
       position: loc,
       label: {
         text: ' '
@@ -288,8 +288,8 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   updateMarkerLocation(loc, index) {
     this.originLocations.at(index).get('latitude').setValue(loc.lat);
     this.originLocations.at(index).get('longitude').setValue(loc.lng);
-    let tmpCurrent = this.markers[index];
-    let tmp = {
+    const tmpCurrent = this.markers[index];
+    const tmp = {
       position: loc,
       label: tmpCurrent.label,
       infoText: tmpCurrent.infoText
@@ -299,8 +299,8 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
   }
 
   updateInfoWindow(infoText, index) {
-    let tmpCurrent = this.markers[index];
-    let tmp = {
+    const tmpCurrent = this.markers[index];
+    const tmp = {
       position: tmpCurrent.position,
       label: tmpCurrent.label,
       infoText: infoText
@@ -331,7 +331,7 @@ export class BatchDetailPageComponent implements OnInit, OnDestroy {
       title: $localize`:@@batchDetail.prefillFromProduct.title:Prefill locations from product?`,
       instructionsHtml: $localize`:@@batchDetail.prefillFromProduct.instructionsHtml:This action will replace all your current locations with product's locations`
     })
-    let confiem = await modalRef.result;
+    const confiem = await modalRef.result;
     if (confirm) {
       const productId = +this.route.snapshot.paramMap.get('id');
       this.productController.getProduct(productId).pipe(take(1))

@@ -15,21 +15,21 @@
             <span class="af-graph-bar"
               [style.height]="worldMarketPriceHeight + 'px'"
               [style.background-color]="b2cSettings.secondaryColor">
-              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.worldMarketPrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.worldMarketPrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
             </span>
           </div>
           <div class="af-graph-col">
             <span class="af-graph-bar"
               [style.height]="fairTradePriceHeight + 'px'"
               [style.background-color]="b2cSettings.secondaryColor">
-              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.fairTradePrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.fairTradePrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
             </span>
           </div>
           <div class="af-graph-col">
             <span class="af-graph-bar"
               [style.height]="productPriceHeight + 'px'"
               [style.background-color]="b2cSettings.primaryColor">
-              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.productPrice }}{{ this.b2cSettings.graphicPriceToProducer == producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
+              <span class="af-graph-bar-number">{{ this.b2cSettings.graphicPriceToProducer !== producerUnitEnum.PERCENTVALUE ? '$' : ''}}{{ this.productPrice }}{{ this.b2cSettings.graphicPriceToProducer === producerUnitEnum.PERCENTVALUE ? '%' : ''}}</span>
             </span>
           </div>
         </div>

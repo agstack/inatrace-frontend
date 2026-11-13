@@ -27,11 +27,11 @@ export class BatchesListComponent implements OnInit {
   sortingParams$ = new BehaviorSubject({ sortBy: 'name', sort: 'ASC' })
   paging$ = new BehaviorSubject<number>(1);
 
-  page: number = 0;
+  page = 0;
   pageSize = 10;
 
-  allBatches: number = 0;
-  showedBatches: number = 0;
+  allBatches = 0;
+  showedBatches = 0;
   goToLink: string = this.router.url.substr(0, this.router.url.lastIndexOf("/"));
 
   searchParams$ = combineLatest(
@@ -64,8 +64,8 @@ export class BatchesListComponent implements OnInit {
   }
 
   async setAllBatches() {
-    let labelId = this.route.snapshot.params.labelId
-    let res = await this.productController.getProductLabelBatches(labelId, 'COUNT').pipe(take(1)).toPromise();
+    const labelId = this.route.snapshot.params.labelId
+    const res = await this.productController.getProductLabelBatches(labelId, 'COUNT').pipe(take(1)).toPromise();
       if (res && res.status === 'OK' && res.data && res.data.count >= 0) {
         this.allBatches = res.data.count;
       }
@@ -83,14 +83,14 @@ export class BatchesListComponent implements OnInit {
       // distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
       tap(val => this.globalEventsManager.showLoading(true)),
       switchMap(params => {
-        let labelId = this.route.snapshot.params.labelId
+        const labelId = this.route.snapshot.params.labelId
         return this.productController.getProductLabelBatchesByMap({...params, id: labelId})
       }),
       map((resp: ApiPaginatedResponseApiProductLabelBatch) => {
         if (resp) {
           if (resp.data && resp.data.count && (this.pageSize - resp.data.count > 0)) this.showedBatches = resp.data.count;
           else {
-            let temp = resp.data.count - (this.pageSize * (this.page - 1));
+            const temp = resp.data.count - (this.pageSize * (this.page - 1));
             this.showedBatches = temp >= this.pageSize ? this.pageSize : temp;
           }
           return resp.data
@@ -101,26 +101,26 @@ export class BatchesListComponent implements OnInit {
     )
 
   createBatch() {
-    let productId = this.route.snapshot.params.id;
-    let labelId = this.route.snapshot.params.labelId;
-    let r = 'product-labels/' + productId + '/labels/' + labelId + '/batches/new';
+    const productId = this.route.snapshot.params.id;
+    const labelId = this.route.snapshot.params.labelId;
+    const r = 'product-labels/' + productId + '/labels/' + labelId + '/batches/new';
     this.router.navigate([r]);
   }
 
    editBatch(id) {
-     let productId = this.route.snapshot.params.id;
-     let labelId = this.route.snapshot.params.labelId;
+     const productId = this.route.snapshot.params.id;
+     const labelId = this.route.snapshot.params.labelId;
      this.router.navigate(['product-labels', productId, 'labels', labelId, 'batches', id]);
   }
 
   async deleteBatch(batch) {
-    let result = await this.globalEventsManager.openMessageModal({
+    const result = await this.globalEventsManager.openMessageModal({
       type: 'warning',
       message: $localize`:@@batchesList.deleteBatch.error.message:Are you sure you want to delete the batch?`,
       options: { centered: true }
     });
     if(result != "ok") return
-    let res = await this.productController.deleteProductLabelBatchByMap(batch).pipe(take(1)).toPromise();
+    const res = await this.productController.deleteProductLabelBatchByMap(batch).pipe(take(1)).toPromise();
     if(res && res.status == 'OK') {
       this.reloadPage()
     }

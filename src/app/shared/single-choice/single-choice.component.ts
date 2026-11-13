@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef, ChangeDetectionStrategy, AfterViewInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
 import { CodebookHelperService, PagedSearchResults } from 'src/interfaces/CodebookHelperService';
@@ -14,14 +14,14 @@ import { NgSelectComponent } from '@ng-select/ng-select';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class SingleChoiceComponent implements OnInit {
+export class SingleChoiceComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input()
     label: string;
 
     @Input() supplierFeedback = false;
 
     @Input()
-    forceAllInLowercase: boolean = false;
+    forceAllInLowercase = false;
 
     @Input()
     markRequired?: boolean;
@@ -62,7 +62,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     @Input()
-    allowMultiple: boolean = false;
+    allowMultiple = false;
 
     @Input()
     enumChoices?: any;
@@ -80,10 +80,10 @@ export class SingleChoiceComponent implements OnInit {
     enumPlaceholder?: string;
 
     @Input()
-    clearable: boolean = true;
+    clearable = true;
 
     @Input()
-    readonly: boolean = false;
+    readonly = false;
 
     @Input()
     headerTemplate?: TemplateRef<any>;
@@ -101,7 +101,7 @@ export class SingleChoiceComponent implements OnInit {
     forbiddenElements: (val: any) => boolean = (val: any) => false
 
     @Input()
-    showPagingInFooter: boolean = false
+    showPagingInFooter = false
 
     supplierState: string = null;
     notFoundText: string = $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
@@ -157,13 +157,13 @@ export class SingleChoiceComponent implements OnInit {
             });
         }
         if(this.iOS && this.ngSelect && this.ngSelect.element) {
-            let el = this.ngSelect.element.querySelector('.ng-placeholder')
+            const el = this.ngSelect.element.querySelector('.ng-placeholder')
             el.setAttribute('style', 'padding-left: 0.5rem');    // iOS left padding hack
         }
     }
 
     @Input()
-    useSimpleStyle: boolean = false
+    useSimpleStyle = false
 
     @Input()
     skipItemId: number = null;
@@ -172,15 +172,15 @@ export class SingleChoiceComponent implements OnInit {
     organizationId: string = null;
 
     @Input()
-    touchedOnBlur: boolean = false;
+    touchedOnBlur = false;
 
     @Output() onChange = new EventEmitter<any>();
 
     @Output() isActive = new EventEmitter<any>();
 
-    options$: Observable<Array<any>> = null;
-    options: Array<any> = []
-    allOptions: Array<any> = []
+    options$: Observable<any[]> = null;
+    options: any[] = []
+    allOptions: any[] = []
 
     keys$: Observable<string> = null
 
@@ -200,7 +200,7 @@ export class SingleChoiceComponent implements OnInit {
         return this.booleanTrue != null && this.booleanFalse != null;
     }
 
-    valueSelectedObjects$ = new BehaviorSubject<Array<any>>([]);
+    valueSelectedObjects$ = new BehaviorSubject<any[]>([]);
 
     modelChoiceSubscription = null;
     optionsSubscription = null;
@@ -234,7 +234,7 @@ export class SingleChoiceComponent implements OnInit {
             if (this.modelChoiceSubscription) this.modelChoiceSubscription.unsubscribe();
             this.modelChoiceSubscription = this.formControlInput.valueChanges.subscribe(val => {
                 if (this.codebookService.isEnumFormControl()) {
-                    let sub = this.codebookService.enumOptions().subscribe(options => {
+                    const sub = this.codebookService.enumOptions().subscribe(options => {
                         if (options) {
                             this.modelChoice = this.codebookService.enumValueToObject(val, options)
                             // sub.unsubscribe()
@@ -357,7 +357,7 @@ export class SingleChoiceComponent implements OnInit {
             distinctUntilChanged()
         ).pipe(
             map(key => {
-                let lkey = key ? key.toLocaleLowerCase() : ''
+                const lkey = key ? key.toLocaleLowerCase() : ''
                 return this.allOptions.filter(x => String(x.value).toLocaleLowerCase().indexOf(lkey) >= 0)
             }),
             startWith(this.allOptions)
@@ -371,7 +371,7 @@ export class SingleChoiceComponent implements OnInit {
             this.booleanTrue,
             this.booleanFalse
         ]
-        let val = this.formControlInput.value
+        const val = this.formControlInput.value
         if (val === true) {
             this.modelChoice = this.options[0]
         } else if (val === false) {
@@ -428,8 +428,8 @@ export class SingleChoiceComponent implements OnInit {
 
     onChangeHandler(event) {
         if (!event) return;   // handled by onClear
-        let lastValueId = this.modelChoice ? this.modelChoice.id : null
-        let newValueId = event ? event.id : null
+        const lastValueId = this.modelChoice ? this.modelChoice.id : null
+        const newValueId = event ? event.id : null
 
         if (this.formControlInput) {
             if (this.enumChoices || this.isBooleanSelector()) {
@@ -498,17 +498,17 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     isPagePrev() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         return tmp && tmp.offset > 0
     }
 
     isPageNext() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         return tmp && tmp.offset + tmp.limit < tmp.totalCount
     }
 
     onPagePrev() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         this.pagingParams$.next(
             {
                 offset: Math.max(0, tmp.offset - tmp.limit),
@@ -518,7 +518,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     onPageNext() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         this.pagingParams$.next(
             {
                 offset: Math.min(tmp.offset + tmp.limit, tmp.totalCount),

@@ -71,12 +71,12 @@
             @if (companies && companies.items && companies.items.length> 0) {
               <table class="af-table">
                 <thead>
-                  <tr scope="col" result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
                 </thead>
                 <tbody>
                   @for (company of companies.items; track company) {
                     <tr>
-                      <td scope="row" [attr.data-label]="sortOptions[0].name"><span class="limit-chars" >{{company.name}}</span></td>
+                      <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars" >{{company.name}}</span></td>
                       <td [attr.data-label]="sortOptions[1].name"><span>{{company.status}}</span></td>
                       <td [attr.data-label]="sortOptions[2].name"><span>
                         <a i18n="@@companyList.tableCol.edit"
@@ -86,16 +86,16 @@
                       Edit
                     </a>
                         <a i18n="@@companyList.tableCol.activate"
-                          (click)="company.status != 'ACTIVE' && activate(company.id)"
+                          (click)="company.status !== 'ACTIVE' && activate(company.id)"
                           class="company-action"
-                          [class.enabled-action]="company.status != 'ACTIVE'"
+                          [class.enabled-action]="company.status !== 'ACTIVE'"
                           [class.disabled-action]="company.status === 'ACTIVE'">
                       Activate
                     </a>
                         <a i18n="@@companyList.tableCol.deactivate"
-                          (click)="company.status != 'DEACTIVATED' && deactivate(company.id)"
+                          (click)="company.status !== 'DEACTIVATED' && deactivate(company.id)"
                           class="company-action"
-                          [class.enabled-action]="company.status != 'DEACTIVATED'"
+                          [class.enabled-action]="company.status !== 'DEACTIVATED'"
                           [class.disabled-action]="company.status === 'DEACTIVATED' || isRegionalAdmin">
                       Deactivate
                     </a>
@@ -113,7 +113,7 @@
               </tbody>
             </table>
           }
-          @if (companies && companies.items && companies.items.length == 0) {
+          @if (companies && companies.items && companies.items.length === 0) {
             <div class="no-list-results" i18n="@@companyList.noCompanies">
               No companies found
             </div>
@@ -141,7 +141,7 @@
     </div>
   }
 
-  @if (!!listErrorStatus$.value && listErrorStatus$.value != 'UNAUTHORIZED') {
+  @if (!!listErrorStatus$.value && listErrorStatus$.value !== 'UNAUTHORIZED') {
     <div i18n="@@companyList.somethingWentWrong">
       Something went wrong during login.
     </div>

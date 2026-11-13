@@ -26,7 +26,7 @@ export class ContentsSectionDirective implements OnInit, OnDestroy {
 
     _forms: AbstractControl[] = null
     @Input() set forms(value: AbstractControl[]) {
-        let initial = this._forms == null
+        const initial = this._forms == null
         this._forms = value;
 
         if(!initial) {
@@ -41,7 +41,7 @@ export class ContentsSectionDirective implements OnInit, OnDestroy {
 
     _errors: any[] = null
     @Input() set errors(value: any[]) {
-        let initial = this._errors == null
+        const initial = this._errors == null
         this._errors = value;
 
         if(!initial) {
@@ -113,7 +113,7 @@ export class ContentsSectionDirective implements OnInit, OnDestroy {
             })
 
             this.errorSub = this._errorSections$.subscribe(val => {
-                let error = Object.values(val).some(x => x)
+                const error = Object.values(val).some(x => x)
                 this.contents._errorReporter$.next({
                     section: this.contentsSection.anchor,
                     error: error
@@ -124,7 +124,7 @@ export class ContentsSectionDirective implements OnInit, OnDestroy {
 
     resubscribe() {
         if(this.forms || this.errors) {
-            let err = (this.forms && this.forms.some((x: AbstractControl) => x.invalid))
+            const err = (this.forms && this.forms.some((x: AbstractControl) => x.invalid))
                       || (this.errors && this.errors.some(x => !!x))
             this.contents._errorReporter$.next({
                 section: this.contentsSection.anchor,
@@ -140,7 +140,7 @@ export class ContentsSectionDirective implements OnInit, OnDestroy {
             this.errorReportSub = combineLatest(...(this.forms.map((x: AbstractControl) => x.statusChanges.pipe(startWith(x.status)))), function(...args) {
                 return [...args]
             }).subscribe(statuses => {
-                let error = statuses.some(status => status == 'INVALID')
+                const error = statuses.some(status => status == 'INVALID')
                 if(!this.isParent) {
                     this.contents._errorReporter$.next({
                         section: this.contentsSection.anchor,

@@ -56,7 +56,7 @@ export class CompanyDashboardComponent implements OnInit {
   deliveriesGraphTrunked = false;
   procPerformanceGraphTrunked = false;
 
-  companyId: number = Number(localStorage.getItem('selectedUserCompany'));
+  companyId = Number(localStorage.getItem('selectedUserCompany'));
 
   semiProductModelChoice = null;
 

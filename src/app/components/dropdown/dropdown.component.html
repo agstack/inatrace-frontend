@@ -3,10 +3,10 @@
     <li>
       <span (click)="openDropdown(i)" (mouseenter)="openDropdown(i)" (mouseleave)="leave(i)" class="sp-text sp-text--dropdown" [ngClass]="{dark: dark}">{{getTitle(dropdown)}}
         @if (arrow) {
-          <img class="sp-dropdown-arrow" src="assets/sp-dropdown-arrow.svg" />
+          <img alt="" class="sp-dropdown-arrow" src="assets/sp-dropdown-arrow.svg" />
         }
         @if (arrowBrand) {
-          <img class="sp-dropdown-arrow" src="assets/sp-dropdown-arrow-brand.svg" />
+          <img alt="" class="sp-dropdown-arrow" src="assets/sp-dropdown-arrow-brand.svg" />
         }</span>
         @if (open === i) {
           <ul class="dropdown grid-y" [ngClass]="{top: top}" (mouseenter)="registerEnter(i)" (mouseleave)="closeDropdownsWithDelay(i)">

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChildren, QueryList, TemplateRef, ViewChild, ElementRef, ViewChildren, Optional, Host, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ContentChildren, QueryList, TemplateRef, ViewChild, ElementRef, ViewChildren, Optional, Host, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 import { LinkDirective } from '../directives/link.directive';
 // import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
@@ -67,7 +67,7 @@ import { Subject } from 'rxjs/internal/Subject';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class ListEditorComponent implements OnInit {
+export class ListEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     label: string;
 
@@ -108,7 +108,7 @@ export class ListEditorComponent implements OnInit {
     listEditorManager = null;
 
     @Input()
-    disabled: boolean = false;
+    disabled = false;
 
     @Input()
     canAdd = true
@@ -122,7 +122,7 @@ export class ListEditorComponent implements OnInit {
     @ContentChildren(LinkDirective)
     links: QueryList<LinkDirective>;
 
-    open: number = -1
+    open = -1
 
     constructor(
       @Optional() @Host() public closable: ClosableComponent
@@ -304,7 +304,7 @@ export class ListEditorComponent implements OnInit {
     }
 
     get textPrazno() {
-        let emptyText = $localize`:@@listEditor.emptyText:Empty`
+        const emptyText = $localize`:@@listEditor.emptyText:Empty`
         if(this.isDisabled()) {
           return emptyText;  // Prevedljivo
         }

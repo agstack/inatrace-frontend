@@ -20,7 +20,7 @@
                 i18n="@@productLabel.title.qrLabels">QR labels
             </div>
             }
-            @if (this.action != 'labels') {
+            @if (this.action !== 'labels') {
               <div
                 class="title-page content-element--title">
                 <span i18n="@@productLabel.title.productSettings"
@@ -900,7 +900,7 @@
     [openOnValueChange]="openOnStart">
     <div class="readonly-text-data">
       @if (productForm.get('company.logo').value && productForm.get('company.logo').value.storageKey) {
-        <img
+        <img alt=""
           src="/api/common/image/{{productForm.get('company.logo').value.storageKey}}/SMALL"
           default="/api/common/image/{{productForm.get('company.logo').value.storageKey}}"
           style="width: 100%">
