@@ -500,11 +500,11 @@
           <!-- TODO: Payments -->
           <div class="af-form-row">
             <div class="af-form-block--c12">
-              <div class="af-bottom-buttons" i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.buttons">
-            <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
-            <button class="btn me-2" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder(!this.update)"><span>Save</span></button>
+              <div class="af-bottom-buttons">
+            <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.cancel">Cancel</span></button>
+            <button class="btn me-2" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder(!this.update)"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.save">Save</span></button>
             @if (this.update) {
-<button class="btn" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder()"><span>Save & Close</span></button>
+<button class="btn" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder()"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.saveAndClose">Save & Close</span></button>
 }
           </div>
             </div>

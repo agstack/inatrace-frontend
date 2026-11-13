@@ -252,12 +252,12 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
   get inputQuantityLabel() {
     if (this.actionType === 'SHIPMENT') {
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.fulfilledQuantityLabelWithUnits.label: Quantity fulfilled by supplier in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     } else {
 
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.inputQuantityLabelWithUnits.label: Input quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     }
 
@@ -272,12 +272,12 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
   get totalOutputQuantityLabel() {
     if (this.actionType === 'SHIPMENT') {
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.totalOrderedQuantityLabelWithUnits.label: Total ordered quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     } else {
 
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.totalOutputQuantityLabelWithUnits.label: Total output quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     }
 
