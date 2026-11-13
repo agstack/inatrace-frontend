@@ -3,3 +3,10 @@
     width: 100%;
   }
 }
+
+// A flex item defaults to min-width: auto, so wide page content (login form, tables) can push
+// the whole layout wider than the viewport. Let routed content shrink and scroll internally.
+:host {
+  display: block;
+  min-width: 0;
+}

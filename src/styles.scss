@@ -242,6 +242,32 @@ p {
   margin-right: 80px;
 }
 
+// Below the large breakpoint the login is a single column: let it grow with the content,
+// give the fixed logo room above the title and keep the side margins from forcing a
+// horizontal scroll on phones.
+@media (max-width: 991.98px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .login-row {
+    height: auto;
+    min-height: calc(100vh - 2rem);
+    padding-top: 1.5rem;
+  }
+
+  .login-left-inner {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .login-right-side-text {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 2rem;
+  }
+}
+
 // /////////////////////////////////////////
 // //// Button style override
 // /////////////////////////////////////////
@@ -1875,6 +1901,11 @@ animation-timing-function: ease-in;
     width: 40%;
     display: inline-block;
     vertical-align: top;
+    box-sizing: border-box;
+    padding-right: .5rem;
+    // Long labels without spaces (for example "State/Province/Region") must wrap instead of
+    // running over the value column.
+    overflow-wrap: anywhere;
     // background-color: red;
   }
 

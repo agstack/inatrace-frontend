@@ -3,17 +3,17 @@
 
   <div class="main">
     <div class="main-inside-top content-element">
-      <div class="d-flex justify-content-between content-element--row1">
+      <div class="d-flex flex-wrap justify-content-between content-element--row1 gap-2">
         <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.farmers">Farmers</div>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-solid round btn-table-new content-element--btn me-4"
+        <div class="d-flex flex-wrap justify-content-end gap-2">
+          <button class="btn btn-solid round btn-table-new content-element--btn"
             (click)="exportFarmerData()"
             i18n="@@productLabelStakeholders.button.exportFarmerData">
                         <span>Export farmer data</span>
                     </button>
           @if (isSystemOrRegionalAdmin) {
             <button
-              class="btn btn-solid round btn-table-new content-element--btn me-4"
+              class="btn btn-solid round btn-table-new content-element--btn"
               (click)="importFarmers()"
               i18n="@@companyDetail.farmers.importFarmers.button">
                         <span>+ Import farmers</span>
