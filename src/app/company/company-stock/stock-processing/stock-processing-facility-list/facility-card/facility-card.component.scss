@@ -289,101 +289,25 @@
   position: relative;
 }
 
-.af-popover {
-  &-wrapper {
-    position: absolute;
-    left: 5px;
-    background: transparent;
-    height: calc(100% - 5px);
-    width: calc(100% - 10px);
+.af-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 
-    &:hover {
-      .af-popover-content {
-        z-index: 10;
-        opacity: 1;
-        visibility: visible;
-        transform: translate(0, -5px);
-        transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-
-        ul li::after {
-          border-left-color: currentColor;
-        }
-
-        li:hover {
-          color: $theme-primary;
-        }
-      }
-    }
+  &-toggle {
+    background: $white;
+    border: 1px solid $af-card-border;
+    border-radius: 4px;
+    color: $theme-primary-text;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 6px 10px;
   }
 
-  &-content {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-
-    top: 105px;
-    transform: translate(0, 5px);
-    padding: 1.5rem;
-    width: 300px;
-    max-width: 100%;
-
-    background: #FFFFFF;
-    border: 1px solid #E0E3E7;
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.13);
-
-    // left: 60px;
-    right: 0;
-
-    // We're trying to adjust it for larger screens.
-    @include media-breakpoint-up(xl) {
-      right: calc(50% - 150px);
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-      line-height: 28px;
-      margin-bottom: 0;
-
-      li {
-        position: relative;
-        width: 100%;
-        color: $theme-primary-text;
-
-        &:hover {
-          cursor: pointer;
-        }
-
-        &:after {
-          content: "";
-          position: absolute;
-          right: 0;
-          top: 8px;
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-style: solid;
-          border-width: 5px 0 5px 5px;
-          border-color: transparent transparent transparent $theme-primary-text;
-        }
-      }
-    }
-
-    &:before {
-      position: absolute;
-      z-index: -1;
-      content: "";
-      right: calc(50% - 10px);
-      top: -8px;
-      border-style: solid;
-      border-width: 0 10px 10px 10px;
-      border-color: transparent transparent #fff transparent;
-      transition-duration: 0.3s;
-      transition-property: transform;
-    }
-  }
-
-  .popover__message {
-    text-align: center;
+  &-menu {
+    max-height: 260px;
+    min-width: 220px;
+    overflow-y: auto;
   }
 }

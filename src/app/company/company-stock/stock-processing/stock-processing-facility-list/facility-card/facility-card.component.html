@@ -1,13 +1,5 @@
 <div class="af-card">
 
-  <div *ngIf="menuOptions.length > 0" class="af-popover-wrapper">
-    <div class="af-popover-content">
-      <ul *ngFor="let action of menuOptions">
-        <li (click)="goTo(action.id)">{{ action.name }}</li>
-      </ul>
-    </div>
-  </div>
-
     <div class="af-card-section">
       <div [ngClass]="facilityTypeColor()">
         <span class="af-card-indicator">&nbsp;</span>
@@ -22,6 +14,29 @@
     <div class="af-card-section">
       <div class="af-card-section-content">
         <span class="af-card-description">{{ description }}</span>
+
+        <div *ngIf="menuOptions.length > 0"
+             class="af-card-actions"
+             ngbDropdown
+             placement="bottom-right"
+             container="body">
+          <button type="button"
+                  class="af-card-actions-toggle"
+                  ngbDropdownToggle
+                  i18n="@@stockProcessingFacilityCard.actions">
+            Actions
+          </button>
+
+          <div class="dropdown-menu af-card-actions-menu" ngbDropdownMenu>
+            <button *ngFor="let action of menuOptions"
+                    type="button"
+                    class="dropdown-item"
+                    ngbDropdownItem
+                    (click)="goTo(action.id)">
+              {{ action.name }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
