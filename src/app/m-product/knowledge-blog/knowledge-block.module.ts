@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbDropdownModule, NgbPaginationModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { QRCodeModule } from 'angular2-qrcode';
 import { EllipsisModule } from 'ngx-ellipsis';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { ComponentsModule } from 'src/app/components/components.module';
@@ -42,7 +41,6 @@ import { ProductCommonModule } from '../product-common/product-common.module';
     NgxPageScrollModule,
     ContentsModule,
     EllipsisModule,
-    QRCodeModule,
     NgbTimepickerModule,
     NgbDropdownModule,
     NgbPaginationModule,

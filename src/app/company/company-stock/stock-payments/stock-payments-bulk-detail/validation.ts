@@ -1,4 +1,4 @@
-import { FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SimpleValidationScheme } from '../../../../../interfaces/Validation';
 import { ApiBulkPayment } from '../../../../../api/model/apiBulkPayment';
 import { ApiPayment } from '../../../../../api/model/apiPayment';
@@ -6,7 +6,7 @@ import { ApiStockOrder } from '../../../../../api/model/apiStockOrder';
 import { ApiActivityProof } from '../../../../../api/model/apiActivityProof';
 import { multiFieldValidator } from '../../../../../shared/validation';
 
-function payingEqualOrLessThanBalance(control: FormGroup): ValidationErrors | null {
+function payingEqualOrLessThanBalance(control: UntypedFormGroup): ValidationErrors | null {
 
     // Paying and balance controls are required.
     if (!control.contains('balance') || !control.contains('paid')) {

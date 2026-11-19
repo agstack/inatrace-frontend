@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location} from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize, take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
@@ -13,28 +13,30 @@ import { ApiUserCustomerImportRowValidationError } from '../../../../api/model/a
 import { FarmerImportConfirmationService } from '../../../../api/api/farmerImportConfirmation.service';
 
 @Component({
-  selector: 'app-company-farmers-import',
-  templateUrl: './company-farmers-import.component.html',
-  styleUrls: ['./company-farmers-import.component.scss']
+    selector: 'app-company-farmers-import',
+    templateUrl: './company-farmers-import.component.html',
+    styleUrls: ['./company-farmers-import.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyFarmersImportComponent implements OnInit {
 
   private companyId: number;
-  fileForm = new FormControl();
+  fileForm = new UntypedFormControl();
 
   mimeError = $localize`:@@companyDetail.farmers.uploadSpreadsheet.error:Upload only file types XLS or XLSX.`;
 
   faFileExcel = faFileExcel;
   
-  duplicates: Array<ApiUserCustomer> = [];
+  duplicates: ApiUserCustomer[] = [];
 
-  validationErrors: Array<ApiUserCustomerImportRowValidationError> = [];
+  validationErrors: ApiUserCustomerImportRowValidationError[] = [];
 
   importInProgress = false;
   duplicateInProgress = false;
   private importedDocumentId: number;
   selectionDocumentId: number;
-  koboSheets: Array<{id: string, name: string, headers: string[], selected: string}> = [];
+  koboSheets: {id: string, name: string, headers: string[], selected: string}[] = [];
   private koboSelections: string[] = [];
 
   farmerImportTemplateHref = '';

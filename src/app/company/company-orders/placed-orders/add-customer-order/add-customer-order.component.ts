@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { CompanyCustomersService } from '../../../../shared-services/company-customers.service';
 import { CompanyFacilitiesService } from '../../../../shared-services/company-facilities.service';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
@@ -22,13 +22,15 @@ import { ProductOrderControllerService } from '../../../../../api/api/productOrd
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-add-customer-order',
-  templateUrl: './add-customer-order.component.html',
-  styleUrls: ['./add-customer-order.component.scss']
+    selector: 'app-add-customer-order',
+    templateUrl: './add-customer-order.component.html',
+    styleUrls: ['./add-customer-order.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AddCustomerOrderComponent implements OnInit {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   title: string = null;
@@ -40,7 +42,7 @@ export class AddCustomerOrderComponent implements OnInit {
   companyCustomerCodebook: CompanyCustomersService;
 
   outputFacilitiesCodebook: CompanyFacilitiesService;
-  outputFacilityForm = new FormControl(null, Validators.required);
+  outputFacilityForm = new UntypedFormControl(null, Validators.required);
 
   stockOrdersListManager = null;
 
@@ -60,14 +62,14 @@ export class AddCustomerOrderComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiStockOrder;
   }
 
-  static StockOrderItemEmptyObjectFormFactory(): () => FormControl {
+  static StockOrderItemEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(AddCustomerOrderComponent.StockOrderItemCreateEmptyObject(), ApiStockOrderValidationScheme.validators);
+      return new UntypedFormControl(AddCustomerOrderComponent.StockOrderItemCreateEmptyObject(), ApiStockOrderValidationScheme.validators);
     };
   }
 
-  get orderItemsFormArray(): FormArray {
-    return this.form.get('items') as FormArray;
+  get orderItemsFormArray(): UntypedFormArray {
+    return this.form.get('items') as UntypedFormArray;
   }
 
   get outputFacility() {

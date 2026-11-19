@@ -7,20 +7,22 @@
       <button type="button" class="navbar-toggler" (click)="toggleNavButtons()">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div *ngIf="showNavButtons$.value" class="navbar-collapse" id="headercontet">
-        <ul class="navbar-nav mr-auto">
-          <ng-container *ngIf="userProfile">
-            <li class="nav-item font-italic">
-              <app-user-box></app-user-box>
-            </li>
-          </ng-container>
-          <ng-container *ngIf="!userProfile">
-            <li class="nav-item font-italic">
-              <a class="nav-link" [routerLink]="['/','login']">Login</a>
-            </li>
-          </ng-container>
-        </ul>
-      </div>
+      @if (showNavButtons$.value) {
+        <div class="navbar-collapse" id="headercontet">
+          <ul class="navbar-nav me-auto">
+            @if (userProfile) {
+              <li class="nav-item font-italic">
+                <app-user-box></app-user-box>
+              </li>
+            }
+            @if (!userProfile) {
+              <li class="nav-item font-italic">
+                <a class="nav-link" [routerLink]="['/','login']">Login</a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </nav>
   </header>
 </div>
@@ -32,12 +34,12 @@
           <img src="/assets/landing-page/landing-inatrace-logo.png" alt="Logo image">
         </a>
         <form class="form-inline">
-          <ng-container *ngIf="userProfile">
+          @if (userProfile) {
             <app-user-box></app-user-box>
-          </ng-container>
-          <ng-container *ngIf="!userProfile">
+          }
+          @if (!userProfile) {
             <a class="btn btn-lg" [routerLink]="['/','login']">Login</a>
-          </ng-container>
+          }
         </form>
       </nav>
     </div>

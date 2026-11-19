@@ -3,58 +3,66 @@
 <!-- [ngClass]="{'c-disabled': !addElementEnabled()}" -->
 
 <div class="list-editor-container">
-    <!-- <label class="d-flex sp-textinput-label" *ngIf="label">
-        <div>
-            {{ label }}
-        </div>
-        <div class="d-flex align-items-center pl-1">
-            <div
-                class="addbutton"
-                (click)="addElementEnabled() && addElement()"
-            >
-                <fa-icon [icon]="'plus-circle'" class="plusicon"></fa-icon>
-            </div>
-        </div>
-    </label> -->
+  <!-- <label class="d-flex sp-textinput-label" *ngIf="label">
+  <div>
+    {{ label }}
+  </div>
+  <div class="d-flex align-items-center ps-1">
+    <div
+      class="addbutton"
+      (click)="addElementEnabled() && addElement()"
+      >
+      <fa-icon [icon]="'plus-circle'" class="plusicon"></fa-icon>
+    </div>
+  </div>
+</label> -->
 
 
-    <div class="sp-textinput-label" style="display: flex; flex: 1 1 0; justify-content: space-between;" [class.d-none]="addExternalSubj">
-        <div *ngIf="label">
-            <label class="sp-textinput-label" style="margin-bottom: 0px;" [class.sc-invalid-feedback-label-color]="invalid" [class.ab-closed-label]="labelClosedIndicator">{{label}}</label>
-        </div>
-        <div style="display: flex;" *ngIf="!isDisabled() && canAdd && !hideItems">
-            <a
-                #addNewLink
-                tabindex="0"
-                style="white-space: nowrap;"
-                (click)="addElementEnabled() && addElement()"
-                (keyup.enter)="addElementEnabled() && addElement()">
-                <label class="sp-textinput-label green-label">{{addText}}<fa-icon style="margin-left: 0.25rem" [icon]="faPlusCircle"></fa-icon></label>
-                <!-- <fa-icon [icon]="'plus-circle'" class="plusicon"></fa-icon> -->
-            </a>
-        </div>
+<div class="sp-textinput-label" style="display: flex; flex: 1 1 0; justify-content: space-between;" [class.d-none]="addExternalSubj">
+  @if (label) {
+    <div>
+      <label class="sp-textinput-label" style="margin-bottom: 0px;" [class.sc-invalid-feedback-label-color]="invalid" [class.ab-closed-label]="labelClosedIndicator">{{label}}</label>
     </div>
-    <div *ngIf="listEditorManager.arrayLength === 0 && !hideItems" [class.d-none]="addExternalSubj" class="le-tagitem" style="margin-top: 0rem; margin-bottom: 0px;" (click)="!isDisabled() && canAdd && !hideItems && addElementEnabled() && addElement()">
-        <span class="le-tagitem-empty-text">{{textPrazno}}</span>
+  }
+  @if (!isDisabled() && canAdd && !hideItems) {
+    <div style="display: flex;">
+      <a
+        #addNewLink
+        tabindex="0"
+        style="white-space: nowrap;"
+        (click)="addElementEnabled() && addElement()"
+        (keyup.enter)="addElementEnabled() && addElement()">
+        <label class="sp-textinput-label green-label">{{addText}}<fa-icon style="margin-left: 0.25rem" [icon]="faPlusCircle"></fa-icon></label>
+        <!-- <fa-icon [icon]="'plus-circle'" class="plusicon"></fa-icon> -->
+      </a>
     </div>
-    <ng-content select="list-editor-errors"></ng-content>
-    <div style="height: 1rem;"></div>
-    <ng-content *ngIf="!hideItems" select="list-editor-items"></ng-content>
+  }
+</div>
+@if (listEditorManager.arrayLength === 0 && !hideItems) {
+  <div [class.d-none]="addExternalSubj" class="le-tagitem" style="margin-top: 0rem; margin-bottom: 0px;" (click)="!isDisabled() && canAdd && !hideItems && addElementEnabled() && addElement()">
+    <span class="le-tagitem-empty-text">{{textPrazno}}</span>
+  </div>
+}
+<ng-content select="list-editor-errors"></ng-content>
+<div style="height: 1rem;"></div>
+@if (!hideItems) {
+  <ng-content select="list-editor-items"></ng-content>
+}
 </div>
 
 
 <!-- VARIANTA GOR X DOL kljukica -->
-<!-- <div class="d-flex flex-column justify-content-between align-items-end pb-3 pt-3 pr-3 pl-3">
-        <button
-            class="btn btn-secondary col-auto btn-circle btn-lg"
-            (click)="cancel(i)"
-        >
-            <fa-icon [icon]="'times'"></fa-icon>
-        </button>
-        <button
-        class="btn btn-success col-auto btn-circle btn-lg"
-        (click)="save(i)"
-        >
-            <fa-icon [icon]="'check'"></fa-icon>
-        </button>
-    </div> -->
+<!-- <div class="d-flex flex-column justify-content-between align-items-end pb-3 pt-3 pe-3 ps-3">
+<button
+  class="btn btn-secondary col-auto btn-circle btn-lg"
+  (click)="cancel(i)"
+  >
+  <fa-icon [icon]="'times'"></fa-icon>
+</button>
+<button
+  class="btn btn-success col-auto btn-circle btn-lg"
+  (click)="save(i)"
+  >
+  <fa-icon [icon]="'check'"></fa-icon>
+</button>
+</div> -->

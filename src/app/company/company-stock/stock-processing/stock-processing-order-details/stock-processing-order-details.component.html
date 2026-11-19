@@ -1,39 +1,37 @@
 <app-authorised-layout>
-  <div *ngIf="procOrderGroup" class="af-layout--authorised">
-    <div class="af-form-wrapper">
-
-      <!-- PAGE TITLE - SET DYNAMICALLY DEPENDING ON THE SELECTED PROCESSING ACTION TYPE -->
-      <div class="af-form-row">
-        <div class="af-form-block--c12 d-flex justify-content-between">
-          <div class="title-page content-element--title">{{ title }}<span></span></div>
-        </div>
-      </div>
-
-      <!-- SECTION FOR INPUT AND OUTPUT DATA -->
-      <div class="af-form-row">
-
-        <!-- INPUT SECTION -->
-        <div class="af-form-block--c6">
-
-          <!-- INPUT SECTION ICON -->
-          <div *ngIf="actionType !== 'SHIPMENT'" class="mb-4">
-            <div class="processing-icon input"></div>
+  @if (procOrderGroup) {
+    <div class="af-layout--authorised">
+      <div class="af-form-wrapper">
+        <!-- PAGE TITLE - SET DYNAMICALLY DEPENDING ON THE SELECTED PROCESSING ACTION TYPE -->
+        <div class="af-form-row">
+          <div class="af-form-block--c12 d-flex justify-content-between">
+            <div class="title-page content-element--title">{{ title }}<span></span></div>
           </div>
-
-          <!-- DISPLAY THE SELECTED PROCESSING ACTION AND FINAL PRODUCT NAME IF ACTION IS QR CODE GENERATION -->
-          <div>
-            <h2 *ngIf="actionType !== 'SHIPMENT'; else quoteOrderTitle"
+        </div>
+        <!-- SECTION FOR INPUT AND OUTPUT DATA -->
+        <div class="af-form-row">
+          <!-- INPUT SECTION -->
+          <div class="af-form-block--c6">
+            <!-- INPUT SECTION ICON -->
+            @if (actionType !== 'SHIPMENT') {
+              <div class="mb-4">
+                <div class="processing-icon input"></div>
+              </div>
+            }
+            <!-- DISPLAY THE SELECTED PROCESSING ACTION AND FINAL PRODUCT NAME IF ACTION IS QR CODE GENERATION -->
+            <div>
+              @if (actionType !== 'SHIPMENT') {
+                <h2
                 i18n="@@productLabelStockProcessingOrderDetail.section.processing">Choose activity that you want to record</h2>
-            <ng-template #quoteOrderTitle>
-              <h2 i18n="@@productLabelStockProcessingOrderDetail.section.orderDetails">Order details</h2>
-            </ng-template>
-            <div class="af-form-element position-relative processing-section"
-                 [class.input]="actionType !== 'SHIPMENT'">
-
-              <!-- DROPDOWN FOR SELECTING PROCESSING ACTION (IF ID PRESENT IN PATH, SELECTED AUTOMATICALLY) -->
-              <div class="af-row">
-                <div class="af-c12">
-                  <single-choice
+              } @else {
+                <h2 i18n="@@productLabelStockProcessingOrderDetail.section.orderDetails">Order details</h2>
+              }
+              <div class="af-form-element position-relative processing-section"
+                [class.input]="actionType !== 'SHIPMENT'">
+                <!-- DROPDOWN FOR SELECTING PROCESSING ACTION (IF ID PRESENT IN PATH, SELECTED AUTOMATICALLY) -->
+                <div class="af-row">
+                  <div class="af-c12">
+                    <single-choice
                       label="Processing"
                       i18n-label="@@productLabelStockProcessingOrderDetail.processingActionForm.label"
                       [formControlInput]="$any(procOrderGroup.get('processingAction'))"
@@ -41,304 +39,322 @@
                       style="min-width: 150px;"
                       (onChange)="processingActionSelected($event)"
                       [isInvalidChoice]="submitted && procOrderGroup.get('processingAction').invalid">
-                    <ng-container *ngIf="submitted">
-                      <div *ngIf="procOrderGroup.get('processingAction').errors as errors" class="sc-invalid-feedback"
-                           i18n="@@productLabelStockProcessingOrderDetail.processingActionForm.error">
+                      @if (submitted) {
+                        @if (procOrderGroup.get('processingAction').errors; as errors) {
+                          <div class="sc-invalid-feedback"
+                            i18n="@@productLabelStockProcessingOrderDetail.processingActionForm.error">
                         Action is required
                       </div>
-                    </ng-container>
-                  </single-choice>
-                </div>
-              </div>
-
-              <!-- IF ACTION IS FOR QR CODE GENERATION, DISPLAY THE FINAL PRODUCT NAME -->
-              <div class="af-row" *ngIf="actionType === 'GENERATE_QR_CODE'">
-                <div class="af-c12">
-                  <textinput
-                      [form]="qrCodeForFinalProductControl"
-                      label="QR code for final product"
-                      i18n-label="@@productLabelStockProcessingOrderDetail.qrCodeForFinalProduct.label"
-                      style="width: 100%">
-                  </textinput>
-                </div>
-              </div>
-
-              <!-- ON QUOTE ORDERS - SHIPMENT, DISPLAY THE COMPANY NAME THAT IS CREATING THE ORDER -->
-              <div class="af-row mb-3" *ngIf="actionType === 'SHIPMENT' && quoteOrderOwnerCompany">
-                <div class="af-c12">
-                  {{ quoteOrderOwnerCompany }}
-                </div>
-              </div>
-
-              <!-- ON QUOTE ORDERS - SHIPMENT, DISPLAY THE PRODUCT ORDER IF SET; THIS IS APPLICABLE IN QUOTE ORDERS FOR FINAL PRODUCTS -->
-              <div class="af-row mb-3" *ngIf="actionType === 'SHIPMENT' && productOrderId">
-                <div class="af-c12">
-                  <span i18n="@@productLabelStockProcessingOrderDetail.orderID.label">Order ID:</span> {{ productOrderId }}
-                </div>
-              </div>
-
-              <div class="af-row">
-                <div class="af-c12">
-                  <app-datepicker [label]="processingDateLabel"
-                                  [form]="$any(procOrderGroup.get('processingDate'))"
-                                  [invalid]="submitted && procOrderGroup.get('processingDate').invalid"
-                                  style="width: 130px; margin-right: 1rem;">
-                    <ng-container>
-                      <div *ngIf="procOrderGroup.get('processingDate').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.datepicker.processingDate.error">
-                          Processing date is required
-                        </div>
-                      </div>
-                    </ng-container>
-                  </app-datepicker>
-                </div>
-              </div>
-
-              <div *ngIf="!rightSideEnabled" class="disabled-section-overlay"></div>
-            </div>
-          </div>
-
-          <!-- THE PROCESSING OUTPUT COMPONENT IS DISPLAYED HERE ONLY WHEN WE HAVE TYPE 'SHIPMENT' - Quote order -->
-          <ng-container *ngIf="selectedProcAction && actionType === 'SHIPMENT'">
-            <app-processing-order-output #output
-                                         [editing]="editing"
-                                         [submitted]="submitted"
-                                         [processingUserId]="processingUserId"
-                                         [productOrderId]="productOrderId"
-                                         [selectedProcAction]="selectedProcAction"
-                                         [procActionLotPrefixControl]="procActionLotPrefixControl"
-                                         [rightSideEnabled]="rightSideEnabled"
-                                         [targetStockOrdersArray]="targetStockOrdersArray"
-                                         [finalProductOutputFacilitiesCodebook]="finalProductOutputFacilitiesCodebook"
-                                         [semiProductOutputFacilitiesCodebooks]="semiProductOutputFacilitiesCodebooks"
-                                         [currentOutputFinalProduct]="currentOutputFinalProduct"
-                                         [outputFinalProductNameControl]="outputFinalProductNameControl"
-                                         [outputSemiProductsCodebook]="outputSemiProductsCodebook"
-                                         (calcTotalOutputQuantity)="calcTotalOutputQuantity()"
-                                         (calcRemainingQuantity)="calcRemainingQuantity()">
-            </app-processing-order-output>
-          </ng-container>
-
-          <!-- INPUT PARAMETERS - MATERIAL TO BE RECORDED -->
-          <div *ngIf="selectedProcAction">
-            <app-processing-order-input #input
-                                        [processingUserId]="processingUserId"
-                                        [editing]="editing"
-                                        [submitted]="submitted"
-                                        [companyId]="companyId"
-                                        [selectedProcAction]="selectedProcAction"
-                                        [inputFacilitiesCodebook]="inputFacilitiesCodebook"
-                                        [inputFacilityControl]="inputFacilityControl"
-                                        [totalInputQuantityControl]="totalInputQuantityControl"
-                                        [currentInputStockUnit]="currentInputStockUnit"
-                                        [remainingQuantityControl]="remainingQuantityControl"
-                                        [targetStockOrdersArray]="targetStockOrdersArray"
-                                        [inputTransactionsArray]="inputTransactionsArray"
-                                        [inputTransactions]="inputTransactions"
-                                        [totalOutputQuantity]="totalOutputQuantity"
-                                        (calcRemainingQuantity)="calcRemainingQuantity()">
-            </app-processing-order-input>
-          </div>
-        </div>
-
-        <!-- OUTPUT SECTION -->
-        <div *ngIf="selectedProcAction && actionType !== 'SHIPMENT'" class="af-form-block--c6">
-
-          <!-- OUTPUT SECTION ICON -->
-          <div class="mb-4">
-            <div class="processing-icon output"></div>
-          </div>
-
-          <!-- OUTPUT DATA OF THE PROCESSING (THERE CAN BE MORE THAN ONE OUTPUT FROM THE PROCESSING) -->
-          <app-processing-order-output #output
-                                       [editing]="editing"
-                                       [submitted]="submitted"
-                                       [processingUserId]="processingUserId"
-                                       [productOrderId]="productOrderId"
-                                       [selectedProcAction]="selectedProcAction"
-                                       [procActionLotPrefixControl]="procActionLotPrefixControl"
-                                       [rightSideEnabled]="rightSideEnabled"
-                                       [targetStockOrdersArray]="targetStockOrdersArray"
-                                       [finalProductOutputFacilitiesCodebook]="finalProductOutputFacilitiesCodebook"
-                                       [semiProductOutputFacilitiesCodebooks]="semiProductOutputFacilitiesCodebooks"
-                                       [currentOutputFinalProduct]="currentOutputFinalProduct"
-                                       [outputFinalProductNameControl]="outputFinalProductNameControl"
-                                       [outputSemiProductsCodebook]="outputSemiProductsCodebook"
-                                       (calcTotalOutputQuantity)="calcTotalOutputQuantity()"
-                                       (calcRemainingQuantity)="calcRemainingQuantity()">
-          </app-processing-order-output>
-        </div>
-      </div>
-
-      <!-- SECTION FOR DISPLAYING TOTAL QUANTITES -->
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-
-          <h2 i18n="@@productLabelStockProcessingOrderDetail.section.output.totalQuantitiesSectionTitle">Total quantities</h2>
-          <div class="af-form-element position-relative processing-section">
-
-            <!-- DISPLAY THE TOTAL SELECTED INPUT QUANTITY - EXISTING INPUT TRANSACTIONS AND SELECTED INPUT STOCK ORDERS -->
-            <div class="af-row">
-              <div class="af-c6">
-                <textinput
-                        [form]="totalInputQuantityControl"
-                        [label]="inputQuantityLabel"
-                        style="width: 100%">
-                </textinput>
-              </div>
-
-              <!-- DISPLAY THE DIFFERENCE QUANTITY BETWEEN THE TOTAL INPUT AND THE TOTAL (ENTERED IN TARGET STOCK ORDERS) OUTPUT -->
-              <div class="af-c6" *ngIf="actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE'">
-                <textinput
-                        [form]="remainingQuantityControl"
-                        [label]="remainingQuantityLabel"
-                        style="width: 100%">
-                </textinput>
-              </div>
-            </div>
-
-            <!-- DISPLAY THE TOTAL OUTPUT QUANTITY - SUM OF TOTAL QUANTITY ENTERED FOR EVERY TARGET STOCK ORDER -->
-            <div *ngIf="actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE'" class="af-row">
-              <div class="af-c12">
-                <textinput
-                        [form]="totalOutputQuantityControl"
-                        [label]="totalOutputQuantityLabel"
-                        [helpText]="expectedOutputQuantityHelpText"
-                        style="width: 100%">
-                  <div *ngIf="totalOutputQuantityTooLarge"
-                       i18n="@@productLabelStockProcessingOrderDetail.totalOutputQuantity.textinput.error.quantityTooLarge"
-                       class="sc-warning-feedback">
-                    Output quantity exceeds input quantity. Would you like to proceed?
+                        }
+                      }
+                    </single-choice>
                   </div>
-                  <div *ngIf="outputQuantityNotInRange"
-                       i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.notInExpectedRange"
-                       class="sc-warning-feedback">
-                    Output quantity not in expected range
-                  </div>
-                </textinput>
-              </div>
-            </div>
-
-            <!-- FILED FOR PROVIDING GENERAL COMMENT (PRESENT ALWAYS) -->
-            <div class="af-row position-relative">
-              <div class="af-c12">
-                <textinput
-                        [form]="commentsControl"
-                        label="Comments"
-                        style="width: 100%"
-                        [textarea]="true"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.textinput.comments.label">
-                </textinput>
-              </div>
-              <div *ngIf="!rightSideEnabled" class="disabled-section-overlay"></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- REQUIRED AND OTHER ADDITIONAL PROCESSING EVIDENCES (DOCUMENTS) -->
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <h2 i18n="@@productLabelStockProcessingOrderDetail.section.processingEvidence">Processing evidence</h2>
-
-          <div class="af-form-element processing-section">
-            <div *ngIf="this.requiredProcessingEvidenceArray.length > 0" class="mb-3">
-              <ng-container *ngFor="let item of requiredProcessingEvidenceArray.controls; index as idx">
-                <div class="d-flex">
-
+                </div>
+                <!-- IF ACTION IS FOR QR CODE GENERATION, DISPLAY THE FINAL PRODUCT NAME -->
+                @if (actionType === 'GENERATE_QR_CODE') {
                   <div class="af-row">
-                    <div class="af-c4">
-                      <app-datepicker
-                          label="Date"
-                          i18n-label="@@processingEvidenceItem.datepicker.date.label"
-                          [form]="item.get('date')"
-                          [invalid]="submitted && item.get('date').invalid">
-                        <ng-container *ngIf="submitted">
-                          <div *ngIf="item.get('date').errors as errors" class="sc-invalid-feedback">
-                            <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
-                              Date is required
-                            </div>
-                          </div>
-                        </ng-container>
-                      </app-datepicker>
-                    </div>
-                    <div class="af-c8">
+                    <div class="af-c12">
                       <textinput
-                          [form]="$any(item.get('evidenceTypeLabel'))"
-                          label="Type"
-                          i18n-label="@@productLabelStockProcessingOrderDetail.label.type">
+                        [form]="qrCodeForFinalProductControl"
+                        label="QR code for final product"
+                        i18n-label="@@productLabelStockProcessingOrderDetail.qrCodeForFinalProduct.label"
+                        style="width: 100%">
                       </textinput>
                     </div>
                   </div>
-
+                }
+                <!-- ON QUOTE ORDERS - SHIPMENT, DISPLAY THE COMPANY NAME THAT IS CREATING THE ORDER -->
+                @if (actionType === 'SHIPMENT' && quoteOrderOwnerCompany) {
+                  <div class="af-row mb-3">
+                    <div class="af-c12">
+                      {{ quoteOrderOwnerCompany }}
+                    </div>
+                  </div>
+                }
+                <!-- ON QUOTE ORDERS - SHIPMENT, DISPLAY THE PRODUCT ORDER IF SET; THIS IS APPLICABLE IN QUOTE ORDERS FOR FINAL PRODUCTS -->
+                @if (actionType === 'SHIPMENT' && productOrderId) {
+                  <div class="af-row mb-3">
+                    <div class="af-c12">
+                      <span i18n="@@productLabelStockProcessingOrderDetail.orderID.label">Order ID:</span> {{ productOrderId }}
+                    </div>
+                  </div>
+                }
+                <div class="af-row">
+                  <div class="af-c12">
+                    <app-datepicker [label]="processingDateLabel"
+                      [form]="$any(procOrderGroup.get('processingDate'))"
+                      [invalid]="submitted && procOrderGroup.get('processingDate').invalid"
+                      style="width: 130px; margin-right: 1rem;">
+                      <ng-container>
+                        @if (procOrderGroup.get('processingDate').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockProcessingOrderDetail.datepicker.processingDate.error">
+                          Processing date is required
+                        </div>
+                            }
+                          </div>
+                        }
+                      </ng-container>
+                    </app-datepicker>
+                  </div>
+                </div>
+                @if (!rightSideEnabled) {
+                  <div class="disabled-section-overlay"></div>
+                }
+              </div>
+            </div>
+            <!-- THE PROCESSING OUTPUT COMPONENT IS DISPLAYED HERE ONLY WHEN WE HAVE TYPE 'SHIPMENT' - Quote order -->
+            @if (selectedProcAction && actionType === 'SHIPMENT') {
+              <app-processing-order-output #output
+                [editing]="editing"
+                [submitted]="submitted"
+                [processingUserId]="processingUserId"
+                [productOrderId]="productOrderId"
+                [selectedProcAction]="selectedProcAction"
+                [procActionLotPrefixControl]="procActionLotPrefixControl"
+                [rightSideEnabled]="rightSideEnabled"
+                [targetStockOrdersArray]="targetStockOrdersArray"
+                [finalProductOutputFacilitiesCodebook]="finalProductOutputFacilitiesCodebook"
+                [semiProductOutputFacilitiesCodebooks]="semiProductOutputFacilitiesCodebooks"
+                [currentOutputFinalProduct]="currentOutputFinalProduct"
+                [outputFinalProductNameControl]="outputFinalProductNameControl"
+                [outputSemiProductsCodebook]="outputSemiProductsCodebook"
+                (calcTotalOutputQuantity)="calcTotalOutputQuantity()"
+                (calcRemainingQuantity)="calcRemainingQuantity()">
+              </app-processing-order-output>
+            }
+            <!-- INPUT PARAMETERS - MATERIAL TO BE RECORDED -->
+            @if (selectedProcAction) {
+              <div>
+                <app-processing-order-input #input
+                  [processingUserId]="processingUserId"
+                  [editing]="editing"
+                  [submitted]="submitted"
+                  [companyId]="companyId"
+                  [selectedProcAction]="selectedProcAction"
+                  [inputFacilitiesCodebook]="inputFacilitiesCodebook"
+                  [inputFacilityControl]="inputFacilityControl"
+                  [totalInputQuantityControl]="totalInputQuantityControl"
+                  [currentInputStockUnit]="currentInputStockUnit"
+                  [remainingQuantityControl]="remainingQuantityControl"
+                  [targetStockOrdersArray]="targetStockOrdersArray"
+                  [inputTransactionsArray]="inputTransactionsArray"
+                  [inputTransactions]="inputTransactions"
+                  [totalOutputQuantity]="totalOutputQuantity"
+                  (calcRemainingQuantity)="calcRemainingQuantity()">
+                </app-processing-order-input>
+              </div>
+            }
+          </div>
+          <!-- OUTPUT SECTION -->
+          @if (selectedProcAction && actionType !== 'SHIPMENT') {
+            <div class="af-form-block--c6">
+              <!-- OUTPUT SECTION ICON -->
+              <div class="mb-4">
+                <div class="processing-icon output"></div>
+              </div>
+              <!-- OUTPUT DATA OF THE PROCESSING (THERE CAN BE MORE THAN ONE OUTPUT FROM THE PROCESSING) -->
+              <app-processing-order-output #output
+                [editing]="editing"
+                [submitted]="submitted"
+                [processingUserId]="processingUserId"
+                [productOrderId]="productOrderId"
+                [selectedProcAction]="selectedProcAction"
+                [procActionLotPrefixControl]="procActionLotPrefixControl"
+                [rightSideEnabled]="rightSideEnabled"
+                [targetStockOrdersArray]="targetStockOrdersArray"
+                [finalProductOutputFacilitiesCodebook]="finalProductOutputFacilitiesCodebook"
+                [semiProductOutputFacilitiesCodebooks]="semiProductOutputFacilitiesCodebooks"
+                [currentOutputFinalProduct]="currentOutputFinalProduct"
+                [outputFinalProductNameControl]="outputFinalProductNameControl"
+                [outputSemiProductsCodebook]="outputSemiProductsCodebook"
+                (calcTotalOutputQuantity)="calcTotalOutputQuantity()"
+                (calcRemainingQuantity)="calcRemainingQuantity()">
+              </app-processing-order-output>
+            </div>
+          }
+        </div>
+        <!-- SECTION FOR DISPLAYING TOTAL QUANTITES -->
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabelStockProcessingOrderDetail.section.output.totalQuantitiesSectionTitle">Total quantities</h2>
+            <div class="af-form-element position-relative processing-section">
+              <!-- DISPLAY THE TOTAL SELECTED INPUT QUANTITY - EXISTING INPUT TRANSACTIONS AND SELECTED INPUT STOCK ORDERS -->
+              <div class="af-row">
+                <div class="af-c6">
+                  <textinput
+                    [form]="totalInputQuantityControl"
+                    [label]="inputQuantityLabel"
+                    style="width: 100%">
+                  </textinput>
+                </div>
+                <!-- DISPLAY THE DIFFERENCE QUANTITY BETWEEN THE TOTAL INPUT AND THE TOTAL (ENTERED IN TARGET STOCK ORDERS) OUTPUT -->
+                @if (actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE') {
                   <div class="af-c6">
-                    <attachment-uploader
-                        allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-                        allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-                        mode="simpleAsTextField"
-                        label="Document (JPG, PNG, PDF)"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.attachment-uploader.label"
-                        i18n-allowedMimeTypeErrorMessage="@@productLabelStockProcessingOrderDetail.attachment-uploader.allowedMimeTypeErrorMessage"
-                        [form]="$any(item.get('document'))"
-                        [attachmentUploaderId]="'productLabelStockProcessingOrderDetail'+idx"
-                        [invalid]="submitted && item.get('document').invalid">
-                      <attachment-uploader-content i18n="@@productLabelStockProcessingOrderDetail.attachment-uploader.content">
+                    <textinput
+                      [form]="remainingQuantityControl"
+                      [label]="remainingQuantityLabel"
+                      style="width: 100%">
+                    </textinput>
+                  </div>
+                }
+              </div>
+              <!-- DISPLAY THE TOTAL OUTPUT QUANTITY - SUM OF TOTAL QUANTITY ENTERED FOR EVERY TARGET STOCK ORDER -->
+              @if (actionType !== 'TRANSFER' && actionType !== 'GENERATE_QR_CODE') {
+                <div class="af-row">
+                  <div class="af-c12">
+                    <textinput
+                      [form]="totalOutputQuantityControl"
+                      [label]="totalOutputQuantityLabel"
+                      [helpText]="expectedOutputQuantityHelpText"
+                      style="width: 100%">
+                      @if (totalOutputQuantityTooLarge) {
+                        <div
+                          i18n="@@productLabelStockProcessingOrderDetail.totalOutputQuantity.textinput.error.quantityTooLarge"
+                          class="sc-warning-feedback">
+                    Output quantity exceeds input quantity. Would you like to proceed?
+                  </div>
+                      }
+                      @if (outputQuantityNotInRange) {
+                        <div
+                          i18n="@@productLabelStockProcessingOrderDetail.outputQuantity.textinput.error.notInExpectedRange"
+                          class="sc-warning-feedback">
+                    Output quantity not in expected range
+                  </div>
+                      }
+                    </textinput>
+                  </div>
+                </div>
+              }
+              <!-- FILED FOR PROVIDING GENERAL COMMENT (PRESENT ALWAYS) -->
+              <div class="af-row position-relative">
+                <div class="af-c12">
+                  <textinput
+                    [form]="commentsControl"
+                    label="Comments"
+                    style="width: 100%"
+                    [textarea]="true"
+                    i18n-label="@@productLabelStockProcessingOrderDetail.textinput.comments.label">
+                  </textinput>
+                </div>
+                @if (!rightSideEnabled) {
+                  <div class="disabled-section-overlay"></div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- REQUIRED AND OTHER ADDITIONAL PROCESSING EVIDENCES (DOCUMENTS) -->
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@productLabelStockProcessingOrderDetail.section.processingEvidence">Processing evidence</h2>
+            <div class="af-form-element processing-section">
+              @if (this.requiredProcessingEvidenceArray.length > 0) {
+                <div class="mb-3">
+                  @for (item of requiredProcessingEvidenceArray.controls; track item; let idx = $index) {
+                    <div class="d-flex">
+                      <div class="af-row">
+                        <div class="af-c4">
+                          <app-datepicker
+                            label="Date"
+                            i18n-label="@@processingEvidenceItem.datepicker.date.label"
+                            [form]="item.get('date')"
+                            [invalid]="submitted && item.get('date').invalid">
+                            @if (submitted) {
+                              @if (item.get('date').errors; as errors) {
+                                <div class="sc-invalid-feedback">
+                                  @if (errors.required) {
+                                    <div i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
+                              Date is required
+                            </div>
+                                  }
+                                </div>
+                              }
+                            }
+                          </app-datepicker>
+                        </div>
+                        <div class="af-c8">
+                          <textinput
+                            [form]="$any(item.get('evidenceTypeLabel'))"
+                            label="Type"
+                            i18n-label="@@productLabelStockProcessingOrderDetail.label.type">
+                          </textinput>
+                        </div>
+                      </div>
+                      <div class="af-c6">
+                        <attachment-uploader
+                          allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+                          allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+                          mode="simpleAsTextField"
+                          label="Document (JPG, PNG, PDF)"
+                          i18n-label="@@productLabelStockProcessingOrderDetail.attachment-uploader.label"
+                          i18n-allowedMimeTypeErrorMessage="@@productLabelStockProcessingOrderDetail.attachment-uploader.allowedMimeTypeErrorMessage"
+                          [form]="$any(item.get('document'))"
+                          [attachmentUploaderId]="'productLabelStockProcessingOrderDetail'+idx"
+                          [invalid]="submitted && item.get('document').invalid">
+                          <attachment-uploader-content i18n="@@productLabelStockProcessingOrderDetail.attachment-uploader.content">
                         Upload document
                       </attachment-uploader-content>
-                    </attachment-uploader>
-                    <attachment-uploader-errors>
-                      <ng-container *ngIf="submitted">
-                        <div *ngIf="item.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                          <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.attachment-uploader.error">
+                        </attachment-uploader>
+                        <attachment-uploader-errors>
+                          @if (submitted) {
+                            @if (item.get('document').errors; as errors) {
+                              <div validation-error class="sc-invalid-feedback">
+                                @if (errors.required) {
+                                  <div i18n="@@productLabelStockProcessingOrderDetail.attachment-uploader.error">
                               <span>
                                 Document is required
                               </span>
                           </div>
-                        </div>
-                      </ng-container>
-                    </attachment-uploader-errors>
-                  </div>
-
+                                }
+                              </div>
+                            }
+                          }
+                        </attachment-uploader-errors>
+                      </div>
+                    </div>
+                  }
                 </div>
-              </ng-container>
+              }
+              @if (processingEvidenceListManager) {
+                <list-editor
+                  label="Other evidence documents"
+                  [listEditorManager]="processingEvidenceListManager"
+                  addText="Add document"
+                  [canAdd]="rightSideEnabled"
+                  i18n-label="@@productLabelStockProcessingOrderDetail.list-editor.processingEvidence.label"
+                  i18n-addText="@@productLabelStockProcessingOrderDetail.list-editor.processingEvidence.addText">
+                  <list-editor-items>
+                    @for (item of otherProcessingEvidenceArray.controls; track item; let i = $index) {
+                      <div>
+                        <app-additional-proof-item title="null"
+                          [evidenceType]="true"
+                          [formControlInput]="$any(item)"
+                          [isOpen]="processingEvidenceListManager.isOpen(i)"
+                          [listEditorManager]="this.processingEvidenceListManager"
+                          [listEditorManagerPosition]="i">
+                        </app-additional-proof-item>
+                      </div>
+                    }
+                  </list-editor-items>
+                  <list-editor-errors>
+                  </list-editor-errors>
+                </list-editor>
+              }
             </div>
-
-            <list-editor *ngIf="processingEvidenceListManager"
-                         label="Other evidence documents"
-                         [listEditorManager]="processingEvidenceListManager"
-                         addText="Add document"
-                         [canAdd]="rightSideEnabled"
-                         i18n-label="@@productLabelStockProcessingOrderDetail.list-editor.processingEvidence.label"
-                         i18n-addText="@@productLabelStockProcessingOrderDetail.list-editor.processingEvidence.addText">
-              <list-editor-items>
-                <div *ngFor="let item of otherProcessingEvidenceArray.controls; let i=index;">
-                  <app-additional-proof-item title="null"
-                                             [evidenceType]="true"
-                                             [formControlInput]="$any(item)"
-                                             [isOpen]="processingEvidenceListManager.isOpen(i)"
-                                             [listEditorManager]="this.processingEvidenceListManager"
-                                             [listEditorManagerPosition]="i">
-                  </app-additional-proof-item>
-                </div>
-              </list-editor-items>
-              <list-editor-errors>
-              </list-editor-errors>
-            </list-editor>
           </div>
         </div>
-      </div>
-
-      <!-- CONTROL BUTTONS -->
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="af-bottom-buttons" i18n="@@productLabelStockProcessingOrderDetail.footer.buttons">
-            <button class="btn btn-outlined mr-2" data-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
+        <!-- CONTROL BUTTONS -->
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons" i18n="@@productLabelStockProcessingOrderDetail.footer.buttons">
+            <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
             <button class="btn" type="button" (click)="!this.saveInProgress && saveProcessingOrder()"><span>Save</span></button>
           </div>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
+  }
 </app-authorised-layout>

@@ -1,15 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { AbstractControl, UntypedFormControl } from '@angular/forms';
 import { map, shareReplay } from 'rxjs/operators';
 import { faPlusSquare, faMinusSquare, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-  selector: 'app-closable',
-  templateUrl: './closable.component.html',
-  styleUrls: ['./closable.component.scss']
+    selector: 'app-closable',
+    templateUrl: './closable.component.html',
+    styleUrls: ['./closable.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ClosableComponent implements OnInit {
+export class ClosableComponent implements OnInit, OnDestroy {
   public hideField$ = new BehaviorSubject<boolean>(true);
 
   private reorderMode$ = new BehaviorSubject<boolean>(false);
@@ -56,18 +58,18 @@ export class ClosableComponent implements OnInit {
   @Input()
   label = null
 
-  _visibilityForm: FormControl = null;
-  @Input() set visibilityForm(value: FormControl) {
+  _visibilityForm: UntypedFormControl = null;
+  @Input() set visibilityForm(value: UntypedFormControl) {
       this._visibilityForm = value;
       if(value) {
         this.resubscribeVisibility()
       }
   }
 
-  get visibilityForm(): FormControl {
+  get visibilityForm(): UntypedFormControl {
     return this._visibilityForm
   }
-  _reorderMode: boolean = false;
+  _reorderMode = false;
   @Input() set reorderMode(value: boolean) {
     this._reorderMode = value;
     this.reorderMode$.next(value)
@@ -111,7 +113,7 @@ export class ClosableComponent implements OnInit {
       }
       if(this.visibilitySub) this.visibilitySub.unsubscribe()
       this.visibilitySub = this.hideField$.subscribe(val => {
-        let oldValue = this.visibilityForm.value;
+        const oldValue = this.visibilityForm.value;
         this.visibilityForm.setValue(!val);
         if(oldValue != !val) {
           this.visibilityForm.markAsDirty();

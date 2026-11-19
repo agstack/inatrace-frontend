@@ -12,6 +12,7 @@ export interface SectionError {
 @Directive({
     selector: '[contents]',
     exportAs: 'contents',
+    standalone: false
 })
 export class ContentsDirective implements OnInit, OnChanges, OnDestroy {
     @Input() scrollingView: HTMLElement;

@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbModalImproved } from "../../../core/ngb-modal-improved/ngb-modal-improved.service";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { SelfOnboardingChecklistModalComponent } from "../self-onboarding-checklist-modal.component";
 import { SelfOnboardingService } from "../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-checklist-add-product-success-modal',
-  templateUrl: './checklist-add-product-success-modal.component.html',
-  styleUrls: ['./checklist-add-product-success-modal.component.scss', '../self-onboarding-checklist-modal.component.scss']
+    selector: 'app-checklist-add-product-success-modal',
+    templateUrl: './checklist-add-product-success-modal.component.html',
+    styleUrls: ['./checklist-add-product-success-modal.component.scss', '../self-onboarding-checklist-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ChecklistAddProductSuccessModalComponent implements OnInit {
 

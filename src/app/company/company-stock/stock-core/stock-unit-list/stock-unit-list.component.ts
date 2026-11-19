@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { DeliveryDates, StockOrderListingPageMode } from '../stock-core-tab/stock-core-tab.component';
 import { SortOption } from '../../../../shared/result-sorter/result-sorter-types';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { StockOrderControllerService } from '../../../../../api/api/stockOrderController.service';
@@ -25,9 +25,11 @@ import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { SelfOnboardingService } from "../../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-stock-unit-list',
-  templateUrl: './stock-unit-list.component.html',
-  styleUrls: ['./stock-unit-list.component.scss']
+    selector: 'app-stock-unit-list',
+    templateUrl: './stock-unit-list.component.html',
+    styleUrls: ['./stock-unit-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockUnitListComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -106,7 +108,7 @@ export class StockUnitListComponent implements OnInit, OnDestroy, AfterViewInit 
   pageSize = 10;
   private paging$ = new BehaviorSubject<number>(1);
 
-  cbCheckedAll = new FormControl(false);
+  cbCheckedAll = new UntypedFormControl(false);
   private allSelected = false;
   currentData: ApiStockOrder[];
 
@@ -221,7 +223,7 @@ export class StockUnitListComponent implements OnInit, OnDestroy, AfterViewInit 
           }, 50);
 
           if (step === 4) {
-            setTimeout(() => this.deliveriesListTooltip.open(), 50);
+            setTimeout(() => this.deliveriesListTooltip?.open(), 50);
           }
         })
     )

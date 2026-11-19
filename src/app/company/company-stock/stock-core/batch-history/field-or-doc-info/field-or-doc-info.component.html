@@ -1,19 +1,25 @@
-<ng-container *ngIf="evidenceField">
+@if (evidenceField) {
   <span class="processing-evidence-field-info">
-    <span class="mr-2">{{ evidenceFieldLabel }}: </span>
-    <span *ngIf="evidenceField.stringValue != null">{{ evidenceField.stringValue }}</span>
-    <span *ngIf="evidenceField.numericValue != null">{{ evidenceField.numericValue }}</span>
-    <span *ngIf="evidenceField.dateValue != null">{{ evidenceField.dateValue | date: 'yyyy-MM-dd' }}</span>
+    <span class="me-2">{{ evidenceFieldLabel }}: </span>
+    @if (evidenceField.stringValue != null) {
+      <span>{{ evidenceField.stringValue }}</span>
+    }
+    @if (evidenceField.numericValue != null) {
+      <span>{{ evidenceField.numericValue }}</span>
+    }
+    @if (evidenceField.dateValue != null) {
+      <span>{{ evidenceField.dateValue | date: 'yyyy-MM-dd' }}</span>
+    }
   </span>
-</ng-container>
+}
 
-<ng-container *ngIf="evidenceDocument">
+@if (evidenceDocument) {
   <span class="processing-evidence-document-info">
-    <span class="mr-2">{{ evidenceDocument.evidenceTypeLabel }}:</span>
+    <span class="me-2">{{ evidenceDocument.evidenceTypeLabel }}:</span>
     <a (click)="onDownload(evidenceDocument.document); $event.stopPropagation()" class="cursor-pointer">
-      <fa-icon [icon]="faFile" class="mr-1"></fa-icon>
+      <fa-icon [icon]="faFile" class="me-1"></fa-icon>
       <span>{{ evidenceDocument.date | date:'yyyy-MM-dd' }} </span>
       <span>{{ evidenceDocument.document.name }}</span>
     </a>
   </span>
-</ng-container>
+}

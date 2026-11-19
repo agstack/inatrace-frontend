@@ -1,9 +1,9 @@
-import { FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ApiProcessingAction } from 'src/api/model/apiProcessingAction';
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { multiFieldValidator } from 'src/shared/validation';
 
-export function requireMaxOutputFinalProductsWeight(control: FormGroup): ValidationErrors | null {
+export function requireMaxOutputFinalProductsWeight(control: UntypedFormGroup): ValidationErrors | null {
 
     if (!control || !control.value) {
         return null;
@@ -21,7 +21,7 @@ export function requireMaxOutputFinalProductsWeight(control: FormGroup): Validat
     return null;
 }
 
-export function requiredTranslations(control: FormGroup): ValidationErrors | null {
+export function requiredTranslations(control: UntypedFormGroup): ValidationErrors | null {
     if (!control || !control.value || !control.contains('translations')) {
         return null;
     }
@@ -37,7 +37,7 @@ export function requiredTranslations(control: FormGroup): ValidationErrors | nul
     return null;
 }
 
-export function requiredFinalProductActionField(group: FormGroup): ValidationErrors | null {
+export function requiredFinalProductActionField(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('finalProductAction')) {
     return null;
@@ -53,7 +53,7 @@ export function requiredFinalProductActionField(group: FormGroup): ValidationErr
   return null;
 }
 
-export function requiredInputSemiProduct(group: FormGroup): ValidationErrors | null {
+export function requiredInputSemiProduct(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('inputSemiProduct')) {
     return null;
@@ -69,7 +69,7 @@ export function requiredInputSemiProduct(group: FormGroup): ValidationErrors | n
   return null;
 }
 
-export function requiredInputFinalProduct(group: FormGroup): ValidationErrors | null {
+export function requiredInputFinalProduct(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('inputFinalProduct')) {
     return null;
@@ -86,7 +86,7 @@ export function requiredInputFinalProduct(group: FormGroup): ValidationErrors | 
   return null;
 }
 
-export function requiredOutputFinalProduct(group: FormGroup): ValidationErrors | null {
+export function requiredOutputFinalProduct(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('outputFinalProduct')) {
     return null;
@@ -102,7 +102,7 @@ export function requiredOutputFinalProduct(group: FormGroup): ValidationErrors |
   return null;
 }
 
-export function requiredOutputSemiProducts(group: FormGroup): ValidationErrors | null {
+export function requiredOutputSemiProducts(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('outputSemiProducts')) {
     return null;
@@ -125,7 +125,7 @@ export function requiredOutputSemiProducts(group: FormGroup): ValidationErrors |
   return null;
 }
 
-export function requiredQRCodeForFinalProduct(group: FormGroup): ValidationErrors | null {
+export function requiredQRCodeForFinalProduct(group: UntypedFormGroup): ValidationErrors | null {
 
   if (!group || !group.value || !group.contains('qrCodeForFinalProduct')) {
     return null;
@@ -143,14 +143,14 @@ export function requiredQRCodeForFinalProduct(group: FormGroup): ValidationError
 
 export const ApiProcessingActionValidationScheme = {
   validators: [
-    multiFieldValidator(['finalProductAction'], (group: FormGroup) => requiredFinalProductActionField(group), ['required']),
-    multiFieldValidator(['inputSemiProduct'], (group: FormGroup) => requiredInputSemiProduct(group), ['required']),
-    multiFieldValidator(['inputFinalProduct'], (group: FormGroup) => requiredInputFinalProduct(group), ['required']),
-    multiFieldValidator(['outputFinalProduct'], (group: FormGroup) => requiredOutputFinalProduct(group), ['required']),
-    multiFieldValidator(['qrCodeForFinalProduct'], (group: FormGroup) => requiredQRCodeForFinalProduct(group), ['required']),
-    multiFieldValidator(['outputSemiProducts'], (group: FormGroup) => requiredOutputSemiProducts(group), ['atLeastOneIsRequired']),
-    multiFieldValidator(['maxOutputWeight'], (group: FormGroup) => requireMaxOutputFinalProductsWeight(group), ['required']),
-    multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslations(group), ['required'])
+    multiFieldValidator(['finalProductAction'], (group: UntypedFormGroup) => requiredFinalProductActionField(group), ['required']),
+    multiFieldValidator(['inputSemiProduct'], (group: UntypedFormGroup) => requiredInputSemiProduct(group), ['required']),
+    multiFieldValidator(['inputFinalProduct'], (group: UntypedFormGroup) => requiredInputFinalProduct(group), ['required']),
+    multiFieldValidator(['outputFinalProduct'], (group: UntypedFormGroup) => requiredOutputFinalProduct(group), ['required']),
+    multiFieldValidator(['qrCodeForFinalProduct'], (group: UntypedFormGroup) => requiredQRCodeForFinalProduct(group), ['required']),
+    multiFieldValidator(['outputSemiProducts'], (group: UntypedFormGroup) => requiredOutputSemiProducts(group), ['atLeastOneIsRequired']),
+    multiFieldValidator(['maxOutputWeight'], (group: UntypedFormGroup) => requireMaxOutputFinalProductsWeight(group), ['required']),
+    multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslations(group), ['required'])
   ],
   fields: {
     company: {

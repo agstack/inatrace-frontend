@@ -1,92 +1,102 @@
 <main class="af-b2c-main">
-    <h1 [style.color]="b2cSettings.headingColor" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''" i18n="@@frontPage.feedback.title">Feedback</h1>
+  <h1 [style.color]="b2cSettings.headingColor" [style.font-family]="b2cSettings.textFont ? 'custom-text' : ''" i18n="@@frontPage.feedback.title">Feedback</h1>
 
-    <textinput
-            [form]="$any(feedbackForm.get('feedback'))"
-            label="The producers of {{ productName }} look forward to your feedback (what do you like / not)"
-            style="width: 100%;"
-            [textarea]="true"
-            i18n-label="@@frontPage.feedback.textinput.text.label"
-            class="af-b2c-form-element af-b2c-form-element--textinput">
-        <small i18n="@@frontPage.feedback.textinput.feedback.small">Describe in max 500 characters.</small>
-        <ng-container *ngIf="submitted">
-            <div *ngIf="feedbackForm.get('feedback').errors as errors" class="sc-invalid-feedback" i18n="@@frontPage.feedback.textinput.feedback.errorMaxLength">
+  <textinput
+    [form]="$any(feedbackForm.get('feedback'))"
+    label="The producers of {{ productName }} look forward to your feedback (what do you like / not)"
+    style="width: 100%;"
+    [textarea]="true"
+    i18n-label="@@frontPage.feedback.textinput.text.label"
+    class="af-b2c-form-element af-b2c-form-element--textinput">
+    <small i18n="@@frontPage.feedback.textinput.feedback.small">Describe in max 500 characters.</small>
+    @if (submitted) {
+      @if (feedbackForm.get('feedback').errors; as errors) {
+        <div class="sc-invalid-feedback" i18n="@@frontPage.feedback.textinput.feedback.errorMaxLength">
                 Feedback should not exceed 500 characters.
             </div>
-        </ng-container>
-    </textinput>
+      }
+    }
+  </textinput>
 
-    <h2 i18n="@@frontPage.feedback.questions">Please also answer the following questions:</h2>
+  <h2 i18n="@@frontPage.feedback.questions">Please also answer the following questions:</h2>
 
-    <single-choice
-            label="1. How would you rate the taste of {{ productName }} in comparison to other products that you consume?"
-            i18n-label="@@frontPage.feedback.taste"
-            [formControlInput]="$any(feedbackForm.get('questionnaireAnswers.rateTaste'))"
-            [codebookService]="codebookTasteCodes"
-            style="min-width: 150px;"
-            class="af-b2c-form-element af-b2c-form-element--singlechoice">
-    </single-choice>
+  <single-choice
+    label="1. How would you rate the taste of {{ productName }} in comparison to other products that you consume?"
+    i18n-label="@@frontPage.feedback.taste"
+    [formControlInput]="$any(feedbackForm.get('questionnaireAnswers.rateTaste'))"
+    [codebookService]="codebookTasteCodes"
+    style="min-width: 150px;"
+    class="af-b2c-form-element af-b2c-form-element--singlechoice">
+  </single-choice>
 
-    <textinput
-            [form]="$any(feedbackForm.get('questionnaireAnswers.age'))"
-            label="2. Your age"
-            style="width: 100%;"
-            placeholder="Enter your age"
-            i18n-label="@@frontPage.feedback.textinput.age.label"
-            i18n-placeholder="@@frontPage.feedback.textinput.age.placeholder"
-            class="af-b2c-form-element af-b2c-form-element--textinput af-b2c-spacer--top-two">
-    </textinput>
+  <textinput
+    [form]="$any(feedbackForm.get('questionnaireAnswers.age'))"
+    label="2. Your age"
+    style="width: 100%;"
+    placeholder="Enter your age"
+    i18n-label="@@frontPage.feedback.textinput.age.label"
+    i18n-placeholder="@@frontPage.feedback.textinput.age.placeholder"
+    class="af-b2c-form-element af-b2c-form-element--textinput af-b2c-spacer--top-two">
+  </textinput>
 
-    <single-choice
-            label="3. Gender"
-            i18n-label="@@frontPage.feedback.gender"
-            [formControlInput]="$any(feedbackForm.get('questionnaireAnswers.gender'))"
-            [codebookService]="codebookAgeCodes"
-            style="min-width: 150px;"
-            class="af-b2c-form-element af-b2c-form-element--singlechoice af-b2c-spacer--top-two">
-    </single-choice>
+  <single-choice
+    label="3. Gender"
+    i18n-label="@@frontPage.feedback.gender"
+    [formControlInput]="$any(feedbackForm.get('questionnaireAnswers.gender'))"
+    [codebookService]="codebookAgeCodes"
+    style="min-width: 150px;"
+    class="af-b2c-form-element af-b2c-form-element--singlechoice af-b2c-spacer--top-two">
+  </single-choice>
 
-    <textinput
-            [form]="$any(feedbackForm.get('email'))"
-            label="In case you would like to receive an answer from us, please provide your email address"
-            style="width: 100%;"
-            placeholder="Enter e-mail"
-            i18n-label="@@frontPage.feedback.textinput.email.label"
-            i18n-placeholder="@@frontPage.feedback.textinput.email.placeholder"
-            class="af-b2c-form-element af-b2c-form-element--textarea">
-        <ng-container *ngIf="submitted">
-            <div *ngIf="feedbackForm.get('email').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.wrongEmail" i18n="@@frontPage.feedback.textinput.email.error">
+  <textinput
+    [form]="$any(feedbackForm.get('email'))"
+    label="In case you would like to receive an answer from us, please provide your email address"
+    style="width: 100%;"
+    placeholder="Enter e-mail"
+    i18n-label="@@frontPage.feedback.textinput.email.label"
+    i18n-placeholder="@@frontPage.feedback.textinput.email.placeholder"
+    class="af-b2c-form-element af-b2c-form-element--textarea">
+    @if (submitted) {
+      @if (feedbackForm.get('email').errors; as errors) {
+        <div class="sc-invalid-feedback">
+          @if (errors.wrongEmail) {
+            <div i18n="@@frontPage.feedback.textinput.email.error">
                     E-mail is in the wrong format
                 </div>
-            </div>
-        </ng-container>
-    </textinput>
+          }
+        </div>
+      }
+    }
+  </textinput>
 
-    <div i18n="@@frontPage.feedback.permissioToContact">Permission to Contact</div>
-    <div [innerHTML]="this.gdprHtmlContext" class="af-b2c--gdpr"></div>
+  <div i18n="@@frontPage.feedback.permissioToContact">Permission to Contact</div>
+  <div [innerHTML]="this.gdprHtmlContext" class="af-b2c--gdpr"></div>
 
-    <checkbox-input
-            [form]="$any(feedbackForm.get('gdprConsent'))"
-            class="af-b2c-form-element af-b2c-form-element--checkbox">
-        <checkbox-input-rich-label
-                i18n="@@frontPage.feedback.checkbox-input.gdprConsent">
+  <checkbox-input
+    [form]="$any(feedbackForm.get('gdprConsent'))"
+    class="af-b2c-form-element af-b2c-form-element--checkbox">
+    <checkbox-input-rich-label
+      i18n="@@frontPage.feedback.checkbox-input.gdprConsent">
             GDPR consent
         </checkbox-input-rich-label>
-        <checkbox-input-errors>
-            <ng-container *ngIf="submitted">
-                <div *ngIf="feedbackForm.get('gdprConsent').errors as errors" class="sc-invalid-feedback register-text-left">
-                    <div *ngIf="errors.conditionsNotConfirmed" i18n="@@frontPage.feedback.checkbox-input.gdprConsent.error">
+    <checkbox-input-errors>
+      @if (submitted) {
+        @if (feedbackForm.get('gdprConsent').errors; as errors) {
+          <div class="sc-invalid-feedback register-text-start">
+            @if (errors.conditionsNotConfirmed) {
+              <div i18n="@@frontPage.feedback.checkbox-input.gdprConsent.error">
                         GDPR consent is required
                     </div>
-                </div>
-            </ng-container>
-        </checkbox-input-errors>
-    </checkbox-input>
+            }
+          </div>
+        }
+      }
+    </checkbox-input-errors>
+  </checkbox-input>
 
-    <button i18n="@@frontPage.feedback.button.submit"
-            class="btn"
-            style="padding-left: 100px; padding-right: 100px; text-transform: uppercase;"
-            type="button"
-            (click)="submitFeedback()" [style.background-color]="b2cSettings.secondaryColor"><span>Submit</span></button>
-</main>
+  <button i18n="@@frontPage.feedback.button.submit"
+    class="btn"
+    style="padding-left: 100px; padding-right: 100px; text-transform: uppercase;"
+    type="button"
+    (click)="submitFeedback()" [style.background-color]="b2cSettings.secondaryColor"><span>Submit</span></button>
+  </main>

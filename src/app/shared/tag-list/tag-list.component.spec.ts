@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { TagListComponent } from './tag-list.component';
@@ -8,8 +9,9 @@ describe('TagListComponent', () => {
   let component: TagListComponent;
   let fixture: ComponentFixture<TagListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       imports: TESTING_IMPORTS,
       providers: TESTING_PROVIDERS,
       declarations: [ TagListComponent ]

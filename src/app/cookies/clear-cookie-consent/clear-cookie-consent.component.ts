@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -8,7 +8,9 @@ import { CookieManagementService } from 'src/app/shared/directives/cookie-manage
 @Component({
     selector: 'app-clear-cookie-consent',
     templateUrl: './clear-cookie-consent.component.html',
-    styleUrls: ['./clear-cookie-consent.component.scss']
+    styleUrls: ['./clear-cookie-consent.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ClearCookieConsentComponent implements OnInit, OnDestroy {
 
@@ -31,8 +33,8 @@ export class ClearCookieConsentComponent implements OnInit, OnDestroy {
         ).subscribe(val => {
             if ([...this.cookieManagementService.activeCookies, 'ALL', 'CHAT'].indexOf(val.type) < 0) return
             if (['true', 'false', 'null'].indexOf(val.value) < 0) return
-            let type = val.type
-            let value = JSON.parse(val.value)
+            const type = val.type
+            const value = JSON.parse(val.value)
 
             if (type === 'ALL') {
                 this.cookieManagementService.activeCookies.forEach(typ => this.cookieManagementService.consentToCookie(typ, value))

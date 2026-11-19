@@ -1,31 +1,37 @@
 <div style="position: relative;">
   <div class="label-container d-flex green-bottom-line outer-wrapper" appScrollContainer>
     <div #scroll class="d-flex align-items-center inner-wrapper" appScrollPosition (hasLeft)="hasLeft.next($event)" (hasRight)="hasRight.next($event)">
-      <ng-container *ngFor="let label of labels">
+      @for (label of labels; track label) {
         <app-label-selector-card
-         (onSelect)="selectItem($event)"
-         (onMouseOver)="showInView($event)"
-         (onDelete)="delete(label)"
-         (onTitleChange)="titleChange(label)"
-         [isSelected]="isSelected(label)"
-         [label]="label"
-         [currentLabelForm]="currentLabelForm"
-         [changed]="changed"
-         [editable]="editable"
+          (onSelect)="selectItem($event)"
+          (onMouseOver)="showInView($event)"
+          (onDelete)="delete(label)"
+          (onTitleChange)="titleChange(label)"
+          [isSelected]="isSelected(label)"
+          [label]="label"
+          [currentLabelForm]="currentLabelForm"
+          [changed]="changed"
+          [editable]="editable"
         ></app-label-selector-card>
-      </ng-container>
-      <div *ngIf="editable" class="label-card-wrapper">
-        <div class="label-card new-label-card" (click)="createNew()" (mouseover)="showInView($event)">
-          <fa-icon [icon]="faPlusSquare" class="plus-icon"></fa-icon>
-          <div class="add-text" i18n="@@productLabel.labelSelector.addLabel">Add {{appName}} label</div>
+      }
+      @if (editable) {
+        <div class="label-card-wrapper">
+          <div class="label-card new-label-card" (click)="createNew()" (mouseover)="showInView($event)">
+            <fa-icon [icon]="faPlusSquare" class="plus-icon"></fa-icon>
+            <div class="add-text" i18n="@@productLabel.labelSelector.addLabel">Add {{appName}} label</div>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
-  <div class="left-nudge" *ngIf="hasLeft | async">
-    <fa-icon [icon]="faChevronLeft" class="chevron-icon" (click)="nudgeLeft()"></fa-icon>
-  </div>
-  <div class="right-nudge" *ngIf="hasRight | async" (click)="nudgeRight()">
-    <fa-icon [icon]="faChevronRight" class="chevron-icon"></fa-icon>
-  </div>
+  @if (hasLeft | async) {
+    <div class="left-nudge">
+      <fa-icon [icon]="faChevronLeft" class="chevron-icon" (click)="nudgeLeft()"></fa-icon>
+    </div>
+  }
+  @if (hasRight | async) {
+    <div class="right-nudge" (click)="nudgeRight()">
+      <fa-icon [icon]="faChevronRight" class="chevron-icon"></fa-icon>
+    </div>
+  }
 </div>

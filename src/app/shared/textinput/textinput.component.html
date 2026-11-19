@@ -1,190 +1,231 @@
-<form class="form-group register-text-left" [autocomplete]="autocomplete" style="margin-bottom: 0;">
-  <label [for]="id"
-         class="mb-0 text-input-label"
-         *ngIf="label || htmlLabel"
-         [class.ab-closed-label]="labelClosedIndicator">
-    <div [class.sc-invalid-feedback-label-color]="isInvalid || isNaN()">
-      <ng-container *ngIf="label && !htmlLabel">{{ label }}</ng-container>
-      <span *ngIf="!label && htmlLabel" [innerHTML]="htmlLabel"></span>
-      <span *ngIf="this.isRequired() && !hideAsterisk">*</span>
-    </div>
-    <fa-icon *ngIf="modal" class="ml-2 edit-link" [icon]="'pen'" (click)="this.editModal()"></fa-icon>
-  </label>
-  <div *ngIf="showInputField && !textarea" class="input-wrapper"
-       (click)="focusOnInput()"
-       [class.prefix-or-suffix-input-wrapper]="prefix != null || suffix != null"
-       [class.small-input]="smallInput">
-    <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
-      <input
-        #inputfield
-        *ngIf="valueTextInput"
-        class="form-control labelPlaceholder"
-        [id]="id"
-        [value]="value"
-        [readonly]="modal || readOnly"
-        [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
-        [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        style="margin-bottom: 0;"
-        [type]="type"
-        [step]="step"
-        [min]="min"
-        [placeholder]="(form && form.disabled) || readOnly || disabled ? '' : placeholder"
-        [autocomplete]="autocomplete"
-        (keyup.enter)="onKeyUpEnter.next($event)">
-      <input
-        #inputfield
-        *ngIf="!forceNumeric() && form && !languageFormArray && !typeaheadEnabled()"
-        [formControl]="form"
-        class="form-control labelPlaceholder"
-        [id]="id"
-        [readonly]="modal || readOnly"
-        [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
-        [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        style="margin-bottom: 0;"
-        [type]="type"
-        [step]="step"
-        [min]="min"
-        [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
-        [autocomplete]="autocomplete"
-        (keyup.enter)="onKeyUpEnter.next($event)">
+<form class="form-group register-text-start" [autocomplete]="autocomplete" style="margin-bottom: 0;">
+  @if (label || htmlLabel) {
+    <label [for]="id"
+      class="mb-0 text-input-label"
+      [class.ab-closed-label]="labelClosedIndicator">
+      <div [class.sc-invalid-feedback-label-color]="isInvalid || isNaN()">
+        @if (label && !htmlLabel) {
+          {{ label }}
+        }
+        @if (!label && htmlLabel) {
+          <span [innerHTML]="htmlLabel"></span>
+        }
+        @if (this.isRequired() && !hideAsterisk) {
+          <span>*</span>
+        }
+      </div>
+      @if (modal) {
+        <fa-icon class="ms-2 edit-link" [icon]="'pen'" (click)="this.editModal()"></fa-icon>
+      }
+    </label>
+  }
+  @if (showInputField && !textarea) {
+    <div class="input-wrapper"
+      (click)="focusOnInput()"
+      [class.prefix-or-suffix-input-wrapper]="prefix != null || suffix != null"
+      [class.small-input]="smallInput">
+      @if (prefix) {
+        <div class="prefix">{{ prefix }}</div>
+      }
+      @if (valueTextInput) {
+        <input
+          #inputfield
+          class="form-control labelPlaceholder"
+          [id]="id"
+          [value]="value"
+          [readonly]="modal || readOnly"
+          [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
+          [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          style="margin-bottom: 0;"
+          [type]="type"
+          [step]="step"
+          [min]="min"
+          [placeholder]="(form && form.disabled) || readOnly || disabled ? '' : placeholder"
+          [autocomplete]="autocomplete"
+          (keyup.enter)="onKeyUpEnter.next($event)">
+      }
+      @if (!forceNumeric() && form && !languageFormArray && !typeaheadEnabled()) {
+        <input
+          #inputfield
+          [formControl]="form"
+          class="form-control labelPlaceholder"
+          [id]="id"
+          [readonly]="modal || readOnly"
+          [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
+          [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          style="margin-bottom: 0;"
+          [type]="type"
+          [step]="step"
+          [min]="min"
+          [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
+          [autocomplete]="autocomplete"
+          (keyup.enter)="onKeyUpEnter.next($event)">
+      }
       <!-- [value]="form.value" // Safari problem - skakanje na konec, overkil, ker že imamo form -->
-      <input
-        #inputfield
-        *ngIf="!forceNumeric() && form && !languageFormArray && typeaheadEnabled()"
-        class="form-control labelPlaceholder"
-        [id]="id"
-        [value]="form.value"
-        [readonly]="modal || readOnly"
-        [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
-        [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
-        #instance="ngbTypeahead"
-        [ngbTypeahead]="typeaheadSearch"
-        [resultFormatter]="resultFormatter"
-        [inputFormatter]="inputFormatter"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        (click)="click$.next($event.target.value)"
-        (input)="input$.next($event.target.value)"
-        (selectItem)="selectedItem($event)"
-        [type]="type"
-        [step]="step"
-        [min]="min"
-        [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
-        [autocomplete]="autocomplete"
-        (keyup.enter)="onKeyUpEnter.next($event)">
+      @if (!forceNumeric() && form && !languageFormArray && typeaheadEnabled()) {
+        <input
+          #inputfield
+          class="form-control labelPlaceholder"
+          [id]="id"
+          [value]="form.value"
+          [readonly]="modal || readOnly"
+          [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
+          [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
+          #instance="ngbTypeahead"
+          [ngbTypeahead]="typeaheadSearch"
+          [resultFormatter]="resultFormatter"
+          [inputFormatter]="inputFormatter"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          (click)="click$.next($event.target.value)"
+          (input)="input$.next($event.target.value)"
+          (selectItem)="selectedItem($event)"
+          [type]="type"
+          [step]="step"
+          [min]="min"
+          [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
+          [autocomplete]="autocomplete"
+          (keyup.enter)="onKeyUpEnter.next($event)">
+      }
       <!-- [resultFormatter]="resultFormatter" -->
-      <input
-        #inputfield
-        *ngIf="!forceNumeric() && !form && languageFormArray"
-        [formControl]="languageFormControl"
-        class="form-control labelPlaceholder"
-        [id]="id"
-        [value]="languageFormControl.value"
-        [readonly]="modal || readOnly"
-        [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
-        [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
-        [type]="type"
-        [step]="step"
-        [min]="min"
-        [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
-        [autocomplete]="autocomplete"
-        (keyup.enter)="onKeyUpEnter.next($event)">
+      @if (!forceNumeric() && !form && languageFormArray) {
+        <input
+          #inputfield
+          [formControl]="languageFormControl"
+          class="form-control labelPlaceholder"
+          [id]="id"
+          [value]="languageFormControl.value"
+          [readonly]="modal || readOnly"
+          [ngClass]="{ 'is-invalid': isInvalid, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
+          [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
+          [type]="type"
+          [step]="step"
+          [min]="min"
+          [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
+          [autocomplete]="autocomplete"
+          (keyup.enter)="onKeyUpEnter.next($event)">
+      }
       <!-- for numeric inputs only. "name" must be set because it is within the form tag -->
-      <input
-        #inputfield
-        name="numericInput"
-        class="form-control labelPlaceholder"
-        *ngIf="forceNumeric()"
-        [ngModel]="model"
-        (ngModelChange)="onChange($event)"
-        [id]="id"
-        [readonly]="readOnly"
-        [ngClass]="{ 'is-invalid': isInvalid || isNaN() || numericError, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
-        [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        [type]="type"
-        [step]="step"
-        [min]="min"
-        [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
-        [autocomplete]="autocomplete"
-        (keyup.enter)="onKeyUpEnter.next($event)">
-    <div class="suffix" *ngIf="suffix">{{ suffix }}</div>
-  </div>
-  <ng-container *ngIf="textarea && showInputField">
-    <ng-container *ngIf="!modal">
-      <textarea *ngIf="form && !languageFormArray"
-        #textareafield
-        [formControl]="form"
-        class="form-control text-input labelPlaceholder"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        [readonly]="readOnly"
-        [id]="id"
-        [rows]="rows"
-        [value]="form.value"
-        [ngClass]="{ 'is-invalid': isInvalid }"></textarea>
-      <textarea *ngIf="!form && languageFormArray"
-        #textareafield
-        [formControl]="languageFormControl"
-        class="form-control text-input labelPlaceholder"
-        (focus)="onFocusHandler($event)"
-        (blur)="onBlurHandler($event)"
-        [readonly]="readOnly"
-        [id]="id"
-        [rows]="rows"
-        [value]="languageFormControl.value"
-        [ngClass]="{ 'is-invalid': isInvalid }"></textarea>
-    </ng-container>
-    <div
-      *ngIf="modal"
-      class="labelPlaceholder form-control text-input"
-      (click)="this.editModal()"
-      [class.show-all]="this.showAll"
-      [class.border-danger]="isInvalid"
-      ellipsis [ellipsis-content]="getValue()">
-      {{getValue()}}
+      @if (forceNumeric()) {
+        <input
+          #inputfield
+          name="numericInput"
+          class="form-control labelPlaceholder"
+          [ngModel]="model"
+          (ngModelChange)="onChange($event)"
+          [id]="id"
+          [readonly]="readOnly"
+          [ngClass]="{ 'is-invalid': isInvalid || isNaN() || numericError, 'text-input-bigger': biggerTextInput, 'text-input-without-border': withoutBorder, 'text-input-search': searchInput }"
+          [class.prefix-or-suffix-text-input]="prefix != null || suffix != null"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          [type]="type"
+          [step]="step"
+          [min]="min"
+          [placeholder]="form.disabled || readOnly || disabled ? '' : placeholder"
+          [autocomplete]="autocomplete"
+          (keyup.enter)="onKeyUpEnter.next($event)">
+      }
+      @if (suffix) {
+        <div class="suffix">{{ suffix }}</div>
+      }
     </div>
-  </ng-container>
-  <div *ngIf="numericError || (form && form.errors && form.errors.NaN)" class="sc-invalid-feedback">
-    <span i18n="textinput field force numeric error message|@@ui.textinput.napaka.forceNumeric">
+  }
+  @if (textarea && showInputField) {
+    @if (!modal) {
+      @if (form && !languageFormArray) {
+        <textarea
+          #textareafield
+          [formControl]="form"
+          class="form-control text-input labelPlaceholder"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          [readonly]="readOnly"
+          [id]="id"
+          [rows]="rows"
+          [value]="form.value"
+        [ngClass]="{ 'is-invalid': isInvalid }"></textarea>
+      }
+      @if (!form && languageFormArray) {
+        <textarea
+          #textareafield
+          [formControl]="languageFormControl"
+          class="form-control text-input labelPlaceholder"
+          (focus)="onFocusHandler($event)"
+          (blur)="onBlurHandler($event)"
+          [readonly]="readOnly"
+          [id]="id"
+          [rows]="rows"
+          [value]="languageFormControl.value"
+        [ngClass]="{ 'is-invalid': isInvalid }"></textarea>
+      }
+    }
+    @if (modal) {
+      <div
+        class="labelPlaceholder form-control text-input"
+        (click)="this.editModal()"
+        [class.show-all]="this.showAll"
+        [class.border-danger]="isInvalid"
+        ellipsis [ellipsis-content]="getValue()">
+        {{getValue()}}
+      </div>
+    }
+  }
+  @if (numericError || (form && form.errors && form.errors.NaN)) {
+    <div class="sc-invalid-feedback">
+      <span i18n="textinput field force numeric error message|@@ui.textinput.napaka.forceNumeric">
       You must enter a number in the field! Use decimal commas instead of decimal points.
     </span>
-  </div>
-  <div *ngIf="form && form.errors && form.errors.longIntOverflow" class="sc-invalid-feedback">
-    <span i18n="textinput field force numeric error message|@@ui.textinput.napaka.longIntOverflow">
+    </div>
+  }
+  @if (form && form.errors && form.errors.longIntOverflow) {
+    <div class="sc-invalid-feedback">
+      <span i18n="textinput field force numeric error message|@@ui.textinput.napaka.longIntOverflow">
       The number exceeds the range supported by the computer record
     </span>
-  </div>
+    </div>
+  }
 
   <ng-content></ng-content>
-  <small *ngIf="!!helpText && showInputField">{{helpText}}</small>
+  @if (!!helpText && showInputField) {
+    <small>{{helpText}}</small>
+  }
 
-  <div class="mt-2 af-overrides-mt-2" *ngIf="!hideCounterForModalView">
-    <span [class.text-danger]="counter && tooManyCharacters()">
-      <span
-        *ngIf="counter"
-        class="mt-1 pl-1"
-        i18n="char count label|@@ui.textinput.charCount.label">Num. of chars: {{getSteviloZnakov()}}
+  @if (!hideCounterForModalView) {
+    <div class="mt-2 af-overrides-mt-2">
+      <span [class.text-danger]="counter && tooManyCharacters()">
+        @if (counter) {
+          <span
+            class="mt-1 ps-1"
+            i18n="char count label|@@ui.textinput.charCount.label">Num. of chars: {{getSteviloZnakov()}}
       </span>
-      <span *ngIf="counter && this.getMaxLength()">/ {{this.getMaxLength()}}</span>
-    </span>
-    <span
-      *ngIf="modal && form && form.value && form.value.length> 100"
-      class="ml-2 edit-link"
-      (click)="this.editModal()"
-      i18n="show more button|@@ui.textinput.button.showMore">Show more</span>
-  </div>
+        }
+        @if (counter && this.getMaxLength()) {
+          <span>/ {{this.getMaxLength()}}</span>
+        }
+      </span>
+      @if (modal && form && form.value && form.value.length> 100) {
+        <span
+          class="ms-2 edit-link"
+          (click)="this.editModal()"
+        i18n="show more button|@@ui.textinput.button.showMore">Show more</span>
+      }
+    </div>
+  }
 
 </form>
 
 
 <ng-template #tlcrt let-r="result" let-t="term">
   <!-- <ngb-highlight *ngIf="r !=null" [result]="r" [term]="t"></ngb-highlight> -->
-  <ng-container *ngIf="r != null">{{r}}</ng-container>
-  <div *ngIf="r == null && autocompleteHeaderText" class="dropdown-header"> {{autocompleteHeaderText}}</div>
+  @if (r != null) {
+    {{r}}
+  }
+  @if (r == null && autocompleteHeaderText) {
+    <div class="dropdown-header"> {{autocompleteHeaderText}}</div>
+  }
 </ng-template>

@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaymentControllerService } from '../../../../../api/api/paymentController.service';
 import { StockOrderControllerService } from '../../../../../api/api/stockOrderController.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { ApiBulkPayment } from '../../../../../api/model/apiBulkPayment';
 import { CompanyControllerService } from '../../../../../api/api/companyController.service';
@@ -40,9 +40,11 @@ enum BulkType {
 }
 
 @Component({
-  selector: 'app-stock-payments-bulk-detail',
-  templateUrl: './stock-payments-bulk-detail.component.html',
-  styleUrls: ['./stock-payments-bulk-detail.component.scss']
+    selector: 'app-stock-payments-bulk-detail',
+    templateUrl: './stock-payments-bulk-detail.component.html',
+    styleUrls: ['./stock-payments-bulk-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
 
@@ -62,14 +64,14 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
   paymentsListManager: ListEditorManager<ApiPayment>;
   additionalProofsListManager: ListEditorManager<ApiActivityProof>;
 
-  paymentsForm: FormArray;
-  purchaseItems: FormArray;
-  purchaseItemsNoBankAccount: FormArray;
-  bulkPaymentForm: FormGroup;
-  payableToCompany: FormControl;
-  payableToFarmer: FormControl;
-  payableToCollector: FormControl;
-  payableFromForm: FormControl;
+  paymentsForm: UntypedFormArray;
+  purchaseItems: UntypedFormArray;
+  purchaseItemsNoBankAccount: UntypedFormArray;
+  bulkPaymentForm: UntypedFormGroup;
+  payableToCompany: UntypedFormControl;
+  payableToFarmer: UntypedFormControl;
+  payableToCollector: UntypedFormControl;
+  payableFromForm: UntypedFormControl;
 
   paymentPurposeTypesCodebook = EnumSifrant.fromObject(this.paymentPurposeTypes);
 
@@ -87,9 +89,9 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
     return defaultEmptyObject(ApiActivityProof.formMetadata()) as ApiActivityProof;
   }
 
-  static ApiActivityProofItemEmptyObjectFormFactory(): () => FormControl {
+  static ApiActivityProofItemEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(
+      return new UntypedFormControl(
           this.ApiActivityProofItemCreateEmptyObject(),
           ApiActivityProofValidationScheme.validators
       );
@@ -100,9 +102,9 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
     return defaultEmptyObject(ApiPayment.formMetadata()) as ApiPayment;
   }
 
-  static ApiPaymentEmptyObjectFormFactory(): () => FormControl {
+  static ApiPaymentEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(
+      return new UntypedFormControl(
           this.ApiPaymentCreateEmptyObject(),
           ApiPaymentValidationScheme.validators
       );
@@ -147,13 +149,13 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.bulkPaymentUpdateInProgress = false;
 
-    this.paymentsForm = new FormArray([]);
-    this.purchaseItems = new FormArray([]);
-    this.purchaseItemsNoBankAccount = new FormArray([]);
-    this.payableFromForm = new FormControl(null);
-    this.payableToCompany = new FormControl(null);
-    this.payableToFarmer = new FormControl($localize`:@@productLabelStockBulkPayments.payableTo.multiple:Multiple`);
-    this.payableToCollector = new FormControl(
+    this.paymentsForm = new UntypedFormArray([]);
+    this.purchaseItems = new UntypedFormArray([]);
+    this.purchaseItemsNoBankAccount = new UntypedFormArray([]);
+    this.payableFromForm = new UntypedFormControl(null);
+    this.payableToCompany = new UntypedFormControl(null);
+    this.payableToFarmer = new UntypedFormControl($localize`:@@productLabelStockBulkPayments.payableTo.multiple:Multiple`);
+    this.payableToCollector = new UntypedFormControl(
         this.bulkType === BulkType.PO
             ? $localize`:@@productLabelStockBulkPayments.payableTo.multiple:Multiple`
             : null
@@ -216,13 +218,13 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
     if (this.payingCompany) {
       this.bulkPaymentForm.get('payingCompany').setValue(this.payingCompany);
       this.payableFromForm.setValue(this.payingCompany.name);
-      this.currency = this.payingCompany.currency.code;
+      this.currency = this.payingCompany.currency?.code;
     }
   }
 
   preparePaymentsForEdit() {
     for (const payment of this.bulkPayment.payments) {
-      (this.paymentsForm as FormArray).push(new FormControl(payment));
+      (this.paymentsForm as UntypedFormArray).push(new UntypedFormControl(payment));
     }
   }
 
@@ -245,13 +247,13 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
 
   initializeListManager() {
     this.additionalProofsListManager = new ListEditorManager<ApiActivityProof>(
-        this.bulkPaymentForm.get('additionalProofs') as FormArray,
+        this.bulkPaymentForm.get('additionalProofs') as UntypedFormArray,
         StockPaymentsBulkDetailComponent.ApiActivityProofItemEmptyObjectFormFactory(),
         ApiActivityProofValidationScheme
     );
 
     this.paymentsListManager = new ListEditorManager<ApiPayment>(
-        this.paymentsForm as FormArray,
+        this.paymentsForm as UntypedFormArray,
         StockPaymentsBulkDetailComponent.ApiPaymentEmptyObjectFormFactory(),
         ApiPaymentValidationScheme
     );
@@ -386,7 +388,7 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
       this.bulkPaymentForm.get('formalCreationTime').setValue(dateISOString(formalCreationTime));
     }
 
-    (this.bulkPaymentForm.get('payments') as FormArray).clear();
+    (this.bulkPaymentForm.get('payments') as UntypedFormArray).clear();
     this.bulkPayment = this.bulkPaymentForm.getRawValue();
 
     if (!this.update) {
@@ -446,8 +448,8 @@ export class StockPaymentsBulkDetailComponent implements OnInit, OnDestroy {
     this.bulkPaymentForm.get('totalAmount').setValue(sum);
   }
 
-  get additionalProofsForm(): FormArray {
-    return this.bulkPaymentForm.get('additionalProofs') as FormArray;
+  get additionalProofsForm(): UntypedFormArray {
+    return this.bulkPaymentForm.get('additionalProofs') as UntypedFormArray;
   }
 
   get BulkType(): typeof BulkType {

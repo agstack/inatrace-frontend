@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  ValidatorFn, FormArray, FormGroup } from '@angular/forms';
+import {  ValidatorFn, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { combineLatest, Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, map, tap, filter, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { isEqual } from 'lodash';
@@ -17,7 +17,7 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   }
 
   insertNullPrefixResultIfNonEmpty = false
-  public formGenerator(): (x: T, validators?: Array<ValidatorFn>) => FormGroup { //: (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl {
+  public formGenerator(): (x: T, validators?: ValidatorFn[]) => UntypedFormGroup { //: (x: T, validators: Array<ValidatorFn>) => FormGroupTyped<T> | FormControl {
     throw new Error("Method not implemented.");
   }
 
@@ -40,7 +40,7 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
 
   lastKey = null;
 
-  public onTheFlyCodebook(key$: Observable<string>, selectedObjects$: Observable<Array<T>>, params$: Observable<any>): Observable<PagedSearchResults<T>> {
+  public onTheFlyCodebook(key$: Observable<string>, selectedObjects$: Observable<T[]>, params$: Observable<any>): Observable<PagedSearchResults<T>> {
     return combineLatest(key$, selectedObjects$, params$).pipe(
       // map((val) => {
       //     if(!val[2]) return val;
@@ -56,7 +56,7 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
         this.lastKey = val[0]
       }),
       switchMap((val) => {
-        let pars = { ...val[2] }
+        const pars = { ...val[2] }
         if (!pars.offset) {
           pars.offset = 0
         }
@@ -76,17 +76,17 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   }
 
 
-  public autocompleteCandidates(key$: Observable<string>, selectedObjects$: Observable<Array<T>>, params?: Observable<any>): Observable<PagedSearchResults<T>> {
+  public autocompleteCandidates(key$: Observable<string>, selectedObjects$: Observable<T[]>, params?: Observable<any>): Observable<PagedSearchResults<T>> {
     let paramStream$ = params;
     if (!paramStream$) {
       paramStream$ = new BehaviorSubject<any>(null)
     }
-    let acomplete: Observable<PagedSearchResults<T>> = combineLatest(
+    const acomplete: Observable<PagedSearchResults<T>> = combineLatest(
       key$,
       this.onTheFlyCodebook(key$, selectedObjects$, paramStream$),
       selectedObjects$,
-      (key: string, sifrant: PagedSearchResults<T>, selectedObjects: Array<T>) => {
-        let choices = sifrant.results.filter((x: T) =>
+      (key: string, sifrant: PagedSearchResults<T>, selectedObjects: T[]) => {
+        const choices = sifrant.results.filter((x: T) =>
           (this.allowDuplicateSelection()
           || !(selectedObjects.find(el => this.identifier(el) === this.identifier(x)))
           )
@@ -109,10 +109,10 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
     return acomplete;
   }
 
-  autocompleteMinPrefix: number = 2;
-  maxAllCandidates: number = 100
+  autocompleteMinPrefix = 2;
+  maxAllCandidates = 100
 
-  public getAllCandidates(): Observable<Array<T>> {
+  public getAllCandidates(): Observable<T[]> {
     return this.makeQuery("",
       {
         offset: 0,
@@ -127,10 +127,10 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   public formatter(): (x: T) => string {
     return ((x: T) => this.textRepresentation(x));
   }
-  public addElement(arr: FormArray, el: T): void {
+  public addElement(arr: UntypedFormArray, el: T): void {
     throw new Error("Method not implemented.");
   }
-  public removeElement(arr: FormArray, index: number): void {
+  public removeElement(arr: UntypedFormArray, index: number): void {
     arr.removeAt(index);
     arr.markAsDirty()
     arr.updateValueAndValidity()
@@ -179,7 +179,7 @@ export class GeneralCodesService<T> implements CodebookHelperService<T>{
   }
 
   public placeholder(): string {
-    let placeholder = $localize`:@@generalCodes.input.placehoder:Select from codes ...`
+    const placeholder = $localize`:@@generalCodes.input.placehoder:Select from codes ...`
     return placeholder
   }
 

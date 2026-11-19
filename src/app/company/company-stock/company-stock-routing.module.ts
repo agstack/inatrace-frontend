@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'deliveries'
+    redirectTo: 'deliveries',
+    pathMatch: 'full'
   },
   {
     path: 'deliveries',
@@ -20,7 +21,8 @@ const routes: Routes = [
   },
   {
     path: 'orders', // Used for Beyco redirect - after login they redirect to orders
-    redirectTo: 'all-stock'
+    redirectTo: 'all-stock',
+    pathMatch: 'full'
   },
   {
     path: 'all-stock', loadChildren: () => import('./stock-all-stock/stock-all-stock.module').then(m => m.StockAllStockModule)

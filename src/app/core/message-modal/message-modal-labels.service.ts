@@ -5,7 +5,7 @@ export type MessageType = 'general' | 'question' | 'info' | 'warning' | 'error';
 
 export type MessageResultType = 'ok' | 'cancel';
 
-export type MessageButtonStringDict = { [key in MessageResultType]: string };
+export type MessageButtonStringDict = Record<MessageResultType, string>;
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class MessageModalLabelsService {
       cancel: $localize`:@@messageModalLabels.button.cancel:Cancel` //this.i18n({ value: 'Prekliči', id: 'messageModal.buttons.cancel', meaning: 'message dialog cancel button text' }),
     }
 
-    public titles: { [key in MessageType]: string } = {
+    public titles: Record<MessageType, string> = {
       general: $localize`:@@messageModalLabels.title.general:Message`, // this.i18n({ value: 'Sporočilo', id: 'messageModal.titles.general', meaning: 'message dialog title' }),
       question: $localize`:@@messageModalLabels.title.question:Question`, //this.i18n({ value: 'Vprašanje', id: 'messageModal.titles.question', meaning: 'message dialog title' }),
       info: $localize`:@@messageModalLabels.title.info:Message`, //this.i18n({ value: 'Sporočilo', id: 'messageModal.titles.info', meaning: 'message dialog title' }),

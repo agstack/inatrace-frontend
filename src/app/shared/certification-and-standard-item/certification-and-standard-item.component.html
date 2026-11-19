@@ -9,116 +9,131 @@
   [disableEdit]="disableEdit"
   [viewOnly]="viewOnly">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="contentObject.description">
-          <a *ngIf="contentObject?.certificate?.storageKey" (click)="onDownload(); $event.stopPropagation()">
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
-          </a>
-          {{ contentObject.description }}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (contentObject.description) {
+            <div>
+              @if (contentObject?.certificate?.storageKey) {
+                <a (click)="onDownload(); $event.stopPropagation()">
+                  <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
+                </a>
+              }
+              {{ contentObject.description }}
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-        <h4 class="sp-subform-title" i18n="@@certAndStdItems.subform.title">Certifications and Standards
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <h4 class="sp-subform-title" i18n="@@certAndStdItems.subform.title">Certifications and Standards
         </h4>
-
-        <textinput
-          label="Description"
-          [form]="form.get('description')"
-          style="width: 100%"
-          [textarea]="true"
-          helpText="List and briefly describe the certificates you are currently holding and standards you are following. (e.g. Organic – use of organic seedlings, organic fertilizers, Fair Trade – fair compensation of farmers and other members in the supply chain…)"
-          i18n-label="@@certAndStdItems.textinput.description.label"
-          i18n-helpText="@@certAndStdItems.textinput.description.helpText"
-          [isInvalid]="submitted && form.get('description').invalid"
-          [readOnly]="viewOnly">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n-label="@@certAndStdItems.textinput.description.error">
-                <span>
-                  Description is required
-                </span>
-              </div>
-            </div>
-          </ng-container>
-        </textinput>
-
-        <ng-container>
-          <attachment-uploader
-            allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-            allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-            mode="simpleAsTextField"
-            label="Certificate or Standard (PDF)"
-            i18n-label="@@certAndStdItems.attachment-uploader.label"
-            i18n-allowedMimeTypeErrorMessage="@@certAndStdItems.attachment-uploader.allowedMimeTypeErrorMessage"
-            [form]="form.get('certificate')"
-            [attachmentUploaderId]="'standardsAndCertificates'+listEditorManagerPosition"
-            [invalid]="submitted && form.get('certificate').invalid"
-            [readOnly]="form.get('certificate').disabled || viewOnly">
-            <attachment-uploader-content i18n="@@certAndStdItems.attachment-uploader.content">
+          <textinput
+            label="Description"
+            [form]="form.get('description')"
+            style="width: 100%"
+            [textarea]="true"
+            helpText="List and briefly describe the certificates you are currently holding and standards you are following. (e.g. Organic – use of organic seedlings, organic fertilizers, Fair Trade – fair compensation of farmers and other members in the supply chain…)"
+            i18n-label="@@certAndStdItems.textinput.description.label"
+            i18n-helpText="@@certAndStdItems.textinput.description.helpText"
+            [isInvalid]="submitted && form.get('description').invalid"
+            [readOnly]="viewOnly">
+            @if (submitted) {
+              @if (form.get('description').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n-label="@@certAndStdItems.textinput.description.error">
+                      <span>
+                        Description is required
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </textinput>
+          <ng-container>
+            <attachment-uploader
+              allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+              mode="simpleAsTextField"
+              label="Certificate or Standard (PDF)"
+              i18n-label="@@certAndStdItems.attachment-uploader.label"
+              i18n-allowedMimeTypeErrorMessage="@@certAndStdItems.attachment-uploader.allowedMimeTypeErrorMessage"
+              [form]="form.get('certificate')"
+              [attachmentUploaderId]="'standardsAndCertificates'+listEditorManagerPosition"
+              [invalid]="submitted && form.get('certificate').invalid"
+              [readOnly]="form.get('certificate').disabled || viewOnly">
+              <attachment-uploader-content i18n="@@certAndStdItems.attachment-uploader.content">
               Upload certificate
             </attachment-uploader-content>
-            <attachment-uploader-errors>
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('certificate').errors as errors" validation-error class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@certAndStdItems.attachment-uploader.error">
+              <attachment-uploader-errors>
+                @if (submitted) {
+                  @if (form.get('certificate').errors; as errors) {
+                    <div validation-error class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@certAndStdItems.attachment-uploader.error">
                     <span>
                       Document is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
-            </attachment-uploader-errors>
-          </attachment-uploader>
-          <small i18n="@@certAndStdItems.attachment-uploader.small">With every certificate or standard listed above, upload pdf/image proofs of holding those certificates and following the standards (make sure to not upload confidential information)</small>
-
-        </ng-container>
-
-        <single-choice label="Type"
-          i18n-label="@@certAndStdItems.textinput.type.label"
-          [formControlInput]="form.get('type')"
-          [enumChoices]="certificationTypes"
-          [isInvalidChoice]="submitted && form.get('type').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('type').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@certAndStdItems.textinput.type.error">
+                      }
+                    </div>
+                  }
+                }
+              </attachment-uploader-errors>
+            </attachment-uploader>
+            <small i18n="@@certAndStdItems.attachment-uploader.small">With every certificate or standard listed above, upload pdf/image proofs of holding those certificates and following the standards (make sure to not upload confidential information)</small>
+          </ng-container>
+          <single-choice label="Type"
+            i18n-label="@@certAndStdItems.textinput.type.label"
+            [formControlInput]="form.get('type')"
+            [enumChoices]="certificationTypes"
+            [isInvalidChoice]="submitted && form.get('type').invalid">
+            @if (submitted) {
+              @if (form.get('type').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@certAndStdItems.textinput.type.error">
                 Type is required
               </div>
-            </div>
-          </ng-container>
-
-        </single-choice>
-
-        <app-datepicker
-          label="Validity date"
-          i18n-label="@@certAndStdItems.validty.labe"
-          [form]="form.get('validity')"
-          [invalid]="submitted && form.get('validity').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('validity').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required">
-                Validity is required
-              </div>
-            </div>
-          </ng-container>
-        </app-datepicker>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid"
-          [cancelButtonOnly]="viewOnly">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                  }
+                </div>
+              }
+            }
+          </single-choice>
+          <app-datepicker
+            label="Validity date"
+            i18n-label="@@certAndStdItems.validty.labe"
+            [form]="form.get('validity')"
+            [invalid]="submitted && form.get('validity').invalid">
+            @if (submitted) {
+              @if (form.get('validity').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div>
+                      Validity is required
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </app-datepicker>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid"
+            [cancelButtonOnly]="viewOnly">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

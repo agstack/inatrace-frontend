@@ -1,49 +1,31 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
-// TO JE ORIGINALNO OD Angular 10. Sem zakomentiral, ker ne dela pravilno VSCode in dodal tisto spodaj.  https://github.com/microsoft/TypeScript/issues/39411
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "useDefineForClassFields": false,
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
+    "allowSyntheticDefaultImports": true
+  }
 }
-
-//{
-//  "compileOnSave": false,
-//  "compilerOptions": {
-//    "baseUrl": "./",
-//    "outDir": "./dist/out-tsc",
-//    "sourceMap": true,
-//    "declaration": false,
-//    "downlevelIteration": true,
-//    "emitDecoratorMetadata": true,
-//    "experimentalDecorators": true,
-//    "module": "es2020",
-//    "moduleResolution": "node",
-//    "importHelpers": true,
-//    "resolveJsonModule": true,
-//    "esModuleInterop": true,
-//    "target": "es2015",
-//    "typeRoots": [
-//      "node_modules/@types"
-//    ],
-//    "lib": [
-//      "es2018",
-//      "dom"
-//    ]
-//  },
-//  "angularCompilerOptions": {
-//    "fullTemplateTypeCheck": true,
-//    "strictInjectionParameters": true
-//  }
-//}
-

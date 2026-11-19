@@ -1,4 +1,4 @@
-import { FormArray, FormControl } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ApiProcessingAction } from '../../../../../api/model/apiProcessingAction';
 import { ApiProcessingEvidenceField } from '../../../../../api/model/apiProcessingEvidenceField';
 import { StockProcessingOrderDetailsHelper } from './stock-processing-order-details.helper';
@@ -12,10 +12,10 @@ describe('StockProcessingOrderDetailsHelper', () => {
   } as ApiProcessingAction;
 
   it('accepts empty values and zero, but rejects fractional integer values', () => {
-    expect(StockProcessingOrderDetailsHelper.integerValidator(new FormControl(null))).toBeNull();
-    expect(StockProcessingOrderDetailsHelper.integerValidator(new FormControl(0))).toBeNull();
-    expect(StockProcessingOrderDetailsHelper.integerValidator(new FormControl(7))).toBeNull();
-    expect(StockProcessingOrderDetailsHelper.integerValidator(new FormControl(7.5))).toEqual({integer: true});
+    expect(StockProcessingOrderDetailsHelper.integerValidator(new UntypedFormControl(null))).toBeNull();
+    expect(StockProcessingOrderDetailsHelper.integerValidator(new UntypedFormControl(0))).toBeNull();
+    expect(StockProcessingOrderDetailsHelper.integerValidator(new UntypedFormControl(7))).toBeNull();
+    expect(StockProcessingOrderDetailsHelper.integerValidator(new UntypedFormControl(7.5))).toEqual({integer: true});
   });
 
   it('does not throw when an older processing order has no evidence form group', () => {
@@ -57,7 +57,7 @@ describe('StockProcessingOrderDetailsHelper', () => {
   });
 
   it('keeps optional document evidence optional and omits it from the payload when empty', async () => {
-    const documents = new FormArray([]);
+    const documents = new UntypedFormArray([]);
     const actionWithOptionalDocument = {
       requiredDocumentTypes: [{id: 3, code: 'QUALITY_REPORT', label: 'Quality control report', mandatory: false}]
     } as ApiProcessingAction;

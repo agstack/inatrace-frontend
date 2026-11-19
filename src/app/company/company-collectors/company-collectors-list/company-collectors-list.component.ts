@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { SortOption, SortOrder } from '../../../shared/result-sorter/result-sorter-types';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 import { CompanyControllerService, GetUserCustomersForCompanyAndType } from '../../../../api/api/companyController.service';
 import { Router } from '@angular/router';
 import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-company-collectors-list',
-  templateUrl: './company-collectors-list.component.html',
-  styleUrls: ['./company-collectors-list.component.scss']
+    selector: 'app-company-collectors-list',
+    templateUrl: './company-collectors-list.component.html',
+    styleUrls: ['./company-collectors-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyCollectorsListComponent implements OnInit{
 
@@ -22,7 +24,7 @@ export class CompanyCollectorsListComponent implements OnInit{
   showing;
   collectorCount;
 
-  searchNameCollectors = new FormControl('');
+  searchNameCollectors = new UntypedFormControl('');
   byCategory = 'BY_NAME';
 
   collector$;

@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -15,7 +16,7 @@ class FakeMap {
   removed = false;
   dragRotate = { disable: () => {} };
   touchZoomRotate = { disableRotation: () => {} };
-  private listeners: { [type: string]: Array<(event?: any) => void> } = {};
+  private listeners: Record<string, ((event?: any) => void)[]> = {};
 
   on(type: string, listener: (event?: any) => void) {
     (this.listeners[type] = this.listeners[type] || []).push(listener);
@@ -40,6 +41,7 @@ describe('MapComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [ReactiveFormsModule],
       declarations: [MapComponent],
       providers: [

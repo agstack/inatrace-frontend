@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelfOnboardingChecklistModalComponent } from "../self-onboarding-checklist-modal.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModalImproved } from "../../../core/ngb-modal-improved/ngb-modal-improved.service";
 import { SelfOnboardingService } from "../../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-checklist-add-processing-action-success-modal',
-  templateUrl: './checklist-add-processing-action-success-modal.component.html',
-  styleUrls: ['./checklist-add-processing-action-success-modal.component.scss', '../self-onboarding-checklist-modal.component.scss']
+    selector: 'app-checklist-add-processing-action-success-modal',
+    templateUrl: './checklist-add-processing-action-success-modal.component.html',
+    styleUrls: ['./checklist-add-processing-action-success-modal.component.scss', '../self-onboarding-checklist-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ChecklistAddProcessingActionSuccessModalComponent implements OnInit {
 

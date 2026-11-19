@@ -1,147 +1,161 @@
 <smart-tag
-        [isOpen]="isOpen && !rawObjectData"
-        [readOnly]="rawObjectData"
-        (onDelete)="delete()"
-        (onEdit)="toggle($event)"
-        [formControlInput]="originalFormControl"
-        [disableDelete]="disableDelete"
-        [disableRowClick]="true">
+  [isOpen]="isOpen && !rawObjectData"
+  [readOnly]="rawObjectData"
+  (onDelete)="delete()"
+  (onEdit)="toggle($event)"
+  [formControlInput]="originalFormControl"
+  [disableDelete]="disableDelete"
+  [disableRowClick]="true">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="af-tagitem-container">
-        <span class="af-tagitem-text">{{ name }}</span>
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="af-tagitem-container">
+          <span class="af-tagitem-text">{{ name }}</span>
+        </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <single-choice *ngIf="codebookOrderingProcessingActions"
-                           label="Final product"
-                           i18n-label="@@stockOrderItem.processingAction.label"
-                           [formControlInput]="$any(form.get('processingOrder.processingAction'))"
-                           [codebookService]="codebookOrderingProcessingActions"
-                           (onChange)="setProcessingAction($event)"
-                           [isInvalidChoice]="submitted && form.get('processingOrder.processingAction').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('processingOrder.processingAction').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@stockOrderItem.singleChoice.finalProduct.error">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <div class="af-row">
+            <div class="af-c12">
+              @if (codebookOrderingProcessingActions) {
+                <single-choice
+                  label="Final product"
+                  i18n-label="@@stockOrderItem.processingAction.label"
+                  [formControlInput]="$any(form.get('processingOrder.processingAction'))"
+                  [codebookService]="codebookOrderingProcessingActions"
+                  (onChange)="setProcessingAction($event)"
+                  [isInvalidChoice]="submitted && form.get('processingOrder.processingAction').invalid">
+                  @if (submitted) {
+                    @if (form.get('processingOrder.processingAction').errors; as errors) {
+                      <div class="sc-invalid-feedback">
+                        @if (errors.required) {
+                          <div i18n="@@stockOrderItem.singleChoice.finalProduct.error">
                     Final product is required
                   </div>
-                </div>
-              </ng-container>
-            </single-choice>
+                        }
+                      </div>
+                    }
+                  }
+                </single-choice>
+              }
+            </div>
           </div>
-        </div>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <single-choice
-                    *ngIf="inputFacilitiesCodebook"
-                    label="Order from"
-                    i18n-label="@@stockOrderItem.inputFacilityForm.label"
-                    [formControlInput]="$any(form.get('quoteFacility'))"
-                    [codebookService]="inputFacilitiesCodebook"
-                    [supplierFeedback]="true"
-                    style="min-width: 150px;"
-                    [isInvalidChoice]="submitted && form.get('quoteFacility').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('quoteFacility').errors as errors" class="sc-invalid-feedback" i18n="@@stockOrderItem.inputFacilityForm.error.required">
+          <div class="af-row">
+            <div class="af-c12">
+              @if (inputFacilitiesCodebook) {
+                <single-choice
+                  label="Order from"
+                  i18n-label="@@stockOrderItem.inputFacilityForm.label"
+                  [formControlInput]="$any(form.get('quoteFacility'))"
+                  [codebookService]="inputFacilitiesCodebook"
+                  [supplierFeedback]="true"
+                  style="min-width: 150px;"
+                  [isInvalidChoice]="submitted && form.get('quoteFacility').invalid">
+                  @if (submitted) {
+                    @if (form.get('quoteFacility').errors; as errors) {
+                      <div class="sc-invalid-feedback" i18n="@@stockOrderItem.inputFacilityForm.error.required">
                   Input facility is required
                 </div>
-              </ng-container>
-            </single-choice>
+                    }
+                  }
+                </single-choice>
+              }
+            </div>
           </div>
-        </div>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <textinput
-                    [form]="$any(form.get('totalQuantity'))"
-                    [label]="outputQuantityLabel"
-                    style="width: 100%"
-                    type="number"
-                    placeholder="Enter quantity"
-                    i18n-placeholder="@@stockOrderItem.textinput.quantity.placeholder"
-                    [isInvalid]="submitted && form.get('totalQuantity').invalid"
-                    [readOnly]="!form.get('processingOrder.processingAction').value">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('totalQuantity').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@stockOrderItem.quantity.textinput.error">
+          <div class="af-row">
+            <div class="af-c12">
+              <textinput
+                [form]="$any(form.get('totalQuantity'))"
+                [label]="outputQuantityLabel"
+                style="width: 100%"
+                type="number"
+                placeholder="Enter quantity"
+                i18n-placeholder="@@stockOrderItem.textinput.quantity.placeholder"
+                [isInvalid]="submitted && form.get('totalQuantity').invalid"
+                [readOnly]="!form.get('processingOrder.processingAction').value">
+                @if (submitted) {
+                  @if (form.get('totalQuantity').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@stockOrderItem.quantity.textinput.error">
                     Quantity is required
                   </div>
-                </div>
-              </ng-container>
-            </textinput>
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+            </div>
           </div>
-        </div>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <textinput
-                    [form]="$any(form.get('internalLotNumber'))"
-                    label="Internal lot name"
-                    i18n-label="@@stockOrderItem.textinput.internalLotName.label"
-                    style="width: 100%"
-                    [readOnly]="true">
-            </textinput>
+          <div class="af-row">
+            <div class="af-c12">
+              <textinput
+                [form]="$any(form.get('internalLotNumber'))"
+                label="Internal lot name"
+                i18n-label="@@stockOrderItem.textinput.internalLotName.label"
+                style="width: 100%"
+                [readOnly]="true">
+              </textinput>
+            </div>
           </div>
-        </div>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <single-choice
-                    label="Currency for end-customer"
-                    i18n-label="@@stockOrderItem.textinput.currencyForEndCustomer.label"
-                    [formControlInput]="$any(form.get('currencyForEndCustomer'))"
-                    [codebookService]="currencyCodesService"
-                    style="min-width: 150px;"
-                    [isInvalidChoice]="submitted && form.get('currencyForEndCustomer').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('currencyForEndCustomer').errors as errors"
-                     class="sc-invalid-feedback" i18n="@@stockOrderItem.textinput.currencyForEndCustomer.error.required">
+          <div class="af-row">
+            <div class="af-c12">
+              <single-choice
+                label="Currency for end-customer"
+                i18n-label="@@stockOrderItem.textinput.currencyForEndCustomer.label"
+                [formControlInput]="$any(form.get('currencyForEndCustomer'))"
+                [codebookService]="currencyCodesService"
+                style="min-width: 150px;"
+                [isInvalidChoice]="submitted && form.get('currencyForEndCustomer').invalid">
+                @if (submitted) {
+                  @if (form.get('currencyForEndCustomer').errors; as errors) {
+                    <div
+                      class="sc-invalid-feedback" i18n="@@stockOrderItem.textinput.currencyForEndCustomer.error.required">
                   Currency for end-customer is required
                 </div>
-              </ng-container>
-            </single-choice>
+                  }
+                }
+              </single-choice>
+            </div>
           </div>
-        </div>
-
-        <div class="af-row">
-          <div class="af-c12">
-            <textinput
-                    [form]="$any(form.get('pricePerUnitForEndCustomer'))"
-                    [label]="pricePerUnitLabel"
-                    style="width: 100%"
-                    type="number"
-                    [placeholder]="pricePerUnitPlaceholder"
-                    [isInvalid]="submitted && form.get('pricePerUnitForEndCustomer').invalid"
-                    [readOnly]="!form.get('currencyForEndCustomer').value">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('pricePerUnitForEndCustomer').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@stockOrderItem.pricePerUnitForEndCustomer.textinput.error">
+          <div class="af-row">
+            <div class="af-c12">
+              <textinput
+                [form]="$any(form.get('pricePerUnitForEndCustomer'))"
+                [label]="pricePerUnitLabel"
+                style="width: 100%"
+                type="number"
+                [placeholder]="pricePerUnitPlaceholder"
+                [isInvalid]="submitted && form.get('pricePerUnitForEndCustomer').invalid"
+                [readOnly]="!form.get('currencyForEndCustomer').value">
+                @if (submitted) {
+                  @if (form.get('pricePerUnitForEndCustomer').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@stockOrderItem.pricePerUnitForEndCustomer.textinput.error">
                     Price is required
                   </div>
-                </div>
-              </ng-container>
-            </textinput>
+                      }
+                    </div>
+                  }
+                }
+              </textinput>
+            </div>
           </div>
-        </div>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-                (onSave)="save()"
-                (onCancel)="cancel()"
-                [error]="submitted && form.invalid">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

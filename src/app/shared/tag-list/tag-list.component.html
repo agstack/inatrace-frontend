@@ -1,125 +1,136 @@
 <div class="form-group">
-    <label class="d-flex">
-        <div>
-                {{ label }}
-        </div>
-        <div class="d-flex align-items-center pl-1">
-                <div class="addbutton">
-                        <fa-icon class="plusicon" [@rotatedPlus]="inputVisible ? 'open' : 'closed'" [icon]="'plus-circle'" (click)="mainCloseButtonToggle()"></fa-icon>
-                </div>
-        </div>
-    </label>
-    <ng-template #tlcrt let-r="result" let-t="term">
-        <ngb-highlight *ngIf="r !=null" [result]="formatter(r)" [term]="t"></ngb-highlight>
-        <!-- <div *ngIf="r == null">
-                <span (click)="addNew()"><fa-icon [icon]="'plus'" transform="shrink-3"></fa-icon> {{addNewTitle}}</span>
-        </div> -->
-    </ng-template>
-    <!-- <div class="form-group form-inline" *ngIf="inputVisible"> -->
-    <div class="form-group form-inline" [@expandCollapse]="inputVisible ? 'open' : 'closed'">
-        <input #newTagInput *ngIf="typeaheadEnabled()"
-                    type="text"
-                    class="form-control col sp-textinput"
-                    [ngModel]="modelChoice"
-                    (ngModelChange)="onModelChange($event)"
-                    (keydown)="keydown$.next($event)"
-                    (keydown.esc)="stopAddTag()"
-                    [ngbTypeahead]="typeaheadSearch"
-                    [inputFormatter]="formatter"
-                    [resultTemplate]="tlcrt"
-                    (focus)="focus$.next($event.target.value)"
-                    (click)="click$.next($event.target.value)"
-                    (input)="input$.next($event.target.value)"
-                    #instance="ngbTypeahead"
-                    (selectItem)="selectedItem($event)"
-                    [focusFirst]="true || !this.codebookService.canAddNew()"
-                    (blur)="onBlur($event)"
-        >
-        <input #newTagInput
-                *ngIf="!typeaheadEnabled()"
-                type="text"
-                class="form-control col"
-                [(ngModel)]="modelChoice"
-                (keydown.esc)="stopAddTag()"
-                (keydown.enter)="finishAddTag()"
-                (blur)="onBlur($event)"
-        >
-        <button
-            *ngIf="codebookService.canAddNew()"
-            class="btn btn-success col-auto ml-2 btn-circle"
-            (click)="createNewTag()"
-            [disabled]="!newTagValid()"
-        >
-            <fa-icon [icon]="'check'"></fa-icon>
-        </button>
-        <button
-            *ngIf="codebookService.canAddNew()"
-            class="btn btn-secondary col-auto ml-2 btn-circle"
-            (click)="cancelCreateAddNewTag()"
-        >
-            <fa-icon [icon]="'times'"></fa-icon>
-        </button>
-
-        <!-- <button
-            *ngIf="codebookService.canAddNew() && !this.arrayName && !this.isNew"
-            class="btn btn-success col-auto ml-2"
-            (click)="createNew()"
-        >
-            <fa-icon [icon]="'check'"></fa-icon>
-        </button>
-        <button
-            *ngIf="codebookService.canAddNew() && !this.arrayName && this.isNew"
-            class="btn btn-secondary col-auto ml-2"
-            (click)="resetNew()"
-        >
-            <fa-icon [icon]="'times'"></fa-icon>
-        </button> -->
-
+  <label class="d-flex">
+    <div>
+      {{ label }}
     </div>
-    <!-- <div *ngIf="isNew" class="card p-3 card-outline-primary">
-        <ng-content ></ng-content>
-    </div> -->
-    <ng-content></ng-content>
-    <div
-        i18n="tag list opozorilo ni izbir|@@ui.tagList.opozorilo.niIzbir"
-        *ngIf="inputVisible && (showNoChoicesWarning$ | async)"
-        class="alert alert-warning"
-        role="alert"
+    <div class="d-flex align-items-center ps-1">
+      <div class="addbutton">
+        <fa-icon class="plusicon" [@rotatedPlus]="inputVisible ? 'open' : 'closed'" [icon]="'plus-circle'" (click)="mainCloseButtonToggle()"></fa-icon>
+      </div>
+    </div>
+  </label>
+  <ng-template #tlcrt let-r="result" let-t="term">
+    @if (r !=null) {
+      <ngb-highlight [result]="formatter(r)" [term]="t"></ngb-highlight>
+    }
+    <!-- <div *ngIf="r == null">
+    <span (click)="addNew()"><fa-icon [icon]="'plus'" transform="shrink-3"></fa-icon> {{addNewTitle}}</span>
+  </div> -->
+</ng-template>
+<!-- <div class="form-group form-inline" *ngIf="inputVisible"> -->
+<div class="form-group form-inline" [@expandCollapse]="inputVisible ? 'open' : 'closed'">
+  @if (typeaheadEnabled()) {
+    <input #newTagInput
+      type="text"
+      class="form-control col sp-textinput"
+      [ngModel]="modelChoice"
+      (ngModelChange)="onModelChange($event)"
+      (keydown)="keydown$.next($event)"
+      (keydown.esc)="stopAddTag()"
+      [ngbTypeahead]="typeaheadSearch"
+      [inputFormatter]="formatter"
+      [resultTemplate]="tlcrt"
+      (focus)="focus$.next($event.target.value)"
+      (click)="click$.next($event.target.value)"
+      (input)="input$.next($event.target.value)"
+      #instance="ngbTypeahead"
+      (selectItem)="selectedItem($event)"
+      [focusFirst]="true || !this.codebookService.canAddNew()"
+      (blur)="onBlur($event)"
+      >
+  }
+  @if (!typeaheadEnabled()) {
+    <input #newTagInput
+      type="text"
+      class="form-control col"
+      [(ngModel)]="modelChoice"
+      (keydown.esc)="stopAddTag()"
+      (keydown.enter)="finishAddTag()"
+      (blur)="onBlur($event)"
+      >
+  }
+  @if (codebookService.canAddNew()) {
+    <button
+      class="btn btn-success col-auto ms-2 btn-circle"
+      (click)="createNewTag()"
+      [disabled]="!newTagValid()"
+      >
+      <fa-icon [icon]="'check'"></fa-icon>
+    </button>
+  }
+  @if (codebookService.canAddNew()) {
+    <button
+      class="btn btn-secondary col-auto ms-2 btn-circle"
+      (click)="cancelCreateAddNewTag()"
+      >
+      <fa-icon [icon]="'times'"></fa-icon>
+    </button>
+  }
+
+  <!-- <button
+  *ngIf="codebookService.canAddNew() && !this.arrayName && !this.isNew"
+  class="btn btn-success col-auto ms-2"
+  (click)="createNew()"
+  >
+  <fa-icon [icon]="'check'"></fa-icon>
+</button>
+<button
+  *ngIf="codebookService.canAddNew() && !this.arrayName && this.isNew"
+  class="btn btn-secondary col-auto ms-2"
+  (click)="resetNew()"
+  >
+  <fa-icon [icon]="'times'"></fa-icon>
+</button> -->
+
+</div>
+<!-- <div *ngIf="isNew" class="card p-3 card-outline-primary">
+<ng-content ></ng-content>
+</div> -->
+<ng-content></ng-content>
+@if (inputVisible && (showNoChoicesWarning$ | async)) {
+  <div
+    i18n="tag list opozorilo ni izbir|@@ui.tagList.opozorilo.niIzbir"
+    class="alert alert-warning"
+    role="alert"
     >
       No choices!
     </div>
+}
 
 
-    <!-- <ul cdkDropList>
-        <div cdkDrag *ngFor="let tag of this.formArray.controls;">Item</div>
-    </ul> -->
+<!-- <ul cdkDropList>
+<div cdkDrag *ngFor="let tag of this.formArray.controls;">Item</div>
+</ul> -->
 
-    <div *ngIf="this.formArray" cdkDropList (cdkDropListDropped)="onDropFormArray($event)" cdkDropListOrientation="horizontal">
-        <div style="display: inline-block;"
-            *ngFor="let tag of this.formArray.controls; let i = index"
-            cdkDrag
-            [cdkDragDisabled]="!(sortable && this.formArray.controls.length > 1)">
-            <!-- <div class="tagitem">
-                    {{ formatter(tag.getRawValue()) }}
-                    <span class="removebutton" (mousedown)="removeTag(i)">
-                        <fa-icon icon="times" transform="shrink-2"></fa-icon>
-                    </span>
-            </div> -->
-            <tag-list-tag
-                [text]="formatter(tag.value)"
-                (onRemove)="removeTag($event, i)"
-            ></tag-list-tag>
-        </div>
+@if (this.formArray) {
+  <div cdkDropList (cdkDropListDropped)="onDropFormArray($event)" cdkDropListOrientation="horizontal">
+    @for (tag of this.formArray.controls; track tag; let i = $index) {
+      <div style="display: inline-block;"
+        cdkDrag
+        [cdkDragDisabled]="!(sortable && this.formArray.controls.length > 1)">
+        <!-- <div class="tagitem">
+        {{ formatter(tag.getRawValue()) }}
+        <span class="removebutton" (mousedown)="removeTag(i)">
+          <fa-icon icon="times" transform="shrink-2"></fa-icon>
+        </span>
+      </div> -->
+      <tag-list-tag
+        [text]="formatter(tag.value)"
+        (onRemove)="removeTag($event, i)"
+      ></tag-list-tag>
     </div>
+  }
+</div>
+}
 
-    <!-- ZAENKRAT ONEMOGOČENO -->
-    <!-- <div *ngIf="!this.arrayName && !this.codebookService.isEmpty(this.formGroup)" class="list">
-        <div class="tagitem">
-            {{ formatter(this.formGroup.getRawValue()) }}
-            <span class="removebutton" style="margin-bottom: 5px" (mousedown)="removeTag(i)">
-                <fa-icon icon="times" transform="shrink-3"></fa-icon>
-            </span>
-        </div>
-     </div> -->
+<!-- ZAENKRAT ONEMOGOČENO -->
+<!-- <div *ngIf="!this.arrayName && !this.codebookService.isEmpty(this.formGroup)" class="list">
+<div class="tagitem">
+  {{ formatter(this.formGroup.getRawValue()) }}
+  <span class="removebutton" style="margin-bottom: 5px" (mousedown)="removeTag(i)">
+    <fa-icon icon="times" transform="shrink-3"></fa-icon>
+  </span>
+</div>
+</div> -->
 
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonControllerService } from 'src/api/api/commonController.service';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
@@ -7,9 +7,11 @@ import { SettingsComponent } from '../settings.component';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-settings-types',
-  templateUrl: './settings-types.component.html',
-  styleUrls: ['../settings.component.scss']
+    selector: 'app-settings-types',
+    templateUrl: './settings-types.component.html',
+    styleUrls: ['../settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SettingsTypesComponent extends SettingsComponent {
 

@@ -1,12 +1,13 @@
-<img
+@if (dataUrl$|async; as src) {
+  <img
     [ngClass]="{'img-view': !width || !height, 'sign-in-image': signInImage, 'center-vertical': centerVertical}"
-    *ngIf="dataUrl$|async as src"
     [src]="src"
     alt="Place image title"
     i18n-alt="@@imageViewer.img.alt"
     [width]="width"
     [height]="height"
     alt="Loading file"
->
+    >
+}
 
 

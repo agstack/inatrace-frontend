@@ -8,88 +8,96 @@
   [disableDelete]="disableDelete"
   [viewOnly]="viewOnly">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="contentObject.description">
-          <a *ngIf="contentObject?.document?.storageKey" (click)="onDownload(); $event.stopPropagation()">
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
-          </a>
-          {{contentObject.description}}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (contentObject.description) {
+            <div>
+              @if (contentObject?.document?.storageKey) {
+                <a (click)="onDownload(); $event.stopPropagation()">
+                  <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faStamp" size="1x"></fa-icon>
+                </a>
+              }
+              {{contentObject.description}}
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-        <h4 class="sp-subform-title">{{title}}
-        </h4>
-
-        <textinput
-          label="Description"
-          [form]="form.get('description')"
-          style="width: 100%"
-          [textarea]="true"
-          helpText="Describe how this product is produced in few steps."
-          i18n-label="@@productionRecordItem.textinput.description.label"
-          [isInvalid]="submitted && form.get('description').invalid"
-          [readOnly]="viewOnly">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n-label="@@productionRecordItem.textinput.description.error">
-                <span>
-                  Description is required
-                </span>
-              </div>
-            </div>
-          </ng-container>
-        </textinput>
-
-        <ng-container>
-          <attachment-uploader
-            allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
-            allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-            mode="simpleAsTextField"
-            label="Production record (PDF/PNG/JPG)"
-            i18n-label="@@productionRecordItem.attachment-uploader.label"
-            i18n-allowedMimeTypeErrorMessage="@@productionRecordItem.attachment-uploader.allowedMimeTypeErrorMessage"
-            [form]="form.get('document')"
-            [attachmentUploaderId]="'productionRecord'+listEditorManagerPosition"
-            [invalid]="submitted && form.get('document').invalid"
-            [readOnly]="form.get('document').disabled || viewOnly">
-            <attachment-uploader-content i18n="@@productionRecordItem.attachment-uploader.content">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <h4 class="sp-subform-title">{{title}}
+          </h4>
+          <textinput
+            label="Description"
+            [form]="form.get('description')"
+            style="width: 100%"
+            [textarea]="true"
+            helpText="Describe how this product is produced in few steps."
+            i18n-label="@@productionRecordItem.textinput.description.label"
+            [isInvalid]="submitted && form.get('description').invalid"
+            [readOnly]="viewOnly">
+            @if (submitted) {
+              @if (form.get('description').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n-label="@@productionRecordItem.textinput.description.error">
+                      <span>
+                        Description is required
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </textinput>
+          <ng-container>
+            <attachment-uploader
+              allowedMimeType="[image/png', 'image/jpeg', 'application/pdf']"
+              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+              mode="simpleAsTextField"
+              label="Production record (PDF/PNG/JPG)"
+              i18n-label="@@productionRecordItem.attachment-uploader.label"
+              i18n-allowedMimeTypeErrorMessage="@@productionRecordItem.attachment-uploader.allowedMimeTypeErrorMessage"
+              [form]="form.get('document')"
+              [attachmentUploaderId]="'productionRecord'+listEditorManagerPosition"
+              [invalid]="submitted && form.get('document').invalid"
+              [readOnly]="form.get('document').disabled || viewOnly">
+              <attachment-uploader-content i18n="@@productionRecordItem.attachment-uploader.content">
               Upload document
             </attachment-uploader-content>
-            <attachment-uploader-errors>
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@productionRecordItem.attachment-uploader.error">
+              <attachment-uploader-errors>
+                @if (submitted) {
+                  @if (form.get('document').errors; as errors) {
+                    <div validation-error class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productionRecordItem.attachment-uploader.error">
                     <span>
                       Document is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
-            </attachment-uploader-errors>
-          </attachment-uploader>
-          <small i18n="@@productionRecordItem.attachment-uploader.small">Upload pdf/image of your production records (farming records, production protocols…)</small>
-
-        </ng-container>
-
-
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid"
-          [cancelButtonOnly]="viewOnly">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                      }
+                    </div>
+                  }
+                }
+              </attachment-uploader-errors>
+            </attachment-uploader>
+            <small i18n="@@productionRecordItem.attachment-uploader.small">Upload pdf/image of your production records (farming records, production protocols…)</small>
+          </ng-container>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid"
+            [cancelButtonOnly]="viewOnly">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

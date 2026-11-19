@@ -1,32 +1,40 @@
 <form class="form-group" autocomplete="off" [class.no-bottom-margin]="noBottomMargin">
-    <label class="mb-0 text-input-label" *ngIf="labelSpacer && !inTable">&nbsp;</label>
-      <div class="form-group checkbox-container" [class.no-bottom-margin]="noBottomMargin">
-        <input *ngIf="form"
-            #inputfield
-            type="checkbox"
-            [id]="id"
-            [class]="'checkbox rounded'"
-            [checked]="form.value"
-            (change)="onClick.next($event.target.checked)"
-            [formControl]="form"
-            [disabled]="isDisabled()"
-            [attr.disabled]="isDisabled() ? true : null"
-            [class.checkbox-disabled]="isDisabled()"
-            [class.sc-invalid-feedback-border]="invalid"
-            />
-        <input *ngIf="!form"
-            #inputfield
-            type="checkbox"
-            [id]="id"
-            [class]="'checkbox rounded'"
-            (click)="onClick.next($event)"
-            [checked]="checked"
-            [disabled]="isDisabled()"
-            [attr.disabled]="isDisabled() ? true : null"
-            [class.checkbox-disabled]="isDisabled()"
-            [class.sc-invalid-feedback-border]="invalid"
-            />
-        <label *ngIf="!inTable" class="text dark label checkbox-label" [for]="id">{{label}}<ng-content select="checkbox-input-rich-label"></ng-content></label>
-    </div>
-    <ng-content select="checkbox-input-errors"></ng-content>
+  @if (labelSpacer && !inTable) {
+    <label class="mb-0 text-input-label">&nbsp;</label>
+  }
+  <div class="form-group checkbox-container" [class.no-bottom-margin]="noBottomMargin">
+    @if (form) {
+      <input
+        #inputfield
+        type="checkbox"
+        [id]="id"
+        [class]="'checkbox rounded'"
+        [checked]="form.value"
+        (change)="onClick.next($event.target.checked)"
+        [formControl]="form"
+        [disabled]="isDisabled()"
+        [attr.disabled]="isDisabled() ? true : null"
+        [class.checkbox-disabled]="isDisabled()"
+        [class.sc-invalid-feedback-border]="invalid"
+        />
+    }
+    @if (!form) {
+      <input
+        #inputfield
+        type="checkbox"
+        [id]="id"
+        [class]="'checkbox rounded'"
+        (click)="onClick.next($event)"
+        [checked]="checked"
+        [disabled]="isDisabled()"
+        [attr.disabled]="isDisabled() ? true : null"
+        [class.checkbox-disabled]="isDisabled()"
+        [class.sc-invalid-feedback-border]="invalid"
+        />
+    }
+    @if (!inTable) {
+      <label class="text dark label checkbox-label" [for]="id">{{label}}<ng-content select="checkbox-input-rich-label"></ng-content></label>
+    }
+  </div>
+  <ng-content select="checkbox-input-errors"></ng-content>
 </form>

@@ -7,86 +7,87 @@
 
     <ul class="navbar-nav auth-side-icon-container">
 
-        <div class="auth-side-icon-spacer"></div>
-        <li>
-            <div class="left-border-active"
-                 routerLinkActive="active"
-                 [ngClass]="{'active': myOrdersActive.isActive || myFarmersActive.isActive || myCollectorsActive.isActive || myCustomersActive.isActive || companyDashboardActive.isActive }">
-                <button class="btn-icon-sidebar"
-                        [disabled]="isConfirmedOnly"
-                        [ngbTooltip]="companyButtonTooltipTemplate"
-                        [autoClose]="false"
-                        placement="right-top"
-                        triggers="manual"
-                        tooltipClass="self-onboarding-tooltip-class"
-                        #companyButtonTooltip="ngbTooltip"
-                        data-toggle="tooltip"
-                        title="Company"
-                        i18n-title="@@authorisedSideNav.link.company"
-                        (click)="openCompanyPage()" [routerLink]="['/my-stock']">
+      <div class="auth-side-icon-spacer"></div>
+      <li>
+        <div class="left-border-active"
+          routerLinkActive="active"
+          [ngClass]="{'active': myOrdersActive.isActive || myFarmersActive.isActive || myCollectorsActive.isActive || myCustomersActive.isActive || companyDashboardActive.isActive }">
+          <button class="btn-icon-sidebar"
+            [disabled]="isConfirmedOnly"
+            [ngbTooltip]="companyButtonTooltipTemplate"
+            [autoClose]="false"
+            placement="end-top"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+            #companyButtonTooltip="ngbTooltip"
+            data-toggle="tooltip"
+            title="Company"
+            i18n-title="@@authorisedSideNav.link.company"
+            (click)="openCompanyPage()" [routerLink]="['/my-stock']">
 
-                    <div class="sidebar-icon">
-                        <span class="sidebar-icon-shape sidebar-icon-shape--company" style="margin-left: 3px;"></span>
-                    </div>
-
-                </button>
+            <div class="sidebar-icon">
+              <span class="sidebar-icon-shape sidebar-icon-shape--company" style="margin-left: 3px;"></span>
             </div>
-            <ng-template #companyButtonTooltipTemplate>
-                <div>
-                    <h2 class="title" i18n="@@selfOnboarding.checklist.addFacilityOrProcAction.step1">Click here to access your company profile</h2>
-                    <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/4' }}</span></div>
-                </div>
-            </ng-template>
-        </li>
 
-        <div class="auth-side-icon-spacer"></div>
-        <li>
-            <div class="left-border-active"
-                 routerLinkActive="active">
-                <button class="btn-icon-sidebar"
-                        [disabled]="isConfirmedOnly"
-                        [ngbTooltip]="productsButtonTooltipTemplate"
-                        [autoClose]="false"
-                        placement="right"
-                        triggers="manual"
-                        tooltipClass="self-onboarding-tooltip-class"
-                        #productsButtonTooltip="ngbTooltip"
-                        data-toggle="tooltip"
-                        title="Products"
-                        i18n-title="@@authorisedSideNav.link.products"
-                        (click)="openProductsPage()" [routerLink]="['/product-labels']">
+          </button>
+        </div>
+        <ng-template #companyButtonTooltipTemplate>
+          <div>
+            <h2 class="title" i18n="@@selfOnboarding.checklist.addFacilityOrProcAction.step1">Click here to access your company profile</h2>
+            <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/4' }}</span></div>
+          </div>
+        </ng-template>
+      </li>
 
-                    <div class="sidebar-icon">
-                        <span class="sidebar-icon-shape sidebar-icon-shape--products"></span>
-                    </div>
+      <div class="auth-side-icon-spacer"></div>
+      <li>
+        <div class="left-border-active"
+          routerLinkActive="active">
+          <button class="btn-icon-sidebar"
+            [disabled]="isConfirmedOnly"
+            [ngbTooltip]="productsButtonTooltipTemplate"
+            [autoClose]="false"
+            placement="end"
+            triggers="manual"
+            tooltipClass="self-onboarding-tooltip-class"
+            #productsButtonTooltip="ngbTooltip"
+            data-toggle="tooltip"
+            title="Products"
+            i18n-title="@@authorisedSideNav.link.products"
+            (click)="openProductsPage()" [routerLink]="['/product-labels']">
 
-                </button>
+            <div class="sidebar-icon">
+              <span class="sidebar-icon-shape sidebar-icon-shape--products"></span>
             </div>
-            <ng-template #productsButtonTooltipTemplate>
-                <div>
-                    <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step1">Click here to add a product</h2>
-                    <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/4' }}</span></div>
-                </div>
-            </ng-template>
-        </li>
+
+          </button>
+        </div>
+        <ng-template #productsButtonTooltipTemplate>
+          <div>
+            <h2 class="title" i18n="@@selfOnboarding.checklist.addProduct.step1">Click here to add a product</h2>
+            <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/4' }}</span></div>
+          </div>
+        </ng-template>
+      </li>
 
       <div class="auth-side-icon-spacer"></div>
       <li>
         <div class="left-border-active"
           routerLinkActive="active"
           [ngClass]="{'active': systemUsersActive.isActive || settingsActive.isActive || valueChainsActive.isActive || currenciesActive.isActive }">
-          <button *ngIf="isAdmin"
-            [disabled]="isConfirmedOnly"
-            class="btn-icon-sidebar"
-            data-toggle="tooltip"
-            title="System"
-            i18n-title="@@authorisedSideNav.link.system"
-            routerLink="/companies">
-
-            <div class="sidebar-icon">
-              <span class="sidebar-icon-shape sidebar-icon-shape--settings"></span>
-            </div>
-          </button>
+          @if (isAdmin) {
+            <button
+              [disabled]="isConfirmedOnly"
+              class="btn-icon-sidebar"
+              data-toggle="tooltip"
+              title="System"
+              i18n-title="@@authorisedSideNav.link.system"
+              routerLink="/companies">
+              <div class="sidebar-icon">
+                <span class="sidebar-icon-shape sidebar-icon-shape--settings"></span>
+              </div>
+            </button>
+          }
         </div>
       </li>
 

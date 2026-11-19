@@ -1,24 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SelfOnboardingService } from '../../shared-services/self-onboarding.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ApiCompanyOnboardingState } from "../../../api/model/apiCompanyOnboardingState";
 import { CompanyControllerService } from "../../../api/api/companyController.service";
 import { SelectedUserCompanyService } from "../../core/selected-user-company.service";
 import { take } from "rxjs/operators";
 
 @Component({
-  selector: 'app-self-onboarding-checklist-modal',
-  templateUrl: './self-onboarding-checklist-modal.component.html',
-  styleUrls: ['./self-onboarding-checklist-modal.component.scss']
+    selector: 'app-self-onboarding-checklist-modal',
+    templateUrl: './self-onboarding-checklist-modal.component.html',
+    styleUrls: ['./self-onboarding-checklist-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelfOnboardingChecklistModalComponent implements OnInit {
 
-  selfOnboardingStatus = new FormGroup({
-    hasProduct: new FormControl(true),
-    hasFacility: new FormControl(false),
-    hasProcessingAction: new FormControl(false),
-    hasFarmers: new FormControl(false),
+  selfOnboardingStatus = new UntypedFormGroup({
+    hasProduct: new UntypedFormControl(true),
+    hasFacility: new UntypedFormControl(false),
+    hasProcessingAction: new UntypedFormControl(false),
+    hasFarmers: new UntypedFormControl(false),
   });
 
   @Input()

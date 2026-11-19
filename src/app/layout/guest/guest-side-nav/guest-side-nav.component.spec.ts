@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GuestSideNavComponent } from './guest-side-nav.component';
 
@@ -6,8 +7,9 @@ describe('GuestSideNavComponent', () => {
   let component: GuestSideNavComponent;
   let fixture: ComponentFixture<GuestSideNavComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       declarations: [ GuestSideNavComponent ]
     })
     .compileComponents();

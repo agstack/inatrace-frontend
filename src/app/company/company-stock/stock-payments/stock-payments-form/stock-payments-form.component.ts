@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
@@ -25,29 +25,31 @@ export enum ModeEnum {
 }
 
 @Component({
-  selector: 'app-stock-payments-form',
-  templateUrl: './stock-payments-form.component.html',
-  styleUrls: ['./stock-payments-form.component.scss']
+    selector: 'app-stock-payments-form',
+    templateUrl: './stock-payments-form.component.html',
+    styleUrls: ['./stock-payments-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsFormComponent implements OnInit, OnDestroy {
 
   @Input()
-  paymentForm: FormGroup;
+  paymentForm: UntypedFormGroup;
 
   @Input()
-  orderReferenceForm = new FormControl(null);
+  orderReferenceForm = new UntypedFormControl(null);
 
   @Input()
-  payableFromForm = new FormControl(null);
+  payableFromForm = new UntypedFormControl(null);
 
   @Input()
-  searchCompaniesForm = new FormControl(null);
+  searchCompaniesForm = new UntypedFormControl(null);
 
   @Input()
-  searchCollectorsForm = new FormControl(null);
+  searchCollectorsForm = new UntypedFormControl(null);
 
   @Input()
-  searchFarmersForm = new FormControl(null);
+  searchFarmersForm = new UntypedFormControl(null);
 
   @Input()
   collectorsCodebook: CompanyUserCustomersByRoleService;
@@ -83,7 +85,7 @@ export class StockPaymentsFormComponent implements OnInit, OnDestroy {
   unitLabel: string;
 
   associatedCompaniesService: ConnectedCompaniesForCompanyService;
-  searchPreferredWayOfPayment = new FormControl(null);
+  searchPreferredWayOfPayment = new UntypedFormControl(null);
 
   uploaderLabelStr = $localize`:@@paymentForm.attachment-uploader.receipt.label:Signed receipt (PDF/PNG/JPG)`;
   uploaderLabelRequiredStr = $localize`:@@paymentForm.attachment-uploader.receipt.required.label:Signed receipt (PDF/PNG/JPG)*`;
@@ -315,7 +317,7 @@ export class StockPaymentsFormComponent implements OnInit, OnDestroy {
     return totalPaid;
   }
   
-  createPaymentTypes(collector: boolean = false): object {
+  createPaymentTypes(collector = false): object {
     const obj = {};
     
     obj['CASH'] = $localize`:@@paymentForm.paymentTypes.cash:Cash`;

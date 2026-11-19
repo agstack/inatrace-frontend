@@ -58,7 +58,7 @@ export class EnumSifrant extends GeneralSifrantService<ApiEnumWithLabelString> {
     }
 
     public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiEnumWithLabelString>> {
-        let lkey = key ? key.toLocaleLowerCase() : null
+        const lkey = key ? key.toLocaleLowerCase() : null
         return this.sifrant$.pipe(
             map((allChoices: PagedSearchResults<ApiEnumWithLabelString>) => {
                 return {
@@ -103,7 +103,7 @@ export class EnumSifrant extends GeneralSifrantService<ApiEnumWithLabelString> {
 
     public enumValueToObject(val: any, enumOptions: ApiEnumWithLabelString[]): ApiEnumWithLabelString {
         if (!enumOptions || enumOptions.length == 0) return null
-        let res: ApiEnumWithLabelString = enumOptions.find(x => x.id === val);
+        const res: ApiEnumWithLabelString = enumOptions.find(x => x.id === val);
         if (!res) return null;
         return {
             id: val,

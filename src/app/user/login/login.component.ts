@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { EmailValidator } from 'src/shared/validation';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
@@ -8,9 +8,11 @@ import { ApiResponseApiUser } from 'src/api/model/apiResponseApiUser';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 
@@ -19,9 +21,9 @@ export class LoginComponent implements OnInit {
   loginErrorStatus$: BehaviorSubject<string>;
   userProfile: ApiResponseApiUser;
 
-  loginForm = new FormGroup({
-    username: new FormControl(null, [Validators.required, EmailValidator()]),
-    password: new FormControl(null, Validators.required),
+  loginForm = new UntypedFormGroup({
+    username: new UntypedFormControl(null, [Validators.required, EmailValidator()]),
+    password: new UntypedFormControl(null, Validators.required),
   });
 
   constructor(

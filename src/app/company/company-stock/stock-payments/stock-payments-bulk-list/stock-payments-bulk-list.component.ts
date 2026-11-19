@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ApiPaginatedListApiBulkPayment } from '../../../../../api/model/apiPaginatedListApiBulkPayment';
@@ -9,9 +9,11 @@ import { GlobalEventManagerService } from '../../../../core/global-event-manager
 import { ApiPaginatedResponseApiBulkPayment } from '../../../../../api/model/apiPaginatedResponseApiBulkPayment';
 
 @Component({
-  selector: 'app-stock-payments-bulk-list',
-  templateUrl: './stock-payments-bulk-list.component.html',
-  styleUrls: ['./stock-payments-bulk-list.component.scss']
+    selector: 'app-stock-payments-bulk-list',
+    templateUrl: './stock-payments-bulk-list.component.html',
+    styleUrls: ['./stock-payments-bulk-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsBulkListComponent implements OnInit {
 

@@ -1,11 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { ApiBusinessToCustomerSettings } from "../../../../api/model/apiBusinessToCustomerSettings";
 
 @Component({
-  selector: 'app-b2c-privacy',
-  templateUrl: './b2c-privacy.component.html',
-  styleUrls: ['./b2c-privacy.component.scss']
+    selector: 'app-b2c-privacy',
+    templateUrl: './b2c-privacy.component.html',
+    styleUrls: ['./b2c-privacy.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cPrivacyComponent implements OnInit {
 

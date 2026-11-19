@@ -1,52 +1,51 @@
-<div class="af-sidenav--block" *ngIf="isAdmin">
-
-  <div class="above-sidenav">
-    <div class="above-sidenav-title">
-      {{ title }}
+@if (isAdmin) {
+  <div class="af-sidenav--block">
+    <div class="above-sidenav">
+      <div class="above-sidenav-title">
+        {{ title }}
+      </div>
     </div>
-  </div>
-
-  <ul class="sidenav">
-    <li style="max-width:100%; margin-top: 2.375rem">
-      <a class="link-normal"
-        routerLinkActive="active"
-        [routerLink]="['/companies']"
-        i18n="@@systemLeftPanel.sideTitle.companies">
+    <ul class="sidenav">
+      <li style="max-width:100%; margin-top: 2.375rem">
+        <a class="link-normal"
+          routerLinkActive="active"
+          [routerLink]="['/companies']"
+          i18n="@@systemLeftPanel.sideTitle.companies">
         Companies
       </a>
-    </li>
-    <li>
-      <a class="link-normal"
-        routerLinkActive="active"
-        [routerLink]="['/users']"
-        i18n="@@systemLeftPanel.sideTitle.users">
+      </li>
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          [routerLink]="['/users']"
+          i18n="@@systemLeftPanel.sideTitle.users">
         Users
       </a>
-    </li>
-    <li>
-      <a class="link-normal"
-        routerLinkActive="active"
-        [routerLink]="['/settings']"
-        i18n="@@systemLeftPanel.sideTitle.settings">
+      </li>
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          [routerLink]="['/settings']"
+          i18n="@@systemLeftPanel.sideTitle.settings">
         Settings
       </a>
-    </li>
-    <li>
-      <a class="link-normal"
-         routerLinkActive="active"
-         [routerLink]="['/value-chains']"
-         i18n="@@systemLeftPanel.sideTitle.valueChains">
+      </li>
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          [routerLink]="['/value-chains']"
+          i18n="@@systemLeftPanel.sideTitle.valueChains">
         Value chains
       </a>
-    </li>
-    <li>
-      <a class="link-normal"
-         routerLinkActive="active"
-         [routerLink]="['/currencies']"
-         i18n="@@systemLeftPanel.sideTitle.currencies">
+      </li>
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          [routerLink]="['/currencies']"
+          i18n="@@systemLeftPanel.sideTitle.currencies">
         Currencies
       </a>
-    </li>
-  </ul>
-
-</div>
+      </li>
+    </ul>
+  </div>
+}

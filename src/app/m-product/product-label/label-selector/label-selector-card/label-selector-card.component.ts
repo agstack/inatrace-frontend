@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from 'src/app/shared-services/theme.service';
 import { BehaviorSubject } from 'rxjs';
 import { faTimes, faPen } from '@fortawesome/free-solid-svg-icons';
@@ -7,9 +7,11 @@ import { ProductControllerService } from 'src/api/api/productController.service'
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-label-selector-card',
-  templateUrl: './label-selector-card.component.html',
-  styleUrls: ['./label-selector-card.component.scss']
+    selector: 'app-label-selector-card',
+    templateUrl: './label-selector-card.component.html',
+    styleUrls: ['./label-selector-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LabelSelectorCardComponent implements OnInit {
 

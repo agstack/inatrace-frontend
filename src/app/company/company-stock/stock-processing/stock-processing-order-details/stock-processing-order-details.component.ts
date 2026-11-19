@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { CompanyProcessingActionsService } from '../../../../shared-services/company-processing-actions.service';
 import { ProcessingActionControllerService } from '../../../../../api/api/processingActionController.service';
 import { ApiProcessingAction } from '../../../../../api/model/apiProcessingAction';
@@ -43,9 +43,11 @@ interface RepackedTargetStockOrder extends ApiStockOrder {
 }
 
 @Component({
-  selector: 'app-stock-processing-order-details',
-  templateUrl: './stock-processing-order-details.component.html',
-  styleUrls: ['./stock-processing-order-details.component.scss', './stock-processing-order-details-common.scss']
+    selector: 'app-stock-processing-order-details',
+    templateUrl: './stock-processing-order-details.component.html',
+    styleUrls: ['./stock-processing-order-details.component.scss', './stock-processing-order-details-common.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -66,39 +68,39 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   // Properties and controls used for display and selection of processing action
   procActionsCodebook: CompanyProcessingActionsService;
-  procActionLotPrefixControl = new FormControl({ value: null, disabled: true });
-  qrCodeForFinalProductControl = new FormControl({ value: null, disabled: true });
+  procActionLotPrefixControl = new UntypedFormControl({ value: null, disabled: true });
+  qrCodeForFinalProductControl = new UntypedFormControl({ value: null, disabled: true });
 
   // Properties and controls used for display and selection of input facility
   inputFacilitiesCodebook: CompanyFacilitiesForStockUnitProductService | AvailableSellingFacilitiesForCompany;
-  inputFacilityControl = new FormControl(null, Validators.required);
+  inputFacilityControl = new UntypedFormControl(null, Validators.required);
 
   // Input stock orders properties and controls
-  totalInputQuantityControl = new FormControl({ value: null, disabled: true });
-  remainingQuantityControl = new FormControl({ value: null, disabled: true });
+  totalInputQuantityControl = new UntypedFormControl({ value: null, disabled: true });
+  remainingQuantityControl = new UntypedFormControl({ value: null, disabled: true });
 
   // Input stock unit (Semi-product or Final product)
   currentInputStockUnit: ApiSemiProduct | ApiFinalProduct;
 
   // Processing order properties (the Processing order connects the input transactions with the target - to be created Stock orders)
-  procOrderGroup: FormGroup;
+  procOrderGroup: UntypedFormGroup;
 
   // Output stock orders properties and controls
-  totalOutputQuantityControl = new FormControl({ value: null, disabled: true });
-  commentsControl = new FormControl(null);
+  totalOutputQuantityControl = new UntypedFormControl({ value: null, disabled: true });
+  commentsControl = new UntypedFormControl(null);
   private totalOutQuantityRangeLow: number = null;
   private totalOutQuantityRangeHigh: number = null;
 
   // Properties and controls for displaying output final-product and output semi-product
   finalProductOutputFacilitiesCodebook: CompanyFacilitiesForStockUnitProductService;
   currentOutputFinalProduct: ApiFinalProduct;
-  outputFinalProductNameControl = new FormControl({ value: null, disabled: true });
+  outputFinalProductNameControl = new UntypedFormControl({ value: null, disabled: true });
   outputSemiProductsCodebook: StaticSemiProductsService;
   semiProductOutputFacilitiesCodebooks: Map<number, CompanyFacilitiesForStockUnitProductService>;
 
   // Processing evidence controls
-  requiredProcessingEvidenceArray = new FormArray([]);
-  otherProcessingEvidenceArray = new FormArray([]);
+  requiredProcessingEvidenceArray = new UntypedFormArray([]);
+  otherProcessingEvidenceArray = new UntypedFormArray([]);
   processingEvidenceListManager = null;
 
   submitted = false;
@@ -198,8 +200,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
     if (this.totalInputQuantity) {
 
-      let expectedOutputQuantity;
-      expectedOutputQuantity = this.totalInputQuantity * this.selectedProcAction.estimatedOutputQuantityPerUnit;
+      const expectedOutputQuantity = this.totalInputQuantity * this.selectedProcAction.estimatedOutputQuantityPerUnit;
 
       this.totalOutQuantityRangeLow = Number(expectedOutputQuantity * 0.8);
       this.totalOutQuantityRangeHigh = Math.min(Number(expectedOutputQuantity * 1.2), this.totalInputQuantity);
@@ -216,8 +217,8 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
         ` ${quantityFrom} ~ ${quantityTo} (${this.currentInputStockUnit.measurementUnitType.label})`;
   }
 
-  get targetStockOrdersArray(): FormArray {
-    return this.procOrderGroup.get('targetStockOrders') as FormArray;
+  get targetStockOrdersArray(): UntypedFormArray {
+    return this.procOrderGroup.get('targetStockOrders') as UntypedFormArray;
   }
 
   get productOrderId(): string | null {
@@ -251,12 +252,12 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
   get inputQuantityLabel() {
     if (this.actionType === 'SHIPMENT') {
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.fulfilledQuantityLabelWithUnits.label: Quantity fulfilled by supplier in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     } else {
 
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.inputQuantityLabelWithUnits.label: Input quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     }
 
@@ -271,12 +272,12 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
   get totalOutputQuantityLabel() {
     if (this.actionType === 'SHIPMENT') {
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.totalOrderedQuantityLabelWithUnits.label: Total ordered quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     } else {
 
       return $localize`:@@productLabelStockProcessingOrderDetail.textinput.totalOutputQuantityLabelWithUnits.label: Total output quantity in ${
-        this.currentInputStockUnit ? this.currentInputStockUnit.measurementUnitType.label : ''
+        this.currentInputStockUnit?.measurementUnitType?.label ?? ''
       }`;
     }
 
@@ -286,8 +287,8 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     return this.companyProfile.id;
   }
 
-  get inputTransactionsArray(): FormArray {
-    return this.procOrderGroup.get('inputTransactions') as FormArray;
+  get inputTransactionsArray(): UntypedFormArray {
+    return this.procOrderGroup.get('inputTransactions') as UntypedFormArray;
   }
 
   ngOnInit(): void {
@@ -589,7 +590,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     await this.processingActionUpdated(processingAction);
 
     // After Processing order and Processing action are loaded and initialized, set the existing evidence documents
-    const firstTSO = this.targetStockOrdersArray.at(0) as FormGroup;
+    const firstTSO = this.targetStockOrdersArray.at(0) as UntypedFormGroup;
     StockProcessingOrderDetailsHelper.loadExistingOtherEvidenceDocuments(firstTSO, this.otherProcessingEvidenceArray);
     StockProcessingOrderDetailsHelper.loadExistingRequiredEvidenceDocuments(firstTSO, this.requiredProcessingEvidenceArray);
 
@@ -598,7 +599,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     this.input.calcInputQuantity(true);
 
     // Set required fields for every target Stock order
-    this.targetStockOrdersArray.controls.forEach(tso => this.output.setRequiredFieldsAndListenersForTSO(tso as FormGroup));
+    this.targetStockOrdersArray.controls.forEach(tso => this.output.setRequiredFieldsAndListenersForTSO(tso as UntypedFormGroup));
   }
 
   private async loadFacilities() {
@@ -818,7 +819,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
       const targetStockOrderGroup = generateFormFromMetadata(ApiStockOrder.formMetadata(), repackedTargetStockOrders[0], ApiStockOrderValidationScheme);
 
       // Add repacked outputs FormArray
-      targetStockOrderGroup.addControl('repackedOutputsArray', new FormArray([]));
+      targetStockOrderGroup.addControl('repackedOutputsArray', new UntypedFormArray([]));
 
       // Set the first Stock order as a target Stock order in the target Stock orders array
       this.targetStockOrdersArray.push(targetStockOrderGroup);
@@ -831,7 +832,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
         repackedStockOrderGroup.get('totalQuantity').setValidators([Validators.required, Validators.max(maxOutputWeight)]);
         repackedStockOrderGroup.get('sacNumber').setValidators([Validators.required]);
 
-        (targetStockOrderGroup.get('repackedOutputsArray') as FormArray).push(repackedStockOrderGroup);
+        (targetStockOrderGroup.get('repackedOutputsArray') as UntypedFormArray).push(repackedStockOrderGroup);
         totalOutputQuantity += tso.totalQuantity;
       });
 
@@ -866,7 +867,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
     if (this.actionType === 'SHIPMENT') {
 
-      this.remainingQuantityControl.setValue(Number(this.totalOutputQuantity - inputQuantity ?? 0).toFixed(2));
+      this.remainingQuantityControl.setValue(Number((this.totalOutputQuantity ?? 0) - (inputQuantity ?? 0)).toFixed(2));
       return;
 
     } else if (inputQuantity != null) {

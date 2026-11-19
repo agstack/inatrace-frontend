@@ -1,9 +1,9 @@
 <app-authorised-layout class="af-layout--system">
 
   <app-system-left-panel
-          [isAdmin]="true"
-          i18n="@@userList.navTitle"
-          title="System">
+    [isAdmin]="true"
+    i18n="@@userList.navTitle"
+    title="System">
   </app-system-left-panel>
 
   <div class="main">
@@ -11,49 +11,48 @@
     <div class="row">
       <div class="col">
 
-        <ng-container *ngIf="users$ | async as users">
-
+        @if (users$ | async; as users) {
           <div class="main-inside-top content-element">
-
             <div class="d-flex align-items-start content-element--row1">
               <div class="title-page content-element--title" i18n="@@userList.title.users">Users</div>
             </div>
-
             <div class="d-flex justify-content-between content-element--row2">
               <div>
                 <div class="sub-title-page content-element--subtitle" i18n="@@userList.subTitle.listOfUsers">List of users</div>
                 <div class="counting-page content-element--counting" i18n="@@userList.subTitle.showing">Showing {{showedUsers}}/{{allUsers}}</div>
               </div>
-
               <div class="d-flex align-items-top">
-
-                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-                  <div *ngIf="searchStatus && searchStatus?.value.length>0" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.showStatus"> Show {{searchStatus.value | lowercase}}
+                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+                  @if (searchStatus && searchStatus?.value.length>0) {
+                    <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.showStatus"> Show {{searchStatus.value | lowercase}}
                     <div (click)="clearValue(searchStatus)" style="margin-left: 0.5rem;">
                       <fa-icon [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
-                  <div *ngIf="searchRole && searchRole?.value.length>0" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.showRole"> Show {{searchRole.value | lowercase}}
+                  }
+                  @if (searchRole && searchRole?.value.length>0) {
+                    <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.showRole"> Show {{searchRole.value | lowercase}}
                     <div (click)="clearValue(searchRole)" style="margin-left: 0.5rem;">
                       <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
-                  <div *ngIf="myUsers && myUsers.value && isSystemAdmin" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.myUsers">My users
+                  }
+                  @if (myUsers && myUsers.value && isSystemAdmin) {
+                    <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@userList.filter.myUsers">My users
                     <div (click)="clearValue(myUsers, true)" style="margin-left: 0.5rem;">
                       <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                       </fa-icon>
                     </div>
                   </div>
-
+                  }
                   <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@userList.filter.placeholder">
                     <div class="button-icon">
                       <span class="button-icon-shape button-icon-shape--filter"></span>
                     </div>
                     <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
                   </button>
-
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button ngbDropdownItem (click)="showStatus('ACTIVE')" i18n="@@userList.filter.showActive">Show active</button>
                     <button ngbDropdownItem (click)="showStatus('DEACTIVATED')" i18n="@@userList.filter.showDeactivated">Show deactivated</button>
@@ -63,84 +62,84 @@
                     <button ngbDropdownItem (click)="showStatus('SYSTEM_ADMIN', true)" i18n="@@userList.filter.showSystemAdmin">Show System admin</button>
                     <button ngbDropdownItem (click)="showStatus('REGIONAL_ADMIN', true)" i18n="@@userList.filter.showRegionalAdmin">Show Regional admin</button>
                     <button ngbDropdownItem (click)="showStatus('USER', true)" i18n="@@userList.filter.showedUsers">Show user</button>
-                    <ng-container *ngIf="isSystemAdmin">
+                    @if (isSystemAdmin) {
                       <div class="line"></div>
                       <button ngbDropdownItem (click)="myUsersOnly(true)" i18n="@@userList.filter.showMyUsers">Show my users</button>
-                    </ng-container>
+                    }
                   </div>
                 </div>
-
                 <app-search-textinput
                   [form]="searchQuery">
                 </app-search-textinput>
               </div>
             </div>
-
           </div>
           <div class="main-inside-main">
-
-            <table *ngIf="users && users.items && users.items.length> 0" class="af-table">
-              <thead>
-                <tr scope="col" result-sorter [sortOptions]="sortOptions"
+            @if (users && users.items && users.items.length> 0) {
+              <table class="af-table">
+                <thead>
+                  <tr result-sorter [sortOptions]="sortOptions"
                   (sortByKey)="changeSort($event)"></tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of users.items">
-                  <td class="limit-chars" scope="row" [attr.data-label]="sortOptions[0].name"><span>{{user.name}}</span></td>
-                  <td class="limit-chars" [attr.data-label]="sortOptions[1].name"><span>{{user.surname}}</span></td>
-                  <td class="limit-chars" [attr.data-label]="sortOptions[2].name"><span>{{user.email}}</span></td>
-                  <td [attr.data-label]="sortOptions[3].name"><span>{{user.role}}</span></td>
-                  <td class="limit-chars" [attr.data-label]="sortOptions[4].name"><span>{{user.status}}</span></td>
-                  <td [attr.data-label]="sortOptions[5].name">
-                    <span>
-                      <a i18n="@@userList.tableCol.edit"
-                         (click)="editUser(user.id)"
-                         class="user-action"
-                         [class.enabled-action]="true">Edit</a>
-                      <ng-container *ngIf="user.status !== 'UNCONFIRMED'">
-                        <a i18n="@@userList.tableCol.activate"
-                           (click)="user.status != 'ACTIVE' && activate(user.id)"
-                           class="user-action"
-                           [class.enabled-action]="user.status != 'ACTIVE'"
-                           [class.disabled-action]="user.status === 'ACTIVE'">Activate</a>
-                        <a i18n="@@userList.tableCol.deactivate"
-                           (click)="user.status != 'DEACTIVATED' && deactivate(user.id)"
-                           class="user-action"
-                           [class.enabled-action]="user.status != 'DEACTIVATED'"
-                           [class.disabled-action]="user.status === 'DEACTIVATED' || isRegionalAdmin">Deactivate</a>
-                        <ng-container *ngIf="isSystemAdmin && user.status === 'ACTIVE'">
-                          <ng-container *ngIf="user.role === 'USER'">
-                            <a class="user-action enabled-action"
-                               (click)="setUserRole(user.id, 'SET_USER_SYSTEM_ADMIN')"
-                               i18n="@@userList.tableCol.setSystemAdmin">Set System admin</a>
-                            <a class="user-action enabled-action"
-                               (click)="setUserRole(user.id, 'SET_USER_REGIONAL_ADMIN')"
-                               i18n="@@userList.tableCol.setRegionalAdmin">Set Regional admin</a>
-                          </ng-container>
-                          <ng-container *ngIf="user.role === 'SYSTEM_ADMIN'">
-                            <a class="user-action enabled-action"
-                               (click)="setUserRole(user.id, 'UNSET_USER_SYSTEM_ADMIN')"
-                               i18n="@@userList.tableCol.unsetSystemAdmin">Unset System admin</a>
-                          </ng-container>
-                          <ng-container *ngIf="user.role === 'REGIONAL_ADMIN'">
-                            <a class="user-action enabled-action"
-                               (click)="setUserRole(user.id, 'UNSET_USER_REGIONAL_ADMIN')"
-                               i18n="@@userList.tableCol.unsetRegionalAdmin">Unset Regional admin</a>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                    </span>
-
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div *ngIf="users && users.items && users.items.length == 0" class="no-list-results" i18n="@@userList.noUsers">
+                </thead>
+                <tbody>
+                  @for (user of users.items; track user) {
+                    <tr>
+                      <td class="limit-chars" [attr.data-label]="sortOptions[0].name"><span>{{user.name}}</span></td>
+                      <td class="limit-chars" [attr.data-label]="sortOptions[1].name"><span>{{user.surname}}</span></td>
+                      <td class="limit-chars" [attr.data-label]="sortOptions[2].name"><span>{{user.email}}</span></td>
+                      <td [attr.data-label]="sortOptions[3].name"><span>{{user.role}}</span></td>
+                      <td class="limit-chars" [attr.data-label]="sortOptions[4].name"><span>{{user.status}}</span></td>
+                      <td [attr.data-label]="sortOptions[5].name">
+                        <span>
+                          <a i18n="@@userList.tableCol.edit"
+                            (click)="editUser(user.id)"
+                            class="user-action"
+                          [class.enabled-action]="true">Edit</a>
+                          @if (user.status !== 'UNCONFIRMED') {
+                            <a i18n="@@userList.tableCol.activate"
+                              (click)="user.status !== 'ACTIVE' && activate(user.id)"
+                              class="user-action"
+                              [class.enabled-action]="user.status !== 'ACTIVE'"
+                            [class.disabled-action]="user.status === 'ACTIVE'">Activate</a>
+                            <a i18n="@@userList.tableCol.deactivate"
+                              (click)="user.status !== 'DEACTIVATED' && deactivate(user.id)"
+                              class="user-action"
+                              [class.enabled-action]="user.status !== 'DEACTIVATED'"
+                            [class.disabled-action]="user.status === 'DEACTIVATED' || isRegionalAdmin">Deactivate</a>
+                            @if (isSystemAdmin && user.status === 'ACTIVE') {
+                              @if (user.role === 'USER') {
+                                <a class="user-action enabled-action"
+                                  (click)="setUserRole(user.id, 'SET_USER_SYSTEM_ADMIN')"
+                                i18n="@@userList.tableCol.setSystemAdmin">Set System admin</a>
+                                <a class="user-action enabled-action"
+                                  (click)="setUserRole(user.id, 'SET_USER_REGIONAL_ADMIN')"
+                                i18n="@@userList.tableCol.setRegionalAdmin">Set Regional admin</a>
+                              }
+                              @if (user.role === 'SYSTEM_ADMIN') {
+                                <a class="user-action enabled-action"
+                                  (click)="setUserRole(user.id, 'UNSET_USER_SYSTEM_ADMIN')"
+                                i18n="@@userList.tableCol.unsetSystemAdmin">Unset System admin</a>
+                              }
+                              @if (user.role === 'REGIONAL_ADMIN') {
+                                <a class="user-action enabled-action"
+                                  (click)="setUserRole(user.id, 'UNSET_USER_REGIONAL_ADMIN')"
+                                i18n="@@userList.tableCol.unsetRegionalAdmin">Unset Regional admin</a>
+                              }
+                            }
+                          }
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+            @if (users && users.items && users.items.length === 0) {
+              <div class="no-list-results" i18n="@@userList.noUsers">
               No users
             </div>
+            }
           </div>
-
           <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
             <ngb-pagination
               [(page)]="page"
@@ -151,18 +150,22 @@
               [rotate]="true">
             </ngb-pagination>
           </div>
-        </ng-container>
+        }
 
       </div>
     </div>
 
-    <div *ngIf="listErrorStatus$.value === 'UNAUTHORIZED'" i18n="@@userList.unauthorized">
+    @if (listErrorStatus$.value === 'UNAUTHORIZED') {
+      <div i18n="@@userList.unauthorized">
       Not authorised to see the list of users.
     </div>
+    }
 
-    <div *ngIf="!!listErrorStatus$.value && listErrorStatus$.value != 'UNAUTHORIZED'" i18n="@@userList.somethingWentWrong">
+    @if (!!listErrorStatus$.value && listErrorStatus$.value !== 'UNAUTHORIZED') {
+      <div i18n="@@userList.somethingWentWrong">
       Something went wrong while loading the users.
     </div>
+    }
 
   </div>
 </app-authorised-layout>

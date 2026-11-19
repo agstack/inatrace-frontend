@@ -65,11 +65,6 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/',
-    pathMatch: 'full'
-  },
-  {
-    path: '',
     component: LandingPageLayoutComponent,
     children: [
       { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -110,7 +105,8 @@ const routes: Routes = [
   },
   {
     path: 'settings',
-    redirectTo: 'settings/additional'
+    redirectTo: 'settings/additional',
+    pathMatch: 'full'
   },
   {
     path: 'settings/additional',
@@ -153,7 +149,8 @@ const routes: Routes = [
   },
   {
     path: 'value-chains/:id',
-    redirectTo: 'value-chains/:id/value-chain'
+    redirectTo: 'value-chains/:id/value-chain',
+    pathMatch: 'full'
   },
   {
     path: 'value-chains/:id/value-chain',
@@ -213,7 +210,8 @@ const routes: Routes = [
   },
   {
     path: 'companies/:id',
-    redirectTo: 'companies/:id/company'
+    redirectTo: 'companies/:id/company',
+    pathMatch: 'full'
   },
   {
     path: 'companies/:id/company',
@@ -473,7 +471,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

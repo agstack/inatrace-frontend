@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ProductControllerService } from 'src/api/api/productController.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take, filter, tap, switchMap, catchError, map } from 'rxjs/operators';
 import { ApiProductCompany } from 'src/api/model/apiProductCompany';
 import { BehaviorSubject, combineLatest, of, Subscription } from 'rxjs';
 import { UnsubscribeList } from 'src/shared/rxutils';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CompanySelectModalComponent } from 'src/app/company/company-common/company-select-modal/company-select-modal.component';
 import { TabCommunicationService } from 'src/app/shared/tab-communication.service';
 import { GlobalEventManagerService } from 'src/app/core/global-event-manager.service';
@@ -22,7 +22,9 @@ import { SelectedUserCompanyService } from '../../../core/selected-user-company.
 import RoleEnum = ApiUserGet.RoleEnum;
 
 @Component({
-  template: ''
+    template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelStakeholdersComponent implements OnInit, AfterViewInit {
 
@@ -82,7 +84,7 @@ export class ProductLabelStakeholdersComponent implements OnInit, AfterViewInit 
   productId = this.route.snapshot.params.id;
   unsubscribeList = new UnsubscribeList();
   currentProduct;
-  productForm: FormGroup;
+  productForm: UntypedFormGroup;
   submitted = false;
   companyId: number | null = null;
 
@@ -152,9 +154,9 @@ export class ProductLabelStakeholdersComponent implements OnInit, AfterViewInit 
     return defaultEmptyObject(obj) as ApiProductDataSharingAgreement;
   }
 
-  static ApiProductDataSharingAgreementEmptyObjectFormFactory(): () => FormControl {
+  static ApiProductDataSharingAgreementEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ProductLabelStakeholdersComponent.ApiProductDataSharingAgreementCreateEmptyObject(),
+      return new UntypedFormControl(ProductLabelStakeholdersComponent.ApiProductDataSharingAgreementCreateEmptyObject(),
         ApiProductDataSharingAgreementValidationScheme.validators);
     };
   }
@@ -194,7 +196,7 @@ export class ProductLabelStakeholdersComponent implements OnInit, AfterViewInit 
 
   initListManagers() {
     this.dataSharingAgreementListManager = new ListEditorManager<ApiProductDataSharingAgreement>(
-      (this.productForm.get('dataSharingAgreements')) as FormArray,
+      (this.productForm.get('dataSharingAgreements')) as UntypedFormArray,
       ProductLabelStakeholdersComponent.ApiProductDataSharingAgreementEmptyObjectFormFactory(),
       ApiProductDataSharingAgreementValidationScheme
     );

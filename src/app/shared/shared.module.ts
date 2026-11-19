@@ -1,18 +1,16 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// tslint:disable-next-line:max-line-length
 import { faAlignJustify, faBuilding, faBullseye, faCheck, faChevronDown, faChevronUp, faEllipsisH, faExclamation, faExternalLinkAlt, faEye, faEyeSlash, faFileUpload, faGavel, faLightbulb, faMapMarkerAlt, faPaperclip, faPen, faPlus, faPlusCircle, faTimes, faTrashAlt, faUndo, faQrcode, faQuestion, faInfoCircle, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { FileUploadModule } from 'ng2-file-upload';
 import { EllipsisModule } from 'ngx-ellipsis';
-import { FileSaverModule } from 'ngx-filesaver';
 import { NgbModalImprovedModule } from '../core/ngb-modal-improved/ngb-modal-improved.module';
 import { AccordionPanelComponent } from './accordion/accordion-panel.component';
 import { AccordionComponent } from './accordion/accordion.component';
@@ -73,9 +71,9 @@ import { ColorInputComponent } from './color-input/color-input.component';
 import { DocumentPreviewComponent } from './document-preview/document-preview.component';
 import { ToggleSwitchComponent } from './toggle-switch/toggle-switch.component';
 import { MapComponent } from './map/map.component';
+import { QrCodeComponent } from './qr-code/qr-code.component';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         TagListComponent,
         SingleChoiceComponent,
         TextinputComponent,
@@ -133,31 +131,11 @@ import { MapComponent } from './map/map.component';
         GeoaddressFormComponent,
         ColorInputComponent,
         DocumentPreviewComponent,
-        ToggleSwitchComponent
-    ],
-    entryComponents: [
-        TextinputModalComponent,
-    ],
-    imports: [
-        FileSaverModule,
-        CommonModule,
-        FontAwesomeModule,
-        EditorModule,
-        NgbTypeaheadModule,
-        NgbModule,
-        NgbModalImprovedModule,
-        NgSelectModule,
-        EllipsisModule,
-        FileUploadModule,
-        DragDropModule,
-        ReactiveFormsModule,
-        FormsModule,
-        GoogleMapsModule,
-        HttpClientModule,
-        RouterModule,
-        // ComponentsModule
+        ToggleSwitchComponent,
+        QrCodeComponent
     ],
     exports: [
+        QrCodeComponent,
         TagListComponent,
         SingleChoiceComponent,
         TextinputComponent,
@@ -209,8 +187,21 @@ import { MapComponent } from './map/map.component';
         DocumentPreviewComponent,
         ToggleSwitchComponent,
         NgSelectModule
-    ]
-})
+    ], imports: [
+        CommonModule,
+        FontAwesomeModule,
+        EditorModule,
+        NgbTypeaheadModule,
+        NgbModule,
+        NgbModalImprovedModule,
+        NgSelectModule,
+        EllipsisModule,
+        FileUploadModule,
+        DragDropModule,
+        ReactiveFormsModule,
+        FormsModule,
+        GoogleMapsModule,
+        RouterModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class SharedModule {
     constructor(library: FaIconLibrary) {
         library.addIcons(

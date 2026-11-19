@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, map, shareReplay, startWith, switchMap, tap, take } from 'rxjs/operators';
@@ -17,17 +17,19 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { SelfOnboardingService } from '../../shared-services/self-onboarding.service';
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+    selector: 'app-product-list',
+    templateUrl: './product-list.component.html',
+    styleUrls: ['./product-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   faTimes = faTimes;
 
-  searchName = new FormControl(null);
-  searchStatus = new FormControl('');
-  myProducts = new FormControl(true);
+  searchName = new UntypedFormControl(null);
+  searchStatus = new UntypedFormControl('');
+  myProducts = new UntypedFormControl(true);
   reloadPing$ = new BehaviorSubject<boolean>(false);
   pagingParams$ = new BehaviorSubject({});
   sortingParams$ = new BehaviorSubject({ sortBy: 'name', sort: 'ASC' });
@@ -127,9 +129,9 @@ export class ProductListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.add(
         this.selfOnboardingService.addProductCurrentStep$.subscribe(step => {
           if (step === 2) {
-            this.newProductButtonTooltip.open();
+            this.newProductButtonTooltip?.open();
           } else {
-            this.newProductButtonTooltip.close();
+            this.newProductButtonTooltip?.close();
           }
         })
     );
@@ -199,7 +201,7 @@ export class ProductListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.myProducts.setValue(my);
   }
 
-  clearValue(form: FormControl, myProducts: boolean = false) {
+  clearValue(form: UntypedFormControl, myProducts = false) {
     if (myProducts) { form.setValue(false); }
     else { form.setValue(''); }
   }

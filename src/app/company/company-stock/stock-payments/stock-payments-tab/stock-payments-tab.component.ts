@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { StockCoreTabComponent } from '../../stock-core/stock-core-tab/stock-core-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
@@ -7,7 +7,7 @@ import { ApiPayment } from '../../../../../api/model/apiPayment';
 import { take } from 'rxjs/operators';
 import { PaymentControllerService } from '../../../../../api/api/paymentController.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { NgbModalImproved } from '../../../../core/ngb-modal-improved/ngb-modal-improved.service';
 import { StockPaymentsSelectorForNewPaymentModalComponent } from '../stock-payments-selector-for-new-payment-modal/stock-payments-selector-for-new-payment-modal.component';
 import { AuthService } from '../../../../core/auth.service';
@@ -18,9 +18,11 @@ import { SelfOnboardingService } from '../../../../shared-services/self-onboardi
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-stock-payments-tab',
-  templateUrl: './stock-payments-tab.component.html',
-  styleUrls: ['./stock-payments-tab.component.scss']
+    selector: 'app-stock-payments-tab',
+    templateUrl: './stock-payments-tab.component.html',
+    styleUrls: ['./stock-payments-tab.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsTabComponent extends StockCoreTabComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -38,7 +40,7 @@ export class StockPaymentsTabComponent extends StockCoreTabComponent implements 
 
   reloadPaymentPingList$ = new BehaviorSubject<boolean>(false);
 
-  searchFarmerNameAndSurname = new FormControl(null);
+  searchFarmerNameAndSurname = new UntypedFormControl(null);
   searchFarmerNameSurnamePing$ = new BehaviorSubject<string>(null);
 
   subs: Subscription;
@@ -70,7 +72,7 @@ export class StockPaymentsTabComponent extends StockCoreTabComponent implements 
     await super.ngOnInit();
 
     if (this.companyProfile) {
-      this.currency = this.companyProfile.currency.code;
+      this.currency = this.companyProfile.currency?.code;
     }
   }
 
@@ -80,14 +82,14 @@ export class StockPaymentsTabComponent extends StockCoreTabComponent implements 
     this.subs = this.selfOnboardingService.guidedTourStep$.subscribe(step => {
 
       setTimeout(() => {
-        this.paymentsTitleTooltip.close();
-        this.addPaymentButtonTooltip.close();
+        this.paymentsTitleTooltip?.close();
+        this.addPaymentButtonTooltip?.close();
       }, 50);
 
       if (step === 8) {
-        setTimeout(() => this.paymentsTitleTooltip.open(), 50);
+        setTimeout(() => this.paymentsTitleTooltip?.open(), 50);
       } else if (step === 9) {
-        setTimeout(() => this.addPaymentButtonTooltip.open(), 50);
+        setTimeout(() => this.addPaymentButtonTooltip?.open(), 50);
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     trigger,
     state,
@@ -16,8 +16,7 @@ import { initial } from 'lodash-es';
     styleUrls: ['./tag-list-tag.component.scss'],
     animations: [
         trigger('deleteAnimate', [
-            state('active', style({
-            })),
+            state('active', style({})),
             state('deleted', style({
                 opacity: '0',
                 width: '0',
@@ -25,13 +24,11 @@ import { initial } from 'lodash-es';
                 paddingLeft: '0',
                 paddingRight: '0'
             })),
-            transition(
-                'active=>deleted',
-                animate("300ms")
-            )
+            transition('active=>deleted', animate("300ms"))
         ])
-    ]
-
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TagListTagComponent implements OnInit {
 

@@ -9,16 +9,18 @@
         <div class="title-page content-element--title" i18n="@@myOrders.title.placedOrders">Placed orders</div>
         <div class="d-flex">
           <button class="btn btn-solid round btn-table-new content-element--btn"
-                  i18n="@@myOrders.button.placeQuoteOrder"
-                  (click)="placeQuoteOrder()">
+            i18n="@@myOrders.button.placeQuoteOrder"
+            (click)="placeQuoteOrder()">
             <span>+ Place quote order</span>
           </button>
-          <button *ngIf="companyHasBuyerRole"
-                  class="ml-4 btn btn-solid round btn-table-new content-element--btn"
-                  i18n="@@myOrders.button.addCustomerOrder"
-                  (click)="addCustomerOrder()">
+          @if (companyHasBuyerRole) {
+            <button
+              class="ms-4 btn btn-solid round btn-table-new content-element--btn"
+              i18n="@@myOrders.button.addCustomerOrder"
+              (click)="addCustomerOrder()">
             <span>+ Add customer order</span>
           </button>
+          }
         </div>
       </div>
 
@@ -28,23 +30,27 @@
             <div class="af-row">
               <div class="af-c12">
 
-                <single-choice *ngIf="facilityCodebook"
-                               label="Selected facility"
-                               i18n-label="@@myOrders..selectedFacility.singleChoice.label"
-                               [formControlInput]="facilityForStockOrderForm"
-                               [codebookService]="facilityCodebook"
-                               (onChange)="facilityChanged($event)"
-                               style="min-width: 150px;">
-                </single-choice>
+                @if (facilityCodebook) {
+                  <single-choice
+                    label="Selected facility"
+                    i18n-label="@@myOrders..selectedFacility.singleChoice.label"
+                    [formControlInput]="facilityForStockOrderForm"
+                    [codebookService]="facilityCodebook"
+                    (onChange)="facilityChanged($event)"
+                    style="min-width: 150px;">
+                  </single-choice>
+                }
 
-                <single-choice *ngIf="facilityForStockOrderForm.value"
-                               label="Customer"
-                               i18n-label="@@myOrders..selectedCustomer.singleChoice.label"
-                               [formControlInput]="companyCustomerForm"
-                               [codebookService]="companyCustomerCodebook"
-                               (onChange)="customerChanged($event)"
-                               style="min-width: 150px;">
-                </single-choice>
+                @if (facilityForStockOrderForm.value) {
+                  <single-choice
+                    label="Customer"
+                    i18n-label="@@myOrders..selectedCustomer.singleChoice.label"
+                    [formControlInput]="companyCustomerForm"
+                    [codebookService]="companyCustomerCodebook"
+                    (onChange)="customerChanged($event)"
+                    style="min-width: 150px;">
+                  </single-choice>
+                }
 
               </div>
             </div>
@@ -59,14 +65,16 @@
         </div>
 
         <div class="d-flex align-items-top">
-          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
+          <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
 
-            <div *ngIf="openOnly" class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@myOrders..filter.openOnly.filter">Open only
+            @if (openOnly) {
+              <div class="d-flex filter-text" style="margin-left: 0.75rem" i18n="@@myOrders..filter.openOnly.filter">Open only
               <div style="margin-left: 0.5rem;" (click)="setOpenOnly(false)">
                 <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs">
                 </fa-icon>
               </div>
             </div>
+            }
 
             <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;" i18n-placeholder="@@myOrders..filter.placeholder">
               <div class="button-icon">
@@ -83,8 +91,8 @@
         </div>
       </div>
 
-      <app-company-orders-list
-          *ngIf="companyId != null"
+      @if (companyId != null) {
+        <app-company-orders-list
           orderType="PLACED"
           (countAll)="onCount($event)"
           [facilityId$]="selectedFacilityId$"
@@ -92,7 +100,8 @@
           [companyId]="companyId"
           [companyCustomerId$]="companyCustomerId$"
           [openOnly$]="openOnly$">
-      </app-company-orders-list>
+        </app-company-orders-list>
+      }
 
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpRequest } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { throwError } from 'rxjs';
 import { TokenInterceptor } from '../../../../core/token.interceptor';
 import { BeycoOfferListComponent } from './beyco-offer-list.component';
@@ -19,9 +19,9 @@ describe('Beyco offer provider failure', () => {
     const service = {sendBeycoOrder: jasmine.createSpy('sendBeycoOrder').and.callFake(() =>
       interceptor.intercept(new HttpRequest('POST', failure.url, {}), {handle: () => throwError(failure)} as any)
     )};
-    const component = new BeycoOfferListComponent(new FormBuilder(), service as any, {} as any,
+    const component = new BeycoOfferListComponent(new UntypedFormBuilder(), service as any, {} as any,
         router as any, events as any, {beycoToken: {accessToken: 'synthetic'}} as any, {} as any);
-    component.generalForm = new FormBuilder().group({});
+    component.generalForm = new UntypedFormBuilder().group({});
     spyOn(component, 'buildApiBeycoOrderFields').and.returnValue({} as any);
 
     component.submit();

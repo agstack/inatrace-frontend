@@ -15,9 +15,7 @@ export default class ProductLabelsService extends GeneralSifrantService<ApiProdu
     super();
   }
 
-  get unpublishedTranslations() {
-    return $localize`:@@productLabelFinalProduct.modal.singleChoice.productLabels.status.unpublished:Unpublished`;
-  }
+  readonly unpublishedTranslations = $localize`:@@productLabelFinalProduct.modal.singleChoice.productLabels.status.unpublished:Unpublished`;
 
   public identifier(el: ApiProductLabelBase) {
     return el.id;

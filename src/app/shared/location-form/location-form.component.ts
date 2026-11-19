@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -9,16 +9,18 @@ import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
 import { ApiCountry } from "../../../api/model/apiCountry";
 
 @Component({
-  selector: 'location-form',
-  templateUrl: './location-form.component.html',
-  styleUrls: ['./location-form.component.scss']
+    selector: 'location-form',
+    templateUrl: './location-form.component.html',
+    styleUrls: ['./location-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LocationFormComponent implements OnInit, OnDestroy {
 
   faTimes = faTimes;
 
   @Input()
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   @Input()
   submitted = false;
@@ -99,12 +101,12 @@ export class LocationFormComponent implements OnInit, OnDestroy {
   }
 
   showRwandaFields() {
-    let country = this.form.get('address.country')?.value as ApiCountry;
+    const country = this.form.get('address.country')?.value as ApiCountry;
     return country && country.code === 'RW';
   }
 
   showHondurasFields() {
-    let country = this.form.get('address.country')?.value as ApiCountry;
+    const country = this.form.get('address.country')?.value as ApiCountry;
     return country && country.code === 'HN';
   }
 
@@ -239,7 +241,7 @@ export class LocationFormComponent implements OnInit, OnDestroy {
     this.form.get('longitude').markAsDirty();
   }
 
-  dblClick(event: google.maps.MouseEvent) {
+  dblClick(event: google.maps.MapMouseEvent) {
     if (this.marker) {
       this.updateMarkerLocation(event.latLng.toJSON());
     } else {

@@ -1,36 +1,35 @@
 <app-authorised-layout>
   <app-system-left-panel title="System" [isAdmin]="isAdmin"></app-system-left-panel>
 
-  <div [class.main]="isAdmin" [class.company-profile]="!isAdmin"
-       *ngIf="companyUsersFormArray"
-       contents
-       [initialValue]=""
-       [submitted]="submitted">
-
-    <div class="af-form-wrapper">
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="title-page content-element--title">
-            {{ title }} (<em>{{ companyName?.name }}</em>)
+  @if (companyUsersFormArray) {
+    <div [class.main]="isAdmin" [class.company-profile]="!isAdmin"
+      contents
+      [initialValue]=""
+      [submitted]="submitted">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="title-page content-element--title">
+              {{ title }} (<em>{{ companyName?.name }}</em>)
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-          <div class="af-form-element">
-            <list-editor *ngIf="companyUserListManager"
-                         label="Users with company roles"
-                         [listEditorManager]="companyUserListManager"
-                         addText="Add new"
-                         [canAdd]="isAdmin"
-                         i18n-label="@@companyDetail.list-editor.cooperatives.label"
-                         i18n-addText="@@companyDetail.list-editor.cooperatives.addText"
-                         [invalid]="submitted && companyUsersFormArray?.invalid">
-              <list-editor-items>
-                <div *ngFor="let item of companyUsersControls; let i=index;">
-                  <app-company-user-role
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-form-element">
+              @if (companyUserListManager) {
+                <list-editor
+                  label="Users with company roles"
+                  [listEditorManager]="companyUserListManager"
+                  addText="Add new"
+                  [canAdd]="isAdmin"
+                  i18n-label="@@companyDetail.list-editor.cooperatives.label"
+                  i18n-addText="@@companyDetail.list-editor.cooperatives.addText"
+                  [invalid]="submitted && companyUsersFormArray?.invalid">
+                  <list-editor-items>
+                    @for (item of companyUsersControls; track item; let i = $index) {
+                      <div>
+                        <app-company-user-role
                           title=null
                           [formControlInput]="item"
                           [isOpen]="companyUserListManager.isOpen(i)"
@@ -38,15 +37,17 @@
                           [listEditorManagerPosition]="i"
                           [readonly]="!isAdmin"
                           [disableDelete]="!isAdmin">
-                  </app-company-user-role>
-                </div>
-              </list-editor-items>
-            </list-editor>
+                        </app-company-user-role>
+                      </div>
+                    }
+                  </list-editor-items>
+                </list-editor>
+              }
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-  </div>
+  }
 
 </app-authorised-layout>

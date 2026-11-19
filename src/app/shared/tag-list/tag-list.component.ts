@@ -1,9 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormArray, FormGroup, AbstractControl } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChild, TemplateRef, ContentChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { Observable, of, Subject, merge, fromEvent, combineLatest, BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, filter, switchMap, tap, shareReplay } from 'rxjs/operators';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { formattedError } from '@angular/compiler';
 import {
     trigger,
     state,
@@ -27,32 +26,34 @@ import { CodebookHelperService } from 'src/interfaces/CodebookHelperService';
         ]),
         trigger('expandCollapse', [
             state('closed', style({
-              height:'0',
-              overflow:'hidden',
-              opacity:'0',
-              margin:'0',
-              padding: '0'
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0'
             })),
             state('open', style({
-              opacity:'1'
+                opacity: '1'
             })),
-            transition('closed=>open', animate('300ms')),  // uskladi trajanje s setTimeoutom za focus!
+            transition('closed=>open', animate('300ms')), // uskladi trajanje s setTimeoutom za focus!
             transition('open=>closed', animate('300ms'))
-          ]),
-  ]
+        ]),
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class TagListComponent implements OnInit {
+export class TagListComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
 
-    private _formArray: FormArray;
+    private _formArray: UntypedFormArray;
 
-    @Input() set formArray(value: FormArray) {
+    @Input() set formArray(value: UntypedFormArray) {
         this._formArray = value;
         this.resubscribe()
     }
 
-    get formArray(): FormArray {
+    get formArray(): UntypedFormArray {
         return this._formArray;
     }
 
@@ -67,7 +68,7 @@ export class TagListComponent implements OnInit {
     // }
 
     @Input()
-    autoCloseOnAdd: boolean = true
+    autoCloseOnAdd = true
 
     @Input()
     codebookService: CodebookHelperService<any>;
@@ -85,7 +86,7 @@ export class TagListComponent implements OnInit {
 
     term: any = null;   // search term
 
-    inputVisible: boolean = false;
+    inputVisible = false;
 
     @ViewChild("newTagInput", { static: false })
     newTagInputField: ElementRef<HTMLInputElement>;
@@ -94,7 +95,7 @@ export class TagListComponent implements OnInit {
 
     formatter = (x: any) => "No format"
 
-    itemSelected: boolean = false;
+    itemSelected = false;
 
     focus$ = new Subject<string>();
     click$ = new Subject<string>();
@@ -105,9 +106,9 @@ export class TagListComponent implements OnInit {
     autocompleteSelection$ = null
     noAutocompleteSelections$ = null // true if autocomplete has no choices
     showNoChoicesWarning$ = null
-    selectedObjects$ = new BehaviorSubject<Array<any>>([]);   // list of currently selected objects
+    selectedObjects$ = new BehaviorSubject<any[]>([]);   // list of currently selected objects
 
-    isNew: boolean = false;   // new object creation mode
+    isNew = false;   // new object creation mode
     constructor() {}
 
 
@@ -140,7 +141,7 @@ export class TagListComponent implements OnInit {
     }
     onDropFormArray(event) {
         // let formArray: FormArray = this.formArray()
-        let ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
+        const ctrl: AbstractControl = this.formArray.controls[event.previousIndex];
         this.formArray.removeAt(event.previousIndex)
         this.formArray.insert(event.currentIndex, ctrl);
         this.formArray.markAsDirty()
@@ -169,7 +170,7 @@ export class TagListComponent implements OnInit {
             map(x => x.results)
         )
         this.noAutocompleteSelections$ = this.autocompleteSelection$.pipe(
-            map((choices: Array<any>) => this.newTagInputField && this.newTagInputField.nativeElement.value.length > 0 && choices.length == 0)
+            map((choices: any[]) => this.newTagInputField && this.newTagInputField.nativeElement.value.length > 0 && choices.length == 0)
         )
         // mora biti v drugem "threadu", če ne dobimo 'ExpressionChangedAfterItHasBeenCheckedError'
         setTimeout(() => {
@@ -190,7 +191,7 @@ export class TagListComponent implements OnInit {
         return true;
     }
 
-    toggleAddTag(visible: boolean = !this.inputVisible) {
+    toggleAddTag(visible = !this.inputVisible) {
         this.modelChoice = null;
         this.newTagInputField.nativeElement.value = null;
         this.inputVisible = visible;

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { ApiPaginatedListApiStockOrder } from '../../../../api/model/apiPaginatedListApiStockOrder';
 import { SortOption } from '../../../shared/result-sorter/result-sorter-types';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ApiStockOrder } from '../../../../api/model/apiStockOrder';
 import {finalize, map, switchMap, take, tap} from 'rxjs/operators';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
@@ -21,9 +21,11 @@ import {FileSaverService} from 'ngx-filesaver';
 import {ToastrService} from 'ngx-toastr';
 
 @Component({
-  selector: 'app-company-orders-list',
-  templateUrl: './company-orders-list.component.html',
-  styleUrls: ['./company-orders-list.component.scss']
+    selector: 'app-company-orders-list',
+    templateUrl: './company-orders-list.component.html',
+    styleUrls: ['./company-orders-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyOrdersListComponent implements OnInit {
 
@@ -66,7 +68,7 @@ export class CompanyOrdersListComponent implements OnInit {
   allOrders = 0;
   showedOrders = 0;
 
-  cbCheckedAll = new FormControl(false);
+  cbCheckedAll = new UntypedFormControl(false);
 
   constructor(
     private router: Router,

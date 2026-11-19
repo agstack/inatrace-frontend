@@ -1,7 +1,8 @@
 import {Directive, HostListener} from '@angular/core';
 
 @Directive({
-  selector: 'textinput[appWholeNumber][type=number]'
+    selector: 'textinput[appWholeNumber][type=number]',
+    standalone: false
 })
 export class WholeNumberDirective {
 

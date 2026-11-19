@@ -11,13 +11,13 @@ export class CodebookTranslations {
   }
 
   public translate(obj: any, field: string) {
-    let docType = obj.docType
-    let docObj = this.translationFields[docType]
+    const docType = obj.docType
+    const docObj = this.translationFields[docType]
     if (!docObj) return obj[field]
-    let translations = docObj[field]
+    const translations = docObj[field]
     if (!translations) return obj[field]
-    let translation = translations[`CBT_${ dbKey(obj) }.${ field }`]
-    let language = LanguageCodeHelper.getCurrentLocale()
+    const translation = translations[`CBT_${ dbKey(obj) }.${ field }`]
+    const language = LanguageCodeHelper.getCurrentLocale()
     return translation && language != 'en' ? translation : obj[field] //  "<NO TRANSLATION>"//
   }
 

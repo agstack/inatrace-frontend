@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-improved.service';
 import { environment } from 'src/environments/environment';
@@ -7,7 +7,9 @@ import { environment } from 'src/environments/environment';
 @Component({
     selector: 'app-cookie-management-modal',
     templateUrl: './cookie-management-modal.component.html',
-    styleUrls: ['./cookie-management-modal.component.scss']
+    styleUrls: ['./cookie-management-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CookieManagementModalComponent implements OnInit {
 
@@ -21,11 +23,11 @@ export class CookieManagementModalComponent implements OnInit {
         private modalService: NgbModalImproved
     ) { }
 
-    form = new FormGroup({
-        googleAnalytics: new FormControl(null),
-        facebookPixel: new FormControl(null),
-        intercom: new FormControl(null),
-        rocket: new FormControl(null)
+    form = new UntypedFormGroup({
+        googleAnalytics: new UntypedFormControl(null),
+        facebookPixel: new UntypedFormControl(null),
+        intercom: new UntypedFormControl(null),
+        rocket: new UntypedFormControl(null)
     })
     ngOnInit() {
         this.form.get('googleAnalytics').setValue(JSON.parse(localStorage.getItem('cookieConsentGoogleAnalytics')))

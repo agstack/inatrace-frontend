@@ -32,10 +32,6 @@ import { InstructionsModalComponent } from './instructions-modal/instructions-mo
         FaqModalComponent,
         InstructionsModalComponent,
     ],
-    entryComponents: [
-        FaqModalComponent,
-        InstructionsModalComponent,
-    ],
     exports: [
         ContentsLinkDirective,
         ContentsLinkParentDirective,
@@ -46,6 +42,6 @@ import { InstructionsModalComponent } from './instructions-modal/instructions-mo
         ParentContentSectionComponent,
         ParentContentLinkComponent,
     ],
-    providers: [],
+    providers: []
 })
 export class ContentsModule { }

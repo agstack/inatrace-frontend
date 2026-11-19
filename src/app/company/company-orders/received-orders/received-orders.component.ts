@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrdersTabComponent } from '../orders-tab/orders-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilityControllerService } from '../../../../api/api/facilityController.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FacilitySemiProductsCodebookService } from '../../../shared-services/facility-semi-products-codebook.service';
 import { setNavigationParameter } from '../../../../shared/utils';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -11,16 +11,18 @@ import { ApiSemiProduct } from '../../../../api/model/apiSemiProduct';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-received-orders',
-  templateUrl: './received-orders.component.html',
-  styleUrls: ['./received-orders.component.scss']
+    selector: 'app-received-orders',
+    templateUrl: './received-orders.component.html',
+    styleUrls: ['./received-orders.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ReceivedOrdersComponent extends OrdersTabComponent implements OnInit, OnDestroy {
 
   rootTab = 0;
 
   // Semi-product dropdown selection component
-  semiProductFrom = new FormControl(null);
+  semiProductFrom = new UntypedFormControl(null);
   semiProductsInFacilityCodebook: FacilitySemiProductsCodebookService;
   semiProductId = null;
   semiProductId$ = new BehaviorSubject<number>(null);

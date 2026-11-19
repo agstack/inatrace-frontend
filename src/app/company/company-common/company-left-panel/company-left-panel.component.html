@@ -3,26 +3,28 @@
   <div class="above-sidenav">
     <div class="above-sidenav-title company-title-wrapper">
       <div>{{ companyTitle }}</div>
-      <div *ngIf="isSystemOrRegionalAdmin || isCompanyAdmin"
-           [ngbTooltip]="companyProfileButtonTooltipTemplate"
-           [autoClose]="false"
-           placement="bottom"
-           triggers="manual"
-           tooltipClass="self-onboarding-tooltip-class"
-           container="body"
-           #companyProfileButtonTooltip="ngbTooltip"
-           class="settings-icon"
-           (click)="openCompanyProfile()"
-           title="Company profile"
-           i18n-title="@@userBox.dropdown.companyProfile">
-        <fa-icon [icon]="faCog"></fa-icon>
-      </div>
-        <ng-template #companyProfileButtonTooltipTemplate>
-            <div>
-                <h2 class="title" i18n="@@selfOnboarding.checklist.addFacilityOrProcAction.step2">Click here to access your company configurations</h2>
-                <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/4' }}</span></div>
-            </div>
-        </ng-template>
+      @if (isSystemOrRegionalAdmin || isCompanyAdmin) {
+        <div
+          [ngbTooltip]="companyProfileButtonTooltipTemplate"
+          [autoClose]="false"
+          placement="bottom"
+          triggers="manual"
+          tooltipClass="self-onboarding-tooltip-class"
+          container="body"
+          #companyProfileButtonTooltip="ngbTooltip"
+          class="settings-icon"
+          (click)="openCompanyProfile()"
+          title="Company profile"
+          i18n-title="@@userBox.dropdown.companyProfile">
+          <fa-icon [icon]="faCog"></fa-icon>
+        </div>
+      }
+      <ng-template #companyProfileButtonTooltipTemplate>
+        <div>
+          <h2 class="title" i18n="@@selfOnboarding.checklist.addFacilityOrProcAction.step2">Click here to access your company configurations</h2>
+          <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '2/4' }}</span></div>
+        </div>
+      </ng-template>
     </div>
   </div>
 
@@ -30,62 +32,68 @@
 
     <div class="img-container">
       <span class="img-container--overlay"></span>
-      <img *ngIf="this.imgStorageKey"
-           src="/api/common/image/{{this.imgStorageKey}}/SMALL"
-           default="/api/common/image/{{this.imgStorageKey}}"
-           class="img-style" alt="Logo image of the company">
+      @if (this.imgStorageKey) {
+        <img
+          src="/api/common/image/{{this.imgStorageKey}}/SMALL"
+          default="/api/common/image/{{this.imgStorageKey}}"
+          class="img-style" alt="Logo image of the company">
+      }
     </div>
 
     <li style="max-width:100%; margin-top: 2.375rem;">
       <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/my-stock"
-         i18n="@@productLabel.sideTitle.stock">
+        routerLinkActive="active"
+        routerLink="/my-stock"
+        i18n="@@productLabel.sideTitle.stock">
         My stock
       </a>
     </li>
 
     <li>
       <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/my-orders"
-         i18n="@@productLabel.sideTitle.orders">
+        routerLinkActive="active"
+        routerLink="/my-orders"
+        i18n="@@productLabel.sideTitle.orders">
         Orders
       </a>
     </li>
 
     <li>
       <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/my-farmers"
-         i18n="@@companyLeftPanel.farmers">
+        routerLinkActive="active"
+        routerLink="/my-farmers"
+        i18n="@@companyLeftPanel.farmers">
         Farmers
       </a>
     </li>
 
-    <li *ngIf="showCollectorsLink">
-      <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/my-collectors"
-         i18n="@@companyLeftPanel.collectors">
+    @if (showCollectorsLink) {
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          routerLink="/my-collectors"
+          i18n="@@companyLeftPanel.collectors">
         Collectors
       </a>
-    </li>
+      </li>
+    }
 
-    <li *ngIf="showMyCustomersLink">
-      <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/my-customers"
-         i18n="@@companyLeftPanel.customers">
+    @if (showMyCustomersLink) {
+      <li>
+        <a class="link-normal"
+          routerLinkActive="active"
+          routerLink="/my-customers"
+          i18n="@@companyLeftPanel.customers">
         Customers
       </a>
-    </li>
+      </li>
+    }
 
     <li>
       <a class="link-normal"
-         routerLinkActive="active"
-         routerLink="/company-dashboard"
-         i18n="@@userHome.dashboard.title">
+        routerLinkActive="active"
+        routerLink="/company-dashboard"
+        i18n="@@userHome.dashboard.title">
         Dashboard
       </a>
     </li>

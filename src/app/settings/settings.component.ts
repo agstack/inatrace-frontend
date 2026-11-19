@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { GlobalEventManagerService } from '../core/global-event-manager.service';
 import { CommonControllerService } from 'src/api/api/commonController.service';
 import { take } from 'rxjs/operators';
@@ -13,13 +13,15 @@ import { AuthorisedLayoutComponent } from '../layout/authorised/authorised-layou
 import { AuthService } from '../core/auth.service';
 
 @Component({
-  template: ''
+    template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SettingsComponent extends ComponentCanDeactivate implements OnInit, OnDestroy, AfterViewInit {
 
   submitted = false;
-  labelsHelperLink = new FormControl(null);
-  unpublishedProductLabelText = new FormControl(null);
+  labelsHelperLink = new UntypedFormControl(null);
+  unpublishedProductLabelText = new UntypedFormControl(null);
 
   allFacilities = 0;
   showedFacilities = 0;

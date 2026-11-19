@@ -1,13 +1,16 @@
 <div class="modal-container">
   <div class="modal-header">
     <h4 class="modal-title sp-faq-modal-title">{{title}}</h4>
-    <button *ngIf="dismissable" type="button" class="close" aria-label="Close"
-      (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    @if (dismissable) {
+      <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
+    }
   </div>
   <div class="modal-body">
-    <div *ngIf="instructionsHtml" [innerHTML]="instructionsHtml"></div>
+    @if (instructionsHtml) {
+      <div [innerHTML]="instructionsHtml"></div>
+    }
 
   </div>
   <div class="modal-footer" i18n="@@batchDetails.prefillLocationFromProduct.buttons">

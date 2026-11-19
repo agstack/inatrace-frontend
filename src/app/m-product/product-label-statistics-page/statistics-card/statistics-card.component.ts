@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-statistics-card',
-  templateUrl: './statistics-card.component.html',
-  styleUrls: ['./statistics-card.component.scss']
+    selector: 'app-statistics-card',
+    templateUrl: './statistics-card.component.html',
+    styleUrls: ['./statistics-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StatisticsCardComponent implements OnInit {
 

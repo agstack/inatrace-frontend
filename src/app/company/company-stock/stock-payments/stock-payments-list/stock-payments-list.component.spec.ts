@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, throwError } from 'rxjs';
@@ -29,7 +29,7 @@ describe('StockPaymentsListComponent', () => {
     return { status: 'OK' as any, data: { items: payments, count: payments.length } };
   }
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     api = jasmine.createSpyObj<PaymentControllerService>('PaymentControllerService',
         ['listPaymentsByCompanyByMap', 'createOrUpdatePayment']);
     api.createOrUpdatePayment.and.returnValue(of({ status: 'OK' } as any));

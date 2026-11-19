@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faStamp } from '@fortawesome/free-solid-svg-icons';
 import { FileSaverService } from 'ngx-filesaver';
@@ -13,9 +13,11 @@ import { ApiProcessDocumentValidationScheme } from '../validation';
 
 
 @Component({
-  selector: 'app-production-record-item',
-  templateUrl: './production-record-item.component.html',
-  styleUrls: ['./production-record-item.component.scss']
+    selector: 'app-production-record-item',
+    templateUrl: './production-record-item.component.html',
+    styleUrls: ['./production-record-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductionRecordItemComponent extends GenericEditableItemComponent<ApiProcessDocument> {
 
@@ -48,14 +50,14 @@ export class ProductionRecordItemComponent extends GenericEditableItemComponent<
         return defaultEmptyObject(market) as ApiProcessDocument;
     }
 
-    static emptyObjectFormFactory(): () => FormControl {
+    static emptyObjectFormFactory(): () => UntypedFormControl {
         return () => {
-            const f = new FormControl(ProductionRecordItemComponent.createEmptyObject(), ApiProcessDocumentValidationScheme.validators);
+            const f = new UntypedFormControl(ProductionRecordItemComponent.createEmptyObject(), ApiProcessDocumentValidationScheme.validators);
             return f;
         };
     }
 
-    public generateForm(value: any): FormGroup {
+    public generateForm(value: any): UntypedFormGroup {
         return generateFormFromMetadata(ApiProcessDocument.formMetadata(), value, ApiProcessDocumentValidationScheme);
     }
 

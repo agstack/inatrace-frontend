@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ApiProductType} from '../../../../api/model/apiProductType';
 import {CompanyProductTypesService} from '../../../shared-services/company-product-types.service';
 import {ApiPlotCoordinate} from '../../../../api/model/apiPlotCoordinate';
@@ -15,16 +15,18 @@ import {
 } from '../../company-farmers/open-plot-details-externally-modal/open-plot-details-externally-modal.component';
 
 @Component({
-  selector: 'app-plots-form',
-  templateUrl: './plots-form.component.html',
-  styleUrls: ['./plots-form.component.scss']
+    selector: 'app-plots-form',
+    templateUrl: './plots-form.component.html',
+    styleUrls: ['./plots-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PlotsFormComponent implements OnInit {
 
-  plotCoordinates: Array<ApiPlotCoordinate> = [];
+  plotCoordinates: ApiPlotCoordinate[] = [];
 
-  plots: Array<ApiPlot> = [];
-  productTypes: Array<ApiProductType> = [];
+  plots: ApiPlot[] = [];
+  productTypes: ApiProductType[] = [];
   plotCoordinatesManager: PlotCoordinatesManagerService = new PlotCoordinatesManagerService();
 
   pin: ApiPlotCoordinate;
@@ -39,7 +41,7 @@ export class PlotsFormComponent implements OnInit {
   productTypesCodebook: CompanyProductTypesService;
 
   @Input()
-  form: FormGroup; // contains the plots control
+  form: UntypedFormGroup; // contains the plots control
 
   @Input()
   submitted = false;
@@ -64,9 +66,9 @@ export class PlotsFormComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiPlot;
   }
 
-  static ApiPlotEmptyObjectFormFactory(): () => FormControl {
+  static ApiPlotEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(PlotsFormComponent.ApiPlotCreateEmptyObject(), ApiPlotValidationScheme.validators);
+      return new UntypedFormControl(PlotsFormComponent.ApiPlotCreateEmptyObject(), ApiPlotValidationScheme.validators);
     };
   }
   
@@ -108,13 +110,13 @@ export class PlotsFormComponent implements OnInit {
 
   initializeListManager() {
     this.plotsListManager = new ListEditorManager<ApiPlot>(
-      this.form.get('plots') as FormArray,
+      this.form.get('plots') as UntypedFormArray,
       PlotsFormComponent.ApiPlotEmptyObjectFormFactory(),
       ApiPlotValidationScheme
     );
   }
 
-  updateLonLat(coordinates: Array<ApiPlotCoordinate>) {
+  updateLonLat(coordinates: ApiPlotCoordinate[]) {
     if (coordinates) {
       this.form.get('location.latitude').setValue(coordinates[0].latitude);
       this.form.get('location.longitude').setValue(coordinates[0].longitude);
@@ -131,7 +133,7 @@ export class PlotsFormComponent implements OnInit {
   }
 
   updateFormGeoId(apiPlot: ApiPlot) {
-    const currentPlotsValue = this.form.get('plots').value as Array<ApiPlot>;
+    const currentPlotsValue = this.form.get('plots').value as ApiPlot[];
     currentPlotsValue.forEach(plot => {
       if (plot.id === apiPlot.id) {
         plot.geoId = apiPlot.geoId;

@@ -6,7 +6,8 @@ import { StockProcessingOrderDetailsComponent } from './stock-processing-order-d
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tab'
+    redirectTo: 'tab',
+    pathMatch: 'full'
   },
   {
     path: 'tab',

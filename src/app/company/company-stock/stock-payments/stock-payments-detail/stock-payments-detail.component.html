@@ -1,48 +1,47 @@
 <app-authorised-layout>
-    <div *ngIf="companyId != null && (mode === modeEnum.PURCHASE && paymentForm && searchFarmersForm.value || mode === modeEnum.CUSTOMER && paymentForm)"
-         class="af-layout--authorised">
-
-        <div class="af-form-wrapper">
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12 d-flex justify-content-between">
-                    <div class="title-page content-element--title">{{ title }} <span>{{ paymentForm.get('receiptNumber').value }}</span></div>
-                    <app-last-seen-tag *ngIf="this.update"
-                                       [dateFormat]="paymentForm.get('updatedTimestamp').value"
-                                       [identifier]="lastUpdatedByUser">
-                    </app-last-seen-tag>
-                </div>
+  @if (companyId != null && (mode === modeEnum.PURCHASE && paymentForm && searchFarmersForm.value || mode === modeEnum.CUSTOMER && paymentForm)) {
+    <div
+      class="af-layout--authorised">
+      <div class="af-form-wrapper">
+        <div class="af-form-row">
+          <div class="af-form-block--c12 d-flex justify-content-between">
+            <div class="title-page content-element--title">{{ title }} <span>{{ paymentForm.get('receiptNumber').value }}</span></div>
+            @if (this.update) {
+              <app-last-seen-tag
+                [dateFormat]="paymentForm.get('updatedTimestamp').value"
+                [identifier]="lastUpdatedByUser">
+              </app-last-seen-tag>
+            }
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c6">
+            <h2 i18n="@@productLabelStockPayments.section.basicInfo">Basic information</h2>
+            <div class="af-form-element">
+              <app-stock-payments-form
+                [paymentForm]="paymentForm"
+                [payableFromForm]="payableFromForm"
+                [searchCompaniesForm]="searchCompaniesForm"
+                [searchFarmersForm]="searchFarmersForm"
+                [searchCollectorsForm]="searchCollectorsForm"
+                [orderReferenceForm]="orderReferenceForm"
+                [farmersCodebook]="farmersCodebook"
+                [collectorsCodebook]="collectorsCodebook"
+                [stockOrder]="this.stockOrder"
+                [openBalance]="this.stockOrder.balance"
+                [purchased]="this.stockOrder.fulfilledQuantity"
+                [viewOnly]="this.update"
+                [submitted]="this.submitted"
+                [mode]="this.mode">
+              </app-stock-payments-form>
             </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c6">
-                    <h2 i18n="@@productLabelStockPayments.section.basicInfo">Basic information</h2>
-                    <div class="af-form-element">
-                        <app-stock-payments-form
-                                [paymentForm]="paymentForm"
-                                [payableFromForm]="payableFromForm"
-                                [searchCompaniesForm]="searchCompaniesForm"
-                                [searchFarmersForm]="searchFarmersForm"
-                                [searchCollectorsForm]="searchCollectorsForm"
-                                [orderReferenceForm]="orderReferenceForm"
-                                [farmersCodebook]="farmersCodebook"
-                                [collectorsCodebook]="collectorsCodebook"
-                                [stockOrder]="this.stockOrder"
-                                [openBalance]="this.stockOrder.balance"
-                                [purchased]="this.stockOrder.fulfilledQuantity"
-                                [viewOnly]="this.update"
-                                [submitted]="this.submitted"
-                                [mode]="this.mode">
-                        </app-stock-payments-form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="af-form-row">
-                <div class="af-form-block--c12">
-                    <div class="af-bottom-buttons" i18n="@@productLabelStockPayments.modal.footer.buttons">
-                        <button class="btn btn-outlined mr-2"
-                                data-dismiss="modal"
+          </div>
+        </div>
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons" i18n="@@productLabelStockPayments.modal.footer.buttons">
+                        <button class="btn btn-outlined me-2"
+                                data-bs-dismiss="modal"
                                 type="button"
                                 (click)="dismiss()">
                             <span>Cancel</span>
@@ -54,10 +53,9 @@
                             <span>Save</span>
                         </button>
                     </div>
-                </div>
-            </div>
-
+          </div>
         </div>
-
+      </div>
     </div>
+  }
 </app-authorised-layout>

@@ -1,96 +1,110 @@
-<ng-container *ngIf="orders$ | async as orders">
-    <div class="main-inside-main">
-        <table *ngIf="orders && orders.items && orders.items.length> 0" class="af-table af-checkbox--small">
-            <thead>
-            <tr result-sorter
-                [sortOptions]="sortOptions"
-                [cbChecked]="cbCheckedAll"
-                [defaultSortingIndex]="1"
-                (sortByKey)="changeSort($event)"></tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let order of orders.items; index as i">
-                <td [attr.data-label]="sortOptions[0].name">
-                    <checkbox-input inTable="true" (onClick)="cbSelected(order, i)" [checked]="this.currentData[i].selected"> </checkbox-input>
-                </td>
-                <td [attr.data-label]="sortOptions[1].name">{{ formatDate(order.productionDate) }}</td>
-                <td [attr.data-label]="sortOptions[2].name">{{ order.internalLotNumber }}</td>
-                <td [attr.data-label]="sortOptions[3].name">{{ order.noOfSacs > 0 ? order.noOfSacs : '/' }}</td>
-                <td [attr.data-label]="sortOptions[4].name">{{ order.orderType | formatStockOrderType }}</td>
-                <td [attr.data-label]="sortOptions[5].name">
-                    <ng-container *ngIf="order.semiProductName">{{ order.semiProductName }}</ng-container>
-                    <ng-container *ngIf="order.finalProductName">{{ order.finalProductName }}</ng-container>
-                </td>
-                <td [attr.data-label]="sortOptions[6].name">
-                    {{ order.totalQuantity ? (order.totalQuantity | number : '1.0-2') : 0 }} / {{ order.fulfilledQuantity ? (order.fulfilledQuantity | number : '1.0-2') : 0 }} / {{ order.availableQuantity ? (order.availableQuantity | number : '1.0-2') : 0 }}
-                </td>
-                <td [attr.data-label]="sortOptions[7].name">{{ order.unitLabel }}</td>
-                <td [attr.data-label]="sortOptions[8].name">{{ formatDate(order.deliveryTime) }}</td>
-                <td [attr.data-label]="sortOptions[9].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</td>
-                <td [attr.data-label]="sortOptions[10].name">{{ order.available | formatAvailability }}</td>
-                <td [attr.data-label]="sortOptions[11].name">
-                    <span *ngIf="order.noOfSacs <= 1">
-                      <a i18n="@@productLabelPurchaseOrder.tableCol.edit"
-                         (click)="edit(order)"
-                         class="company-action"
-                         [class.enabled-action]="true">
+@if (orders$ | async; as orders) {
+  <div class="main-inside-main">
+    @if (orders && orders.items && orders.items.length> 0) {
+      <table class="af-table af-checkbox--small">
+        <thead>
+          <tr result-sorter
+            [sortOptions]="sortOptions"
+            [cbChecked]="cbCheckedAll"
+            [defaultSortingIndex]="1"
+          (sortByKey)="changeSort($event)"></tr>
+        </thead>
+        <tbody>
+          @for (order of orders.items; track order; let i = $index) {
+            <tr>
+              <td [attr.data-label]="sortOptions[0].name">
+                <checkbox-input inTable="true" (onClick)="cbSelected(order, i)" [checked]="this.currentData[i].selected"> </checkbox-input>
+              </td>
+              <td [attr.data-label]="sortOptions[1].name">{{ formatDate(order.productionDate) }}</td>
+              <td [attr.data-label]="sortOptions[2].name">{{ order.internalLotNumber }}</td>
+              <td [attr.data-label]="sortOptions[3].name">{{ order.noOfSacs > 0 ? order.noOfSacs : '/' }}</td>
+              <td [attr.data-label]="sortOptions[4].name">{{ order.orderType | formatStockOrderType }}</td>
+              <td [attr.data-label]="sortOptions[5].name">
+                @if (order.semiProductName) {
+                  {{ order.semiProductName }}
+                }
+                @if (order.finalProductName) {
+                  {{ order.finalProductName }}
+                }
+              </td>
+              <td [attr.data-label]="sortOptions[6].name">
+                {{ order.totalQuantity ? (order.totalQuantity | number : '1.0-2') : 0 }} / {{ order.fulfilledQuantity ? (order.fulfilledQuantity | number : '1.0-2') : 0 }} / {{ order.availableQuantity ? (order.availableQuantity | number : '1.0-2') : 0 }}
+              </td>
+              <td [attr.data-label]="sortOptions[7].name">{{ order.unitLabel }}</td>
+              <td [attr.data-label]="sortOptions[8].name">{{ formatDate(order.deliveryTime) }}</td>
+              <td [attr.data-label]="sortOptions[9].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</td>
+              <td [attr.data-label]="sortOptions[10].name">{{ order.available | formatAvailability }}</td>
+              <td [attr.data-label]="sortOptions[11].name">
+                @if (order.noOfSacs <= 1) {
+                  <span>
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.edit"
+                      (click)="edit(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                         Edit
                       </a>
-                      <a i18n="@@productLabelPurchaseOrder.tableCol.view"
-                         (click)="history(order)"
-                         class="company-action"
-                         [class.enabled-action]="true">
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.view"
+                      (click)="history(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                         View
                       </a>
-                      <a *ngIf="canDelete(order)"
-                         i18n="@@productLabelPurchaseOrder.tableCol.delete"
-                         (click)="delete(order)"
-                         class="company-action"
-                         [class.enabled-action]="true">
+                    @if (canDelete(order)) {
+                      <a
+                        i18n="@@productLabelPurchaseOrder.tableCol.delete"
+                        (click)="delete(order)"
+                        class="company-action"
+                        [class.enabled-action]="true">
                         Delete
                       </a>
-                      <a i18n="@@productLabelPurchaseOrder.tableCol.exportGeoData"
-                         (click)="exportGeoData(order)"
-                         class="company-action"
-                         [class.enabled-action]="true">
+                    }
+                    <a i18n="@@productLabelPurchaseOrder.tableCol.exportGeoData"
+                      (click)="exportGeoData(order)"
+                      class="company-action"
+                      [class.enabled-action]="true">
                         Export Geo Data
                       </a>
-                    </span>
-                </td>
+                  </span>
+                }
+              </td>
             </tr>
-            </tbody>
-        </table>
-        <div *ngIf="orders && orders.items && orders.items.length === 0" class="no-list-results" i18n="@@productLabelPurchaseOrder.noOrders">
+          }
+        </tbody>
+      </table>
+    }
+    @if (orders && orders.items && orders.items.length === 0) {
+      <div class="no-list-results" i18n="@@productLabelPurchaseOrder.noOrders">
             No orders found
         </div>
-    </div>
-
-    <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
-        <ngb-pagination
-                [(page)]="page"
-                [pageSize]="pageSize"
-                [collectionSize]="orders.count"
-                (pageChange)="onPageChange($event)"
-                [maxSize]="7"
-                [rotate]="true">
-        </ngb-pagination>
-    </div>
-
-    <h4 class="text-color-primary" i18n="@@productLabelPurchaseOrder.aggregated.title">Summed up quantities</h4>
-    <div class="aggregated-orders">
-        <table class="aggregated-orders-table">
-            <thead>
-            <tr>
-                <th i18n="@@productLabelPurchaseOrder.sortOptions.semiProduct.name">Semi-product</th>
-                <th i18n="@@productLabelPurchaseOrder.aggregated.totalQuantity">Total quantity</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let order of aggregatedOrders">
-                <td>{{ order.stockUnitName }}:</td>
-                <td>{{ order.amount ? (order.amount | number : '1.0-2') : 0 }} {{ order.measureUnit }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</ng-container>
+    }
+  </div>
+  <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="orders.count"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="7"
+      [rotate]="true">
+    </ngb-pagination>
+  </div>
+  <h4 class="text-color-primary" i18n="@@productLabelPurchaseOrder.aggregated.title">Summed up quantities</h4>
+  <div class="aggregated-orders">
+    <table class="aggregated-orders-table">
+      <thead>
+        <tr>
+          <th i18n="@@productLabelPurchaseOrder.sortOptions.semiProduct.name">Semi-product</th>
+          <th i18n="@@productLabelPurchaseOrder.aggregated.totalQuantity">Total quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of aggregatedOrders; track order) {
+          <tr>
+            <td>{{ order.stockUnitName }}:</td>
+            <td>{{ order.amount ? (order.amount | number : '1.0-2') : 0 }} {{ order.measureUnit }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

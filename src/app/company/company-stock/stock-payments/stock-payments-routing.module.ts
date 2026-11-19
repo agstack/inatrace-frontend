@@ -7,7 +7,8 @@ import { StockPaymentsBulkDetailComponent } from './stock-payments-bulk-detail/s
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tab'
+    redirectTo: 'tab',
+    pathMatch: 'full'
   },
   {
     path: 'tab',

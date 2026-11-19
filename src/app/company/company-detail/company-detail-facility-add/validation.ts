@@ -1,6 +1,6 @@
 import { SimpleValidationScheme } from '../../../../interfaces/Validation';
 import { ApiFacility } from '../../../../api/model/apiFacility';
-import { FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ApiFacilityType } from '../../../../api/model/apiFacilityType';
 import { ApiFacilityLocation } from '../../../../api/model/apiFacilityLocation';
 import { ApiAddress } from '../../../../api/model/apiAddress';
@@ -63,7 +63,7 @@ export const ApiFacilityLocationValidationScheme = {
 export const ApiFacilityValidationScheme = {
     forceExpand: true,
     validators: [
-        multiFieldValidator(['translations'], (group: FormGroup) => requiredTranslationsFacility(group), ['required'])
+        multiFieldValidator(['translations'], (group: UntypedFormGroup) => requiredTranslationsFacility(group), ['required'])
     ],
     fields: {
         name: {
@@ -85,7 +85,7 @@ export const ApiFacilityValidationScheme = {
     }
 } as SimpleValidationScheme<ApiFacility>;
 
-export function requiredTranslationsFacility(control: FormGroup): ValidationErrors | null {
+export function requiredTranslationsFacility(control: UntypedFormGroup): ValidationErrors | null {
     if (!control || !control.value || !control.contains('translations')) {
         return null;
     }

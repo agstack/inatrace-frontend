@@ -1,33 +1,35 @@
- <div class="d-flex align-items-start">
+<div class="d-flex align-items-start">
 
-  <ng-container *ngIf="byCategory">
-    <div class="af-search-wrapper" *ngIf="showSearch">
-      <div class="af-search-field af-search-field--ellipsis">
-        <textinput searchInput="true" placeholder="" [form]="form" (input)="onInput($event)">
-        </textinput>
-      </div>
-      <div class="af-search-tag" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-        <div ngbDropdownToggle>
-          <span class="af-search-tag-pill" i18n="@@searchTextinput.by">By {{labelCategory(searchCategory)}}</span>
+  @if (byCategory) {
+    @if (showSearch) {
+      <div class="af-search-wrapper">
+        <div class="af-search-field af-search-field--ellipsis">
+          <textinput searchInput="true" placeholder="" [form]="form" (input)="onInput($event)">
+          </textinput>
         </div>
-
-        <div class="dropdown-menu" ngbDropdownMenu>
-          <ng-container *ngFor="let item of items">
-            <div ngbDropdownItem (click)="onChange(item)">{{item.name}}</div>
-          </ng-container>
+        <div class="af-search-tag" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+          <div ngbDropdownToggle>
+            <span class="af-search-tag-pill" i18n="@@searchTextinput.by">By {{labelCategory(searchCategory)}}</span>
+          </div>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            @for (item of items; track item) {
+              <div ngbDropdownItem (click)="onChange(item)">{{item.name}}</div>
+            }
+          </div>
         </div>
-
       </div>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="!byCategory">
-    <div class="af-search-wrapper" *ngIf="showSearch">
-      <div class="af-search-field">
-        <textinput searchInput="true" placeholder="" [form]="form" (input)="onInput($event)">
-        </textinput>
+    }
+  }
+  @if (!byCategory) {
+    @if (showSearch) {
+      <div class="af-search-wrapper">
+        <div class="af-search-field">
+          <textinput searchInput="true" placeholder="" [form]="form" (input)="onInput($event)">
+          </textinput>
+        </div>
       </div>
-    </div>
-  </ng-container>
+    }
+  }
   <button class="btn btn-search" (click)="toggleShowSearch()" style="margin-left: 1rem;" i18n="@@search.button.placeholder">
     <div class="button-icon">
       <span class="button-icon-shape button-icon-shape--search"></span>

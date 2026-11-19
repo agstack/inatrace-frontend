@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
 import { take } from 'rxjs/operators';
@@ -6,9 +6,11 @@ import { PublicControllerService } from '../../../../api/api/publicController.se
 import { ApiCertification } from '../../../../api/model/apiCertification';
 
 @Component({
-  selector: 'app-b2c-quality',
-  templateUrl: './b2c-quality.component.html',
-  styleUrls: ['./b2c-quality.component.scss']
+    selector: 'app-b2c-quality',
+    templateUrl: './b2c-quality.component.html',
+    styleUrls: ['./b2c-quality.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cQualityComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { PublicControllerService } from '../../../api/api/publicController.service';
 import { ActivatedRoute } from '@angular/router';
@@ -19,9 +19,11 @@ import { ApiQRTagPublic } from '../../../api/model/apiQRTagPublic';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-b2c-page',
-  templateUrl: './b2c-page.component.html',
-  styleUrls: ['./b2c-page.component.scss']
+    selector: 'app-b2c-page',
+    templateUrl: './b2c-page.component.html',
+    styleUrls: ['./b2c-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cPageComponent implements OnInit {
 
@@ -66,12 +68,30 @@ export class B2cPageComponent implements OnInit {
 
   loading = true;
 
+  dataUnavailable = false;
+
+  /**
+   * Default colours keep the shell renderable while the public data is still loading or when
+   * the API fails. Without them the template dereferences an undefined object and the page
+   * stays blank (the "quaternaryColor" crash).
+   */
+  b2cSettings: ApiBusinessToCustomerSettings = { ...B2cPageComponent.DEFAULT_B2C_SETTINGS };
+
+  static readonly DEFAULT_B2C_SETTINGS: ApiBusinessToCustomerSettings = {
+    primaryColor: '#25265E',
+    secondaryColor: '#5DBCCF',
+    tertiaryColor: '#F7F7F7',
+    quaternaryColor: '#25265E',
+    productTitleColor: '#25265E',
+    headingColor: '#000000',
+    textColor: '#000000'
+  };
+
   productName: string;
 
   headerColor: string;
   footerColor: string;
 
-  b2cSettings: ApiBusinessToCustomerSettings;
   publicProductLabel: ApiProductLabelValuesExtended;
   qrProductLabel: ApiQRTagPublic;
 
@@ -130,6 +150,10 @@ export class B2cPageComponent implements OnInit {
         this.qrProductLabel = qrTag.data;
       },
       complete: () => {
+        this.loading = false;
+      },
+      error: () => {
+        this.dataUnavailable = true;
         this.loading = false;
       }
     });
@@ -204,11 +228,15 @@ export class B2cPageComponent implements OnInit {
   }
 
   get productFontHref() {
-    return `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.productFont.storageKey}`;
+    return this.b2cSettings.productFont?.storageKey
+      ? `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.productFont.storageKey}`
+      : null;
   }
 
   get textFontHref() {
-    return `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.textFont.storageKey}`;
+    return this.b2cSettings.textFont?.storageKey
+      ? `${environment.appBaseUrl}/api/public/document/${this.b2cSettings.textFont.storageKey}`
+      : null;
   }
 
 }

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import _ from 'lodash-es';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { ApiCompany } from '../../../../api/model/apiCompany';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 import { ActivatedRoute } from '@angular/router';
@@ -16,9 +16,11 @@ import { ApiGeoAddress } from '../../../../api/model/apiGeoAddress';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-company-customers-details',
-  templateUrl: './company-customers-details.component.html',
-  styleUrls: ['./company-customers-details.component.scss']
+    selector: 'app-company-customers-details',
+    templateUrl: './company-customers-details.component.html',
+    styleUrls: ['./company-customers-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyCustomersDetailsComponent implements OnInit {
 
@@ -33,11 +35,11 @@ export class CompanyCustomersDetailsComponent implements OnInit {
 
   customer: ApiCompanyCustomer;
   customerId;
-  customerForm: FormGroup;
+  customerForm: UntypedFormGroup;
 
   submitted = false;
   userProfile;
-  semiProductWithPrices = new FormArray([]);
+  semiProductWithPrices = new UntypedFormArray([]);
 
   constructor(
       private globalEventsManager: GlobalEventManagerService,

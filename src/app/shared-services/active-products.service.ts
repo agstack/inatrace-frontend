@@ -36,13 +36,13 @@ export class ActiveProductsService extends GeneralSifrantService<ApiProductListR
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiProductListResponse>> {
     // console.log("MAKE Q")
-    let limit = params && params.limit ? params.limit : this.limit()
+    const limit = params && params.limit ? params.limit : this.limit()
 
-    let reqPars = {
+    const reqPars = {
       ...this.requestParams,
       name: key
     }
-    let tmp = this.producController.listProductsByMap(reqPars).pipe(
+    const tmp = this.producController.listProductsByMap(reqPars).pipe(
       map((res: ApiPaginatedResponseApiProductListResponse) => {
         return {
           results: res.data.items,
@@ -56,7 +56,7 @@ export class ActiveProductsService extends GeneralSifrantService<ApiProductListR
   }
 
   public placeholder(): string {
-    let placeholder = $localize`:@@activeProducts.input.placehoder:Type product name ...`
+    const placeholder = $localize`:@@activeProducts.input.placehoder:Type product name ...`
     return placeholder
   }
 

@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/auth.service';
 
 @Component({
-  selector: 'app-landing-page-top-nav',
-  templateUrl: './landing-page-top-nav.component.html',
-  styleUrls: ['./landing-page-top-nav.component.scss']
+    selector: 'app-landing-page-top-nav',
+    templateUrl: './landing-page-top-nav.component.html',
+    styleUrls: ['./landing-page-top-nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LandingPageTopNavComponent implements OnInit, OnDestroy {
 

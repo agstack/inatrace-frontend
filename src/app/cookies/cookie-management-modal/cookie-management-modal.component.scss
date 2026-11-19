@@ -27,16 +27,16 @@
 }
 
 .modal-container {
-    .custom-control-input:checked ~ .custom-control-label::before {
+    .form-check-input:checked ~ .form-check-label::before {
         border-color: $theme-primary;
         background-color: $theme-primary;
     }
 
-    .custom-control-input:focus ~ .custom-control-label::before {
+    .form-check-input:focus ~ .form-check-label::before {
         box-shadow: 0 0 0 0.2rem $theme-primary-light;
     }
 
-    .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    .form-check-input:focus:not(:checked) ~ .form-check-label::before {
         border-color: $theme-primary;
     }
 }

@@ -1,16 +1,16 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CompanyDetailProcessingActionsDetailComponent } from './company-detail-processing-actions-detail.component';
 
 describe('CompanyDetailProcessingActionsDetailComponent translations', () => {
-  function translation(language: string, name = '', description = ''): FormGroup {
-    return new FormGroup({
-      language: new FormControl(language),
-      name: new FormControl(name),
-      description: new FormControl(description)
+  function translation(language: string, name = '', description = ''): UntypedFormGroup {
+    return new UntypedFormGroup({
+      language: new UntypedFormControl(language),
+      name: new UntypedFormControl(name),
+      description: new UntypedFormControl(description)
     });
   }
 
-  function createComponent(translations: FormGroup[]): CompanyDetailProcessingActionsDetailComponent {
+  function createComponent(translations: UntypedFormGroup[]): CompanyDetailProcessingActionsDetailComponent {
     const globalEventsManager = jasmine.createSpyObj('GlobalEventManagerService', ['showLoading']);
     const component = new CompanyDetailProcessingActionsDetailComponent(
       jasmine.createSpyObj('Router', ['navigate']),
@@ -20,14 +20,14 @@ describe('CompanyDetailProcessingActionsDetailComponent translations', () => {
       { detectChanges: jasmine.createSpy('detectChanges') } as any,
       null
     );
-    component.form = new FormGroup({ translations: new FormArray(translations) });
+    component.form = new UntypedFormGroup({ translations: new UntypedFormArray(translations) });
     component.finalizeForm();
     return component;
   }
 
-  function translationControl(component: CompanyDetailProcessingActionsDetailComponent, language: string): FormGroup {
-    return (component.form.get('translations') as FormArray).controls
-      .find(control => control.get('language').value === language) as FormGroup;
+  function translationControl(component: CompanyDetailProcessingActionsDetailComponent, language: string): UntypedFormGroup {
+    return (component.form.get('translations') as UntypedFormArray).controls
+      .find(control => control.get('language').value === language) as UntypedFormGroup;
   }
 
   it('requires the English name and description without requiring optional translations', () => {

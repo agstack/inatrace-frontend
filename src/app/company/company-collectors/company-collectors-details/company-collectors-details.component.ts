@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import _ from 'lodash-es';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ApiUserCustomer } from '../../../../api/model/apiUserCustomer';
@@ -32,9 +32,11 @@ import { ApiPayment } from '../../../../api/model/apiPayment';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-company-collectors-details',
-  templateUrl: './company-collectors-details.component.html',
-  styleUrls: ['./company-collectors-details.component.scss']
+    selector: 'app-company-collectors-details',
+    templateUrl: './company-collectors-details.component.html',
+    styleUrls: ['./company-collectors-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyCollectorsDetailsComponent implements OnInit {
 
@@ -45,7 +47,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
   company: ApiCompany;
   companyId;
   collector: ApiUserCustomer;
-  collectorForm: FormGroup;
+  collectorForm: UntypedFormGroup;
   submitted = false;
   qrCodeSize = 110;
   appName = environment.appName;
@@ -72,7 +74,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
   codebookAssoc;
   codebookCoop;
   assocCoop;
-  assocForm = new FormControl(null);
+  assocForm = new UntypedFormControl(null);
 
   genderCodebook = EnumSifrant.fromObject({
     MALE: $localize`:@@collectorDetail.gender.male:Male`,
@@ -146,7 +148,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
 
   constructor(
       private location: Location,
-      private formBuilder: FormBuilder,
+      private formBuilder: UntypedFormBuilder,
       private route: ActivatedRoute,
       private companyService: CompanyControllerService,
       private globalEventsManager: GlobalEventManagerService,
@@ -160,9 +162,9 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
     return obj;
   }
 
-  static ApiUserCustomerCooperativeEmptyObjectFormFactory(): () => FormControl {
+  static ApiUserCustomerCooperativeEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyCollectorsDetailsComponent.ApiUserCustomerCooperativeCreateEmptyObject(),
+      return new UntypedFormControl(CompanyCollectorsDetailsComponent.ApiUserCustomerCooperativeCreateEmptyObject(),
         ApiUserCustomerCooperativeValidationScheme.validators);
     };
   }
@@ -172,14 +174,14 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiCertification;
   }
 
-  static ApiCertificationEmptyObjectFormFactory(): () => FormControl {
+  static ApiCertificationEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(CompanyCollectorsDetailsComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
+      return new UntypedFormControl(CompanyCollectorsDetailsComponent.ApiCertificationCreateEmptyObject(), ApiCertificationValidationScheme.validators);
     };
   }
 
   get certifications(): AbstractControl[] {
-    return (this.collectorForm.get('certifications') as FormArray).controls;
+    return (this.collectorForm.get('certifications') as UntypedFormArray).controls;
   }
 
   ngOnInit(): void {
@@ -208,7 +210,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
         this.title = $localize`:@@collectorDetail.newCollector.title:New collector`;
         this.update = false;
         break;
-      case 'update':
+      case 'update': {
         this.title = $localize`:@@collectorDetail.editCollector.title:Edit collector`;
         this.update = true;
         const uc = await this.companyService.getUserCustomer(this.route.snapshot.params.id).pipe(first()).toPromise();
@@ -216,6 +218,7 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
           this.collector = uc.data;
         }
         break;
+      }
       default:
         throw Error('Wrong action!');
     }
@@ -301,13 +304,13 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
   initializeListManager() {
 
     this.producersListManager = new ListEditorManager<ApiUserCustomerCooperative>(
-        this.collectorForm.get('cooperatives') as FormArray,
+        this.collectorForm.get('cooperatives') as UntypedFormArray,
         CompanyCollectorsDetailsComponent.ApiUserCustomerCooperativeEmptyObjectFormFactory(),
         ApiUserCustomerCooperativeValidationScheme
     );
 
     this.certificationListManager = new ListEditorManager<ApiCertification>(
-      (this.collectorForm.get('certifications')) as FormArray,
+      (this.collectorForm.get('certifications')) as UntypedFormArray,
       CompanyCollectorsDetailsComponent.ApiCertificationEmptyObjectFormFactory(),
       ApiCertificationValidationScheme
     );
@@ -371,8 +374,8 @@ export class CompanyCollectorsDetailsComponent implements OnInit {
     this.sortPO = event.sortOrder;
   }
   
-  public get areaUnit(): FormControl {
-    return this.collectorForm.get('farm.areaUnit') as FormControl;
+  public get areaUnit(): UntypedFormControl {
+    return this.collectorForm.get('farm.areaUnit') as UntypedFormControl;
   }
 
   selectedIdsChanged(event, type?) {

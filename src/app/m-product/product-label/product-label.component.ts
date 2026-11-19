@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GoogleMap, MapInfoWindow } from '@angular/google-maps';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCompass, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
@@ -56,31 +56,27 @@ import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { SelfOnboardingService } from "../../shared-services/self-onboarding.service";
 
 @Component({
-  selector: 'app-product-label',
-  templateUrl: './product-label.component.html',
-  styleUrls: ['./product-label.component.scss'],
-  animations: [
-    trigger('expandCollapse', [
-      state('closed', style({
-        height: '0',
-        overflow: 'hidden',
-        opacity: '0',
-        margin: '0',
-        padding: '0'
-      })),
-      state('open', style({
-        opacity: '1'
-      })),
-      transition(
-        'closed=>open',
-        animate('150ms')
-      ),
-      transition(
-        'open=>closed',
-        animate('150ms ease-out')
-      )
-    ]),
-  ]
+    selector: 'app-product-label',
+    templateUrl: './product-label.component.html',
+    styleUrls: ['./product-label.component.scss'],
+    animations: [
+        trigger('expandCollapse', [
+            state('closed', style({
+                height: '0',
+                overflow: 'hidden',
+                opacity: '0',
+                margin: '0',
+                padding: '0'
+            })),
+            state('open', style({
+                opacity: '1'
+            })),
+            transition('closed=>open', animate('150ms')),
+            transition('open=>closed', animate('150ms ease-out'))
+        ]),
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductLabelComponent extends ComponentCanDeactivate implements OnInit, OnDestroy, AfterViewInit {
 
@@ -111,13 +107,11 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
   }
 
   // origin location helper methods
-  get originLocations(): FormArray {
-    return this.productForm.get('origin.locations') as FormArray;
+  get originLocations(): UntypedFormArray {
+    return this.productForm.get('origin.locations') as UntypedFormArray;
   }
 
-  get isGoogleMapsLoaded() {  // fix of a Google Maps glitch
-    return !!window.google;
-  }
+  isGoogleMapsLoaded = false;
 
   get labelChanged() {
     return (this.visibilityForm && this.visibilityForm.dirty) || this.labelTitleForm.dirty;
@@ -172,7 +166,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
   gMap = null;
   gInfoWindow = null;
   gInfoWindowText = '';
-  productForm: FormGroup;
+  productForm: UntypedFormGroup;
   countries: any = [];
   markers: any = [];
   journeyMarkers: any[] = [];
@@ -217,7 +211,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
   action = this.route.snapshot.data.action;
 
   availableMedia: ApiProductLabelCompanyDocument[];
-  mediaForm = new FormGroup({});
+  mediaForm = new UntypedFormGroup({});
 
   viewIcon = faEye;
 
@@ -259,12 +253,12 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
       this.productForm = generateFormFromMetadata(ApiProduct.formMetadata(), product, ApiProductValidationScheme);
 
       const pricingTransparencyForm = generateFormFromMetadata(pricingTransparencyFormMetadata(), product.settings.pricingTransparency, pricingTransparencyValidationScheme);
-      (this.productForm.get('settings') as FormGroup).setControl('pricingTransparency', pricingTransparencyForm);
+      (this.productForm.get('settings') as UntypedFormGroup).setControl('pricingTransparency', pricingTransparencyForm);
 
       const companyFormMediaLinks = CompanyDetailComponent.generateSocialMediaForm();
       const oldMediaLinks = this.productForm.get('company.mediaLinks').value;
       companyFormMediaLinks.setValue({ ...companyFormMediaLinks.value, ...oldMediaLinks });
-      (this.productForm.get('company') as FormGroup).setControl('mediaLinks', companyFormMediaLinks);
+      (this.productForm.get('company') as UntypedFormGroup).setControl('mediaLinks', companyFormMediaLinks);
 
       const businessToCustomerSettings = generateFormFromMetadata(ApiBusinessToCustomerSettings.formMetadata(),
           product.businessToCustomerSettings, ApiBusinessToCustomerSettingsValidationScheme);
@@ -497,7 +491,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
 
   settingsElements: any[] = [];
 
-  visibilityForm: FormGroup = null;
+  visibilityForm: UntypedFormGroup = null;
 
   sectionToNameToObj = new Map();
 
@@ -507,7 +501,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
 
   reorderMode = false;
 
-  labelTitleForm = new FormControl(null);
+  labelTitleForm = new UntypedFormControl(null);
   editTitleMode = false;
 
   @ViewChild('labelTitleInput', { static: false })
@@ -544,6 +538,13 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
 
   ngOnInit(): void {
 
+    // window.google exists before the versioned loader attaches importLibrary and Map;
+    // rendering google-map at that moment makes @angular/google-maps fail to initialise.
+    // The event manager only reports the maps as loaded once the loader is usable.
+    this.unsubscribeList.add(
+      this.globalEventsManager.loadedGoogleMapsEmitter.subscribe(loaded => this.isGoogleMapsLoaded = loaded)
+    );
+
     this.unsubscribeList.add(
       this.authService.userProfile$
         .pipe(
@@ -575,9 +576,9 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
               this.unsubscribeList.add(
                   this.selfOnboardingService.addProductCurrentStep$.subscribe(step => {
                     if (step == 4) {
-                      this.createProductTooltip.open();
+                      this.createProductTooltip?.open();
                     } else {
-                      this.createProductTooltip.close();
+                      this.createProductTooltip?.close();
                     }
                   })
               );
@@ -649,12 +650,12 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     this.productForm = generateFormFromMetadata(ApiProduct.formMetadata(), product, ApiProductValidationScheme);
 
     const pricingTransparencyForm = generateFormFromMetadata(pricingTransparencyFormMetadata(), product.settings.pricingTransparency, pricingTransparencyValidationScheme);
-    (this.productForm.get('settings') as FormGroup).setControl('pricingTransparency', pricingTransparencyForm);
+    (this.productForm.get('settings') as UntypedFormGroup).setControl('pricingTransparency', pricingTransparencyForm);
 
     const companyFormMediaLinks = CompanyDetailComponent.generateSocialMediaForm();
     const oldMediaLinks = this.productForm.get('company.mediaLinks').value;
     companyFormMediaLinks.setValue({ ...companyFormMediaLinks.value, ...oldMediaLinks });
-    (this.productForm.get('company') as FormGroup).setControl('mediaLinks', companyFormMediaLinks);
+    (this.productForm.get('company') as UntypedFormGroup).setControl('mediaLinks', companyFormMediaLinks);
 
     const businessToCustomerSettings = generateFormFromMetadata(ApiBusinessToCustomerSettings.formMetadata(),
         product.businessToCustomerSettings, ApiBusinessToCustomerSettingsValidationScheme);
@@ -683,7 +684,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     this.productForm = generateFormFromMetadata(ApiProduct.formMetadata(), this.emptyObject(), ApiProductValidationScheme);
 
     const pricingTransparencyForm = generateFormFromMetadata(pricingTransparencyFormMetadata(), {}, pricingTransparencyValidationScheme);
-    (this.productForm.get('settings') as FormGroup).setControl('pricingTransparency', pricingTransparencyForm);
+    (this.productForm.get('settings') as UntypedFormGroup).setControl('pricingTransparency', pricingTransparencyForm);
 
     const originForm = generateFormFromMetadata(ApiProductOrigin.formMetadata(), {}, ApiProductOriginValidationScheme);
     this.productForm.setControl('origin', originForm);
@@ -712,7 +713,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     this.productForm.setControl('businessToCustomerSettings', businessToCustomerSettings);
 
     const companyFormMediaLinks = CompanyDetailComponent.generateSocialMediaForm();
-    (this.productForm.get('company') as FormGroup).setControl('mediaLinks', companyFormMediaLinks);
+    (this.productForm.get('company') as UntypedFormGroup).setControl('mediaLinks', companyFormMediaLinks);
     this.productForm.updateValueAndValidity();
     const companyId = this.route.snapshot.params.companyId;
     const valueChainId = this.route.snapshot.params.valueChainId;
@@ -884,21 +885,21 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     }
   }
 
-  createOrFillOriginLocationsItem(loc: any, create: boolean): FormGroup {
-    return new FormGroup({
-      latitude: new FormControl(create ? loc.lat : loc.latitude),
-      longitude: new FormControl(create ? loc.lng : loc.longitude),
-      pinName: new FormControl(create ? null : loc.pinName),
-      numberOfFarmers: new FormControl(create ? null : loc.numberOfFarmers),
+  createOrFillOriginLocationsItem(loc: any, create: boolean): UntypedFormGroup {
+    return new UntypedFormGroup({
+      latitude: new UntypedFormControl(create ? loc.lat : loc.latitude),
+      longitude: new UntypedFormControl(create ? loc.lng : loc.longitude),
+      pinName: new UntypedFormControl(create ? null : loc.pinName),
+      numberOfFarmers: new UntypedFormControl(create ? null : loc.numberOfFarmers),
     });
   }
 
   initializeOriginLocations(): void {
-    const tmp = new FormArray([]);
+    const tmp = new UntypedFormArray([]);
     for (const loc of this.originLocations.value) {
       tmp.push(this.createOrFillOriginLocationsItem(loc, false));
     }
-    (this.productForm.get('origin') as FormGroup).setControl('locations', tmp);
+    (this.productForm.get('origin') as UntypedFormGroup).setControl('locations', tmp);
     this.productForm.updateValueAndValidity();
   }
 
@@ -929,7 +930,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
       infoText: ' '
     };
     this.markers.push(tmp);
-    this.originLocations.push(this.createOrFillOriginLocationsItem(loc, true) as FormGroup);
+    this.originLocations.push(this.createOrFillOriginLocationsItem(loc, true) as UntypedFormGroup);
     this.productForm.markAsDirty();
   }
 
@@ -962,7 +963,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     this.markers.splice(index, 1, tmp);
   }
 
-  dblClick(event: google.maps.MouseEvent) {
+  dblClick(event: google.maps.MapMouseEvent) {
     if (this.canEdit()) {
       this.addOriginLocations(event.latLng.toJSON());
     }
@@ -1051,97 +1052,97 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
 
   generateProductElements() {
     this.productElements = [
-      { name: 'name', section: 'product', visible: new FormControl(true), template: this.productNameTmpl, disableDrag: true },
-      { name: 'photo', section: 'product', visible: new FormControl(true), template: this.productLogoTmpl, disableDrag: true },
-      { name: 'description', section: 'product', visible: new FormControl(true), template: this.productDescriptionTmpl, disableDrag: true },
-      { name: 'origin', section: 'product', visible: new FormControl(true), template: this.originValueTmpl },
-      { name: 'journeyMarkers', section: 'product', visible: new FormControl(true), disableDrag: true }
+      { name: 'name', section: 'product', visible: new UntypedFormControl(true), template: this.productNameTmpl, disableDrag: true },
+      { name: 'photo', section: 'product', visible: new UntypedFormControl(true), template: this.productLogoTmpl, disableDrag: true },
+      { name: 'description', section: 'product', visible: new UntypedFormControl(true), template: this.productDescriptionTmpl, disableDrag: true },
+      { name: 'origin', section: 'product', visible: new UntypedFormControl(true), template: this.originValueTmpl },
+      { name: 'journeyMarkers', section: 'product', visible: new UntypedFormControl(true), disableDrag: true }
     ];
   }
 
   generateProcessElements() {
     this.processElements = [
-      { name: 'process.production', section: 'process', visible: new FormControl(false), template: this.productionTmpl }
+      { name: 'process.production', section: 'process', visible: new UntypedFormControl(false), template: this.productionTmpl }
     ];
   }
 
   generateSocialResponsibilityElements() {
     this.socialResponsibilityElements = [
-      { name: 'responsibility.laborPolicies', section: 'responsibility', visible: new FormControl(false), template: this.laborPoliciesTmpl }
+      { name: 'responsibility.laborPolicies', section: 'responsibility', visible: new UntypedFormControl(false), template: this.laborPoliciesTmpl }
     ];
   }
 
   generateEnvironmentalSustainabilityElements() {
     this.environmentalSustainabilityElements = [
-      { name: 'sustainability.production', section: 'sustainability', visible: new FormControl(false), template: this.environmentalyFriendlyProductionTmpl },
-      { name: 'sustainability.packaging', section: 'sustainability', visible: new FormControl(false), template: this.sustainablePackagingTmpl },
-      { name: 'sustainability.co2Footprint', section: 'sustainability', visible: new FormControl(false), template: this.co2FootprintTmpl },
+      { name: 'sustainability.production', section: 'sustainability', visible: new UntypedFormControl(false), template: this.environmentalyFriendlyProductionTmpl },
+      { name: 'sustainability.packaging', section: 'sustainability', visible: new UntypedFormControl(false), template: this.sustainablePackagingTmpl },
+      { name: 'sustainability.co2Footprint', section: 'sustainability', visible: new UntypedFormControl(false), template: this.co2FootprintTmpl },
     ];
   }
 
   generateCompanyElements() {
     this.companyElements = [
-      { name: 'company.name', section: 'company', visible: new FormControl(false), template: this.companyNameTmpl },
-      { name: 'company.logo', section: 'company', visible: new FormControl(false), template: this.companyLogoTmpl },
-      { name: 'company.headquarters', section: 'company', visible: new FormControl(false), template: this.companyHeadquartersTmpl },
-      { name: 'company.about', section: 'company', visible: new FormControl(false), template: this.aboutTheCompanyTmpl },
-      { name: 'company.manager', section: 'company', visible: new FormControl(false), template: this.nameOfManagerCEOTmpl },
-      { name: 'company.email', section: 'company', visible: new FormControl(false), template: this.contactEmailTmpl },
-      { name: 'company.phone', section: 'company', visible: new FormControl(false), template: this.contactPhoneNumberTmpl },
-      { name: 'company.webPage', section: 'company', visible: new FormControl(false), template: this.companyWebPageTmpl },
-      { name: 'company.mediaLinks.facebook', section: 'company', visible: new FormControl(false), template: this.facebookTmpl },
-      { name: 'company.mediaLinks.instagram', section: 'company', visible: new FormControl(false), template: this.instagramTmpl },
-      { name: 'company.mediaLinks.twitter', section: 'company', visible: new FormControl(false), template: this.twitterTmpl },
-      { name: 'company.mediaLinks.youtube', section: 'company', visible: new FormControl(false), template: this.youtubeTmpl },
-      { name: 'company.mediaLinks.other', section: 'company', visible: new FormControl(false), template: this.otherTmpl },
+      { name: 'company.name', section: 'company', visible: new UntypedFormControl(false), template: this.companyNameTmpl },
+      { name: 'company.logo', section: 'company', visible: new UntypedFormControl(false), template: this.companyLogoTmpl },
+      { name: 'company.headquarters', section: 'company', visible: new UntypedFormControl(false), template: this.companyHeadquartersTmpl },
+      { name: 'company.about', section: 'company', visible: new UntypedFormControl(false), template: this.aboutTheCompanyTmpl },
+      { name: 'company.manager', section: 'company', visible: new UntypedFormControl(false), template: this.nameOfManagerCEOTmpl },
+      { name: 'company.email', section: 'company', visible: new UntypedFormControl(false), template: this.contactEmailTmpl },
+      { name: 'company.phone', section: 'company', visible: new UntypedFormControl(false), template: this.contactPhoneNumberTmpl },
+      { name: 'company.webPage', section: 'company', visible: new UntypedFormControl(false), template: this.companyWebPageTmpl },
+      { name: 'company.mediaLinks.facebook', section: 'company', visible: new UntypedFormControl(false), template: this.facebookTmpl },
+      { name: 'company.mediaLinks.instagram', section: 'company', visible: new UntypedFormControl(false), template: this.instagramTmpl },
+      { name: 'company.mediaLinks.twitter', section: 'company', visible: new UntypedFormControl(false), template: this.twitterTmpl },
+      { name: 'company.mediaLinks.youtube', section: 'company', visible: new UntypedFormControl(false), template: this.youtubeTmpl },
+      { name: 'company.mediaLinks.other', section: 'company', visible: new UntypedFormControl(false), template: this.otherTmpl },
     ];
   }
 
   generateSettingsElements() {
     if (this.action === 'labels') {
       this.settingsElements = [
-        { name: 'settings.language', section: 'settings', visible: new FormControl(false), template: this.languageTmpl },
-        { name: 'settings.gdprText', section: 'settings', visible: new FormControl(false), template: this.gdprTextTmpl },
-        { name: 'settings.privacyPolicyText', section: 'settings', visible: new FormControl(false), template: this.privacyPolicyTextTmpl },
-        { name: 'settings.termsOfUseText', section: 'settings', visible: new FormControl(false), template: this.termsOfUseTextTmpl }
+        { name: 'settings.language', section: 'settings', visible: new UntypedFormControl(false), template: this.languageTmpl },
+        { name: 'settings.gdprText', section: 'settings', visible: new UntypedFormControl(false), template: this.gdprTextTmpl },
+        { name: 'settings.privacyPolicyText', section: 'settings', visible: new UntypedFormControl(false), template: this.privacyPolicyTextTmpl },
+        { name: 'settings.termsOfUseText', section: 'settings', visible: new UntypedFormControl(false), template: this.termsOfUseTextTmpl }
       ];
       return;
     }
     this.settingsElements = [
-      { name: 'settings.language', section: 'settings', visible: new FormControl(false), template: this.languageTmpl },
-      { name: 'settings.gdprText', section: 'settings', visible: new FormControl(false), template: this.gdprTextTmpl },
-      { name: 'settings.privacyPolicyText', section: 'settings', visible: new FormControl(false), template: this.privacyPolicyTextTmpl },
-      { name: 'settings.termsOfUseText', section: 'settings', visible: new FormControl(false), template: this.termsOfUseTextTmpl }
+      { name: 'settings.language', section: 'settings', visible: new UntypedFormControl(false), template: this.languageTmpl },
+      { name: 'settings.gdprText', section: 'settings', visible: new UntypedFormControl(false), template: this.gdprTextTmpl },
+      { name: 'settings.privacyPolicyText', section: 'settings', visible: new UntypedFormControl(false), template: this.privacyPolicyTextTmpl },
+      { name: 'settings.termsOfUseText', section: 'settings', visible: new UntypedFormControl(false), template: this.termsOfUseTextTmpl }
     ];
   }
 
   generateBusinessToCustomerSettingsElements() {
     this.b2cElements = [
-      { name: 'businessToCustomerSettings.primaryColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cPrimaryColor },
-      { name: 'businessToCustomerSettings.secondaryColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cSecondaryColor },
-      { name: 'businessToCustomerSettings.tertiaryColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTertiaryColor },
-      { name: 'businessToCustomerSettings.quaternaryColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cQuaternaryColor },
-      { name: 'businessToCustomerSettings.productTitleColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cProductTitleColor },
-      { name: 'businessToCustomerSettings.headingColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cHeadingColor },
-      { name: 'businessToCustomerSettings.textColor', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTextColor },
-      { name: 'businessToCustomerSettings.tabFairPrices', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTabFairPrices },
-      { name: 'businessToCustomerSettings.tabProducers', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTabProducers },
-      { name: 'businessToCustomerSettings.tabQuality', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTabQuality },
-      { name: 'businessToCustomerSettings.tabFeedback', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTabFeedback },
-      { name: 'businessToCustomerSettings.productFont', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cProductFont },
-      { name: 'businessToCustomerSettings.textFont', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cTextFont },
-      { name: 'businessToCustomerSettings.landingPageImage', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cLandingPageImage },
+      { name: 'businessToCustomerSettings.primaryColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cPrimaryColor },
+      { name: 'businessToCustomerSettings.secondaryColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cSecondaryColor },
+      { name: 'businessToCustomerSettings.tertiaryColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTertiaryColor },
+      { name: 'businessToCustomerSettings.quaternaryColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cQuaternaryColor },
+      { name: 'businessToCustomerSettings.productTitleColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cProductTitleColor },
+      { name: 'businessToCustomerSettings.headingColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cHeadingColor },
+      { name: 'businessToCustomerSettings.textColor', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTextColor },
+      { name: 'businessToCustomerSettings.tabFairPrices', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTabFairPrices },
+      { name: 'businessToCustomerSettings.tabProducers', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTabProducers },
+      { name: 'businessToCustomerSettings.tabQuality', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTabQuality },
+      { name: 'businessToCustomerSettings.tabFeedback', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTabFeedback },
+      { name: 'businessToCustomerSettings.productFont', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cProductFont },
+      { name: 'businessToCustomerSettings.textFont', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cTextFont },
+      { name: 'businessToCustomerSettings.landingPageImage', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cLandingPageImage },
       { name: 'businessToCustomerSettings.landingPageBackgroundImage', section: 'businessToCustomerSettings',
-        visible: new FormControl(false), template: this.b2cLandingPageBackgroundImage },
-      { name: 'businessToCustomerSettings.headerBackgroundImage', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cHeaderBackgroundImage },
-      { name: 'businessToCustomerSettings.graphicPriceToProducer', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cPricePaidToProducer },
-      { name: 'businessToCustomerSettings.graphicFarmGatePrice', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cFarmGatePrice },
-      { name: 'businessToCustomerSettings.prices', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cPrices },
-      { name: 'businessToCustomerSettings.graphicQuality', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cGraphicQuality},
+        visible: new UntypedFormControl(false), template: this.b2cLandingPageBackgroundImage },
+      { name: 'businessToCustomerSettings.headerBackgroundImage', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cHeaderBackgroundImage },
+      { name: 'businessToCustomerSettings.graphicPriceToProducer', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cPricePaidToProducer },
+      { name: 'businessToCustomerSettings.graphicFarmGatePrice', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cFarmGatePrice },
+      { name: 'businessToCustomerSettings.prices', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cPrices },
+      { name: 'businessToCustomerSettings.graphicQuality', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cGraphicQuality},
     ];
     if (this.action === 'labels') {
       this.b2cElements.push(
-          { name: 'businessToCustomerSettings.media', section: 'businessToCustomerSettings', visible: new FormControl(false), template: this.b2cMedia }
+          { name: 'businessToCustomerSettings.media', section: 'businessToCustomerSettings', visible: new UntypedFormControl(false), template: this.b2cMedia }
       );
     }
   }
@@ -1166,7 +1167,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
       const fixedKey = element.name.replace(/\./g, '_');
       formObj[fixedKey] = element.visible;
     });
-    this.visibilityForm = new FormGroup(formObj);
+    this.visibilityForm = new UntypedFormGroup(formObj);
   }
 
   generateLabelMaps() {
@@ -1297,15 +1298,15 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
   }
 
   get videoList(): AbstractControl[] {
-    return this.mediaForm && this.mediaForm.get('video') ? (this.mediaForm.get('video') as FormArray).controls : [];
+    return this.mediaForm && this.mediaForm.get('video') ? (this.mediaForm.get('video') as UntypedFormArray).controls : [];
   }
 
   get farmerList(): AbstractControl[] {
-    return this.mediaForm && this.mediaForm.get('farmers') ? (this.mediaForm.get('farmers') as FormArray).controls : [];
+    return this.mediaForm && this.mediaForm.get('farmers') ? (this.mediaForm.get('farmers') as UntypedFormArray).controls : [];
   }
 
   get productionRecordList(): AbstractControl[] {
-    return this.mediaForm && this.mediaForm.get('productionRecord') ? (this.mediaForm.get('productionRecord') as FormArray).controls : [];
+    return this.mediaForm && this.mediaForm.get('productionRecord') ? (this.mediaForm.get('productionRecord') as UntypedFormArray).controls : [];
   }
 
   showImage(storageKey: string) {
@@ -1325,20 +1326,20 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     if (media && media.status === 'OK' && media.data) {
       this.availableMedia = media.data;
 
-      this.mediaForm.setControl('video', new FormArray([], maxActiveArrayControls(1)));
-      this.mediaForm.setControl('farmers', new FormArray([]));
-      this.mediaForm.setControl('productionRecord', new FormArray([]));
+      this.mediaForm.setControl('video', new UntypedFormArray([], maxActiveArrayControls(1)));
+      this.mediaForm.setControl('farmers', new UntypedFormArray([]));
+      this.mediaForm.setControl('productionRecord', new UntypedFormArray([]));
 
       this.availableMedia.map(value => {
         switch (value.category) {
           case ApiProductLabelCompanyDocument.CategoryEnum.VIDEO:
-            (this.mediaForm.get('video') as FormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
+            (this.mediaForm.get('video') as UntypedFormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
             break;
           case ApiProductLabelCompanyDocument.CategoryEnum.MEETTHEFARMER:
-            (this.mediaForm.get('farmers') as FormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
+            (this.mediaForm.get('farmers') as UntypedFormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
             break;
           case ApiProductLabelCompanyDocument.CategoryEnum.PRODUCTIONRECORD:
-            (this.mediaForm.get('productionRecord') as FormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
+            (this.mediaForm.get('productionRecord') as UntypedFormArray).push(generateFormFromMetadata(ApiProductLabelCompanyDocument.formMetadata(), value));
             break;
         }
       });
@@ -1653,7 +1654,7 @@ export class ProductLabelComponent extends ComponentCanDeactivate implements OnI
     return this.isOwner;
   }
 
-  public get journeyMarkersCtrl(): FormArray {
-    return this.productForm.get('journeyMarkers') as FormArray;
+  public get journeyMarkersCtrl(): UntypedFormArray {
+    return this.productForm.get('journeyMarkers') as UntypedFormArray;
   }
 }

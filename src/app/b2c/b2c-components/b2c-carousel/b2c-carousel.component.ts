@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
 
 @Component({
-  selector: 'app-b2c-carousel',
-  templateUrl: './b2c-carousel.component.html',
-  styleUrls: ['./b2c-carousel.component.scss']
+    selector: 'app-b2c-carousel',
+    templateUrl: './b2c-carousel.component.html',
+    styleUrls: ['./b2c-carousel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cCarouselComponent implements OnInit {
 

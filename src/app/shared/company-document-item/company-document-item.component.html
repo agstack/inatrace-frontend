@@ -7,221 +7,256 @@
   [disableDelete]="disableDelete"
   [viewOnly]="readOnly">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="contentObject.description">
-          <a *ngIf="contentObject?.document?.storageKey" (click)="onDownload(); $event.stopPropagation()">
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faUser" size="1x" *ngIf="category == 'MEET_THE_FARMER'"></fa-icon>
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faImage" size="1x" *ngIf="category == 'PRODUCTION_RECORD'"></fa-icon>
-          </a>
-          <span *ngIf="category == 'VIDEO'">
-            <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faYoutube" size="1x"></fa-icon>
-          </span>
-          {{category == 'MEET_THE_FARMER' ? contentObject.name : contentObject.description}}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (contentObject.description) {
+            <div>
+              @if (contentObject?.document?.storageKey) {
+                <a (click)="onDownload(); $event.stopPropagation()">
+                  @if (category === 'MEET_THE_FARMER') {
+                    <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faUser" size="1x"></fa-icon>
+                  }
+                  @if (category === 'PRODUCTION_RECORD') {
+                    <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faImage" size="1x"></fa-icon>
+                  }
+                </a>
+              }
+              @if (category === 'VIDEO') {
+                <span>
+                  <fa-icon class="tagitem-download-icon" style="margin-left: 0.5rem" [icon]="faYoutube" size="1x"></fa-icon>
+                </span>
+              }
+              {{category === 'MEET_THE_FARMER' ? contentObject.name : contentObject.description}}
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-        <h4 class="sp-subform-title">{{title}}
-        </h4>
-
-        <ng-container *ngIf="category == 'MEET_THE_FARMER'">
-          <textinput
-            label="Farmer name"
-            [form]="form.get('name')"
-            style="width: 100%"
-            i18n-label="@@compDocItem.textinput.farmerName.label"
-            [isInvalid]="submitted && form.get('name').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('name').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.farmerName.error">
-                  <span>
-                    Farmer name is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-
-          <textinput
-            label="Farmer description"
-            [form]="form.get('description')"
-            style="width: 100%"
-            [textarea]="true"
-            i18n-label="@@compDocItem.textinput.farmerDescription.label"
-            [isInvalid]="submitted && form.get('description').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.farmerDescription.error">
-                  <span>
-                    Farmer description is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'PRODUCTION_RECORD'">
-          <textinput
-            label="Description"
-            [form]="form.get('description')"
-            style="width: 100%"
-            [textarea]="true"
-            i18n-label="@@compDocItem.textinput.description.label"
-            [isInvalid]="submitted && form.get('description').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.description.error">
-                  <span>
-                    Description is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'VIDEO'">
-          <textinput
-            label="Video description"
-            [form]="form.get('description')"
-            style="width: 100%"
-            [textarea]="true"
-            i18n-label="@@compDocItem.textinput.videoDescription.label"
-            [isInvalid]="submitted && form.get('description').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.videoDescription.error">
-                  <span>
-                    Video description is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'MEET_THE_FARMER'">
-          <attachment-uploader
-            rootImageUrl="{{rootImageUrl}}"
-            allowedMimeType="[image/png', 'image/jpeg']"
-            allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-            mode="simpleAsTextField"
-            label="Farmer photo"
-            i18n-label="@@compDocItem.farmer.attachment-uploader.label"
-            i18n-allowedMimeTypeErrorMessage="@@compDocItem.attachment-uploader.allowedMimeTypeErrorMessage"
-            [form]="form.get('document')"
-            [attachmentUploaderId]="'companyDocumentItems'+listEditorManagerPosition"
-            [invalid]="submitted && form.get('document').invalid"
-            [readOnly]="form.get('document').disabled || readOnly">
-            <attachment-uploader-content i18n="@@compDocItem.farmer.attachment-uploader.content">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <h4 class="sp-subform-title">{{title}}
+          </h4>
+          @if (category === 'MEET_THE_FARMER') {
+            <textinput
+              label="Farmer name"
+              [form]="form.get('name')"
+              style="width: 100%"
+              i18n-label="@@compDocItem.textinput.farmerName.label"
+              [isInvalid]="submitted && form.get('name').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('name').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.farmerName.error">
+                        <span>
+                          Farmer name is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+            <textinput
+              label="Farmer description"
+              [form]="form.get('description')"
+              style="width: 100%"
+              [textarea]="true"
+              i18n-label="@@compDocItem.textinput.farmerDescription.label"
+              [isInvalid]="submitted && form.get('description').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('description').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.farmerDescription.error">
+                        <span>
+                          Farmer description is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          }
+          @if (category === 'PRODUCTION_RECORD') {
+            <textinput
+              label="Description"
+              [form]="form.get('description')"
+              style="width: 100%"
+              [textarea]="true"
+              i18n-label="@@compDocItem.textinput.description.label"
+              [isInvalid]="submitted && form.get('description').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('description').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.description.error">
+                        <span>
+                          Description is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          }
+          @if (category === 'VIDEO') {
+            <textinput
+              label="Video description"
+              [form]="form.get('description')"
+              style="width: 100%"
+              [textarea]="true"
+              i18n-label="@@compDocItem.textinput.videoDescription.label"
+              [isInvalid]="submitted && form.get('description').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('description').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.videoDescription.error">
+                        <span>
+                          Video description is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          }
+          @if (category === 'MEET_THE_FARMER') {
+            <attachment-uploader
+              rootImageUrl="{{rootImageUrl}}"
+              allowedMimeType="[image/png', 'image/jpeg']"
+              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+              mode="simpleAsTextField"
+              label="Farmer photo"
+              i18n-label="@@compDocItem.farmer.attachment-uploader.label"
+              i18n-allowedMimeTypeErrorMessage="@@compDocItem.attachment-uploader.allowedMimeTypeErrorMessage"
+              [form]="form.get('document')"
+              [attachmentUploaderId]="'companyDocumentItems'+listEditorManagerPosition"
+              [invalid]="submitted && form.get('document').invalid"
+              [readOnly]="form.get('document').disabled || readOnly">
+              <attachment-uploader-content i18n="@@compDocItem.farmer.attachment-uploader.content">
               Upload farmer photo
             </attachment-uploader-content>
-            <attachment-uploader-errors>
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@compDocItem.farmer.attachment-uploader.error">
+              <attachment-uploader-errors>
+                @if (submitted) {
+                  @if (form.get('document').errors; as errors) {
+                    <div validation-error class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@compDocItem.farmer.attachment-uploader.error">
                     <span>
                       Farmer photo is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
-            </attachment-uploader-errors>
-          </attachment-uploader>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'PRODUCTION_RECORD'">
-          <attachment-uploader
-            rootImageUrl="{{rootImageUrl}}"
-            allowedMimeType="[image/png', 'image/jpeg']"
-            allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-            mode="simpleAsTextField"
-            label="Photo"
-            i18n-label="@@compDocItem.attachment-uploader.label"
-            i18n-allowedMimeTypeErrorMessage="@@compDocItem.attachment-uploader.allowedMimeTypeErrorMessage"
-            [form]="form.get('document')"
-            [attachmentUploaderId]="'companyDocumentItems'+listEditorManagerPosition"
-            [invalid]="submitted && form.get('document').invalid"
-            [readOnly]="form.get('document').disabled || readOnly">
-            <attachment-uploader-content i18n="@@compDocItem.attachment-uploader.content">
+                      }
+                    </div>
+                  }
+                }
+              </attachment-uploader-errors>
+            </attachment-uploader>
+          }
+          @if (category === 'PRODUCTION_RECORD') {
+            <attachment-uploader
+              rootImageUrl="{{rootImageUrl}}"
+              allowedMimeType="[image/png', 'image/jpeg']"
+              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+              mode="simpleAsTextField"
+              label="Photo"
+              i18n-label="@@compDocItem.attachment-uploader.label"
+              i18n-allowedMimeTypeErrorMessage="@@compDocItem.attachment-uploader.allowedMimeTypeErrorMessage"
+              [form]="form.get('document')"
+              [attachmentUploaderId]="'companyDocumentItems'+listEditorManagerPosition"
+              [invalid]="submitted && form.get('document').invalid"
+              [readOnly]="form.get('document').disabled || readOnly">
+              <attachment-uploader-content i18n="@@compDocItem.attachment-uploader.content">
               Upload photo
             </attachment-uploader-content>
-            <attachment-uploader-errors>
-              <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@compDocItem.attachment-uploader.error">
+              <attachment-uploader-errors>
+                @if (submitted) {
+                  @if (form.get('document').errors; as errors) {
+                    <div validation-error class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@compDocItem.attachment-uploader.error">
                     <span>
                       Photo is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
-            </attachment-uploader-errors>
-          </attachment-uploader>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'VIDEO'">
-          <textinput
-            label="Link"
-            [form]="form.get('link')"
-            style="width: 100%"
-            i18n-label="@@compDocItem.textinput.link.label"
-            [isInvalid]="submitted && form.get('link').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('link').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.link.error">
-                  <span>
-                    Link is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-        </ng-container>
-
-        <ng-container *ngIf="category == 'MEET_THE_FARMER'">
-          <textinput
-            label="Quote"
-            [form]="form.get('quote')"
-            style="width: 100%"
-            [textarea]="true"
-            i18n-label="@@compDocItem.textinput.quote.label"
-            [isInvalid]="submitted && form.get('quote').invalid"
-            [readOnly]="readOnly">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('quote').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n-label="@@compDocItem.textinput.quote.error">
-                  <span>
-                    Quote is required
-                  </span>
-                </div>
-              </div>
-            </ng-container>
-          </textinput>
-        </ng-container>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="save()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid"
-          [cancelButtonOnly]="readOnly">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                      }
+                    </div>
+                  }
+                }
+              </attachment-uploader-errors>
+            </attachment-uploader>
+          }
+          @if (category === 'VIDEO') {
+            <textinput
+              label="Link"
+              [form]="form.get('link')"
+              style="width: 100%"
+              i18n-label="@@compDocItem.textinput.link.label"
+              [isInvalid]="submitted && form.get('link').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('link').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.link.error">
+                        <span>
+                          Link is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          }
+          @if (category === 'MEET_THE_FARMER') {
+            <textinput
+              label="Quote"
+              [form]="form.get('quote')"
+              style="width: 100%"
+              [textarea]="true"
+              i18n-label="@@compDocItem.textinput.quote.label"
+              [isInvalid]="submitted && form.get('quote').invalid"
+              [readOnly]="readOnly">
+              @if (submitted) {
+                @if (form.get('quote').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n-label="@@compDocItem.textinput.quote.error">
+                        <span>
+                          Quote is required
+                        </span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+          }
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid"
+            [cancelButtonOnly]="readOnly">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

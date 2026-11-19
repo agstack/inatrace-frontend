@@ -1,238 +1,281 @@
 <ng-container>
-    <h2 *ngIf="actionType !== 'SHIPMENT'; else quoteOrderTitle"
-        i18n="@@productLabelStockProcessingOrderDetail.section.input">Material to be recorded</h2>
-    <ng-template #quoteOrderTitle>
-        <h2 i18n="@@productLabelStockProcessingOrderDetail.section.supplierDetails">Supplier details</h2>
-    </ng-template>
-    <div class="af-form-element position-relative processing-section"
-         [class.input]="actionType !== 'SHIPMENT'">
-        <div class="af-row mb-3" *ngIf="actionType === 'SHIPMENT'">
-            <div class="af-c12">
-                {{ inputFacilityControl?.value?.company?.name }}
-            </div>
+  @if (actionType !== 'SHIPMENT') {
+    <h2
+    i18n="@@productLabelStockProcessingOrderDetail.section.input">Material to be recorded</h2>
+  } @else {
+    <h2 i18n="@@productLabelStockProcessingOrderDetail.section.supplierDetails">Supplier details</h2>
+  }
+  <div class="af-form-element position-relative processing-section"
+    [class.input]="actionType !== 'SHIPMENT'">
+    @if (actionType === 'SHIPMENT') {
+      <div class="af-row mb-3">
+        <div class="af-c12">
+          {{ inputFacilityControl?.value?.company?.name }}
         </div>
+      </div>
+    }
 
-        <!-- INPUT FACILITY SELECTION DROPDOWN -->
-        <div class="af-row">
-            <div class="af-c12">
-                <single-choice
-                        *ngIf="inputFacilitiesCodebook"
-                        label="Facility"
-                        i18n-label="@@productLabelStockProcessingOrderDetail.inputFacilityForm.label"
-                        [formControlInput]="inputFacilityControl"
-                        [codebookService]="inputFacilitiesCodebook"
-                        [supplierFeedback]="actionType === 'SHIPMENT'"
-                        style="min-width: 150px;"
-                        (onChange)="setInputFacility($event)"
-                        [isInvalidChoice]="submitted && inputFacilityControl.invalid">
-                    <ng-container *ngIf="submitted">
-                        <div *ngIf="inputFacilityControl.errors as errors"
-                             class="sc-invalid-feedback" i18n="@@productLabelStockProcessingOrderDetail.inputFacilityForm.error">
+    <!-- INPUT FACILITY SELECTION DROPDOWN -->
+    <div class="af-row">
+      <div class="af-c12">
+        @if (inputFacilitiesCodebook) {
+          <single-choice
+            label="Facility"
+            i18n-label="@@productLabelStockProcessingOrderDetail.inputFacilityForm.label"
+            [formControlInput]="inputFacilityControl"
+            [codebookService]="inputFacilitiesCodebook"
+            [supplierFeedback]="actionType === 'SHIPMENT'"
+            style="min-width: 150px;"
+            (onChange)="setInputFacility($event)"
+            [isInvalidChoice]="submitted && inputFacilityControl.invalid">
+            @if (submitted) {
+              @if (inputFacilityControl.errors; as errors) {
+                <div
+                  class="sc-invalid-feedback" i18n="@@productLabelStockProcessingOrderDetail.inputFacilityForm.error">
                             Input facility is required
                         </div>
-                    </ng-container>
-                </single-choice>
-            </div>
-        </div>
+              }
+            }
+          </single-choice>
+        }
+      </div>
+    </div>
 
-        <!-- DATE AND INTERNAL LOT NAME SEARCH FOR AVAILABLE STOCK AT SELECTED FACILITY FOR THE SELECTED SEMI-PRODUCT -->
-        <div *ngIf="inputFacilityControl.value && !hideAvailableStock" class="d-flex justify-content-between"
-             ngbDropdown placement="bottom-right" display="dynamic" container="body">
-
-            <div class="af-row">
-                <div class="af-c12">
-                    <div class="d-flex">
-
-                        <app-datepicker
-                                label="From"
-                                i18n-label="@@productLabelStockProcessingOrderDetail.datepicker.date.from"
-                                [form]="dateFromFilterControl"
-                                [invalid]="submitted && dateFromFilterControl.invalid"
-                                style="width: 130px; margin-right: 1rem;"
-                                (onChange)="dateSearch()">
-                            <ng-container>
-                                <div *ngIf="dateFromFilterControl.errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
-                                        Delivery date is required
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </app-datepicker>
-
-                        <app-datepicker
-                                label="To"
-                                i18n-label="@@productLabelStockProcessingOrderDetail.datepicker.date.to"
-                                [form]="dateToFilterControl"
-                                [invalid]="submitted && dateToFilterControl.invalid"
-                                style="width: 130px"
-                                (onChange)="dateSearch()">
-                            <ng-container>
-                                <div *ngIf="dateToFilterControl.errors as errors" class="sc-invalid-feedback">
-                                    <div *ngIf="errors.required" i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
-                                        Delivery date is required
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </app-datepicker>
-
-                    </div>
-                </div>
-            </div>
-
+    <!-- DATE AND INTERNAL LOT NAME SEARCH FOR AVAILABLE STOCK AT SELECTED FACILITY FOR THE SELECTED SEMI-PRODUCT -->
+    @if (inputFacilityControl.value && !hideAvailableStock) {
+      <div class="d-flex justify-content-between"
+        ngbDropdown placement="bottom-end" display="dynamic" container="body">
+        <div class="af-row">
+          <div class="af-c12">
             <div class="d-flex">
-                <app-search-textinput [form]="internalLotNameSearchControl" style="margin-top: 1.55rem;">
-                </app-search-textinput>
+              <app-datepicker
+                label="From"
+                i18n-label="@@productLabelStockProcessingOrderDetail.datepicker.date.from"
+                [form]="dateFromFilterControl"
+                [invalid]="submitted && dateFromFilterControl.invalid"
+                style="width: 130px; margin-right: 1rem;"
+                (onChange)="dateSearch()">
+                <ng-container>
+                  @if (dateFromFilterControl.errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
+                                        Delivery date is required
+                                    </div>
+                      }
+                    </div>
+                  }
+                </ng-container>
+              </app-datepicker>
+              <app-datepicker
+                label="To"
+                i18n-label="@@productLabelStockProcessingOrderDetail.datepicker.date.to"
+                [form]="dateToFilterControl"
+                [invalid]="submitted && dateToFilterControl.invalid"
+                style="width: 130px"
+                (onChange)="dateSearch()">
+                <ng-container>
+                  @if (dateToFilterControl.errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.required) {
+                        <div i18n="@@productLabelStockProcessingOrderDetail.datepicker.date.error">
+                                        Delivery date is required
+                                    </div>
+                      }
+                    </div>
+                  }
+                </ng-container>
+              </app-datepicker>
             </div>
+          </div>
         </div>
-
-        <!-- ORGANIC AND WOMEN'S COFFE FILTERS DROPDOWN -->
-        <div *ngIf="inputFacilityControl.value && !hideAvailableStock"
-             class="d-flex justify-content-end" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-            <div *ngIf="womenOnlyFilterControl.value != null" (click)="setWomenOnlyStatus(null)"
-                 class="d-flex filter-text cursor-pointer" style="margin-top: 0.55rem;"> {{ womenOnlyStatusValue }}
-                <div style="margin-left: 0.5rem;">
-                    <fa-icon [icon]="faTimes" size="xs"></fa-icon>
-                </div>
-            </div>
-            <div *ngIf="organicOnlyFilterControl.value != null" (click)="setOrganicOnlyStatus(null)"
-                 class="d-flex filter-text cursor-pointer" style="margin-left: 1rem; margin-top: 0.55rem;"> {{ organicOnlyStatusValue }}
-                <div style="margin-left: 0.5rem;">
-                    <fa-icon [icon]="faTimes" size="xs"></fa-icon>
-                </div>
-            </div>
-
-            <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
-                  <span class="button-icon">
-                    <span class="button-icon-shape button-icon-shape--filter"></span>
-                  </span>
-                <span i18n="@@productLabelStockProcessingOrderDetail.filter" class="button-icon-label">Filter</span>
-            </button>
-
-            <div class="dropdown-menu" ngbDropdownMenu>
-                <button ngbDropdownItem (click)="setWomenOnlyStatus(true)" i18n="@@productLabelStockProcessingOrderDetail.filter.womensOnlyCoffee">Women's only coffee</button>
-                <button ngbDropdownItem (click)="setWomenOnlyStatus(false)" i18n="@@productLabelStockProcessingOrderDetail.filter.nonWomensOnlyCoffee">Non-women's only coffee</button>
-                <div class="line"></div>
-                <button ngbDropdownItem (click)="setOrganicOnlyStatus(true)" i18n="@@productLabelStockProcessingOrderDetail.filter.organicOnlyCoffee">Organic only coffee</button>
-                <button ngbDropdownItem (click)="setOrganicOnlyStatus(false)" i18n="@@productLabelStockProcessingOrderDetail.filter.nonOrganicOnlyCoffee">Non-organic only coffee</button>
-            </div>
+        <div class="d-flex">
+          <app-search-textinput [form]="internalLotNameSearchControl" style="margin-top: 1.55rem;">
+          </app-search-textinput>
         </div>
+      </div>
+    }
 
-        <!-- EXISTING INPUT TRANSACTIONS AND AVAIALBLE STOCK ORDERS THAT CAN BE ADDED TO THIS PROECSSING ORDER -->
-        <div *ngIf="inputFacilityControl.value">
-
-            <!-- Existing input transactions - only applicable when editing stock order -->
-            <div class="af-row">
-                <div class="af-c12">
-                    <ng-container *ngIf="inputTransactions && inputTransactions.length">
-                        <label class="ml-1">Existing transactions</label>
-                        <div *ngFor="let tx of inputTransactions; index as i" class="af-row pb-2">
-                            <div class="af-c9 pl-3">
-                                <div>
-                                    <span>{{ tx.sourceStockOrder.lotPrefix }} {{ tx.sourceStockOrder.identifier }} {{ tx.sourceStockOrder.internalLotNumber }} ({{ tx.status }})</span>
-                                    <span *ngIf="tx.sourceStockOrder.qrCodeTag"
-                                          (click)="openInputStockOrderQRCode(tx.sourceStockOrder)"
-                                          class="cursor-pointer">
-                            <fa-icon [icon]="faQrcode" class="sorter-icon pl-2"></fa-icon>
-                          </span>
-                                    <span *ngIf="tx.sourceStockOrder.organic">
-                            <fa-icon [icon]="faLeaf" class="sorter-icon pl-2" title="Organic coffee"
-                                     i18n-title="@@productLabelStockProcessingOrderDetail.icon.organicCoffee.title"></fa-icon>
-                          </span>
-                                    <span *ngIf="tx.sourceStockOrder.womenShare">
-                            <fa-icon [icon]="faFemale" class="sorter-icon pl-2" title="Women's coffee"
-                                     i18n-title="@@productLabelStockProcessingOrderDetail.icon.womensCoffee.title"></fa-icon>
-                          </span>
-                                </div>
-                                <div *ngIf="tx.status === 'CANCELED'" class="canceled">{{ tx.rejectComment }}</div>
-                            </div>
-                            <div class="af-c2 text-right">{{ tx.outputQuantity }} {{ tx.inputMeasureUnitType?.label }}</div>
-
-                            <div class="af-c1 text-right"
-                                 [hidden]="tx.status !== 'PENDING'"
-                                 (click)="deleteTransaction(i)">
-                                <fa-icon
-                                        class="del-icon cursor-pointer"
-                                        [icon]="faTimes"></fa-icon>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
+    <!-- ORGANIC AND WOMEN'S COFFE FILTERS DROPDOWN -->
+    @if (inputFacilityControl.value && !hideAvailableStock) {
+      <div
+        class="d-flex justify-content-end" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+        @if (womenOnlyFilterControl.value != null) {
+          <div (click)="setWomenOnlyStatus(null)"
+            class="d-flex filter-text cursor-pointer" style="margin-top: 0.55rem;"> {{ womenOnlyStatusValue }}
+            <div style="margin-left: 0.5rem;">
+              <fa-icon [icon]="faTimes" size="xs"></fa-icon>
             </div>
+          </div>
+        }
+        @if (organicOnlyFilterControl.value != null) {
+          <div (click)="setOrganicOnlyStatus(null)"
+            class="d-flex filter-text cursor-pointer" style="margin-left: 1rem; margin-top: 0.55rem;"> {{ organicOnlyStatusValue }}
+            <div style="margin-left: 0.5rem;">
+              <fa-icon [icon]="faTimes" size="xs"></fa-icon>
+            </div>
+          </div>
+        }
+        <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
+          <span class="button-icon">
+            <span class="button-icon-shape button-icon-shape--filter"></span>
+          </span>
+          <span i18n="@@productLabelStockProcessingOrderDetail.filter" class="button-icon-label">Filter</span>
+        </button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+          <button ngbDropdownItem (click)="setWomenOnlyStatus(true)" i18n="@@productLabelStockProcessingOrderDetail.filter.womensOnlyCoffee">Women's only coffee</button>
+          <button ngbDropdownItem (click)="setWomenOnlyStatus(false)" i18n="@@productLabelStockProcessingOrderDetail.filter.nonWomensOnlyCoffee">Non-women's only coffee</button>
+          <div class="line"></div>
+          <button ngbDropdownItem (click)="setOrganicOnlyStatus(true)" i18n="@@productLabelStockProcessingOrderDetail.filter.organicOnlyCoffee">Organic only coffee</button>
+          <button ngbDropdownItem (click)="setOrganicOnlyStatus(false)" i18n="@@productLabelStockProcessingOrderDetail.filter.nonOrganicOnlyCoffee">Non-organic only coffee</button>
+        </div>
+      </div>
+    }
 
-            <!-- WRAPPER FOR AVAILABLE STOCK ORDER SECTION (we use this so we can overlay when controls should be disabled) -->
-            <div *ngIf="!hideAvailableStock">
-
-                <!-- CHECKBOX FOR SELECTING ALL INPUT AVAILABLE STOCK ORDERS -->
-                <div class="af-row" *ngIf="inputFacilityControl.value && availableInputStockOrders.length > 0">
-                    <label i18n="@@productLabelStockProcessingOrderDetail.addNewTransactions" class="ml-1 mt-2">Add new transactions</label>
-                    <div class="af-c12" style="margin-top: -1rem;">
-                        <checkbox-input (onClick)="cbSelectAllClick()" [form]="cbSelectAllControl" style="margin-bottom: 1rem; margin-top: -1rem;">
-                            <checkbox-input-rich-label i18n="@@productLabelStockProcessingOrderDetail.checkbox.selectAll">
+    <!-- EXISTING INPUT TRANSACTIONS AND AVAIALBLE STOCK ORDERS THAT CAN BE ADDED TO THIS PROECSSING ORDER -->
+    @if (inputFacilityControl.value) {
+      <div>
+        <!-- Existing input transactions - only applicable when editing stock order -->
+        <div class="af-row">
+          <div class="af-c12">
+            @if (inputTransactions && inputTransactions.length) {
+              <label class="ms-1">Existing transactions</label>
+              @for (tx of inputTransactions; track tx; let i = $index) {
+                <div class="af-row pb-2">
+                  <div class="af-c9 ps-3">
+                    <div>
+                      <span>{{ tx.sourceStockOrder.lotPrefix }} {{ tx.sourceStockOrder.identifier }} {{ tx.sourceStockOrder.internalLotNumber }} ({{ tx.status }})</span>
+                      @if (tx.sourceStockOrder.qrCodeTag) {
+                        <span
+                          (click)="openInputStockOrderQRCode(tx.sourceStockOrder)"
+                          class="cursor-pointer">
+                          <fa-icon [icon]="faQrcode" class="sorter-icon ps-2"></fa-icon>
+                        </span>
+                      }
+                      @if (tx.sourceStockOrder.organic) {
+                        <span>
+                          <fa-icon [icon]="faLeaf" class="sorter-icon ps-2" title="Organic coffee"
+                          i18n-title="@@productLabelStockProcessingOrderDetail.icon.organicCoffee.title"></fa-icon>
+                        </span>
+                      }
+                      @if (tx.sourceStockOrder.womenShare) {
+                        <span>
+                          <fa-icon [icon]="faFemale" class="sorter-icon ps-2" title="Women's coffee"
+                          i18n-title="@@productLabelStockProcessingOrderDetail.icon.womensCoffee.title"></fa-icon>
+                        </span>
+                      }
+                    </div>
+                    @if (tx.status === 'CANCELED') {
+                      <div class="canceled">{{ tx.rejectComment }}</div>
+                    }
+                  </div>
+                  <div class="af-c2 text-end">{{ tx.outputQuantity }} {{ tx.inputMeasureUnitType?.label }}</div>
+                  <div class="af-c1 text-end"
+                    [hidden]="tx.status !== 'PENDING'"
+                    (click)="deleteTransaction(i)">
+                    <fa-icon
+                      class="del-icon cursor-pointer"
+                    [icon]="faTimes"></fa-icon>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <!-- WRAPPER FOR AVAILABLE STOCK ORDER SECTION (we use this so we can overlay when controls should be disabled) -->
+        @if (!hideAvailableStock) {
+          <div>
+            <!-- CHECKBOX FOR SELECTING ALL INPUT AVAILABLE STOCK ORDERS -->
+            @if (inputFacilityControl.value && availableInputStockOrders.length > 0) {
+              <div class="af-row">
+                <label i18n="@@productLabelStockProcessingOrderDetail.addNewTransactions" class="ms-1 mt-2">Add new transactions</label>
+                <div class="af-c12" style="margin-top: -1rem;">
+                  <checkbox-input (onClick)="cbSelectAllClick()" [form]="cbSelectAllControl" style="margin-bottom: 1rem; margin-top: -1rem;">
+                    <checkbox-input-rich-label i18n="@@productLabelStockProcessingOrderDetail.checkbox.selectAll">
                                 Select all ({{ currentInputStockUnit.name }})
                             </checkbox-input-rich-label>
-                        </checkbox-input>
-                    </div>
+                  </checkbox-input>
                 </div>
-                <div class="af-row" *ngIf="inputFacilityControl.value && availableStockOrdersLoading">
-                    <label class="ml-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.loadingStock">Loading available stock…</label>
+              </div>
+            }
+            @if (inputFacilityControl.value && availableStockOrdersLoading) {
+              <div class="af-row">
+                <label class="ms-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.loadingStock">Loading available stock…</label>
+              </div>
+            }
+            @if (inputFacilityControl.value && availableStockOrdersError) {
+              <div class="af-row">
+                <div class="ms-1 mt-2">
+                  <span i18n="@@productLabelStockProcessingOrderDetail.stockLoadError">Available stock could not be loaded. Please try again.</span>
+                  <button type="button" class="btn btn-link p-0 ms-1" (click)="dateSearch()"
+                  i18n="@@productLabelStockProcessingOrderDetail.stockLoadRetry">Try again</button>
                 </div>
-                <div class="af-row" *ngIf="inputFacilityControl.value && availableStockOrdersError">
-                    <div class="ml-1 mt-2">
-                        <span i18n="@@productLabelStockProcessingOrderDetail.stockLoadError">Available stock could not be loaded. Please try again.</span>
-                        <button type="button" class="btn btn-link p-0 ml-1" (click)="dateSearch()"
-                                i18n="@@productLabelStockProcessingOrderDetail.stockLoadRetry">Try again</button>
-                    </div>
+              </div>
+            }
+            @if (inputFacilityControl.value && !availableStockOrdersLoading && !availableStockOrdersError && availableInputStockOrders.length === 0) {
+              <div class="af-row">
+                <label class="ms-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.noStock">No relevant stock to add transactions in facility</label>
+              </div>
+            }
+            <!-- LIST OF AVAILABLE STOCK ORDERS TO BE USED IN THE PROCESSING ACTION -->
+            @for (item of availableInputStockOrders; track item; let i = $index) {
+              <div class="af-row">
+                <div class="af-c1">
+                  <checkbox-input inTable="true" (onClick)="cbSelectClick(item, i)"
+                  [checked]="this.availableInputStockOrders[i].selected"></checkbox-input>
                 </div>
-                <div class="af-row" *ngIf="inputFacilityControl.value && !availableStockOrdersLoading && !availableStockOrdersError && availableInputStockOrders.length === 0">
-                    <label class="ml-1 mt-2" i18n="@@productLabelStockProcessingOrderDetail.noStock">No relevant stock to add transactions in facility</label>
-                </div>
-
-                <!-- LIST OF AVAILABLE STOCK ORDERS TO BE USED IN THE PROCESSING ACTION -->
-                <ng-container *ngFor="let item of availableInputStockOrders; index as i">
-                    <div class="af-row">
-                        <div class="af-c1">
-                            <checkbox-input inTable="true" (onClick)="cbSelectClick(item, i)"
-                                            [checked]="this.availableInputStockOrders[i].selected"></checkbox-input>
-                        </div>
-                        <div class="af-c8">
-                            <ng-container *ngIf="item.orderType === 'PURCHASE_ORDER'">
-                                <span>{{ item.identifier }} ({{ item.producerUserCustomer.name }} {{ item.producerUserCustomer.surname }})</span>
-                            </ng-container>
-                            <ng-container *ngIf="item.orderType != 'PURCHASE_ORDER'">
-                                <span>{{ item.lotPrefix }} {{ item.identifier }} {{ item.internalLotNumber }}</span>
-                                <span *ngIf="item.qrCodeTag"
-                                      (click)="openInputStockOrderQRCode(item)"
-                                      class="cursor-pointer">
-                        <fa-icon [icon]="faQrcode" class="sorter-icon pl-2"></fa-icon>
+                <div class="af-c8">
+                  @if (item.orderType === 'PURCHASE_ORDER') {
+                    <span>{{ item.identifier }} ({{ item.producerUserCustomer.name }} {{ item.producerUserCustomer.surname }})</span>
+                  }
+                  @if (item.orderType !== 'PURCHASE_ORDER') {
+                    <span>{{ item.lotPrefix }} {{ item.identifier }} {{ item.internalLotNumber }}</span>
+                    @if (item.qrCodeTag) {
+                      <span
+                        (click)="openInputStockOrderQRCode(item)"
+                        class="cursor-pointer">
+                        <fa-icon [icon]="faQrcode" class="sorter-icon ps-2"></fa-icon>
                       </span>
-                            </ng-container>
-                            <span *ngIf="item.organic">
-                      <fa-icon [icon]="faLeaf" class="sorter-icon pl-2" title="Organic coffee"
-                               i18n-title="@@productLabelStockProcessingOrderDetail.icon.organicCoffee.title"></fa-icon>
+                    }
+                  }
+                  @if (item.organic) {
+                    <span>
+                      <fa-icon [icon]="faLeaf" class="sorter-icon ps-2" title="Organic coffee"
+                      i18n-title="@@productLabelStockProcessingOrderDetail.icon.organicCoffee.title"></fa-icon>
                     </span>
-                            <span *ngIf="item.womenShare">
-                      <fa-icon [icon]="faFemale" class="sorter-icon pl-2" title="Women's coffee"
-                               i18n-title="@@productLabelStockProcessingOrderDetail.icon.womensCoffee.title"></fa-icon>
+                  }
+                  @if (item.womenShare) {
+                    <span>
+                      <fa-icon [icon]="faFemale" class="sorter-icon ps-2" title="Women's coffee"
+                      i18n-title="@@productLabelStockProcessingOrderDetail.icon.womensCoffee.title"></fa-icon>
                     </span>
-                        </div>
-                        <div class="af-c3 text-right">
-                    <span *ngIf="actionType === 'PROCESSING' || actionType === 'FINAL_PROCESSING'"
-                          (click)="clipInputTransaction(item, i)" class="cursor-pointer">
-                      <fa-icon [icon]="faCut" class="pr-2"></fa-icon>
+                  }
+                </div>
+                <div class="af-c3 text-end">
+                  @if (actionType === 'PROCESSING' || actionType === 'FINAL_PROCESSING') {
+                    <span
+                      (click)="clipInputTransaction(item, i)" class="cursor-pointer">
+                      <fa-icon [icon]="faCut" class="pe-2"></fa-icon>
                     </span>
-                            <span *ngIf="item.selected">{{ item.selectedQuantity }} / </span>{{ item.availableQuantity }} {{ currentInputStockUnit.measurementUnitType.label }}
-                        </div>
-                    </div>
-                </ng-container>
+                  }
+                  @if (item.selected) {
+                    <span>{{ item.selectedQuantity }} / </span>
+                    }{{ item.availableQuantity }} {{ currentInputStockUnit.measurementUnitType.label }}
+                  </div>
+                </div>
+              }
             </div>
-
-            <ng-container *ngIf="submitted && oneInputStockOrderRequired">
-                <small class="sc-invalid-feedback" i18n="@@productLabelStockProcessingOrderDetail.inputSemiProducts.error">
+          }
+          @if (submitted && oneInputStockOrderRequired) {
+            <small class="sc-invalid-feedback" i18n="@@productLabelStockProcessingOrderDetail.inputSemiProducts.error">
                     At least one input semi-product is required
                 </small>
-            </ng-container>
+          }
         </div>
+      }
 
-        <div *ngIf="!leftSideEnabled" class="disabled-section-overlay"></div>
+      @if (!leftSideEnabled) {
+        <div class="disabled-section-overlay"></div>
+      }
     </div>
-</ng-container>
+  </ng-container>

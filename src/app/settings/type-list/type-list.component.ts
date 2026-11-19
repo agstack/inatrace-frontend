@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, tap, switchMap, map, shareReplay, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
@@ -17,9 +17,11 @@ import { ProductTypeControllerService } from '../../../api/api/productTypeContro
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-type-list',
-  templateUrl: './type-list.component.html',
-  styleUrls: ['./type-list.component.scss']
+    selector: 'app-type-list',
+    templateUrl: './type-list.component.html',
+    styleUrls: ['./type-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TypeListComponent implements OnInit, OnChanges {
 
@@ -48,7 +50,7 @@ export class TypeListComponent implements OnInit, OnChanges {
   @Output()
   countAll = new EventEmitter<number>();
 
-  searchName = new FormControl(null);
+  searchName = new UntypedFormControl(null);
   reloadPingList$ = new BehaviorSubject<boolean>(false);
 
   pagingParams$ = new BehaviorSubject({});

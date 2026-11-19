@@ -1,52 +1,59 @@
 <div class="modal-container">
-    <div class="modal-header">
-        <h4 class="modal-title sp-faq-modal-title">{{title}}</h4>
-        <button *ngIf="dismissible" type="button" class="close" aria-label="Close"
-                (click)="activeModal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
+  <div class="modal-header">
+    <h4 class="modal-title sp-faq-modal-title">{{title}}</h4>
+    @if (dismissible) {
+      <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
+    }
+  </div>
+  <div class="modal-body">
 
-        <single-choice *ngIf="farmersCodebook"
-                       label="Farmer"
-                       i18n-label="@@facilityStockOrderPaymentModal.singleChoice.farmers"
-                       [formControlInput]="farmerForm"
-                       [codebookService]="farmersCodebook"
-                       (onChange)="farmersChanged($event)"
-                       style="min-width: 150px;">
-        </single-choice>
+    @if (farmersCodebook) {
+      <single-choice
+        label="Farmer"
+        i18n-label="@@facilityStockOrderPaymentModal.singleChoice.farmers"
+        [formControlInput]="farmerForm"
+        [codebookService]="farmersCodebook"
+        (onChange)="farmersChanged($event)"
+        style="min-width: 150px;">
+      </single-choice>
+    }
 
-        <single-choice *ngIf="this.currentFarmerId"
-                       label="Women coffee only"
-                       i18n-label="@@facilityStockOrderPaymentModal.singleChoice.womenOnly"
-                       [formControlInput]="womenCoffeeOnlyForm"
-                       [codebookService]="womenShareCodebook"
-                       (onChange)="womenCoffeeChanged($event)"
-                       style="min-width: 150px;">
-        </single-choice>
+    @if (this.currentFarmerId) {
+      <single-choice
+        label="Women coffee only"
+        i18n-label="@@facilityStockOrderPaymentModal.singleChoice.womenOnly"
+        [formControlInput]="womenCoffeeOnlyForm"
+        [codebookService]="womenShareCodebook"
+        (onChange)="womenCoffeeChanged($event)"
+        style="min-width: 150px;">
+      </single-choice>
+    }
 
-        <single-choice *ngIf="this.currentFarmerId"
-                       label="Delivery date"
-                       i18n-label="@@facilityStockOrderPaymentModal.singleChoice.deliveryDate"
-                       [formControlInput]="stockOrderForPaymentForm"
-                       [codebookService]="purchaseOrdersForPaymentsCodebook"
-                       (onChange)="purchaseOrderForPaymentChanged($event)"
-                       style="min-width: 150px;">
-        </single-choice>
+    @if (this.currentFarmerId) {
+      <single-choice
+        label="Delivery date"
+        i18n-label="@@facilityStockOrderPaymentModal.singleChoice.deliveryDate"
+        [formControlInput]="stockOrderForPaymentForm"
+        [codebookService]="purchaseOrdersForPaymentsCodebook"
+        (onChange)="purchaseOrderForPaymentChanged($event)"
+        style="min-width: 150px;">
+      </single-choice>
+    }
 
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outlined"
-                i18n="@@facilityStockOrderPaymentModal.modal.button.cancel"
-                (click)="cancel()">
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlined"
+      i18n="@@facilityStockOrderPaymentModal.modal.button.cancel"
+      (click)="cancel()">
             <span>Cancel</span>
         </button>
-        <button type="button" class="btn"
-                i18n="@@facilityStockOrderPaymentModal.modal.button.confirm"
-                [class.disabled]="!purchaseOrderId"
-                (click)="onConfirm()">
+    <button type="button" class="btn"
+      i18n="@@facilityStockOrderPaymentModal.modal.button.confirm"
+      [class.disabled]="!purchaseOrderId"
+      (click)="onConfirm()">
             <span>Confirm</span>
         </button>
-    </div>
+  </div>
 </div>

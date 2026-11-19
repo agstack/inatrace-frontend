@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TabCommunicationService } from 'src/app/shared/tab-communication.service';
 
 @Component({
-  selector: 'app-authorised-layout',
-  templateUrl: './authorised-layout.component.html',
-  styleUrls: ['./authorised-layout.component.scss']
+    selector: 'app-authorised-layout',
+    templateUrl: './authorised-layout.component.html',
+    styleUrls: ['./authorised-layout.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AuthorisedLayoutComponent implements OnInit {
 

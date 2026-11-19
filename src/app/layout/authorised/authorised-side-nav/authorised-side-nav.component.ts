@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'src/app/core/auth.service';
 import { combineLatest, Subscription } from 'rxjs';
 import { AboutAppInfoService } from 'src/app/about-app-info.service';
@@ -8,9 +8,11 @@ import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-authorised-side-nav',
-  templateUrl: './authorised-side-nav.component.html',
-  styleUrls: ['./authorised-side-nav.component.scss']
+    selector: 'app-authorised-side-nav',
+    templateUrl: './authorised-side-nav.component.html',
+    styleUrls: ['./authorised-side-nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AuthorisedSideNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -47,9 +49,9 @@ export class AuthorisedSideNavComponent implements OnInit, OnDestroy, AfterViewI
     this.sub.add(
         this.selfOnboardingService.addProductCurrentStep$.subscribe(step => {
           if (step === 1) {
-            this.productsButtonTooltip.open();
+            this.productsButtonTooltip?.open();
           } else {
-            this.productsButtonTooltip.close();
+            this.productsButtonTooltip?.close();
           }
         })
     );
@@ -60,9 +62,9 @@ export class AuthorisedSideNavComponent implements OnInit, OnDestroy, AfterViewI
           this.selfOnboardingService.addProcessingActionCurrentStep$
         ]).subscribe(([addFacilityStep, addProcActionStep]) => {
           if (addFacilityStep === 1 || addProcActionStep === 1) {
-            this.companyButtonTooltip.open();
+            this.companyButtonTooltip?.open();
           } else {
-            this.companyButtonTooltip.close();
+            this.companyButtonTooltip?.close();
           }
         })
     );

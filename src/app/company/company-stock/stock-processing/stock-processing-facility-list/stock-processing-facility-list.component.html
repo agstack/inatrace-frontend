@@ -1,68 +1,84 @@
-<ng-container *ngIf="facilities$ | async as facilities">
-
+@if (facilities$ | async; as facilities) {
   <div class="container container--bare">
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryOne.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryOne; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions">
-        </app-facility-card>
+    @if (categoryOne.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryOne; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+              [actions]="processingActions">
+            </app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryTwo.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryTwo; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions"></app-facility-card>
+    }
+    @if (categoryTwo.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryTwo; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+            [actions]="processingActions"></app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryThree.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryThree; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions"></app-facility-card>
+    }
+    @if (categoryThree.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryThree; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+            [actions]="processingActions"></app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryFour.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryFour; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions"></app-facility-card>
+    }
+    @if (categoryFour.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryFour; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+            [actions]="processingActions"></app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryFive.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryFive; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions"></app-facility-card>
+    }
+    @if (categoryFive.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryFive; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+            [actions]="processingActions"></app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 30px;" *ngIf="categoryOther.length > 0">
-      <div class="col-md-6 col-lg-4 col--bare" *ngFor="let facility of categoryOther; index as i">
-        <app-facility-card [facility]="facility"
-                           [indexInList]="i"
-                           [companyId]="companyId"
-                           [actions]="processingActions"></app-facility-card>
+    }
+    @if (categoryOther.length > 0) {
+      <div class="row" style="margin-top: 30px;">
+        @for (facility of categoryOther; track facility; let i = $index) {
+          <div class="col-md-6 col-lg-4 col--bare">
+            <app-facility-card [facility]="facility"
+              [indexInList]="i"
+              [companyId]="companyId"
+            [actions]="processingActions"></app-facility-card>
+          </div>
+        }
       </div>
-    </div>
-
+    }
   </div>
-
-  <div *ngIf="facilities && facilities.items && facilities.items.length == 0"
-       class="no-list-results"
-       i18n="@@productLabelStockProcessingFacilityList.noFacilities">
+  @if (facilities && facilities.items && facilities.items.length === 0) {
+    <div
+      class="no-list-results"
+      i18n="@@productLabelStockProcessingFacilityList.noFacilities">
     No facilities
   </div>
-
-</ng-container>
+  }
+}

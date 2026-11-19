@@ -21,7 +21,7 @@ export class NgbDateCustomParserFormatter extends NgbDateParserFormatter {
     format(date: NgbDateStruct): string {
         if (!date) return ''
         // POMEMBNO: če delaš na ta način, moraš vedno najprej nastavit leto. Če ne je problem z dnevi kot je 31.5.2000, ki jih pretvori v 1.5.2000
-        let dateDate = new Date();
+        const dateDate = new Date();
         dateDate.setHours(12, 0, 0, 0);   // 12h so that it doesn't change on UTC
         dateDate.setDate(15);
         dateDate.setFullYear(date['year']);

@@ -1,19 +1,18 @@
 <div class="modal-container" style="max-width: 500px;">
   <div class="modal-header">
     <h4 class="modal-title">{{title}}</h4>
-    <button type="button" class="close" aria-label="Close"
+    <button type="button" class="btn-close" aria-label="Close"
       (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
+
     </button>
   </div>
   <div>
     <div class="modal-body">
 
-      <ng-container *ngIf="type === 'semi-products'">
+      @if (type === 'semi-products') {
         <small i18n="@@semiProductDetail.hint.translations">
           Specify name in English and add translations for all used languages.
         </small>
-
         <div class="d-flex af-translation-language">
           <div (click)="selectLanguage(languageEnum.EN)"
                [ngClass]="selectedLanguage === languageEnum.EN
@@ -25,131 +24,137 @@
             <span>EN</span>
           </div>
           <div (click)="selectLanguage(languageEnum.DE)"
-               [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
             <span>DE</span>
           </div>
           <div (click)="selectLanguage(languageEnum.RW)"
-               [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
             <span>RW</span>
           </div>
           <div (click)="selectLanguage(languageEnum.ES)"
-               [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
             <span>ES</span>
           </div>
         </div>
-
         <div class="spacer-title-section"></div>
-
-        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-          <ng-container *ngIf="translation.value.language === selectedLanguage">
+        @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+          @if (translation.value.language === selectedLanguage) {
             <textinput
-                    label="Name"
-                    placeholder="Enter name"
-                    i18n-label="@@semiProductDetail.textinput.name.label"
-                    i18n-placeholder="@@semiProductDetail.textinput.name.placeholder"
-                    [form]="$any(this.form.get('translations.' + i + '.name'))"
-                    [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.name').value"
-                    [markRequired]="translation.value.language === languageEnum.EN"
-                    style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.name').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required"
-                       i18n-label="@@semiProductDetail.textinput.name.error">
+              label="Name"
+              placeholder="Enter name"
+              i18n-label="@@semiProductDetail.textinput.name.label"
+              i18n-placeholder="@@semiProductDetail.textinput.name.placeholder"
+              [form]="$any(this.form.get('translations.' + i + '.name'))"
+              [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.name').value"
+              [markRequired]="translation.value.language === languageEnum.EN"
+              style="width: 100%">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.name').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div
+                        i18n-label="@@semiProductDetail.textinput.name.error">
                         <span>
                           Name is required
                         </span>
+                      </div>
+                    }
                   </div>
-                </div>
-              </ng-container>
+                }
+              }
             </textinput>
-
             <textinput
-                    label="Description"
-                    helpText="Enter short semi-product description."
-                    [textarea]="true"
-                    i18n-label="@@semiProductDetail.textinput.description.label"
-                    i18n-helpText="@@semiProductDetail.textinput.description.helpText"
-                    [form]="$any(this.form.get('translations.' + i + '.description'))"
-                    [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.description').value"
-                    [markRequired]="translation.value.language === languageEnum.EN"
-                    style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.description').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required"
-                       i18n-label="@@semiProductDetail.textinput.description.error">
-                                          <span>
-                                            Description is required
-                                          </span>
+              label="Description"
+              helpText="Enter short semi-product description."
+              [textarea]="true"
+              i18n-label="@@semiProductDetail.textinput.description.label"
+              i18n-helpText="@@semiProductDetail.textinput.description.helpText"
+              [form]="$any(this.form.get('translations.' + i + '.description'))"
+              [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.description').value"
+              [markRequired]="translation.value.language === languageEnum.EN"
+              style="width: 100%">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.description').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div
+                        i18n-label="@@semiProductDetail.textinput.description.error">
+                        <span>
+                          Description is required
+                        </span>
+                      </div>
+                    }
                   </div>
-                </div>
-              </ng-container>
+                }
+              }
             </textinput>
-          </ng-container>
-        </ng-container>
-
+          }
+        }
         <single-choice
-                label="Measurement unit type"
-                i18n-label="@@productLabelStockSKUModal.measurementUnitType.label"
-                [formControlInput]="$any(form.get('measurementUnitType'))"
-                [codebookService]="activeMeasureUnitTypeService"
-                [isInvalidChoice]="submitted && form.get('measurementUnitType').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('measurementUnitType').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@semiProductDetail.singleChoice.measurementUnit.error.requred">
+          label="Measurement unit type"
+          i18n-label="@@productLabelStockSKUModal.measurementUnitType.label"
+          [formControlInput]="$any(form.get('measurementUnitType'))"
+          [codebookService]="activeMeasureUnitTypeService"
+          [isInvalidChoice]="submitted && form.get('measurementUnitType').invalid">
+          @if (submitted) {
+            @if (form.get('measurementUnitType').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@semiProductDetail.singleChoice.measurementUnit.error.requred">
                 Measure unit is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </single-choice>
-
         <checkbox-input [form]="$any(form.get('buyable'))">
           <checkbox-input-rich-label i18n="@@semiProductDetail.checkbox-input.isSemiProductBuyable">
             Is buyable at producer
           </checkbox-input-rich-label>
         </checkbox-input>
-
         <checkbox-input [form]="$any(form.get('sku'))">
           <checkbox-input-rich-label i18n="@@semiProductDetail.checkbox-input.isSemiProductSKU">
             Is stock keeping unit at producer
           </checkbox-input-rich-label>
         </checkbox-input>
-
         <checkbox-input [form]="$any(form.get('skuendCustomer'))">
           <checkbox-input-rich-label i18n="@@semiProductDetail.checkbox-input.isSemiProductSKUEndCustomer">
             Is stock keeping unit at end customer
           </checkbox-input-rich-label>
         </checkbox-input>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="this.type === 'product-types'">
-
+      @if (this.type === 'product-types') {
         <textinput
-            label="Code"
-            placeholder="Enter product type code"
-            i18n-label="@@productTypeDetail.textinput.code.label"
-            i18n-placeholder="@@productTypeDetail.textinput.code.placeholder"
-            [form]="$any(this.form.get('code'))"
-            [isInvalid]="submitted && form.get('code').invalid"
-            [readOnly]="this.update"
-            style="width: 100%">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('code').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@productTypeDetail.textinput.code.error">
+          label="Code"
+          placeholder="Enter product type code"
+          i18n-label="@@productTypeDetail.textinput.code.label"
+          i18n-placeholder="@@productTypeDetail.textinput.code.placeholder"
+          [form]="$any(this.form.get('code'))"
+          [isInvalid]="submitted && form.get('code').invalid"
+          [readOnly]="this.update"
+          style="width: 100%">
+          @if (submitted) {
+            @if (form.get('code').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@productTypeDetail.textinput.code.error">
                     <span>
                       Code is required
                     </span>
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
-
         <small i18n="@@productTypeDetail.hint.translations">
           Specify name in English and add translations for all used languages.
         </small>
-
         <div class="d-flex af-translation-language">
           <div (click)="selectLanguage(languageEnum.EN)"
                [ngClass]="selectedLanguage === languageEnum.EN
@@ -161,26 +166,24 @@
             <span>EN</span>
           </div>
           <div (click)="selectLanguage(languageEnum.DE)"
-               [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
             <span>DE</span>
           </div>
           <div (click)="selectLanguage(languageEnum.RW)"
-               [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
             <span>RW</span>
           </div>
           <div (click)="selectLanguage(languageEnum.ES)"
-               [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
             <span>ES</span>
           </div>
         </div>
-
         <div class="spacer-title-section"></div>
-
-        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-          <ng-container *ngIf="translation.value.language === selectedLanguage">
+        @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+          @if (translation.value.language === selectedLanguage) {
             <textinput
               label="Name"
               placeholder="Enter product type name"
@@ -190,17 +193,20 @@
               [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.name').value"
               [markRequired]="translation.value.language === languageEnum.EN"
               style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.name').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@productTypeDetail.textinput.name.error">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.name').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n="@@productTypeDetail.textinput.name.error">
                     <span>
                       Name is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
+                    }
+                  </div>
+                }
+              }
             </textinput>
-
             <textinput
               label="Description"
               helpText="Enter short product type description."
@@ -211,65 +217,81 @@
               [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.description').value"
               [markRequired]="translation.value.language === languageEnum.EN"
               style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.description').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required" i18n="@@productTypeDetail.textinput.description.error">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.description').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n="@@productTypeDetail.textinput.description.error">
                     <span>
                       Description is required
                     </span>
                   </div>
-                </div>
-              </ng-container>
+                    }
+                  </div>
+                }
+              }
             </textinput>
-         </ng-container>
-        </ng-container>
-      </ng-container>
+          }
+        }
+      }
 
-      <ng-container *ngIf="this.type !== 'semi-products' && this.type !== 'product-types'">
-        <textinput *ngIf="this.type !== 'processing-evidence-fields'"
-                hideAsterisk="true"
-                [form]="$any(form.get('code'))"
-                label="Id"
-                [disabled]="update"
-                style="width: 100%"
-                placeholder="Enter id"
-                i18n-label="@@facilityTypeDetail.textinput.id.label"
-                i18n-placeholder="@@facilityTypeDetail.textinput.id.placeholder"
-                [isInvalid]="submitted && form.get('code').invalid"
-                [readOnly]="this.update">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('code').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.wrongInput" i18n="@@facilityTypeDetail.textinput.id.error">
+      @if (this.type !== 'semi-products' && this.type !== 'product-types') {
+        @if (this.type !== 'processing-evidence-fields') {
+          <textinput
+            hideAsterisk="true"
+            [form]="$any(form.get('code'))"
+            label="Id"
+            [disabled]="update"
+            style="width: 100%"
+            placeholder="Enter id"
+            i18n-label="@@facilityTypeDetail.textinput.id.label"
+            i18n-placeholder="@@facilityTypeDetail.textinput.id.placeholder"
+            [isInvalid]="submitted && form.get('code').invalid"
+            [readOnly]="this.update">
+            @if (submitted) {
+              @if (form.get('code').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.wrongInput) {
+                    <div i18n="@@facilityTypeDetail.textinput.id.error">
                 Id should contain only capital letters, numbers and / or underscores
               </div>
-              <div *ngIf="errors.required" i18n="@@facilityTypeDetail.textinput.id.errorRequired">
+                  }
+                  @if (errors.required) {
+                    <div i18n="@@facilityTypeDetail.textinput.id.errorRequired">
                 Id is required
               </div>
-            </div>
-          </ng-container>
-        </textinput>
-
-        <textinput
-                *ngIf="this.type !== 'processing-evidence-fields' && this.type !== 'processing-evidence-types'"
-                hideAsterisk="true"
-                [form]="$any(form.get('label'))"
-                label="Label"
-                style="width: 100%"
-                placeholder="Enter label"
-                i18n-label="@@facilityTypeDetail.textinput.label.label"
-                i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
-                [isInvalid]="submitted && form.get('label').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('label').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@facilityTypeDetail.textinput.label.error">
+                  }
+                </div>
+              }
+            }
+          </textinput>
+        }
+        @if (this.type !== 'processing-evidence-fields' && this.type !== 'processing-evidence-types') {
+          <textinput
+            hideAsterisk="true"
+            [form]="$any(form.get('label'))"
+            label="Label"
+            style="width: 100%"
+            placeholder="Enter label"
+            i18n-label="@@facilityTypeDetail.textinput.label.label"
+            i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
+            [isInvalid]="submitted && form.get('label').invalid">
+            @if (submitted) {
+              @if (form.get('label').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@facilityTypeDetail.textinput.label.error">
                 Label is required
               </div>
-            </div>
-          </ng-container>
-        </textinput>
-      </ng-container>
+                  }
+                </div>
+              }
+            }
+          </textinput>
+        }
+      }
 
-      <ng-container *ngIf="this.type === 'measurement-unit-types'">
+      @if (this.type === 'measurement-unit-types') {
         <textinput
           hideAsterisk="true"
           [form]="$any(form.get('weight'))"
@@ -281,20 +303,18 @@
           [isInvalid]="submitted && form.get('weight').invalid"
           type="number">
         </textinput>
-
         <single-choice
           label="Underlying measure unit"
           i18n-label="@@facilityTypeDetail.single-choice.underlyingMeasurementUnit.label"
           [formControlInput]="$any(form.get('underlyingMeasurementUnitType'))"
           [codebookService]="activeMeasureUnitTypeService">
         </single-choice>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="this.type === 'processing-evidence-types'">
+      @if (this.type === 'processing-evidence-types') {
         <small i18n="@@semiProductDetail.hint.translations">
           Specify name in English and add translations for all used languages.
         </small>
-
         <div class="d-flex af-translation-language">
           <div (click)="selectLanguage(languageEnum.EN)"
                [ngClass]="selectedLanguage === languageEnum.EN
@@ -306,63 +326,67 @@
             <span>EN</span>
           </div>
           <div (click)="selectLanguage(languageEnum.DE)"
-               [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
             <span>DE</span>
           </div>
           <div (click)="selectLanguage(languageEnum.RW)"
-               [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
             <span>RW</span>
           </div>
           <div (click)="selectLanguage(languageEnum.ES)"
-               [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
             <span>ES</span>
           </div>
         </div>
-
         <div class="spacer-title-section"></div>
-
-        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-          <ng-container *ngIf="translation.value.language === selectedLanguage">
+        @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+          @if (translation.value.language === selectedLanguage) {
             <textinput
-                    label="Label"
-                    placeholder="Enter label"
-                    i18n-label="@@facilityTypeDetail.textinput.label.label"
-                    i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
-                    [form]="$any(this.form.get('translations.' + i + '.label'))"
-                    [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.label').value"
-                    [markRequired]="translation.value.language === languageEnum.EN"
-                    style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.label').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required">
+              label="Label"
+              placeholder="Enter label"
+              i18n-label="@@facilityTypeDetail.textinput.label.label"
+              i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
+              [form]="$any(this.form.get('translations.' + i + '.label'))"
+              [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.label').value"
+              [markRequired]="translation.value.language === languageEnum.EN"
+              style="width: 100%">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.label').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div>
                         <span i18n="@@facilityTypeDetail.textinput.label.error">
                           Label is required
                         </span>
+                      </div>
+                    }
                   </div>
-                </div>
-              </ng-container>
+                }
+              }
             </textinput>
-          </ng-container>
-        </ng-container>
-
+          }
+        }
         <single-choice
           label="Type"
           i18n-label="@@productLabelProcessingAction.transactionType.label"
           [formControlInput]="$any(form.get('type'))"
           [codebookService]="codebookProcessingEvidenceTypeType"
           [isInvalidChoice]="submitted && form.get('type').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('type').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@productLabelProcessingAction.singleChoice.type.error.requred">
+          @if (submitted) {
+            @if (form.get('type').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@productLabelProcessingAction.singleChoice.type.error.requred">
                 Type is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </single-choice>
-
         <label class="mb-0 mt-3">
           Indicators
         </label>
@@ -371,25 +395,22 @@
             Fairness
           </checkbox-input-rich-label>
         </checkbox-input>
-
         <checkbox-input [form]="$any(form.get('provenance'))">
           <checkbox-input-rich-label i18n="@@typeDetailModal.processingEvidenceType.checkbox.provenance">
             Provenance
           </checkbox-input-rich-label>
         </checkbox-input>
-
         <checkbox-input [form]="$any(form.get('quality'))">
           <checkbox-input-rich-label i18n="@@typeDetailModal.processingEvidenceType.checkbox.quality">
             Quality
           </checkbox-input-rich-label>
         </checkbox-input>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="this.type === 'processing-evidence-fields'">
+      @if (this.type === 'processing-evidence-fields') {
         <small i18n="@@semiProductDetail.hint.translations">
           Specify name in English and add translations for all used languages.
         </small>
-
         <div class="d-flex af-translation-language">
           <div (click)="selectLanguage(languageEnum.EN)"
                [ngClass]="selectedLanguage === languageEnum.EN
@@ -401,91 +422,100 @@
             <span>EN</span>
           </div>
           <div (click)="selectLanguage(languageEnum.DE)"
-               [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.DE ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--germany.svg" alt="Select DE lang">
             <span>DE</span>
           </div>
           <div (click)="selectLanguage(languageEnum.RW)"
-               [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.RW ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--rwanda.svg" alt="Select RW lang">
             <span>RW</span>
           </div>
           <div (click)="selectLanguage(languageEnum.ES)"
-               [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
+            [ngClass]="selectedLanguage === languageEnum.ES ? 'af-translation-language--selected' : ''">
             <img src="../../../assets/icons/icon-flag--spain.svg" alt="Select ES lang">
             <span>ES</span>
           </div>
         </div>
-
         <div class="spacer-title-section"></div>
-
-        <ng-container *ngFor="let translation of this.form.get('translations')['controls']; index as i">
-          <ng-container *ngIf="translation.value.language === selectedLanguage">
+        @for (translation of this.form.get('translations')['controls']; track translation; let i = $index) {
+          @if (translation.value.language === selectedLanguage) {
             <textinput
-                    label="Label"
-                    placeholder="Enter label"
-                    i18n-label="@@facilityTypeDetail.textinput.label.label"
-                    i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
-                    [form]="$any(this.form.get('translations.' + i + '.label'))"
-                    [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.label').value"
-                    [markRequired]="translation.value.language === languageEnum.EN"
-                    style="width: 100%">
-              <ng-container *ngIf="submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.label').value">
-                <div *ngIf="this.form.get('translations').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.required">
+              label="Label"
+              placeholder="Enter label"
+              i18n-label="@@facilityTypeDetail.textinput.label.label"
+              i18n-placeholder="@@facilityTypeDetail.textinput.label.placeholder"
+              [form]="$any(this.form.get('translations.' + i + '.label'))"
+              [isInvalid]="translation.value.language === languageEnum.EN && submitted && !this.form.get('translations.' + i + '.label').value"
+              [markRequired]="translation.value.language === languageEnum.EN"
+              style="width: 100%">
+              @if (submitted && translation.value.language === languageEnum.EN && !this.form.get('translations.' + i + '.label').value) {
+                @if (this.form.get('translations').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div>
                         <span i18n="@@facilityTypeDetail.textinput.label.error">
                           Label is required
                         </span>
+                      </div>
+                    }
                   </div>
-                </div>
-              </ng-container>
+                }
+              }
             </textinput>
-          </ng-container>
-        </ng-container>
-
+          }
+        }
         <textinput
-                [form]="$any(form.get('fieldName'))"
-                label="Field name"
-                style="width: 100%"
-                placeholder="Enter field name"
-                i18n-label="@@procEvidenceField.fieldName.label"
-                i18n-placeholder="@@procEvidenceField.fieldName.placeholder"
-                [isInvalid]="submitted && form.get('fieldName').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('fieldName').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.wrongInput" i18n="@@facilityTypeDetail.textinput.id.error">
+          [form]="$any(form.get('fieldName'))"
+          label="Field name"
+          style="width: 100%"
+          placeholder="Enter field name"
+          i18n-label="@@procEvidenceField.fieldName.label"
+          i18n-placeholder="@@procEvidenceField.fieldName.placeholder"
+          [isInvalid]="submitted && form.get('fieldName').invalid">
+          @if (submitted) {
+            @if (form.get('fieldName').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.wrongInput) {
+                  <div i18n="@@facilityTypeDetail.textinput.id.error">
                 Id should contain only capital letters, numbers and / or underscores
               </div>
-              <div *ngIf="errors.required" i18n="@@procEvidenceField.fieldName.error.required">
+                }
+                @if (errors.required) {
+                  <div i18n="@@procEvidenceField.fieldName.error.required">
                 Field name is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </textinput>
-
         <single-choice
-                label="Type"
-                i18n-label="@@productLabelProcessingAction.evidenceFieldType.label"
-                [formControlInput]="$any(form.get('type'))"
-                [codebookService]="codebookProcessingEvidenceFieldType"
-                [isInvalidChoice]="submitted && form.get('type').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('type').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@productLabelProcessingAction.singleChoice.type.error.requred">
+          label="Type"
+          i18n-label="@@productLabelProcessingAction.evidenceFieldType.label"
+          [formControlInput]="$any(form.get('type'))"
+          [codebookService]="codebookProcessingEvidenceFieldType"
+          [isInvalidChoice]="submitted && form.get('type').invalid">
+          @if (submitted) {
+            @if (form.get('type').errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div i18n="@@productLabelProcessingAction.singleChoice.type.error.requred">
                 Type is required
               </div>
-            </div>
-          </ng-container>
+                }
+              </div>
+            }
+          }
         </single-choice>
-
-      </ng-container>
+      }
 
     </div>
   </div>
   <div class="modal-footer" i18n="@@collectorDetail.modal.footer.buttons">
-    <button class="btn btn-outlined" data-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
+    <button class="btn btn-outlined" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
     <button class="btn" type="button"
             [disabled]="update && isRegionalAdmin"
             (click)="save(); saveCallback && saveCallback();"><span>Save</span></button>
   </div>
-</div>
+  </div>

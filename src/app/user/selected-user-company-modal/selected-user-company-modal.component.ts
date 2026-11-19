@@ -1,14 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../core/auth.service';
 import { ActiveCompaniesService } from '../../shared-services/active-companies.service';
 import { ApiUserGet } from '../../../api/model/apiUserGet';
 
 @Component({
-  selector: 'app-selected-user-company-modal',
-  templateUrl: './selected-user-company-modal.component.html',
-  styleUrls: ['./selected-user-company-modal.component.scss']
+    selector: 'app-selected-user-company-modal',
+    templateUrl: './selected-user-company-modal.component.html',
+    styleUrls: ['./selected-user-company-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelectedUserCompanyModalComponent implements OnInit {
 
@@ -24,7 +26,7 @@ export class SelectedUserCompanyModalComponent implements OnInit {
   @Input()
   onSelectedCompany: (company: any) => {};
 
-  companyForm = new FormControl(null);
+  companyForm = new UntypedFormControl(null);
   userHasCompanies = false;
 
   constructor(

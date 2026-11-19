@@ -4,17 +4,14 @@
 # (see RELEASE.md). Runtime settings are applied when the container starts, from
 # environment variables (src/assets/env.template.js), so one image serves any environment.
 
-FROM node:14-alpine AS build
+FROM node:26.13.1-alpine AS build
 # git: one dependency (openapi-typescript-angular-generator) is installed from GitHub.
 RUN apk add --no-cache git
 WORKDIR /src
 # Dependencies get their own layer, rebuilt only when the lock file changes, so the layer
 # cache (local or CI) avoids downloading them on every build.
-COPY package.json package-lock.json ./
-# ngcc prepares the Angular libraries for Ivy; run once here, in parallel, it is cached
-# with the dependencies instead of running package by package in every build.
-RUN npm ci --no-audit --no-fund \
- && npx ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points
+COPY package.json package-lock.json .npmrc ./
+RUN npm ci --no-audit --no-fund
 COPY . .
 ARG REVISION=dev
 RUN printf "export const VERSION = '%s';\n" "$REVISION" > src/environments/version.ts \

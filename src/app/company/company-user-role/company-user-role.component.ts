@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { CompanyControllerService } from 'src/api/api/companyController.service';
@@ -14,9 +14,11 @@ import { ApiCompanyActionRequest } from '../../../api/model/apiCompanyActionRequ
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-company-user-role',
-  templateUrl: './company-user-role.component.html',
-  styleUrls: ['./company-user-role.component.scss']
+    selector: 'app-company-user-role',
+    templateUrl: './company-user-role.component.html',
+    styleUrls: ['./company-user-role.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyUserRoleComponent extends GenericEditableItemComponent<ApiCompanyUser> implements OnInit {
 
@@ -39,7 +41,7 @@ export class CompanyUserRoleComponent extends GenericEditableItemComponent<ApiCo
   @Input()
   readonly = false;
 
-  userForm = new FormControl(null, Validators.required);
+  userForm = new UntypedFormControl(null, Validators.required);
 
   codebookRoles = EnumSifrant.fromObject(this.roles);
 
@@ -49,7 +51,7 @@ export class CompanyUserRoleComponent extends GenericEditableItemComponent<ApiCo
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiCompanyUser.formMetadata(), value, ApiCompanyUserValidationScheme);
   }
 

@@ -1,154 +1,173 @@
 <div class="af-row">
-    <div class="af-c6">
+  <div class="af-c6">
 
-        <single-choice
-                label="Country"
-                i18n-label="@@locationForm.textinput.country.label"
-                [formControlInput]="form.get('facilityLocation.address.country')"
-                [codebookService]="countryCodes"
-                [isInvalidChoice]="submitted && form.get('facilityLocation.address.country').invalid">
-            <ng-container *ngIf="submitted">
-                <div *ngIf="form.get('facilityLocation.address.country').errors as errors" class="sc-invalid-feedback">
-                    <div *ngIf="errors.required" i18n="@@locationForm.textinput.country.error">
+    <single-choice
+      label="Country"
+      i18n-label="@@locationForm.textinput.country.label"
+      [formControlInput]="form.get('facilityLocation.address.country')"
+      [codebookService]="countryCodes"
+      [isInvalidChoice]="submitted && form.get('facilityLocation.address.country').invalid">
+      @if (submitted) {
+        @if (form.get('facilityLocation.address.country').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@locationForm.textinput.country.error">
                         Country is required.
                     </div>
-                </div>
-            </ng-container>
-        </single-choice>
+            }
+          </div>
+        }
+      }
+    </single-choice>
 
-    </div>
+  </div>
 </div>
 
 <div class="af-row">
-    <div class="af-c6">
+  <div class="af-c6">
 
-        <ng-container *ngIf="doShowVillage()">
-            <textinput
-                    [form]="form.get('facilityLocation.address.village')"
-                    label="Village"
-                    style="width: 100%"
-                    placeholder="Enter village"
-                    i18n-label="@@locationForm.textinput.village.label"
-                    i18n-placeholder="@@locationForm.textinput.village.placeholder"
-                    [isInvalid]="submitted && form.get('facilityLocation.address.village').invalid">
-                <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('facilityLocation.address.village').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@locationForm.textinput.village.error">
+    @if (doShowVillage()) {
+      <textinput
+        [form]="form.get('facilityLocation.address.village')"
+        label="Village"
+        style="width: 100%"
+        placeholder="Enter village"
+        i18n-label="@@locationForm.textinput.village.label"
+        i18n-placeholder="@@locationForm.textinput.village.placeholder"
+        [isInvalid]="submitted && form.get('facilityLocation.address.village').invalid">
+        @if (submitted) {
+          @if (form.get('facilityLocation.address.village').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@locationForm.textinput.village.error">
                             Village is required.
                         </div>
-                    </div>
-                </ng-container>
-            </textinput>
-
-            <textinput
-                    [form]="form.get('facilityLocation.address.cell')"
-                    label="Cell"
-                    style="width: 100%"
-                    placeholder="Enter cell"
-                    i18n-label="@@locationForm.textinput.cell.label"
-                    i18n-placeholder="@@locationForm.textinput.cell.placeholder"
-                    [isInvalid]="submitted && form.get('facilityLocation.address.cell').invalid">
-                <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('facilityLocation.address.cell').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@locationForm.textinput.cell.error">
+              }
+            </div>
+          }
+        }
+      </textinput>
+      <textinput
+        [form]="form.get('facilityLocation.address.cell')"
+        label="Cell"
+        style="width: 100%"
+        placeholder="Enter cell"
+        i18n-label="@@locationForm.textinput.cell.label"
+        i18n-placeholder="@@locationForm.textinput.cell.placeholder"
+        [isInvalid]="submitted && form.get('facilityLocation.address.cell').invalid">
+        @if (submitted) {
+          @if (form.get('facilityLocation.address.cell').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@locationForm.textinput.cell.error">
                             Cell is required.
                         </div>
-                    </div>
-                </ng-container>
-            </textinput>
-
-            <textinput
-                    [form]="form.get('facilityLocation.address.sector')"
-                    label="Sector"
-                    style="width: 100%"
-                    placeholder="Enter sector"
-                    i18n-label="@@locationForm.textinput.sector.label"
-                    i18n-placeholder="@@locationForm.textinput.sector.placeholder"
-                    [isInvalid]="submitted && form.get('facilityLocation.address.sector').invalid">
-                <ng-container *ngIf="submitted">
-                    <div *ngIf="form.get('facilityLocation.address.sector').errors as errors" class="sc-invalid-feedback">
-                        <div *ngIf="errors.required" i18n="@@locationForm.sector.village.error">
+              }
+            </div>
+          }
+        }
+      </textinput>
+      <textinput
+        [form]="form.get('facilityLocation.address.sector')"
+        label="Sector"
+        style="width: 100%"
+        placeholder="Enter sector"
+        i18n-label="@@locationForm.textinput.sector.label"
+        i18n-placeholder="@@locationForm.textinput.sector.placeholder"
+        [isInvalid]="submitted && form.get('facilityLocation.address.sector').invalid">
+        @if (submitted) {
+          @if (form.get('facilityLocation.address.sector').errors; as errors) {
+            <div class="sc-invalid-feedback">
+              @if (errors.required) {
+                <div i18n="@@locationForm.sector.village.error">
                             Sector is required.
                         </div>
-                    </div>
-                </ng-container>
-            </textinput>
-        </ng-container>
+              }
+            </div>
+          }
+        }
+      </textinput>
+    }
 
-        <ng-container *ngIf="!doShowVillage()">
-            <textinput
-                    [form]="form.get('facilityLocation.address.address')"
-                    label="Street address"
-                    style="width: 100%"
-                    placeholder="Enter street address"
-                    i18n-label="@@locationForm.textinput.address.label"
-                    i18n-placeholder="@@locationForm.textinput.address.placeholder">
-            </textinput>
-            <textinput
-                    [form]="form.get('facilityLocation.address.city')"
-                    label="City"
-                    style="width: 100%"
-                    placeholder="Enter city"
-                    i18n-label="@@locationForm.textinput.city.label"
-                    i18n-placeholder="@@locationForm.textinput.city.placeholder">
-            </textinput>
-            <textinput
-                    [form]="form.get('facilityLocation.address.state')"
-                    label="State / Province / Region"
-                    style="width: 100%"
-                    placeholder="Enter State / Province / Region"
-                    i18n-label="@@locationForm.textinput.state.label"
-                    i18n-placeholder="@@locationForm.textinput.state.placeholder">
-            </textinput>
+    @if (!doShowVillage()) {
+      <textinput
+        [form]="form.get('facilityLocation.address.address')"
+        label="Street address"
+        style="width: 100%"
+        placeholder="Enter street address"
+        i18n-label="@@locationForm.textinput.address.label"
+        i18n-placeholder="@@locationForm.textinput.address.placeholder">
+      </textinput>
+      <textinput
+        [form]="form.get('facilityLocation.address.city')"
+        label="City"
+        style="width: 100%"
+        placeholder="Enter city"
+        i18n-label="@@locationForm.textinput.city.label"
+        i18n-placeholder="@@locationForm.textinput.city.placeholder">
+      </textinput>
+      <textinput
+        [form]="form.get('facilityLocation.address.state')"
+        label="State / Province / Region"
+        style="width: 100%"
+        placeholder="Enter State / Province / Region"
+        i18n-label="@@locationForm.textinput.state.label"
+        i18n-placeholder="@@locationForm.textinput.state.placeholder">
+      </textinput>
+      <textinput
+        [form]="form.get('facilityLocation.address.zip')"
+        label="Zip / Postal Code / P.O. Box"
+        style="width: 100%"
+        placeholder="Enter Zip / Postal Code / P.O. Box"
+        i18n-label="@@locationForm.textinput.zip.label"
+        i18n-placeholder="@@locationForm.textinput.zip.placeholder">
+      </textinput>
+    }
 
-            <textinput
-                    [form]="form.get('facilityLocation.address.zip')"
-                    label="Zip / Postal Code / P.O. Box"
-                    style="width: 100%"
-                    placeholder="Enter Zip / Postal Code / P.O. Box"
-                    i18n-label="@@locationForm.textinput.zip.label"
-                    i18n-placeholder="@@locationForm.textinput.zip.placeholder">
-            </textinput>
-        </ng-container>
+    <single-choice
+      label="Is location publicly visible on a map?"
+      i18n-label="@@locationForm.textinput.visible.label"
+      [formControlInput]="form.get('facilityLocation.publiclyVisible')"
+      [codebookService]="codebookStatus">
+    </single-choice>
 
-        <single-choice
-                label="Is location publicly visible on a map?"
-                i18n-label="@@locationForm.textinput.visible.label"
-                [formControlInput]="form.get('facilityLocation.publiclyVisible')"
-                [codebookService]="codebookStatus">
-        </single-choice>
+  </div>
 
-    </div>
+  <div class="af-c6" style="padding-top: 25px;">
 
-    <div class="af-c6" style="padding-top: 25px;">
+    <div class="location-map-label" [class.location-map-label--required]="isMapPinRequired">
+      <span i18n="@@locationForm.mapPin.label">Map pin</span>@if (isMapPinRequired) {
+      <span aria-hidden="true">*</span>
+    }
+  </div>
 
-        <div class="location-map-label" [class.location-map-label--required]="isMapPinRequired">
-            <span i18n="@@locationForm.mapPin.label">Map pin</span><span *ngIf="isMapPinRequired" aria-hidden="true">*</span>
-        </div>
-
-        <google-map
-                *ngIf="isGoogleMapsLoaded"
-                height="250px"
-                width="100%"
-                [options]="{disableDoubleClickZoom: true}"
-                [class.location-map--invalid]="submitted && hasInvalidMapPin"
-                (mapDblclick)="dblClick($event)">
-            <map-marker
-                #gMarker="mapMarker"
-                *ngIf="marker"
-                [position]="marker.position"
-                [label]="marker.label"
-                [options]="{draggable:true}"
-                (mapRightclick)="removeMarker()"
-                (mapDragend)="dragEnd($event)">
-            </map-marker>
-        </google-map>
-        <small i18n="@@locationForm.origin.helpText" style="margin-top: 0.5rem;">
+  @if (isGoogleMapsLoaded) {
+    <google-map
+      height="250px"
+      width="100%"
+      [options]="{disableDoubleClickZoom: true}"
+      [class.location-map--invalid]="submitted && hasInvalidMapPin"
+      (mapDblclick)="dblClick($event)">
+      @if (marker) {
+        <map-marker
+          #gMarker="mapMarker"
+          [position]="marker.position"
+          [label]="marker.label"
+          [options]="{draggable:true}"
+          (mapRightclick)="removeMarker()"
+          (mapDragend)="dragEnd($event)">
+        </map-marker>
+      }
+    </google-map>
+  }
+  <small i18n="@@locationForm.origin.helpText" style="margin-top: 0.5rem;">
             Double click on the map to drop a pin and mark the locations. Right click on marker to remove it.
         </small>
-        <div *ngIf="submitted && hasInvalidMapPin" class="sc-invalid-feedback" i18n="@@locationForm.mapPin.error">
+  @if (submitted && hasInvalidMapPin) {
+    <div class="sc-invalid-feedback" i18n="@@locationForm.mapPin.error">
             A map pin is required when the location is publicly visible.
         </div>
+  }
 
-    </div>
+</div>
 </div>

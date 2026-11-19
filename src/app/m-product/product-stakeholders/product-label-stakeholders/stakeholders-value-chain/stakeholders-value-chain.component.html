@@ -2,254 +2,267 @@
   <app-product-label-left-panel-content>
   </app-product-label-left-panel-content>
 
-  <div *ngIf="companyId != null" class="main">
-    <div class="row">
-      <div class="col">
-
-        <div class="main-inside-top content-element">
-
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.buyers">Buyers</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newBuyer()" i18n="@@productLabelStakeholders.button.newBuyer">
+  @if (companyId != null) {
+    <div class="main">
+      <div class="row">
+        <div class="col">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.buyers">Buyers</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newBuyer()" i18n="@@productLabelStakeholders.button.newBuyer">
               <span>+ Add buyer</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px;" *ngIf="this.buyers">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let buyer of this.buyers">
-
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="buyer"
-                  [editable]="editable()">
-                </app-company-card>
-
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.buyers) {
+                <div class="row" style="margin-top: 30px;">
+                  @for (buyer of this.buyers; track buyer) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="buyer"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-
-
-        </div>
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.importers">Importers</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newImporter()" i18n="@@productLabelStakeholders.button.newImporter">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.importers">Importers</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newImporter()" i18n="@@productLabelStakeholders.button.newImporter">
               <span>+ Add importer</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px" *ngIf="this.importers">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let importer of this.importers">
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="importer"
-                  [editable]="editable()">
-                </app-company-card>
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.importers) {
+                <div class="row" style="margin-top: 30px">
+                  @for (importer of this.importers; track importer) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="importer"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-        </div>
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.exporters">Exporters</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newExporter()" i18n="@@productLabelStakeholders.button.newExporter">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.exporters">Exporters</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newExporter()" i18n="@@productLabelStakeholders.button.newExporter">
               <span>+ Add exporter</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px" *ngIf="this.exporters">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let exporter of this.exporters">
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="exporter"
-                  [editable]="editable()">
-                </app-company-card>
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.exporters) {
+                <div class="row" style="margin-top: 30px">
+                  @for (exporter of this.exporters; track exporter) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="exporter"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-        </div>
-
-        <div class="main-inside-top content-element">
-
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.producers">Producers</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newProducer()" i18n="@@productLabelStakeholders.button.newProducer">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.producers">Producers</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newProducer()" i18n="@@productLabelStakeholders.button.newProducer">
               <span>+ Add producer</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px;" *ngIf="this.producers">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let producer of this.producers">
-
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="producer"
-                  [editable]="editable()">
-                </app-company-card>
-
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.producers) {
+                <div class="row" style="margin-top: 30px;">
+                  @for (producer of this.producers; track producer) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="producer"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-
-        </div>
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.associations">Associations</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newAssociation()" i18n="@@productLabelStakeholders.button.newAssociation">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.associations">Associations</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newAssociation()" i18n="@@productLabelStakeholders.button.newAssociation">
               <span>+ Add association</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px;" *ngIf="this.associations">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let association of this.associations">
-
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="association"
-                  [editable]="editable()">
-                </app-company-card>
-
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.associations) {
+                <div class="row" style="margin-top: 30px;">
+                  @for (association of this.associations; track association) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="association"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-
-        </div>
-
-        <div class="main-inside-top content-element">
-
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.processors">Processors</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newProcessor()" i18n="@@productLabelStakeholders.button.newProcessor">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.processors">Processors</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newProcessor()" i18n="@@productLabelStakeholders.button.newProcessor">
               <span>+ Add processor</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px;" *ngIf="this.processors">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let processor of this.processors">
-
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="processor"
-                  [editable]="editable()">
-                </app-company-card>
-
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.processors) {
+                <div class="row" style="margin-top: 30px;">
+                  @for (processor of this.processors; track processor) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="processor"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-
-        </div>
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.traders">Traders</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newTrader()" i18n="@@productLabelStakeholders.button.newTrader">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.traders">Traders</div>
+              @if (editable()) {
+                <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newTrader()" i18n="@@productLabelStakeholders.button.newTrader">
               <span>+ Add trader</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px" *ngIf="this.traders">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let trader of this.traders">
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="trader"
-                  [editable]="editable()">
-                </app-company-card>
-              </div>
+              }
+            </div>
+            <div class="container container--bare">
+              @if (this.traders) {
+                <div class="row" style="margin-top: 30px">
+                  @for (trader of this.traders; track trader) {
+                    <div class="col-md-6 col-lg-4 col--bare">
+                      <app-company-card
+                        (onSelect)="remove($event)"
+                        [company]="trader"
+                        [editable]="editable()">
+                      </app-company-card>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-        </div>
-
-        <hr>
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.owners">Product admin</div>
-            <button *ngIf="editable()" class="btn btn-solid round btn-table-new content-element--btn" (click)="newOwner()" i18n="@@productLabelStakeholders.button.newOwner">
+          <hr>
+            <div class="main-inside-top content-element">
+              <div class="d-flex justify-content-between content-element--row1">
+                <div class="title-page content-element--title" i18n="@@productLabelStakeholders.title.owners">Product admin</div>
+                @if (editable()) {
+                  <button class="btn btn-solid round btn-table-new content-element--btn" (click)="newOwner()" i18n="@@productLabelStakeholders.button.newOwner">
               <span>+ Add product admin</span>
             </button>
-          </div>
-
-          <div class="container container--bare">
-            <div class="row" style="margin-top: 30px;" *ngIf="this.owners">
-              <div class="col-md-6 col-lg-4 col--bare" *ngFor="let owner of this.owners">
-                <app-company-card
-                  (onSelect)="remove($event)"
-                  [company]="owner"
-                  [owner]="true"
-                  [editable]="editable()">
-                </app-company-card>
+                }
               </div>
-            </div>
-          </div>
-        </div>
-
-        <ng-container *ngIf="product$ | async">
-          <hr>
-
-          <div class="af-form-wrapper">
-            <div class="af-form-row">
-              <div class="af-form-block--c12">
-                <div class="title-page content-element--title"
-                     i18n="@@productLabelStakeholders.dataSharingAgreements.title">Data sharing agreements</div>
-                <div class="af-form-element">
-
-                  <list-editor
-                          *ngIf="productForm && dataSharingAgreementListManager"
-                          label="Data sharing agreements"
-                          [listEditorManager]="dataSharingAgreementListManager"
-                          addText="Add new"
-                          [canAdd]="isOwner"
-                          i18n-label="@@productLabelStakeholders.dataSharingAgreements.label"
-                          i18n-addText="@@productLabelStakeholders.dataSharingAgreements.addNew">
-                    <list-editor-items>
-                      <div *ngFor="let item of dataSharingAgreementsControls; let i=index;">
-                        <app-data-sharing-agreement-item
-                                title="Data sharing agreement"
-                                i18n-title="@@productLabelStakeholders.dataSharingAgreements.listEditor.title"
-                                [readOnly]="!isOwner"
-                                [disableDelete]="!isOwner"
-                                [formControlInput]="item"
-                                [isOpen]="dataSharingAgreementListManager.isOpen(i)"
-                                [listEditorManager]="dataSharingAgreementListManager"
-                                [listEditorManagerPosition]="i">
-                        </app-data-sharing-agreement-item>
+              <div class="container container--bare">
+                @if (this.owners) {
+                  <div class="row" style="margin-top: 30px;">
+                    @for (owner of this.owners; track owner) {
+                      <div class="col-md-6 col-lg-4 col--bare">
+                        <app-company-card
+                          (onSelect)="remove($event)"
+                          [company]="owner"
+                          [owner]="true"
+                          [editable]="editable()">
+                        </app-company-card>
                       </div>
-                    </list-editor-items>
-                  </list-editor>
-
-                </div>
+                    }
+                  </div>
+                }
               </div>
             </div>
-
-            <div class="af-form-row">
-              <div class="af-form-block--c12">
-                <div class="af-bottom-buttons">
-                  <bottom-buttons
+            @if (product$ | async) {
+              <hr>
+                <div class="af-form-wrapper">
+                  <div class="af-form-row">
+                    <div class="af-form-block--c12">
+                      <div class="title-page content-element--title"
+                      i18n="@@productLabelStakeholders.dataSharingAgreements.title">Data sharing agreements</div>
+                      <div class="af-form-element">
+                        @if (productForm && dataSharingAgreementListManager) {
+                          <list-editor
+                            label="Data sharing agreements"
+                            [listEditorManager]="dataSharingAgreementListManager"
+                            addText="Add new"
+                            [canAdd]="isOwner"
+                            i18n-label="@@productLabelStakeholders.dataSharingAgreements.label"
+                            i18n-addText="@@productLabelStakeholders.dataSharingAgreements.addNew">
+                            <list-editor-items>
+                              @for (item of dataSharingAgreementsControls; track item; let i = $index) {
+                                <div>
+                                  <app-data-sharing-agreement-item
+                                    title="Data sharing agreement"
+                                    i18n-title="@@productLabelStakeholders.dataSharingAgreements.listEditor.title"
+                                    [readOnly]="!isOwner"
+                                    [disableDelete]="!isOwner"
+                                    [formControlInput]="item"
+                                    [isOpen]="dataSharingAgreementListManager.isOpen(i)"
+                                    [listEditorManager]="dataSharingAgreementListManager"
+                                    [listEditorManagerPosition]="i">
+                                  </app-data-sharing-agreement-item>
+                                </div>
+                              }
+                            </list-editor-items>
+                          </list-editor>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="af-form-row">
+                    <div class="af-form-block--c12">
+                      <div class="af-bottom-buttons">
+                        <bottom-buttons
                           [changed]="productForm.dirty"
                           [invalid]="submitted && productForm.invalid"
                           (onSave)="saveDataSharingAgreements()"
                           [floatingValidate]="true"
                           [error]="submitted && productForm.invalid"
                           [success]="submitted && !productForm.invalid">
-                  </bottom-buttons>
+                        </bottom-buttons>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
-
           </div>
-        </ng-container>
-
-      </div>
-    </div>
-  </div>
-</app-authorised-layout>
+        </div>
+      }
+    </app-authorised-layout>

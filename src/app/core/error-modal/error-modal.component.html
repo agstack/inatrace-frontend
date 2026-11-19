@@ -1,12 +1,13 @@
 <div class="modal-header">
-    <h4 class="modal-title">{{ title || "Error" }}</h4>
-    <button *ngIf="dismissable" type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
+  <h4 class="modal-title">{{ title || "Error" }}</h4>
+  @if (dismissable) {
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     </button>
+  }
 </div>
 <div class="modal-body">
-    <p >{{errorMessage || "Write error message here ..."}}</p>
+  <p >{{errorMessage || "Write error message here ..."}}</p>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click'); closeCallback && closeCallback()">Close</button>
+  <button type="button" class="btn btn-light" (click)="activeModal.close('Close click'); closeCallback && closeCallback()">Close</button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FileSaverService } from 'ngx-filesaver';
 import { take } from 'rxjs/operators';
 import { ApiStockOrderEvidenceFieldValue } from '../../../../../../api/model/apiStockOrderEvidenceFieldValue';
@@ -9,9 +9,11 @@ import { ApiDocument } from '../../../../../../api/model/apiDocument';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-  selector: 'app-field-or-doc-info',
-  templateUrl: './field-or-doc-info.component.html',
-  styleUrls: ['./field-or-doc-info.component.scss']
+    selector: 'app-field-or-doc-info',
+    templateUrl: './field-or-doc-info.component.html',
+    styleUrls: ['./field-or-doc-info.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FieldOrDocInfoComponent implements OnInit {
 

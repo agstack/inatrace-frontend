@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { ApiPayment } from '../../../../../api/model/apiPayment';
 import { CompanyControllerService } from '../../../../../api/api/companyController.service';
 import { CompanyUserCustomersByRoleService } from '../../../../shared-services/company-user-customers-by-role.service';
 import { dateISOString, generateFormFromMetadata } from '../../../../../shared/utils';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ApiPaymentValidationScheme } from '../validation';
 import { Location } from '@angular/common';
 import { ApiStockOrder } from '../../../../../api/model/apiStockOrder';
@@ -21,9 +21,11 @@ import { ToastrService } from 'ngx-toastr';
 import { SelectedUserCompanyService } from '../../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-stock-payments-detail',
-  templateUrl: './stock-payments-detail.component.html',
-  styleUrls: ['./stock-payments-detail.component.scss']
+    selector: 'app-stock-payments-detail',
+    templateUrl: './stock-payments-detail.component.html',
+    styleUrls: ['./stock-payments-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsDetailComponent implements OnInit {
 
@@ -47,14 +49,14 @@ export class StockPaymentsDetailComponent implements OnInit {
   farmersCodebook: CompanyUserCustomersByRoleService;
   collectorsCodebook: CompanyUserCustomersByRoleService;
 
-  paymentForm: FormGroup;
+  paymentForm: UntypedFormGroup;
 
-  searchFarmersForm = new FormControl(null);
-  searchCollectorsForm = new FormControl(null);
-  searchCompaniesForm = new FormControl(null);
+  searchFarmersForm = new UntypedFormControl(null);
+  searchCollectorsForm = new UntypedFormControl(null);
+  searchCompaniesForm = new UntypedFormControl(null);
 
-  payableFromForm = new FormControl(null);
-  orderReferenceForm = new FormControl(null);
+  payableFromForm = new UntypedFormControl(null);
+  orderReferenceForm = new UntypedFormControl(null);
 
   private addPricePerUnitMessage: string = $localize`:@@productLabelStockPayments.addPricePerUnit.message:Add price per unit`;
 

@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,8 +17,8 @@ describe('FacilityCardComponent', () => {
     return {
       id: 10,
       facilityType: { code: 'STORAGE' },
-      facilitySemiProductList: [{ id: 1 }],
-      facilityFinalProducts: [{ id: 2 }]
+      facilitySemiProductList: [{ id: 1, name: 'Cherry' }],
+      facilityFinalProducts: [{ id: 2, name: 'Roasted', product: { name: 'Coffee' } }]
     };
   }
 
@@ -71,8 +72,9 @@ describe('FacilityCardComponent template', () => {
 
   let fixture: ComponentFixture<FacilityCardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [CommonModule, NgbDropdownModule],
       declarations: [FacilityCardComponent],
       providers: [{ provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }]
@@ -87,7 +89,7 @@ describe('FacilityCardComponent template', () => {
     fixture.componentInstance.facility = {
       id: 10,
       facilityType: { code: 'STORAGE', label: 'Storage' },
-      facilitySemiProductList: [{ id: 1 }],
+      facilitySemiProductList: [{ id: 1, name: 'Cherry' }],
       facilityFinalProducts: []
     };
     fixture.componentInstance.actions = actions;

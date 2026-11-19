@@ -1,53 +1,54 @@
 <smart-tag [isOpen]="isOpen && !rawObjectData"
-           [readOnly]="rawObjectData"
-           [viewOnly]="viewOnly"
-           [formControlInput]="originalFormControl"
-           [disableDelete]="disableDelete"
-           (onEdit)="toggle($event)"
-           (onView)="toggle($event)">
+  [readOnly]="rawObjectData"
+  [viewOnly]="viewOnly"
+  [formControlInput]="originalFormControl"
+  [disableDelete]="disableDelete"
+  (onEdit)="toggle($event)"
+  (onView)="toggle($event)">
 
-    <tag-closed>
-        <div *ngIf="contentObject" class="c-capitalize-first">
-            <div class="tagitem-text-container">
-                {{name}}
-            </div>
+  <tag-closed>
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          {{name}}
         </div>
-    </tag-closed>
+      </div>
+    }
+  </tag-closed>
 
-    <tag-open>
-        <subform-layout *ngIf="this.form && searchFarmersForm.value">
-
-            <subform-form>
-                <div [ngClass]="this.whichClass()">
-                    <app-stock-payments-form
-                            [paymentForm]="form"
-                            [orderReferenceForm]="orderReferenceForm"
-                            [payableFromForm]="payableFromForm"
-                            [searchCompaniesForm]="searchCompaniesForm"
-                            [searchCollectorsForm]="searchCollectorsForm"
-                            [searchFarmersForm]="searchFarmersForm"
-                            [farmersCodebook]="farmersCodebook"
-                            [collectorsCodebook]="collectorsCodebook"
-                            [stockOrder]="purchaseOrder"
-                            [openBalance]="openBalanceToBeSet"
-                            [purchased]="purchasedToBeSet"
-                            [submitted]="submitted"
-                            [viewOnly]="viewOnly">
-                    </app-stock-payments-form>
-                </div>
-            </subform-form>
-
-            <subform-mini-buttons
-                    class="d-flex justify-content-end"
-                    style="width: 100%;">
-                <mini-buttons
-                        [error]="submitted && form.invalid"
-                        [cancelButtonOnly]="viewOnly"
-                        (onCancel)="cancel()">
-                </mini-buttons>
-            </subform-mini-buttons>
-
-        </subform-layout>
-    </tag-open>
+  <tag-open>
+    @if (this.form && searchFarmersForm.value) {
+      <subform-layout>
+        <subform-form>
+          <div [ngClass]="this.whichClass()">
+            <app-stock-payments-form
+              [paymentForm]="form"
+              [orderReferenceForm]="orderReferenceForm"
+              [payableFromForm]="payableFromForm"
+              [searchCompaniesForm]="searchCompaniesForm"
+              [searchCollectorsForm]="searchCollectorsForm"
+              [searchFarmersForm]="searchFarmersForm"
+              [farmersCodebook]="farmersCodebook"
+              [collectorsCodebook]="collectorsCodebook"
+              [stockOrder]="purchaseOrder"
+              [openBalance]="openBalanceToBeSet"
+              [purchased]="purchasedToBeSet"
+              [submitted]="submitted"
+              [viewOnly]="viewOnly">
+            </app-stock-payments-form>
+          </div>
+        </subform-form>
+        <subform-mini-buttons
+          class="d-flex justify-content-end"
+          style="width: 100%;">
+          <mini-buttons
+            [error]="submitted && form.invalid"
+            [cancelButtonOnly]="viewOnly"
+            (onCancel)="cancel()">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
+  </tag-open>
 
 </smart-tag>

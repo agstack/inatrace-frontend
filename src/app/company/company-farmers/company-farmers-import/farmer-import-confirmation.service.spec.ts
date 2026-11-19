@@ -1,16 +1,21 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FarmerImportConfirmationService } from '../../../../api/api/farmerImportConfirmation.service';
 import { Configuration } from '../../../../api/configuration';
 import { environment } from '../../../../environments/environment';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('FarmerImportConfirmationService', () => {
   let service: FarmerImportConfirmationService;
   let http: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientTestingModule],
-      providers: [{ provide: Configuration, useValue: new Configuration({ basePath: environment.basePath }) }] });
+    TestBed.configureTestingModule({
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [{ provide: Configuration, useValue: new Configuration({ basePath: environment.basePath }) }, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(FarmerImportConfirmationService);
     http = TestBed.inject(HttpTestingController);
   });

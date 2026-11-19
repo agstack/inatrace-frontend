@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '../../core/auth.service';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
@@ -38,9 +38,11 @@ import {
 } from "../self-onboarding-checklist-modal/guided-tour-success-modal/guided-tour-success-modal.component";
 
 @Component({
-  selector: 'app-user-home',
-  templateUrl: './user-home.component.html',
-  styleUrls: ['./user-home.component.scss']
+    selector: 'app-user-home',
+    templateUrl: './user-home.component.html',
+    styleUrls: ['./user-home.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UserHomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -190,9 +192,9 @@ export class UserHomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sub.add(
       this.selfOnboardingService.addFarmersCurrentStep$.subscribe(currentStep => {
         if (currentStep === 1) {
-          this.farmersNavButtonTooltip.open();
+          this.farmersNavButtonTooltip?.open();
         } else {
-          this.farmersNavButtonTooltip.close();
+          this.farmersNavButtonTooltip?.close();
         }
       })
     );
@@ -200,9 +202,9 @@ export class UserHomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sub.add(
         this.selfOnboardingService.guidedTourStep$.subscribe(step => {
           if (step === 1) {
-            this.myStockNavButtonTooltip.open();
+            this.myStockNavButtonTooltip?.open();
           } else {
-            this.myStockNavButtonTooltip.close();
+            this.myStockNavButtonTooltip?.close();
           }
         })
     );

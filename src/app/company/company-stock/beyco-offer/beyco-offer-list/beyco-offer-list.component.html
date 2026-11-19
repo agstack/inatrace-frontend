@@ -1,488 +1,580 @@
 <app-authorised-layout>
 
-    <div class="af-layout--authorised">
+  <div class="af-layout--authorised">
 
-        <div class="af-form-wrapper">
+    <div class="af-form-wrapper">
 
-<!--            Page title -->
-            <div class="af-form-row">
-                <div class="af-form-block--c12 d-flex justify-content-between">
-                    <div class="title-page content-element--title" i18n="@@beycoOrderList.title">Export to Beyco</div>
+      <!--            Page title -->
+      <div class="af-form-row">
+        <div class="af-form-block--c12 d-flex justify-content-between">
+          <div class="title-page content-element--title" i18n="@@beycoOrderList.title">Export to Beyco</div>
+        </div>
+      </div>
+
+      <!--            Shared fields between coffe lots -->
+      @if (generalForm) {
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <h2 i18n="@@beycoOrderList.form.sharedValues">General values</h2>
+            <div class="af-form-element">
+              <div class="af-row">
+                <div class="af-c6">
+                  <textinput
+                    label="Offer title"
+                    [form]="fc(generalForm, 'title')"
+                    i18n-label="@@beycoOrderList.form.sharedValues.title"
+                    >
+                    @if (fc(generalForm, 'title').touched) {
+                      @if (fc(generalForm, 'title').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.sharedValues.title.error.required">Title is required</span>
+                          }
+                          @if (errors.maxlength) {
+                            <span i18n="@@beycoOrderList.form.sharedValues.title.error.maxLength">Title should be no longer than 70 characters</span>
+                          }
+                        </div>
+                      }
+                    }
+                  </textinput>
                 </div>
-            </div>
-
-<!--            Shared fields between coffe lots -->
-            <div class="af-form-row" *ngIf="generalForm">
-                <div class="af-form-block--c12">
-                    <h2 i18n="@@beycoOrderList.form.sharedValues">General values</h2>
-                    <div class="af-form-element">
-
-                        <div class="af-row">
-                            <div class="af-c6">
-                                <textinput
-                                        label="Offer title"
-                                        [form]="fc(generalForm, 'title')"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.title"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'title').touched">
-                                        <div *ngIf="fc(generalForm, 'title').errors as errors" class="sc-invalid-feedback">
-                                            <span *ngIf="errors.required" i18n="@@beycoOrderList.form.sharedValues.title.error.required">Title is required</span>
-                                            <span *ngIf="errors.maxlength" i18n="@@beycoOrderList.form.sharedValues.title.error.maxLength">Title should be no longer than 70 characters</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c6">
-                                <app-datepicker
-                                        label="Available at"
-                                        [form]="fc(generalForm, 'availableAt')"
-                                        [touchOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.availableAt"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'availableAt').touched">
-                                        <div *ngIf="fc(generalForm, 'availableAt').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.availableAt.error.required">
+                <div class="af-c6">
+                  <app-datepicker
+                    label="Available at"
+                    [form]="fc(generalForm, 'availableAt')"
+                    [touchOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.sharedValues.availableAt"
+                    >
+                    @if (fc(generalForm, 'availableAt').touched) {
+                      @if (fc(generalForm, 'availableAt').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.availableAt.error.required">
                                             Available date is required
                                         </div>
-                                    </ng-container>
-                                </app-datepicker>
-                            </div>
-                        </div>
-
-                        <div class="af-row">
-                            <div class="af-c6">
-                                <textinput
-                                        label="Address of port of export"
-                                        [form]="fc(generalForm, 'address')"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.address"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'address').touched">
-                                        <div *ngIf="fc(generalForm, 'address').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.address.error.required">
+                      }
+                    }
+                  </app-datepicker>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c6">
+                  <textinput
+                    label="Address of port of export"
+                    [form]="fc(generalForm, 'address')"
+                    i18n-label="@@beycoOrderList.form.sharedValues.address"
+                    >
+                    @if (fc(generalForm, 'address').touched) {
+                      @if (fc(generalForm, 'address').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.address.error.required">
                                             Address is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c6">
-                                <textinput
-                                        label="Country of port of export"
-                                        [form]="fc(generalForm, 'country')"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.country"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'country').touched">
-                                        <div *ngIf="fc(generalForm, 'country').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.country.error.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c6">
+                  <textinput
+                    label="Country of port of export"
+                    [form]="fc(generalForm, 'country')"
+                    i18n-label="@@beycoOrderList.form.sharedValues.country"
+                    >
+                    @if (fc(generalForm, 'country').touched) {
+                      @if (fc(generalForm, 'country').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.country.error.required">
                                             Country is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                        </div>
-
-                        <div class="af-row">
-                            <div class="af-c6">
-                                <textinput
-                                        label="Latitude of port of export"
-                                        [form]="fc(generalForm, 'latitude')"
-                                        type="number"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.latitude"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'latitude').touched">
-                                        <div *ngIf="fc(generalForm, 'latitude').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.latitude.error.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c6">
+                  <textinput
+                    label="Latitude of port of export"
+                    [form]="fc(generalForm, 'latitude')"
+                    type="number"
+                    i18n-label="@@beycoOrderList.form.sharedValues.latitude"
+                    >
+                    @if (fc(generalForm, 'latitude').touched) {
+                      @if (fc(generalForm, 'latitude').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.latitude.error.required">
                                             Latitude component is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c6">
-                                <textinput
-                                        label="Longitude of port of export"
-                                        [form]="fc(generalForm, 'longitude')"
-                                        type="number"
-                                        i18n-label="@@beycoOrderList.form.sharedValues.longitude"
-                                >
-                                    <ng-container *ngIf="fc(generalForm, 'longitude').touched">
-                                        <div *ngIf="fc(generalForm, 'longitude').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.longitude.error.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c6">
+                  <textinput
+                    label="Longitude of port of export"
+                    [form]="fc(generalForm, 'longitude')"
+                    type="number"
+                    i18n-label="@@beycoOrderList.form.sharedValues.longitude"
+                    >
+                    @if (fc(generalForm, 'longitude').touched) {
+                      @if (fc(generalForm, 'longitude').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.sharedValues.longitude.error.required">
                                             Longitude component is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                        </div>
-
-                    </div>
+                      }
+                    }
+                  </textinput>
                 </div>
+              </div>
             </div>
+          </div>
+        </div>
+      }
 
-<!--            Coffee detail fields for each lot selected for Beyco order -->
-            <div class="af-form-row justify-content-between">
-                <div class="af-form-block--c6 ml-0" *ngFor="let form of coffeeInfoForms">
-                    <h2>{{ fc(form, 'title').value }}&nbsp;</h2>
-
-                    <div class="af-form-element">
-                        <div class="af-row">
-                            <div class="af-c8">
-                                <textinput
-                                        label="Name"
-                                        [form]="fc(form, 'name')"
-                                        i18n-label="@@beycoOrderList.form.coffee.name"
-                                >
-                                    <ng-container *ngIf="fc(form, 'name').touched">
-                                        <div *ngIf="fc(form, 'name').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.name.error.required">
+      <!--            Coffee detail fields for each lot selected for Beyco order -->
+      <div class="af-form-row justify-content-between">
+        @for (form of coffeeInfoForms; track form) {
+          <div class="af-form-block--c6 ms-0">
+            <h2>{{ fc(form, 'title').value }}&nbsp;</h2>
+            <div class="af-form-element">
+              <div class="af-row">
+                <div class="af-c8">
+                  <textinput
+                    label="Name"
+                    [form]="fc(form, 'name')"
+                    i18n-label="@@beycoOrderList.form.coffee.name"
+                    >
+                    @if (fc(form, 'name').touched) {
+                      @if (fc(form, 'name').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.name.error.required">
                                             Name is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c4">
-                                <textinput
-                                        label="Quantity"
-                                        [form]="fc(form, 'quantity')"
-                                        type="number"
-                                        i18n-label="@@beycoOrderList.form.coffee.quantity"
-                                        suffix="kg"
-                                >
-                                    <ng-container *ngIf="fc(form, 'quantity').touched">
-                                        <div *ngIf="fc(form, 'quantity').errors as errors" class="sc-invalid-feedback">
-                                            <span *ngIf="errors.required" i18n="@@beycoOrderList.form.coffee.quantity.error.required">Quantity is required</span>
-                                            <span *ngIf="errors.min" i18n="@@beycoOrderList.form.coffee.quantity.error.min">Quantity must not be negative</span>
-                                            <span *ngIf="errors.max" i18n="@@beycoOrderList.form.coffee.quantity.error.max">Quantity is too large</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c4">
+                  <textinput
+                    label="Quantity"
+                    [form]="fc(form, 'quantity')"
+                    type="number"
+                    i18n-label="@@beycoOrderList.form.coffee.quantity"
+                    suffix="kg"
+                    >
+                    @if (fc(form, 'quantity').touched) {
+                      @if (fc(form, 'quantity').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.coffee.quantity.error.required">Quantity is required</span>
+                          }
+                          @if (errors.min) {
+                            <span i18n="@@beycoOrderList.form.coffee.quantity.error.min">Quantity must not be negative</span>
+                          }
+                          @if (errors.max) {
+                            <span i18n="@@beycoOrderList.form.coffee.quantity.error.max">Quantity is too large</span>
+                          }
                         </div>
-
-                        <div class="af-row">
-                            <div class="af-c5">
-                                <textinput
-                                        label="Price"
-                                        [form]="fc(form, 'price')"
-                                        type="number"
-                                        i18n-label="@@beycoOrderList.form.coffee.price"
-                                >
-                                    <ng-container *ngIf="fc(form, 'price').touched">
-                                        <div *ngIf="fc(form, 'price').errors as errors" class="sc-invalid-feedback">
-                                            <span *ngIf="errors.required" i18n="@@beycoOrderList.form.coffee.price.error.required">Price is required</span>
-                                            <span *ngIf="errors.min" i18n="@@beycoOrderList.form.coffee.price.error.min">Price must not be negative</span>
-                                            <span *ngIf="errors.max" i18n="@@beycoOrderList.form.coffee.price.error.max">Price is too large</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c3">
-                                <single-choice
-                                        label="Currency"
-                                        [formControlInput]="fc(form, 'currency')"
-                                        [enumChoices]="Currency"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.currency"
-                                        [enumFormatter]="toUpperCase"
-                                >
-                                    <ng-container *ngIf="fc(form, 'currency').touched">
-                                        <div *ngIf="fc(form, 'currency').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.currency.errors.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c5">
+                  <textinput
+                    label="Price"
+                    [form]="fc(form, 'price')"
+                    type="number"
+                    i18n-label="@@beycoOrderList.form.coffee.price"
+                    >
+                    @if (fc(form, 'price').touched) {
+                      @if (fc(form, 'price').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.coffee.price.error.required">Price is required</span>
+                          }
+                          @if (errors.min) {
+                            <span i18n="@@beycoOrderList.form.coffee.price.error.min">Price must not be negative</span>
+                          }
+                          @if (errors.max) {
+                            <span i18n="@@beycoOrderList.form.coffee.price.error.max">Price is too large</span>
+                          }
+                        </div>
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c3">
+                  <single-choice
+                    label="Currency"
+                    [formControlInput]="fc(form, 'currency')"
+                    [enumChoices]="Currency"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.currency"
+                    [enumFormatter]="toUpperCase"
+                    >
+                    @if (fc(form, 'currency').touched) {
+                      @if (fc(form, 'currency').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.currency.errors.required">
                                             Currency is required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div class="af-c4">
-                                <single-choice
-                                        label="Price unit"
-                                        [formControlInput]="fc(form, 'priceUnit')"
-                                        [enumChoices]="PriceUnit"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.priceUnit"
-                                >
-                                    <ng-container *ngIf="fc(form, 'priceUnit').touched">
-                                        <div *ngIf="fc(form, 'priceUnit').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.priceUnit.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+                <div class="af-c4">
+                  <single-choice
+                    label="Price unit"
+                    [formControlInput]="fc(form, 'priceUnit')"
+                    [enumChoices]="PriceUnit"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.priceUnit"
+                    >
+                    @if (fc(form, 'priceUnit').touched) {
+                      @if (fc(form, 'priceUnit').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.priceUnit.errors.required">
                                             Price unit is required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                        </div>
-
-                        <div class="af-row">
-                            <div class="af-c5">
-                                <textinput
-                                        label="Region"
-                                        [form]="fc(form, 'region')"
-                                        i18n-label="@@beycoOrderList.form.coffee.region"
-                                ></textinput>
-                            </div>
-                            <div class="af-c4">
-                                <textinput
-                                        label="Country"
-                                        [form]="fc(form, 'country')"
-                                        i18n-label="@@beycoOrderList.form.coffee.country"
-                                >
-                                    <ng-container *ngIf="fc(form, 'country').touched">
-                                        <div *ngIf="fc(form, 'country').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.country.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c5">
+                  <textinput
+                    label="Region"
+                    [form]="fc(form, 'region')"
+                    i18n-label="@@beycoOrderList.form.coffee.region"
+                  ></textinput>
+                </div>
+                <div class="af-c4">
+                  <textinput
+                    label="Country"
+                    [form]="fc(form, 'country')"
+                    i18n-label="@@beycoOrderList.form.coffee.country"
+                    >
+                    @if (fc(form, 'country').touched) {
+                      @if (fc(form, 'country').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.country.errors.required">
                                             Country is required
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c3">
-                                <app-datepicker
-                                        label="Harvest period"
-                                        [form]="fc(form, 'harvestAt')"
-                                        [touchOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.harvestAt"
-                                >
-                                    <ng-container *ngIf="fc(form, 'harvestAt').touched">
-                                        <div *ngIf="fc(form, 'harvestAt').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.harvestAt.errors.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c3">
+                  <app-datepicker
+                    label="Harvest period"
+                    [form]="fc(form, 'harvestAt')"
+                    [touchOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.harvestAt"
+                    >
+                    @if (fc(form, 'harvestAt').touched) {
+                      @if (fc(form, 'harvestAt').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.harvestAt.errors.required">
                                             Harvest date is required
                                         </div>
-                                    </ng-container>
-                                </app-datepicker>
-                            </div>
-                        </div>
-
-                        <div class="af-row">
-                            <div class="af-c3">
-                                <single-choice
-                                        label="Incoterms"
-                                        [formControlInput]="fc(form, 'incoterms')"
-                                        [enumChoices]="Incoterms"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.incoterms"
-                                        [enumFormatter]="toUpperCase"
-                                >
-                                    <ng-container *ngIf="fc(form, 'incoterms').touched">
-                                        <div *ngIf="fc(form, 'incoterms').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.incoterms.errors.required">
+                      }
+                    }
+                  </app-datepicker>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c3">
+                  <single-choice
+                    label="Incoterms"
+                    [formControlInput]="fc(form, 'incoterms')"
+                    [enumChoices]="Incoterms"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.incoterms"
+                    [enumFormatter]="toUpperCase"
+                    >
+                    @if (fc(form, 'incoterms').touched) {
+                      @if (fc(form, 'incoterms').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.incoterms.errors.required">
                                             Incoterm is required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div class="af-c4">
-                                <single-choice
-                                        label="Species"
-                                        [formControlInput]="fc(form, 'species')"
-                                        [enumChoices]="Species"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.species"
-                                >
-                                    <ng-container *ngIf="fc(form, 'species').touched">
-                                        <div *ngIf="fc(form, 'species').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.species.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+                <div class="af-c4">
+                  <single-choice
+                    label="Species"
+                    [formControlInput]="fc(form, 'species')"
+                    [enumChoices]="Species"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.species"
+                    >
+                    @if (fc(form, 'species').touched) {
+                      @if (fc(form, 'species').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.species.errors.required">
                                             Species is required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div class="af-c5">
-                                <single-choice
-                                        label="Process"
-                                        [formControlInput]="fc(form, 'process')"
-                                        [enumChoices]="Process"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.process"
-                                        [enumFormatter]="titleCaseToSpacedString"
-                                >
-                                    <ng-container *ngIf="fc(form, 'process').touched">
-                                        <div *ngIf="fc(form, 'process').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.process.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+                <div class="af-c5">
+                  <single-choice
+                    label="Process"
+                    [formControlInput]="fc(form, 'process')"
+                    [enumChoices]="Process"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.process"
+                    [enumFormatter]="titleCaseToSpacedString"
+                    >
+                    @if (fc(form, 'process').touched) {
+                      @if (fc(form, 'process').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.process.errors.required">
                                             Process is required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                        </div>
-
-                        <div class="af-row" *ngIf="fc(form, 'incoterms').value === 'Other'">
-                            <div class="af-c12">
-                                <textinput
-                                        label="Other incoterms"
-                                        [form]="fc(form, 'customIncoterms')"
-                                        i18n-label="@@beycoOrderList.form.coffee.customIncoterms"
-                                >
-                                    <ng-container *ngIf="fc(form, 'customIncoterms').touched">
-                                        <div *ngIf="fc(form, 'customIncoterms').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.customIncoterms.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+              </div>
+              @if (fc(form, 'incoterms').value === 'Other') {
+                <div class="af-row">
+                  <div class="af-c12">
+                    <textinput
+                      label="Other incoterms"
+                      [form]="fc(form, 'customIncoterms')"
+                      i18n-label="@@beycoOrderList.form.coffee.customIncoterms"
+                      >
+                      @if (fc(form, 'customIncoterms').touched) {
+                        @if (fc(form, 'customIncoterms').errors; as errors) {
+                          <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.customIncoterms.errors.required">
                                             Other incoterms field is required, if 'Other' incoterms are selected
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                </div>
+              }
+              <div class="af-row">
+                <div class="af-c4">
+                  <textinput
+                    label="Min screen size"
+                    [form]="fc(form, 'minScreenSize')"
+                    type="number"
+                    appWholeNumber
+                    i18n-label="@@beycoOrderList.form.coffee.minScreenSize"
+                    >
+                    @if (fc(form, 'minScreenSize').touched) {
+                      @if (fc(form, 'minScreenSize').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.min) {
+                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.min">Min screen size should be 8 or more</span>
+                          }
+                          @if (errors.max) {
+                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.max">Min screen size should be 20 or less</span>
+                          }
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.required">Min screen size is required</span>
+                          }
                         </div>
-
-                        <div class="af-row">
-                            <div class="af-c4">
-                                <textinput
-                                        label="Min screen size"
-                                        [form]="fc(form, 'minScreenSize')"
-                                        type="number"
-                                        appWholeNumber
-                                        i18n-label="@@beycoOrderList.form.coffee.minScreenSize"
-                                >
-                                    <ng-container *ngIf="fc(form, 'minScreenSize').touched">
-                                        <div *ngIf="fc(form, 'minScreenSize').errors as errors" class="sc-invalid-feedback">
-                                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.min" *ngIf="errors.min">Min screen size should be 8 or more</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.max" *ngIf="errors.max">Min screen size should be 20 or less</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.required" *ngIf="errors.required">Min screen size is required</span>
-                                        </div>
-                                        <div *ngIf="form.errors as errors" class="sc-invalid-feedback">
-                                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.minIsMax" *ngIf="errors.minIsMax">Min screen size should be lower than max screen size</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c4">
-                                <textinput
-                                        label="Max screen size"
-                                        [form]="fc(form, 'maxScreenSize')"
-                                        type="number"
-                                        appWholeNumber
-                                        i18n-label="@@beycoOrderList.form.coffee.maxScreenSize"
-                                >
-                                    <ng-container *ngIf="fc(form, 'maxScreenSize').touched">
-                                        <div *ngIf="fc(form, 'maxScreenSize').errors as errors" class="sc-invalid-feedback">
-                                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.min" *ngIf="errors.min">Max screen size should be 8 or more</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.max" *ngIf="errors.max">Max screen size should be 20 or less</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.required" *ngIf="errors.required">Max screen size is required</span>
-                                        </div>
-                                        <div *ngIf="form.errors as errors" class="sc-invalid-feedback">
-                                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.minIsMax" *ngIf="errors.minIsMax">Max screen size should be larger than min screen size</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                            <div class="af-c4">
-                                <textinput
-                                        label="Cupping score"
-                                        [form]="fc(form, 'cuppingScore')"
-                                        type="number"
-                                        appWholeNumber
-                                        i18n-label="@@beycoOrderList.form.coffee.cuppingScore"
-                                >
-                                    <ng-container *ngIf="fc(form, 'cuppingScore').touched">
-                                        <div *ngIf="fc(form, 'cuppingScore').errors as errors" class="sc-invalid-feedback">
-                                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.min" *ngIf="errors.min">Cupping score should be 60 or more</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.max" *ngIf="errors.max">Cupping score should be 100 or less</span>
-                                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.required" *ngIf="errors.required">Cupping score is required</span>
-                                        </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
+                      }
+                      @if (form.errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.minIsMax) {
+                            <span i18n="@@beycoOrderList.form.coffee.minScreenSize.errors.minIsMax">Min screen size should be lower than max screen size</span>
+                          }
                         </div>
-
-                        <div class="af-row">
-                            <div class="af-c6">
-                                <single-choice
-                                        label="Varieties"
-                                        [formControlInput]="fc(form, 'varieties')"
-                                        [enumChoices]="Variety"
-                                        [allowMultiple]="true"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.varieties"
-                                        [enumFormatter]="titleCaseToSpacedString"
-                                >
-                                    <ng-container *ngIf="fc(form, 'varieties').touched">
-                                        <div *ngIf="fc(form, 'varieties').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.varieties.errors.required">
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c4">
+                  <textinput
+                    label="Max screen size"
+                    [form]="fc(form, 'maxScreenSize')"
+                    type="number"
+                    appWholeNumber
+                    i18n-label="@@beycoOrderList.form.coffee.maxScreenSize"
+                    >
+                    @if (fc(form, 'maxScreenSize').touched) {
+                      @if (fc(form, 'maxScreenSize').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.min) {
+                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.min">Max screen size should be 8 or more</span>
+                          }
+                          @if (errors.max) {
+                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.max">Max screen size should be 20 or less</span>
+                          }
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.required">Max screen size is required</span>
+                          }
+                        </div>
+                      }
+                      @if (form.errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.minIsMax) {
+                            <span i18n="@@beycoOrderList.form.coffee.maxScreenSize.errors.minIsMax">Max screen size should be larger than min screen size</span>
+                          }
+                        </div>
+                      }
+                    }
+                  </textinput>
+                </div>
+                <div class="af-c4">
+                  <textinput
+                    label="Cupping score"
+                    [form]="fc(form, 'cuppingScore')"
+                    type="number"
+                    appWholeNumber
+                    i18n-label="@@beycoOrderList.form.coffee.cuppingScore"
+                    >
+                    @if (fc(form, 'cuppingScore').touched) {
+                      @if (fc(form, 'cuppingScore').errors; as errors) {
+                        <div class="sc-invalid-feedback">
+                          @if (errors.min) {
+                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.min">Cupping score should be 60 or more</span>
+                          }
+                          @if (errors.max) {
+                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.max">Cupping score should be 100 or less</span>
+                          }
+                          @if (errors.required) {
+                            <span i18n="@@beycoOrderList.form.coffee.cuppingScore.errors.required">Cupping score is required</span>
+                          }
+                        </div>
+                      }
+                    }
+                  </textinput>
+                </div>
+              </div>
+              <div class="af-row">
+                <div class="af-c6">
+                  <single-choice
+                    label="Varieties"
+                    [formControlInput]="fc(form, 'varieties')"
+                    [enumChoices]="Variety"
+                    [allowMultiple]="true"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.varieties"
+                    [enumFormatter]="titleCaseToSpacedString"
+                    >
+                    @if (fc(form, 'varieties').touched) {
+                      @if (fc(form, 'varieties').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.varieties.errors.required">
                                             Varieties are required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div class="af-c6">
-                                <single-choice
-                                        label="Quality segments"
-                                        [formControlInput]="fc(form, 'qualitySegments')"
-                                        [enumChoices]="QualitySegment"
-                                        [allowMultiple]="true"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.qualitySegments"
-                                        [enumFormatter]="titleCaseToSpacedString"
-                                >
-                                    <ng-container *ngIf="fc(form, 'qualitySegments').touched">
-                                        <div *ngIf="fc(form, 'qualitySegments').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.qualitySegments.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+                <div class="af-c6">
+                  <single-choice
+                    label="Quality segments"
+                    [formControlInput]="fc(form, 'qualitySegments')"
+                    [enumChoices]="QualitySegment"
+                    [allowMultiple]="true"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.qualitySegments"
+                    [enumFormatter]="titleCaseToSpacedString"
+                    >
+                    @if (fc(form, 'qualitySegments').touched) {
+                      @if (fc(form, 'qualitySegments').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.qualitySegments.errors.required">
                                             Quality segments are required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                        </div>
-
-                        <div class="af-row" *ngIf="fc(form, 'varieties').value?.includes('Other')">
-                            <div class="af-c12">
-                                <textinput
-                                        label="Other variety"
-                                        [form]="fc(form, 'customVariety')"
-                                        i18n-label="@@beycoOrderList.form.coffee.customVariety"
-                                >
-                                    <ng-container *ngIf="fc(form, 'customVariety').touched">
-                                        <div *ngIf="fc(form, 'customVariety').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.customVariety.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+              </div>
+              @if (fc(form, 'varieties').value?.includes('Other')) {
+                <div class="af-row">
+                  <div class="af-c12">
+                    <textinput
+                      label="Other variety"
+                      [form]="fc(form, 'customVariety')"
+                      i18n-label="@@beycoOrderList.form.coffee.customVariety"
+                      >
+                      @if (fc(form, 'customVariety').touched) {
+                        @if (fc(form, 'customVariety').errors; as errors) {
+                          <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.customVariety.errors.required">
                                             Other variety field is required, if 'Other' variety is selected
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                        </div>
-
-                        <div class="af-row">
-                            <div class="af-c6">
-                                <single-choice
-                                        label="Grades"
-                                        [formControlInput]="fc(form, 'grades')"
-                                        [enumChoices]="Grade"
-                                        [allowMultiple]="true"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.grades"
-                                        [enumFormatter]="formatGrades"
-                                >
-                                    <ng-container *ngIf="fc(form, 'grades').touched">
-                                        <div *ngIf="fc(form, 'grades').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.grades.errors.required">
+                        }
+                      }
+                    </textinput>
+                  </div>
+                </div>
+              }
+              <div class="af-row">
+                <div class="af-c6">
+                  <single-choice
+                    label="Grades"
+                    [formControlInput]="fc(form, 'grades')"
+                    [enumChoices]="Grade"
+                    [allowMultiple]="true"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.grades"
+                    [enumFormatter]="formatGrades"
+                    >
+                    @if (fc(form, 'grades').touched) {
+                      @if (fc(form, 'grades').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.grades.errors.required">
                                             Grades are required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                            <div class="af-c6">
-                                <single-choice
-                                        label="Certificates"
-                                        [formControlInput]="fc(form, 'certificates')"
-                                        [enumChoices]="Certificate"
-                                        [allowMultiple]="true"
-                                        [touchedOnBlur]="true"
-                                        i18n-label="@@beycoOrderList.form.coffee.certificates"
-                                        [enumFormatter]="titleCaseToSpacedString"
-                                >
-                                    <ng-container *ngIf="fc(form, 'certificates').touched">
-                                        <div *ngIf="fc(form, 'certificates').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.certificates.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+                <div class="af-c6">
+                  <single-choice
+                    label="Certificates"
+                    [formControlInput]="fc(form, 'certificates')"
+                    [enumChoices]="Certificate"
+                    [allowMultiple]="true"
+                    [touchedOnBlur]="true"
+                    i18n-label="@@beycoOrderList.form.coffee.certificates"
+                    [enumFormatter]="titleCaseToSpacedString"
+                    >
+                    @if (fc(form, 'certificates').touched) {
+                      @if (fc(form, 'certificates').errors; as errors) {
+                        <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.certificates.errors.required">
                                             Certificates are required
                                         </div>
-                                    </ng-container>
-                                </single-choice>
-                            </div>
-                        </div>
-
-                        <div class="af-row" *ngIf="fc(form, 'grades').value?.includes('Other')">
-                            <div class="af-c12">
-                                <textinput
-                                        label="Other grade"
-                                        [form]="fc(form, 'additionalQualityDescriptors')"
-                                        i18n-label="@@beycoOrderList.form.coffee.additionalQualityDescriptors"
-                                >
-                                    <ng-container *ngIf="fc(form, 'additionalQualityDescriptors').touched">
-                                        <div *ngIf="fc(form, 'additionalQualityDescriptors').errors as errors" class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.additionalQualityDescriptors.errors.required">
+                      }
+                    }
+                  </single-choice>
+                </div>
+              </div>
+              @if (fc(form, 'grades').value?.includes('Other')) {
+                <div class="af-row">
+                  <div class="af-c12">
+                    <textinput
+                      label="Other grade"
+                      [form]="fc(form, 'additionalQualityDescriptors')"
+                      i18n-label="@@beycoOrderList.form.coffee.additionalQualityDescriptors"
+                      >
+                      @if (fc(form, 'additionalQualityDescriptors').touched) {
+                        @if (fc(form, 'additionalQualityDescriptors').errors; as errors) {
+                          <div class="sc-invalid-feedback" i18n="@@beycoOrderList.form.coffee.additionalQualityDescriptors.errors.required">
                                             Other grade field is required, if 'Other' grade is selected
                                         </div>
-                                    </ng-container>
-                                </textinput>
-                            </div>
-                        </div>
-                    </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
                 </div>
+              }
             </div>
+          </div>
+        }
+      </div>
 
-<!--            Buttons -->
-            <div class="af-form-row" *ngIf="generalForm">
-                <div class="af-form-block--c12">
-                    <div class="af-bottom-buttons">
-                        <button class="btn" type="button" (click)="submit()">
-                            <span i18n="@@beycoOrderList.button.submit">Submit</span>
-                        </button>
-                    </div>
-                </div>
+      <!--            Buttons -->
+      @if (generalForm) {
+        <div class="af-form-row">
+          <div class="af-form-block--c12">
+            <div class="af-bottom-buttons">
+              <button class="btn" type="button" (click)="submit()">
+                <span i18n="@@beycoOrderList.button.submit">Submit</span>
+              </button>
             </div>
+          </div>
         </div>
+      }
     </div>
+  </div>
 </app-authorised-layout>

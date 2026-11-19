@@ -5,7 +5,8 @@ import { StakeholdersValueChainComponent } from './product-label-stakeholders/st
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'value-chain'
+    redirectTo: 'value-chain',
+    pathMatch: 'full'
   },
   {
     path: 'value-chain',

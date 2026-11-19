@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {dateISOString, generateFormFromMetadata} from 'src/shared/utils';
 import { ApiActivityProofValidationScheme } from './validation';
 import { EnumSifrant } from 'src/app/shared-services/enum-sifrant';
@@ -14,9 +14,11 @@ import { CodebookTranslations } from '../../../../shared-services/codebook-trans
 import { ProcessingEvidenceTypeControllerService } from '../../../../../api/api/processingEvidenceTypeController.service';
 
 @Component({
-  selector: 'app-additional-proof-item',
-  templateUrl: './additional-proof-item.component.html',
-  styleUrls: ['./additional-proof-item.component.scss']
+    selector: 'app-additional-proof-item',
+    templateUrl: './additional-proof-item.component.html',
+    styleUrls: ['./additional-proof-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AdditionalProofItemComponent extends GenericEditableItemComponent<ApiActivityProof> implements OnInit {
 
@@ -85,7 +87,7 @@ export class AdditionalProofItemComponent extends GenericEditableItemComponent<A
     }
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiActivityProof.formMetadata(), value, ApiActivityProofValidationScheme);
   }
 

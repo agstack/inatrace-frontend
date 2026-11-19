@@ -16,7 +16,7 @@ export class ProcessingEvidenceTypeService extends GeneralSifrantService<ApiProc
     private codebookService: ProcessingEvidenceTypeControllerService,
     protected codebookTranslations: CodebookTranslations,
     private type: string,
-    private valueChainIdList?: Array<number>
+    private valueChainIdList?: number[]
   ) {
     super();
   }
@@ -62,7 +62,7 @@ export class ProcessingEvidenceTypeService extends GeneralSifrantService<ApiProc
     return $localize`:@@processingEvidenceType.input.placehoder:Select document type`;
   }
 
-  private fetchProcessingEvidenceTypes(reqParams, valueChainIdList?: Array<number>): Observable<ApiPaginatedResponseApiProcessingEvidenceType> {
+  private fetchProcessingEvidenceTypes(reqParams, valueChainIdList?: number[]): Observable<ApiPaginatedResponseApiProcessingEvidenceType> {
     if (valueChainIdList !== null && valueChainIdList !== undefined) {
       return this.codebookService.listProcessingEvidenceTypesByValueChainsByMap({ valueChainIds: valueChainIdList, ...reqParams });
     } else {

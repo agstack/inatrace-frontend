@@ -1,17 +1,17 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ApiProcessingAction } from '../../../../../../api/model/apiProcessingAction';
 import { ApiProcessingEvidenceField } from '../../../../../../api/model/apiProcessingEvidenceField';
 import { ProcessingOrderOutputComponent } from './processing-order-output.component';
 
 describe('ProcessingOrderOutputComponent', () => {
-  function outputForm(requiredEvidenceFieldValues: any[] = []): FormGroup {
-    return new FormGroup({
-      totalQuantity: new FormControl(null),
-      semiProduct: new FormControl(null),
-      facility: new FormControl(null),
-      finalProduct: new FormControl(null),
-      measureUnitType: new FormControl(null),
-      requiredEvidenceFieldValues: new FormControl(requiredEvidenceFieldValues)
+  function outputForm(requiredEvidenceFieldValues: any[] = []): UntypedFormGroup {
+    return new UntypedFormGroup({
+      totalQuantity: new UntypedFormControl(null),
+      semiProduct: new UntypedFormControl(null),
+      facility: new UntypedFormControl(null),
+      finalProduct: new UntypedFormControl(null),
+      measureUnitType: new UntypedFormControl(null),
+      requiredEvidenceFieldValues: new UntypedFormControl(requiredEvidenceFieldValues)
     });
   }
 
@@ -43,8 +43,8 @@ describe('ProcessingOrderOutputComponent', () => {
     component.setRequiredFieldsAndListenersForTSO(firstOutput);
     component.setRequiredFieldsAndListenersForTSO(secondOutput);
 
-    const firstEvidence = firstOutput.get('requiredProcEvidenceFieldGroup') as FormGroup;
-    const secondEvidence = secondOutput.get('requiredProcEvidenceFieldGroup') as FormGroup;
+    const firstEvidence = firstOutput.get('requiredProcEvidenceFieldGroup') as UntypedFormGroup;
+    const secondEvidence = secondOutput.get('requiredProcEvidenceFieldGroup') as UntypedFormGroup;
     expect(firstEvidence.get('moisture').value).toBe(11.5);
     expect(firstEvidence.get('brokenShare').value).toBe(0);
     expect(secondEvidence.get('moisture').value).toBe(9.25);
@@ -65,7 +65,7 @@ describe('ProcessingOrderOutputComponent', () => {
 
     component.setRequiredFieldsAndListenersForTSO(output);
 
-    const evidence = output.get('requiredProcEvidenceFieldGroup') as FormGroup;
+    const evidence = output.get('requiredProcEvidenceFieldGroup') as UntypedFormGroup;
     expect(evidence.get('moisture').invalid).toBe(true);
     expect(evidence.get('brokenShare').valid).toBe(true);
 

@@ -1,30 +1,44 @@
-<ng-container *ngFor="let item of sortOptions; let i= index;">
-  <th (click)="onClick(item, i)" *ngIf="!item.hide">
-    <div class="d-flex justify-content-start align-items-center" *ngIf="!item.hide">
-      <div
-        [class.sorter-oznacen]="oznacen == i">
-        {{item.name}}
-      </div>
-      <div *ngIf="!item.inactive">
-        <checkbox-input *ngIf="item.selectAllCheckbox" [checked]="cbChecked.value" inTable="true"></checkbox-input>
-        <ng-container *ngIf="!item.selectAllCheckbox">
+@for (item of sortOptions; track item; let i = $index) {
+  @if (!item.hide) {
+    <th (click)="onClick(item, i)">
+      @if (!item.hide) {
+        <div class="d-flex justify-content-start align-items-center">
           <div
-            class="sorter-box-disabled"
-            *ngIf="oznacen !== i">
-            <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
+            [class.sorter-oznacen]="oznacen === i">
+            {{item.name}}
           </div>
-          <div
-            class="sorter-box"
-            *ngIf="oznacen == i && sortOrder===this.ASC">
-            <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
-          </div>
-          <div
-            class="sorter-box"
-            *ngIf="oznacen == i && sortOrder===this.DESC">
-            <fa-icon [icon]="faCaretDown" class="sorter-icon"></fa-icon>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-  </th>
-</ng-container>
+          @if (!item.inactive) {
+            <div>
+              @if (item.selectAllCheckbox) {
+                <checkbox-input [checked]="cbChecked.value" inTable="true"></checkbox-input>
+              }
+              @if (!item.selectAllCheckbox) {
+                @if (oznacen !== i) {
+                  <div
+                    class="sorter-box-disabled"
+                    >
+                    <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
+                  </div>
+                }
+                @if (oznacen === i && sortOrder===this.ASC) {
+                  <div
+                    class="sorter-box"
+                    >
+                    <fa-icon [icon]="faCaretUp" class="sorter-icon"></fa-icon>
+                  </div>
+                }
+                @if (oznacen === i && sortOrder===this.DESC) {
+                  <div
+                    class="sorter-box"
+                    >
+                    <fa-icon [icon]="faCaretDown" class="sorter-icon"></fa-icon>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+    </th>
+  }
+}

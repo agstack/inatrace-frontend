@@ -2,46 +2,55 @@
 
   <div class="modal-header">
     <h4 class="modal-title sp-faq-modal-title">{{ title }}</h4>
-    <button *ngIf="dismissible" type="button" class="close" aria-label="Close"
-            (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    @if (dismissible) {
+      <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
+    }
   </div>
 
   <div class="modal-body">
 
     <textinput
-            label="Label title"
-            placeholder="Enter the label title"
-            i18n-label="@@productLabel.newLabelModal.textinput.title.label"
-            i18n-placeholder="@@productLabel.newLabelModal.textinput.title.placeholder"
-            style="width: 100%"
-            [form]="form.get('title')"
-            [isInvalid]="submitted && form.get('title').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="form.get('title').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@productLabel.newLabelModal.textinput.title.error.required">
+      label="Label title"
+      placeholder="Enter the label title"
+      i18n-label="@@productLabel.newLabelModal.textinput.title.label"
+      i18n-placeholder="@@productLabel.newLabelModal.textinput.title.placeholder"
+      style="width: 100%"
+      [form]="form.get('title')"
+      [isInvalid]="submitted && form.get('title').invalid">
+      @if (submitted) {
+        @if (form.get('title').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@productLabel.newLabelModal.textinput.title.error.required">
             <span>
               Label title is required
             </span>
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </textinput>
 
     <single-choice
-            label="Select label language"
-            i18n-label="@@productLabel.newLabelModal.select.lang.label"
-            [formControlInput]="form.get('language')"
-            [codebookService]="codebookLanguageCodes"
-            [isInvalidChoice]="submitted && form.get('language').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="form.get('language').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required" i18n="@@productLabel.newLabelModal.select.lang.error.required">
+      label="Select label language"
+      i18n-label="@@productLabel.newLabelModal.select.lang.label"
+      [formControlInput]="form.get('language')"
+      [codebookService]="codebookLanguageCodes"
+      [isInvalidChoice]="submitted && form.get('language').invalid">
+      @if (submitted) {
+        @if (form.get('language').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div i18n="@@productLabel.newLabelModal.select.lang.error.required">
             Label language is required
           </div>
-        </div>
-      </ng-container>
+            }
+          </div>
+        }
+      }
     </single-choice>
 
   </div>

@@ -1,8 +1,8 @@
 @import 'scss/unit.scss';
 @import 'variables';
-@import '~bootstrap/scss/bootstrap';
-@import "~@ng-select/ng-select/scss/default.theme.scss";
-@import '~ngx-toastr/toastr';
+@import 'bootstrap/scss/bootstrap';
+@import "@ng-select/ng-select/scss/default.theme";
+@import 'ngx-toastr/toastr';
 @import 'scss/fontawesome.scss';
 @import 'scss/solid.scss';
 @import 'scss/pathway-gothic-one-regular';
@@ -240,6 +240,32 @@ p {
 .login-left-inner{
   margin-left: 50px;
   margin-right: 80px;
+}
+
+// Below the large breakpoint the login is a single column: let it grow with the content,
+// give the fixed logo room above the title and keep the side margins from forcing a
+// horizontal scroll on phones.
+@media (max-width: 991.98px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .login-row {
+    height: auto;
+    min-height: calc(100vh - 2rem);
+    padding-top: 1.5rem;
+  }
+
+  .login-left-inner {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .login-right-side-text {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 2rem;
+  }
 }
 
 // /////////////////////////////////////////
@@ -1875,6 +1901,11 @@ animation-timing-function: ease-in;
     width: 40%;
     display: inline-block;
     vertical-align: top;
+    box-sizing: border-box;
+    padding-right: .5rem;
+    // Long labels without spaces (for example "State/Province/Region") must wrap instead of
+    // running over the value column.
+    overflow-wrap: anywhere;
     // background-color: red;
   }
 
@@ -2264,7 +2295,7 @@ tr:nth-child(odd) {
       &-c11 {
         @include make-col(11);
 
-        max-width: calc(91.6666666667 - 10px) !important;
+        max-width: calc(91.6666666667% - 10px) !important;
         background-color: $af-row;
         margin-left: 20px;
 
@@ -2542,9 +2573,9 @@ $ustwo-colour-delux: #666;
     opacity: 0.95;
   }
 
-  &.bs-tooltip-left {
+  &.bs-tooltip-start {
     padding: 0 0.8rem;
-    .arrow {
+    .tooltip-arrow {
       top: calc(50% - .8rem);
       width: .8rem;
       &:before {
@@ -2554,9 +2585,9 @@ $ustwo-colour-delux: #666;
     }
   }
 
-  &.bs-tooltip-right {
+  &.bs-tooltip-end {
     padding: 0 0.8rem;
-    .arrow {
+    .tooltip-arrow {
       top: calc(50% - .8rem);
       width: 0.8rem;
       &:before {
@@ -2566,15 +2597,15 @@ $ustwo-colour-delux: #666;
     }
   }
 
-  &.bs-tooltip-right-top {
-    .arrow {
+  &.bs-tooltip-end-top {
+    .tooltip-arrow {
       top: 1.3rem;
     }
   }
 
   &.bs-tooltip-bottom {
     padding: 0.8rem 0;
-    .arrow {
+    .tooltip-arrow {
       left: calc(50% - .8rem);
       top: 0.4rem;
       &:before {
@@ -4184,4 +4215,25 @@ input.toggle-switch-checkbox:checked + label.toggle-switch-label:after {
 
 .geoid-content {
   word-break: break-all;
+}
+
+
+/* Bootstrap 5 compatibility for classes used by the app */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+.form-row > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
 }

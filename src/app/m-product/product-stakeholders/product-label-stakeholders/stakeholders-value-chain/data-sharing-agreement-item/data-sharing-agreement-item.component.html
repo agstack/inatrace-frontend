@@ -1,83 +1,92 @@
 <smart-tag
-        [isOpen]="isOpen && !rawObjectData"
-        [readOnly]="rawObjectData"
-        (onDelete)="delete()"
-        (onEdit)="toggle($event)"
-        [formControlInput]="originalFormControl"
-        [disableDelete]="disableDelete"
-        [viewOnly]="readOnly">
+  [isOpen]="isOpen && !rawObjectData"
+  [readOnly]="rawObjectData"
+  (onDelete)="delete()"
+  (onEdit)="toggle($event)"
+  [formControlInput]="originalFormControl"
+  [disableDelete]="disableDelete"
+  [viewOnly]="readOnly">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="contentObject.document && contentObject.description">
-          {{ contentObject.document.name }} ({{ contentObject.description }})
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (contentObject.document && contentObject.description) {
+            <div>
+              {{ contentObject.document.name }} ({{ contentObject.description }})
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-        <h4 class="sp-subform-title">{{ title }}</h4>
-
-        <textinput
-                label="Description"
-                [form]="form.get('description')"
-                style="width: 100%"
-                [textarea]="true"
-                i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.description.label"
-                [isInvalid]="submitted && form.get('description').invalid"
-                [readOnly]="readOnly">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('description').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.description.error">
-                  <span>
-                    Description is required
-                  </span>
-              </div>
-            </div>
-          </ng-container>
-        </textinput>
-
-        <attachment-uploader
-                allowedMimeType="['application/pdf']"
-                allowedMimeTypeErrorMessage="Upload only file type: PDF."
-                mode="simpleAsTextField"
-                label="Document"
-                i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.label"
-                i18n-allowedMimeTypeErrorMessage="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.allowedMimeTypeErrorMessage"
-                [form]="form.get('document')"
-                [attachmentUploaderId]="'dataSharingAgreements'+listEditorManagerPosition"
-                [invalid]="submitted && form.get('document').invalid"
-                [readOnly]="form.get('document').disabled || readOnly">
-          <attachment-uploader-content i18n="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.content">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <h4 class="sp-subform-title">{{ title }}</h4>
+          <textinput
+            label="Description"
+            [form]="form.get('description')"
+            style="width: 100%"
+            [textarea]="true"
+            i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.description.label"
+            [isInvalid]="submitted && form.get('description').invalid"
+            [readOnly]="readOnly">
+            @if (submitted) {
+              @if (form.get('description').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.description.error">
+                      <span>
+                        Description is required
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </textinput>
+          <attachment-uploader
+            allowedMimeType="['application/pdf']"
+            allowedMimeTypeErrorMessage="Upload only file type: PDF."
+            mode="simpleAsTextField"
+            label="Document"
+            i18n-label="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.label"
+            i18n-allowedMimeTypeErrorMessage="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.allowedMimeTypeErrorMessage"
+            [form]="form.get('document')"
+            [attachmentUploaderId]="'dataSharingAgreements'+listEditorManagerPosition"
+            [invalid]="submitted && form.get('document').invalid"
+            [readOnly]="form.get('document').disabled || readOnly">
+            <attachment-uploader-content i18n="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.content">
             Upload data sharing agreement document
           </attachment-uploader-content>
-          <attachment-uploader-errors>
-            <ng-container *ngIf="submitted">
-              <div *ngIf="form.get('document').errors as errors" validation-error class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.error">
+            <attachment-uploader-errors>
+              @if (submitted) {
+                @if (form.get('document').errors; as errors) {
+                  <div validation-error class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n="@@productLabelStakeholders.dataSharingAgreements.listEditor.item.attachment-uploader.error">
                   <span>
                     Document is required
                   </span>
                 </div>
-              </div>
-            </ng-container>
-          </attachment-uploader-errors>
-        </attachment-uploader>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-                (onSave)="save()"
-                (onCancel)="cancel()"
-                [error]="submitted && form.invalid"
-                [cancelButtonOnly]="readOnly">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                    }
+                  </div>
+                }
+              }
+            </attachment-uploader-errors>
+          </attachment-uploader>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="save()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid"
+            [cancelButtonOnly]="readOnly">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

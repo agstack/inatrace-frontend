@@ -2,201 +2,206 @@
   <app-product-label-left-panel-content>
   </app-product-label-left-panel-content>
 
-  <div class="main"
-    *ngIf="batchDetailForm">
-
-    <div class="row">
-      <div class="col">
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex align-items-start content-element--row1">
-            <div class="title-page content-element--title">{{title}}</div>
+  @if (batchDetailForm) {
+    <div class="main"
+      >
+      <div class="row">
+        <div class="col">
+          <div class="main-inside-top content-element">
+            <div class="d-flex align-items-start content-element--row1">
+              <div class="title-page content-element--title">{{title}}</div>
+            </div>
           </div>
-        </div>
-
-        <div class="main-inside-main">
-
-          <textinput
-            hideAsterisk="true"
-            [form]="batchDetailForm.get('number')"
-            label="Batch number"
-            style="width: 100%"
-            placeholder="Enter batch number"
-            i18n-label="@@batchDetail.textinput.number.label"
-            i18n-placeholder="@@batchDetail.textinput.number.placeholder"
-            [isInvalid]="submitted && batchDetailForm.get('number').invalid">
-            <ng-container *ngIf="submitted">
-              <div *ngIf="batchDetailForm.get('number').errors as errors" class="sc-invalid-feedback">
-                <div *ngIf="errors.required" i18n="@@batchDetail.textinput.number.error">
+          <div class="main-inside-main">
+            <textinput
+              hideAsterisk="true"
+              [form]="batchDetailForm.get('number')"
+              label="Batch number"
+              style="width: 100%"
+              placeholder="Enter batch number"
+              i18n-label="@@batchDetail.textinput.number.label"
+              i18n-placeholder="@@batchDetail.textinput.number.placeholder"
+              [isInvalid]="submitted && batchDetailForm.get('number').invalid">
+              @if (submitted) {
+                @if (batchDetailForm.get('number').errors; as errors) {
+                  <div class="sc-invalid-feedback">
+                    @if (errors.required) {
+                      <div i18n="@@batchDetail.textinput.number.error">
                   Batch number is required
                 </div>
-              </div>
-            </ng-container>
-          </textinput>
-
-          <checkbox-input #conditionEl [form]="batchDetailForm.get('checkAuthenticity')">
-            <checkbox-input-rich-label i18n="@@batchDetail.checkbox-input.checkAuthenticity">
+                    }
+                  </div>
+                }
+              }
+            </textinput>
+            <checkbox-input #conditionEl [form]="batchDetailForm.get('checkAuthenticity')">
+              <checkbox-input-rich-label i18n="@@batchDetail.checkbox-input.checkAuthenticity">
               Check Authenticity
             </checkbox-input-rich-label>
-          </checkbox-input>
-
-          <ng-container *ngIf="batchDetailForm.get('checkAuthenticity').value">
-
-            <app-datepicker
-              label="Production date"
-              i18n-label="@@batchDetail.datepicker.productionDate.label"
-              [form]="batchDetailForm.get('productionDate')"
-              [invalid]="submitted && batchDetailForm.get('productionDate').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="batchDetailForm.get('productionDate').errors as errors" class="sc-invalid-feedback">
-                  <div *ngIf="errors.atLeastOneDate" i18n="@@batchDetail.datepicker.productionDate.error">
+            </checkbox-input>
+            @if (batchDetailForm.get('checkAuthenticity').value) {
+              <app-datepicker
+                label="Production date"
+                i18n-label="@@batchDetail.datepicker.productionDate.label"
+                [form]="batchDetailForm.get('productionDate')"
+                [invalid]="submitted && batchDetailForm.get('productionDate').invalid">
+                @if (submitted) {
+                  @if (batchDetailForm.get('productionDate').errors; as errors) {
+                    <div class="sc-invalid-feedback">
+                      @if (errors.atLeastOneDate) {
+                        <div i18n="@@batchDetail.datepicker.productionDate.error">
                     At least one of the dates is required
                   </div>
-                </div>
-              </ng-container>
-            </app-datepicker>
-
-            <app-datepicker
-              label="Expiry date"
-              i18n-label="@@batchDetail.datepicker.expiryDate.label"
-              [form]="batchDetailForm.get('expiryDate')"
-              [invalid]="submitted && batchDetailForm.get('expiryDate').invalid">
-              <ng-container *ngIf="submitted">
-                <div *ngIf="batchDetailForm.get('expiryDate').errors as errors" class="sc-invalid-feedback" i18n="@@batchDetail.datepicker.expiryDate.errors">
-                  <div *ngIf="errors.endBeforeStart">
+                      }
+                    </div>
+                  }
+                }
+              </app-datepicker>
+              <app-datepicker
+                label="Expiry date"
+                i18n-label="@@batchDetail.datepicker.expiryDate.label"
+                [form]="batchDetailForm.get('expiryDate')"
+                [invalid]="submitted && batchDetailForm.get('expiryDate').invalid">
+                @if (submitted) {
+                  @if (batchDetailForm.get('expiryDate').errors; as errors) {
+                    <div class="sc-invalid-feedback" i18n="@@batchDetail.datepicker.expiryDate.errors">
+                  @if (errors.endBeforeStart) {
+<div>
                     Expiry date must be later than prodution date
                   </div>
-                  <div *ngIf="errors.atLeastOneDate">
+}
+                  @if (errors.atLeastOneDate) {
+<div>
                     At least one of the dates is required
                   </div>
+}
                 </div>
-              </ng-container>
-            </app-datepicker>
-
-            <attachment-uploader
-              rootImageUrl="{{rootImageUrl}}"
-              allowedMimeType="[image/png', 'image/jpeg']"
-              allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
-              mode="simpleAsTextField"
-              label="Instructions Image"
-              i18n-label="@@batchDetail.attachment-uploader.batchImage.label"
-              i18n-allowedMimeTypeErrorMessage="@@batchDetail.attachment-uploader.batchImage.allowedMimeTypeErrorMessage"
-              [flexCol]="true"
-              (onFileInfoLoad)="onFileUpload($event)"
-              [form]="batchDetailForm.get('photo')"
-              [attachmentUploaderId]="'batch_instructions_image'"
-              comment="Please upload an image that shows, where batch number can be found on your product.">
-              <attachment-uploader-content i18n="@@batchDetail.attachment-uploader.batchImage.content">
+                  }
+                }
+              </app-datepicker>
+              <attachment-uploader
+                rootImageUrl="{{rootImageUrl}}"
+                allowedMimeType="[image/png', 'image/jpeg']"
+                allowedMimeTypeErrorMessage="Upload only file types: PNG, JPG and JPEG."
+                mode="simpleAsTextField"
+                label="Instructions Image"
+                i18n-label="@@batchDetail.attachment-uploader.batchImage.label"
+                i18n-allowedMimeTypeErrorMessage="@@batchDetail.attachment-uploader.batchImage.allowedMimeTypeErrorMessage"
+                [flexCol]="true"
+                (onFileInfoLoad)="onFileUpload($event)"
+                [form]="batchDetailForm.get('photo')"
+                [attachmentUploaderId]="'batch_instructions_image'"
+                comment="Please upload an image that shows, where batch number can be found on your product.">
+                <attachment-uploader-content i18n="@@batchDetail.attachment-uploader.batchImage.content">
                 Upload product photo
               </attachment-uploader-content>
-              <attachment-uploader-errors>
-              </attachment-uploader-errors>
-            </attachment-uploader>
-            <div style="height: 1rem;"></div>
-          </ng-container>
-
-          <checkbox-input #conditionEl [form]="batchDetailForm.get('traceOrigin')">
-            <checkbox-input-rich-label i18n="@@batchDetail.checkbox-input.traceOrigin">
+                <attachment-uploader-errors>
+                </attachment-uploader-errors>
+              </attachment-uploader>
+              <div style="height: 1rem;"></div>
+            }
+            <checkbox-input #conditionEl [form]="batchDetailForm.get('traceOrigin')">
+              <checkbox-input-rich-label i18n="@@batchDetail.checkbox-input.traceOrigin">
               Trace Origin
             </checkbox-input-rich-label>
-          </checkbox-input>
-
-          <ng-container *ngIf="batchDetailForm.get('traceOrigin').value">
-
-            <div class="tool-button tool-button-right prefill-button" (click)="prefillFromProduct()" i18n="@@batchDetail.button.prefill">
+            </checkbox-input>
+            @if (batchDetailForm.get('traceOrigin').value) {
+              <div class="tool-button tool-button-right prefill-button" (click)="prefillFromProduct()" i18n="@@batchDetail.button.prefill">
               Prefill locations from product
             </div>
-
-            <app-closable
-              [nonClosable]="true">
-              <google-map
-                *ngIf="isGoogleMapsLoaded"
-                width="100%"
-                height="380px"
-                [zoom]="defaultZoom"
-                [center]="defaultCenter"
-                [options]="{disableDoubleClickZoom: true}"
-                (mapDblclick)="dblClick($event)">
-                <map-marker
-                  #gMarker="mapMarker"
-                  *ngFor="let marker of markers; index as i"
-                  [position]="marker.position"
-                  [label]="marker.label"
-                  [options]="{draggable:true}"
-                  (mapRightclick)="removeOriginLocation(i)"
-                  (mapDragend)="dragend($event, i)"
-                  (mapClick)="openInfoWindow(gMarker, marker)">
-                </map-marker>
-                <map-info-window>{{gInfoWindowText}}</map-info-window>
-              </google-map>
-              <small i18n="@@batchDetail.locations.small">
+              <app-closable
+                [nonClosable]="true">
+                @if (isGoogleMapsLoaded) {
+                  <google-map
+                    width="100%"
+                    height="380px"
+                    [zoom]="defaultZoom"
+                    [center]="defaultCenter"
+                    [options]="{disableDoubleClickZoom: true}"
+                    (mapDblclick)="dblClick($event)">
+                    @for (marker of markers; track marker; let i = $index) {
+                      <map-marker
+                        #gMarker="mapMarker"
+                        [position]="marker.position"
+                        [label]="marker.label"
+                        [options]="{draggable:true}"
+                        (mapRightclick)="removeOriginLocation(i)"
+                        (mapDragend)="dragend($event, i)"
+                        (mapClick)="openInfoWindow(gMarker, marker)">
+                      </map-marker>
+                    }
+                    <map-info-window>{{gInfoWindowText}}</map-info-window>
+                  </google-map>
+                }
+                <small i18n="@@batchDetail.locations.small">
                 Double click on the map to drop a pin and mark the locations of farmers / suppliers. Indicate the number of farmers / suppliers you work with directly or indirectly at each location. You can also name each location.
               </small>
-
-              <div class="spacer-between-fields"></div>
-              <div *ngFor="let loc of batchDetailForm.get('locations')?.controls;index as idx">
-                <div class="row">
-                  <div class="col-6">
-                    <textinput [form]="loc.get('pinName')"
-                      i18n-label="@@batchDetail.locations.pinName"
-                      label="Pin name"
-                      (keyup)="onKey($event, idx)">
-                    </textinput>
+                <div class="spacer-between-fields"></div>
+                @for (loc of batchDetailForm.get('locations')?.controls; track loc; let idx = $index) {
+                  <div>
+                    <div class="row">
+                      <div class="col-6">
+                        <textinput [form]="loc.get('pinName')"
+                          i18n-label="@@batchDetail.locations.pinName"
+                          label="Pin name"
+                          (keyup)="onKey($event, idx)">
+                        </textinput>
+                      </div>
+                      <div class="col-4">
+                        <textinput [form]="loc.get('numberOfFarmers')"
+                          i18n-label="@@batchDetail.locations.numberOfFarmers"
+                          label="# of farmers" type="number">
+                        </textinput>
+                      </div>
+                      <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
+                        <button class="btn round" (click)="removeOriginLocation(idx)" class="btn-del">
+                          <span><fa-icon
+                            class="del-icon"
+                            [icon]="faTrashAlt">
+                          </fa-icon></span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-4">
-                    <textinput [form]="loc.get('numberOfFarmers')"
-                      i18n-label="@@batchDetail.locations.numberOfFarmers"
-                      label="# of farmers" type="number">
-                    </textinput>
-                  </div>
-                  <div class="col-2 d-flex align-self-center" style="margin-top: 0.5rem">
-                    <button class="btn round" (click)="removeOriginLocation(idx)" class="btn-del">
-                      <span><fa-icon
-                          class="del-icon"
-                          [icon]="faTrashAlt">
-                        </fa-icon></span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <ng-container *ngIf="submitted && batchDetailForm.get('traceOrigin').value">
-                <div *ngIf="batchDetailForm.get('locations').value.length <1" class="sc-invalid-feedback" i18n="@@batchDetail.locations.error">
+                }
+                @if (submitted && batchDetailForm.get('traceOrigin').value) {
+                  @if (batchDetailForm.get('locations').value.length <1) {
+                    <div class="sc-invalid-feedback" i18n="@@batchDetail.locations.error">
                   At least one of the location is required
                 </div>
-              </ng-container>
-            </app-closable>
-
-          </ng-container>
-
-
-          <div class="search-field">
-            <div *ngIf="mode === 'update'">
-              <bottom-buttons
-                [changed]="changed"
-                [invalid]="submitted && invalid"
-                (onSave)="saveBatch()"
-                [error]="submitted && batchDetailForm.invalid"
-                [success]="submitted && !batchDetailForm.invalid">
-              </bottom-buttons>
-            </div>
-            <div *ngIf="mode === 'create'">
-              <bottom-buttons
-                [changed]="changed"
-                [invalid]="submitted && invalid"
-                (onSave)="createBatch()"
-                saveButtonLabel="Create"
-                i18n-saveButtonLabel="@@batchDetail.botomButtoms.saveButtonLabel"
-                [error]="submitted && batchDetailForm.invalid"
-                [success]="submitted && !batchDetailForm.invalid">
-              </bottom-buttons>
+                  }
+                }
+              </app-closable>
+            }
+            <div class="search-field">
+              @if (mode === 'update') {
+                <div>
+                  <bottom-buttons
+                    [changed]="changed"
+                    [invalid]="submitted && invalid"
+                    (onSave)="saveBatch()"
+                    [error]="submitted && batchDetailForm.invalid"
+                    [success]="submitted && !batchDetailForm.invalid">
+                  </bottom-buttons>
+                </div>
+              }
+              @if (mode === 'create') {
+                <div>
+                  <bottom-buttons
+                    [changed]="changed"
+                    [invalid]="submitted && invalid"
+                    (onSave)="createBatch()"
+                    saveButtonLabel="Create"
+                    i18n-saveButtonLabel="@@batchDetail.botomButtoms.saveButtonLabel"
+                    [error]="submitted && batchDetailForm.invalid"
+                    [success]="submitted && !batchDetailForm.invalid">
+                  </bottom-buttons>
+                </div>
+              }
             </div>
           </div>
-
         </div>
       </div>
-
-
     </div>
-
-  </div>
+  }
 </app-authorised-layout>

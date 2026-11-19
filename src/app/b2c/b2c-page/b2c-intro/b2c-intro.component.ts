@@ -1,13 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { Router } from '@angular/router';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-b2c-intro',
-  templateUrl: './b2c-intro.component.html',
-  styleUrls: ['./b2c-intro.component.scss']
+    selector: 'app-b2c-intro',
+    templateUrl: './b2c-intro.component.html',
+    styleUrls: ['./b2c-intro.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cIntroComponent implements OnInit {
 

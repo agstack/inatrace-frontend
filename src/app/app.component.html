@@ -1,18 +1,22 @@
 <div class="cookie-container">
-  <div *ngIf="!hasDefinedConsentToAllCookies()" class="sp-cookie-box">
-    <app-cookie-banner
-      (onAccept)="consentToAllCookies()"
-      [cookieInfoUrl]="cookieInfoUrl">
-    </app-cookie-banner>
-  </div>
+  @if (!hasDefinedConsentToAllCookies()) {
+    <div class="sp-cookie-box">
+      <app-cookie-banner
+        (onAccept)="consentToAllCookies()"
+        [cookieInfoUrl]="cookieInfoUrl">
+      </app-cookie-banner>
+    </div>
+  }
 </div>
 
 <router-outlet></router-outlet>
 
-<div class="global-overlay-backdrop spinner-fade-in full-page-center"
-  *ngIf="globalEventsManager.showLoadingSpinnerEmitter | async">
-  <div class="lds-ripple">
-    <div></div>
-    <div></div>
+@if (globalEventsManager.showLoadingSpinnerEmitter | async) {
+  <div class="global-overlay-backdrop spinner-fade-in full-page-center"
+    >
+    <div class="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
   </div>
-</div>
+}

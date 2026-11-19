@@ -2,104 +2,89 @@
   <app-product-label-left-panel-content>
   </app-product-label-left-panel-content>
 
-  <div class="main" *ngIf="form">
-
-    <div class="row">
-      <div class="col">
-
-        <div class="main-inside-top content-element">
-          <div class="d-flex justify-content-between content-element--row1">
-            <div class="title-page content-element--title">{{title}}</div>
+  @if (form) {
+    <div class="main">
+      <div class="row">
+        <div class="col">
+          <div class="main-inside-top content-element">
+            <div class="d-flex justify-content-between content-element--row1">
+              <div class="title-page content-element--title">{{title}}</div>
+            </div>
           </div>
-        </div>
-
-        <div class="main-inside-main">
-          <textinput
-            [form]="form.get('title')"
-            label="Title"
-            style="width: 100%;"
-            placeholder="Enter title"
-            hideAsterisk="true"
-            i18n-label="@@knowledgeBlogPart.title.label"
-            i18n-placeholder="@@knowledgeBlogPart.title.placeholder">
-          </textinput>
-
-          <tinymce-textarea
-            [formControlInput]="form.get('summary')"
-            label="Abstract"
-            hideRequired="true"
-            style="width: 100%;"
-            i18n-label="@@knowledgeBlogPart.summary.label">
-          </tinymce-textarea>
-
-
-          <tinymce-textarea
-            [formControlInput]="form.get('content')"
-            label="Content"
-            hideRequired="true"
-            style="width: 100%;"
-            i18n-label="@@knowledgeBlogPart.content.label">
-          </tinymce-textarea>
-
-
-          <app-datepicker
-            [form]="form.get('date')"
-            label="Date"
-            i18n-label="@@knowledgeBlogPart.date.label">
-          </app-datepicker>
-
-
-          <textinput
-            [form]="form.get('youtubeUrl')"
-            label="Youtube URL"
-            style="width: 100%;"
-            placeholder="Enter Youtube URL"
-            hideAsterisk="true"
-            i18n-label="@@knowledgeBlogPart.youtubeURL.label"
-            i18n-placeholder="@@knowledgeBlogPart.youtubeURL.placeholder">
-          </textinput>
-
-
-          <list-editor
-            label="Documents"
-            [listEditorManager]="listManager"
-            addText="Add new"
-            [canAdd]="true"
-            i18n-label="@@knowledgeBlogPart.list-editor.label"
-            i18n-addText="@@knowledgeBlogPart.list-editor.addText">
-            <list-editor-items>
-              <div cdkDropList
-                (cdkDropListDropped)="listManager.onDrop($event)">
-                <div *ngFor="let item of form.get('documents').controls; index as i;">
-                  <app-knowledge-blog-documents-item
-                    title="Documents"
-                    i18n-title="@@knowledgeBlogPart.list-editor.item.title"
-                    [formControlInput]="item"
-                    [isOpen]="listManager.isOpen(i)"
-                    [listEditorManager]="this.listManager"
-                    [listEditorManagerPosition]="i">
-                    >
-                  </app-knowledge-blog-documents-item>
+          <div class="main-inside-main">
+            <textinput
+              [form]="form.get('title')"
+              label="Title"
+              style="width: 100%;"
+              placeholder="Enter title"
+              hideAsterisk="true"
+              i18n-label="@@knowledgeBlogPart.title.label"
+              i18n-placeholder="@@knowledgeBlogPart.title.placeholder">
+            </textinput>
+            <tinymce-textarea
+              [formControlInput]="form.get('summary')"
+              label="Abstract"
+              hideRequired="true"
+              style="width: 100%;"
+              i18n-label="@@knowledgeBlogPart.summary.label">
+            </tinymce-textarea>
+            <tinymce-textarea
+              [formControlInput]="form.get('content')"
+              label="Content"
+              hideRequired="true"
+              style="width: 100%;"
+              i18n-label="@@knowledgeBlogPart.content.label">
+            </tinymce-textarea>
+            <app-datepicker
+              [form]="form.get('date')"
+              label="Date"
+              i18n-label="@@knowledgeBlogPart.date.label">
+            </app-datepicker>
+            <textinput
+              [form]="form.get('youtubeUrl')"
+              label="Youtube URL"
+              style="width: 100%;"
+              placeholder="Enter Youtube URL"
+              hideAsterisk="true"
+              i18n-label="@@knowledgeBlogPart.youtubeURL.label"
+              i18n-placeholder="@@knowledgeBlogPart.youtubeURL.placeholder">
+            </textinput>
+            <list-editor
+              label="Documents"
+              [listEditorManager]="listManager"
+              addText="Add new"
+              [canAdd]="true"
+              i18n-label="@@knowledgeBlogPart.list-editor.label"
+              i18n-addText="@@knowledgeBlogPart.list-editor.addText">
+              <list-editor-items>
+                <div cdkDropList
+                  (cdkDropListDropped)="listManager.onDrop($event)">
+                  @for (item of form.get('documents').controls; track item; let i = $index) {
+                    <div>
+                      <app-knowledge-blog-documents-item
+                        title="Documents"
+                        i18n-title="@@knowledgeBlogPart.list-editor.item.title"
+                        [formControlInput]="item"
+                        [isOpen]="listManager.isOpen(i)"
+                        [listEditorManager]="this.listManager"
+                        [listEditorManagerPosition]="i">
+                        >
+                      </app-knowledge-blog-documents-item>
+                    </div>
+                  }
                 </div>
-              </div>
-            </list-editor-items>
-          </list-editor>
-
-
-
-
-
-          <bottom-buttons
-            [changed]="changed"
-            [invalid]="submitted && invalid"
-            (onSave)="save()"
-            [error]="submitted && invalid"
-            [success]="submitted && !invalid">
-          </bottom-buttons>
-
-
+              </list-editor-items>
+            </list-editor>
+            <bottom-buttons
+              [changed]="changed"
+              [invalid]="submitted && invalid"
+              (onSave)="save()"
+              [error]="submitted && invalid"
+              [success]="submitted && !invalid">
+            </bottom-buttons>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </app-authorised-layout>

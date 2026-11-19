@@ -1,13 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveProductsService } from 'src/app/shared-services/active-products.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-prefill-product-selection-modal',
-  templateUrl: './prefill-product-selection-modal.component.html',
-  styleUrls: ['./prefill-product-selection-modal.component.scss']
+    selector: 'app-prefill-product-selection-modal',
+    templateUrl: './prefill-product-selection-modal.component.html',
+    styleUrls: ['./prefill-product-selection-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PrefillProductSelectionModalComponent implements OnInit, OnDestroy {
 
@@ -26,7 +28,7 @@ export class PrefillProductSelectionModalComponent implements OnInit, OnDestroy 
   @Input()
   onSelectedProduct: (product: any) => {};
 
-  productForm = new FormControl(null);
+  productForm = new UntypedFormControl(null);
   subs: Subscription[] = [];
   dataFields = [];
 

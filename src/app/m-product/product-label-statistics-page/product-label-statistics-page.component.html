@@ -3,147 +3,143 @@
   <app-product-label-left-panel-content>
   </app-product-label-left-panel-content>
 
-  <div *ngIf="statistics" class="main">
-
-    <div class="main-inside-top content-element">
-      <div class="d-flex justify-content-between content-element--row1">
-        <div class="title-page content-element--title" i18n="@@productLabelStatistics.title">Statistics</div>
-      </div>
-    </div>
-
-    <div class="main-inside-main">
-      <div class="d-flex flex-column flex-wrap">
-
-        <h5 i18n="@@productLabelStatistics.title.qrCodeVisits">Page visit</h5>
-        <div class="d-flex text-center flex-wrap">
-
-          <app-statistics-card
-            i18n-text="@@productLabelStatistics.card.qrCodeVisits"
-            text="Number of visits through QR code"
-            value="{{statistics.visits}}"
-            faIcon="qrcode"
-            [iconColor]="'#1E90FF'">
-          </app-statistics-card>
+  @if (statistics) {
+    <div class="main">
+      <div class="main-inside-top content-element">
+        <div class="d-flex justify-content-between content-element--row1">
+          <div class="title-page content-element--title" i18n="@@productLabelStatistics.title">Statistics</div>
         </div>
       </div>
-
-      <ng-container *ngIf="this.showAuth">
-        <div class="section-spacer"></div>
+      <div class="main-inside-main">
         <div class="d-flex flex-column flex-wrap">
-          <h5 i18n="@@productLabelStatistics.title.authenticity">Check Authenticity</h5>
-          <div class="d-flex flex-wrap">
+          <h5 i18n="@@productLabelStatistics.title.qrCodeVisits">Page visit</h5>
+          <div class="d-flex text-center flex-wrap">
             <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.authenticityChecks"
-              text="Number of authenticity checks"
-              value="{{statistics.authTrue + statistics.authFalse}}"
-              faIcon="question"
-              [iconColor]="'#FFBB38'">
-            </app-statistics-card>
-
-            <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.authenticChecks"
-              text="Number of authentic checks"
-              value="{{statistics.authTrue}}"
-              faIcon="check"
-              [iconColor]="'#26AE60'">
-            </app-statistics-card>
-
-            <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.counterfeitChecks"
-              text="Number of counterfeit checks"
-              value="{{statistics.authFalse}}"
-              faIcon="times"
-              [iconColor]="'#DF1642'">
+              i18n-text="@@productLabelStatistics.card.qrCodeVisits"
+              text="Number of visits through QR code"
+              value="{{statistics.visits}}"
+              faIcon="qrcode"
+              [iconColor]="'#1E90FF'">
             </app-statistics-card>
           </div>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="this.showOrig">
-        <div class="section-spacer"></div>
-        <div class="d-flex flex-column flex-wrap">
-          <h5 i18n="@@productLabelStatistics.title.origin">Trace origin</h5>
-          <div class="d-flex flex-wrap">
-            <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.originChecks"
-              text="Number of trace origin checks"
-              value="{{statistics.originFalse + statistics.originTrue}}"
-              faIcon="question"
-              [iconColor]="'#FFBB38'">
-            </app-statistics-card>
-
-            <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.successfullOriginChecks"
-              text="Number of successful trace origin checks"
-              value="{{statistics.originTrue}}"
-              faIcon="check"
-              [iconColor]="'#26AE60'">
-            </app-statistics-card>
-
-            <app-statistics-card
-              i18n-text="@@productLabelStatistics.card.unsuccessfullOriginChecks"
-              text="Number of unsuccessful trace origin checks"
-              value="{{statistics.originFalse}}"
-              faIcon="times"
-              [iconColor]="'#DF1642'">
-            </app-statistics-card>
+        @if (this.showAuth) {
+          <div class="section-spacer"></div>
+          <div class="d-flex flex-column flex-wrap">
+            <h5 i18n="@@productLabelStatistics.title.authenticity">Check Authenticity</h5>
+            <div class="d-flex flex-wrap">
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.authenticityChecks"
+                text="Number of authenticity checks"
+                value="{{statistics.authTrue + statistics.authFalse}}"
+                faIcon="question"
+                [iconColor]="'#FFBB38'">
+              </app-statistics-card>
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.authenticChecks"
+                text="Number of authentic checks"
+                value="{{statistics.authTrue}}"
+                faIcon="check"
+                [iconColor]="'#26AE60'">
+              </app-statistics-card>
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.counterfeitChecks"
+                text="Number of counterfeit checks"
+                value="{{statistics.authFalse}}"
+                faIcon="times"
+                [iconColor]="'#DF1642'">
+              </app-statistics-card>
+            </div>
           </div>
+        }
+        @if (this.showOrig) {
+          <div class="section-spacer"></div>
+          <div class="d-flex flex-column flex-wrap">
+            <h5 i18n="@@productLabelStatistics.title.origin">Trace origin</h5>
+            <div class="d-flex flex-wrap">
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.originChecks"
+                text="Number of trace origin checks"
+                value="{{statistics.originFalse + statistics.originTrue}}"
+                faIcon="question"
+                [iconColor]="'#FFBB38'">
+              </app-statistics-card>
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.successfullOriginChecks"
+                text="Number of successful trace origin checks"
+                value="{{statistics.originTrue}}"
+                faIcon="check"
+                [iconColor]="'#26AE60'">
+              </app-statistics-card>
+              <app-statistics-card
+                i18n-text="@@productLabelStatistics.card.unsuccessfullOriginChecks"
+                text="Number of unsuccessful trace origin checks"
+                value="{{statistics.originFalse}}"
+                faIcon="times"
+                [iconColor]="'#DF1642'">
+              </app-statistics-card>
+            </div>
+          </div>
+        }
+        <div class="section-spacer"></div>
+        <div class="d-flex flex-column">
+          <h5 i18n="@@productLabelStatistics.title.locations">Scan locations</h5>
+          @if (isGoogleMapsLoaded) {
+            <google-map
+              width="100%"
+              height="380px"
+              [zoom]="defaultZoom"
+              [center]="defaultCenter"
+              [options]="{disableDoubleClickZoom: true}">
+              @if (locationsForm.get('authLoc').value) {
+                @for (marker of authMarkers; track marker; let i = $index) {
+                  <map-marker
+                    [position]="marker.position"
+                    [label]="marker.label">
+                  </map-marker>
+                }
+              }
+              @if (locationsForm.get('origLoc').value) {
+                @for (marker of origMarkers; track marker; let i = $index) {
+                  <map-marker
+                    [position]="marker.position"
+                    [label]="marker.label">
+                  </map-marker>
+                }
+              }
+              @if (locationsForm.get('visitLoc').value) {
+                @for (marker of visitMarkers; track marker; let i = $index) {
+                  <map-marker
+                    [position]="marker.position"
+                    [label]="marker.label">
+                  </map-marker>
+                }
+              }
+            </google-map>
+          }
         </div>
-      </ng-container>
-
-      <div class="section-spacer"></div>
-      <div class="d-flex flex-column">
-        <h5 i18n="@@productLabelStatistics.title.locations">Scan locations</h5>
-        <google-map
-          *ngIf="isGoogleMapsLoaded"
-          width="100%"
-          height="380px"
-          [zoom]="defaultZoom"
-          [center]="defaultCenter"
-          [options]="{disableDoubleClickZoom: true}">
-          <ng-container *ngIf="locationsForm.get('authLoc').value">
-            <map-marker
-              *ngFor="let marker of authMarkers; index as i"
-              [position]="marker.position"
-              [label]="marker.label">
-            </map-marker>
-          </ng-container>
-          <ng-container *ngIf="locationsForm.get('origLoc').value">
-            <map-marker
-              *ngFor="let marker of origMarkers; index as i"
-              [position]="marker.position"
-              [label]="marker.label">
-            </map-marker>
-          </ng-container>
-          <ng-container *ngIf="locationsForm.get('visitLoc').value">
-            <map-marker
-              *ngFor="let marker of visitMarkers; index as i"
-              [position]="marker.position"
-              [label]="marker.label">
-            </map-marker>
-          </ng-container>
-        </google-map>
-      </div>
-
-      <div class="d-flex justify-content-between">
-        <checkbox-input [form]="locationsForm.get('visitLoc')" (onClick)="fitBounds()">
-          <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.pageVisits">
+        <div class="d-flex justify-content-between">
+          <checkbox-input [form]="locationsForm.get('visitLoc')" (onClick)="fitBounds()">
+            <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.pageVisits">
             Page visits
           </checkbox-input-rich-label>
-        </checkbox-input>
-        <checkbox-input [form]="locationsForm.get('authLoc')" (onClick)="fitBounds()" *ngIf="this.showAuth">
-          <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.authenticityClicks">
+          </checkbox-input>
+          @if (this.showAuth) {
+            <checkbox-input [form]="locationsForm.get('authLoc')" (onClick)="fitBounds()">
+              <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.authenticityClicks">
             Check Authenticity clicks
           </checkbox-input-rich-label>
-        </checkbox-input>
-        <checkbox-input [form]="locationsForm.get('origLoc')" (onClick)="fitBounds()" *ngIf="this.showOrig">
-          <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.originClicks">
+            </checkbox-input>
+          }
+          @if (this.showOrig) {
+            <checkbox-input [form]="locationsForm.get('origLoc')" (onClick)="fitBounds()">
+              <checkbox-input-rich-label i18n="@@productLabelStatistics.checkbox-input.originClicks">
             Trace origin clicks
           </checkbox-input-rich-label>
-        </checkbox-input>
+            </checkbox-input>
+          }
+        </div>
       </div>
-
     </div>
-
-  </div>
+  }
 </app-authorised-layout>

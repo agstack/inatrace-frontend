@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { debounceTime, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
@@ -9,9 +9,11 @@ import { ApiPaginatedResponseApiProcessingAction } from '../../../../../api/mode
 import { SortOption } from '../../../../shared/result-sorter/result-sorter-types';
 
 @Component({
-  selector: 'app-company-list-processing-actions',
-  templateUrl: './company-detail-processing-actions-list.component.html',
-  styleUrls: ['./company-detail-processing-actions-list.component.scss']
+    selector: 'app-company-list-processing-actions',
+    templateUrl: './company-detail-processing-actions-list.component.html',
+    styleUrls: ['./company-detail-processing-actions-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailProcessingActionsListComponent implements OnInit {
 
@@ -24,7 +26,7 @@ export class CompanyDetailProcessingActionsListComponent implements OnInit {
   @Output()
   countAll = new EventEmitter<number>();
 
-  searchName = new FormControl(null);
+  searchName = new UntypedFormControl(null);
   reloadPingList$ = new BehaviorSubject<boolean>(false);
   pagingParams$ = new BehaviorSubject({});
   sortingParams$ = new BehaviorSubject({ sortBy: 'name', sort: 'ASC' });

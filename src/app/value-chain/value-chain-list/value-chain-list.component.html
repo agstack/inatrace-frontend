@@ -7,120 +7,118 @@
     <div class="row">
       <div class="col">
 
-        <ng-container *ngIf="valueChains$ | async as valueChains">
+        @if (valueChains$ | async; as valueChains) {
           <div class="main-inside-top content-element">
-
             <div class="d-flex justify-content-between content-element--row1">
               <div class="title-page content-element--title" i18n="@@valueChainList.title.valueChains">Value chains</div>
               <button class="btn btn-round round btn-table-new content-element--btn"
-                      i18n="@@valueChainList.button.newValueChain"
-                      (click)="createNewValueChain()">
+                i18n="@@valueChainList.button.newValueChain"
+                (click)="createNewValueChain()">
                 New value chain
               </button>
             </div>
-
             <div class="d-flex justify-content-between content-element--row2">
               <div>
                 <div class="sub-title-page content-element--subtitle"
-                     i18n="@@valueChainList.subTitle.listOfValueChains">List of value chains</div>
+                i18n="@@valueChainList.subTitle.listOfValueChains">List of value chains</div>
                 <div class="counting-page content-element--counting"
-                     i18n="@@valueChainList.subTitle.showing">Showing {{ showedValueChains }}/{{ allValueChains }}</div>
+                i18n="@@valueChainList.subTitle.showing">Showing {{ showedValueChains }}/{{ allValueChains }}</div>
               </div>
-
               <div class="d-flex align-items-top">
-                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-right" display="dynamic" container="body">
-                  <div *ngIf="filterStatus?.value" class="d-flex filter-text" style="margin-left: 0.75rem"> Show {{ filterStatus.value | lowercase }}
-                    <div (click)="clearFilter()" style="margin-left: 0.5rem;">
-                      <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs"></fa-icon>
+                <div class="d-flex align-items-center" style="margin-bottom: 1rem;" ngbDropdown placement="bottom-end" display="dynamic" container="body">
+                  @if (filterStatus?.value) {
+                    <div class="d-flex filter-text" style="margin-left: 0.75rem"> Show {{ filterStatus.value | lowercase }}
+                      <div (click)="clearFilter()" style="margin-left: 0.5rem;">
+                        <fa-icon class="cursor-pointer" [icon]="faTimes" size="xs"></fa-icon>
+                      </div>
                     </div>
-                  </div>
-
+                  }
                   <button ngbDropdownToggle class="btn btn-filter" style="margin-left: 1rem;">
                     <span class="button-icon">
                       <span class="button-icon-shape button-icon-shape--filter"></span>
                     </span>
                     <span i18n="@@list.button.filter" class="button-icon-label">Filter</span>
                   </button>
-
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button ngbDropdownItem
-                            (click)="showValueChainsWithStatus('ENABLED')"
-                            i18n="@@valueChainList.filter.showEnabled">Show active</button>
+                      (click)="showValueChainsWithStatus('ENABLED')"
+                    i18n="@@valueChainList.filter.showEnabled">Show active</button>
                     <button ngbDropdownItem
-                            (click)="showValueChainsWithStatus('DISABLED')"
-                            i18n="@@valueChainList.filter.showDisabled">Show deactivated</button>
+                      (click)="showValueChainsWithStatus('DISABLED')"
+                    i18n="@@valueChainList.filter.showDisabled">Show deactivated</button>
                   </div>
                 </div>
-
                 <app-search-textinput
-                        [form]="searchName">
+                  [form]="searchName">
                 </app-search-textinput>
               </div>
             </div>
-
           </div>
-
           <div class="main-inside-main">
-            <table *ngIf="valueChains?.items?.length > 0; else noItems" class="af-table">
-              <thead>
-                <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChange($event)"></tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let valueChain of valueChains.items">
-                  <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ valueChain.name }}</span></td>
-                  <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ valueChain.description }}</span></td>
-                  <td [attr.data-label]="sortOptions[2].name"><span>{{ valueChain.valueChainStatus }}</span></td>
-                  <td [attr.data-label]="sortOptions[3].name">
-                    <span>
-                      <a (click)="editValueChain(valueChain.id)"
-                         class="value-chain-action"
-                         [class.enabled-action]="true">
-                        <span *ngIf="isRegionalAdmin; else editMode"
+            @if (valueChains?.items?.length > 0) {
+              <table class="af-table">
+                <thead>
+                  <tr result-sorter [sortOptions]="sortOptions" (sortByKey)="onSortChange($event)"></tr>
+                </thead>
+                <tbody>
+                  @for (valueChain of valueChains.items; track valueChain) {
+                    <tr>
+                      <td [attr.data-label]="sortOptions[0].name"><span class="limit-chars">{{ valueChain.name }}</span></td>
+                      <td [attr.data-label]="sortOptions[1].name"><span class="limit-chars">{{ valueChain.description }}</span></td>
+                      <td [attr.data-label]="sortOptions[2].name"><span>{{ valueChain.valueChainStatus }}</span></td>
+                      <td [attr.data-label]="sortOptions[3].name">
+                        <span>
+                          <a (click)="editValueChain(valueChain.id)"
+                            class="value-chain-action"
+                            [class.enabled-action]="true">
+                            @if (isRegionalAdmin) {
+                              <span
                               i18n="@@valueChainList.tableCol.action.view">View</span>
-                        <ng-template #editMode>
-                          <span i18n="@@valueChainList.tableCol.action.edit">Edit</span>
-                        </ng-template>
-                      </a>
-                      <a i18n="@@valueChainList.tableCol.action.enable"
-                         (click)="enableValueChain(valueChain.id)"
-                         class="value-chain-action"
-                         [class.enabled-action]="valueChain.valueChainStatus === 'DISABLED' && !isRegionalAdmin"
-                         [class.disabled-action]="valueChain.valueChainStatus === 'ENABLED' || isRegionalAdmin">
+                            } @else {
+                              <span i18n="@@valueChainList.tableCol.action.edit">Edit</span>
+                            }
+                          </a>
+                          <a i18n="@@valueChainList.tableCol.action.enable"
+                            (click)="enableValueChain(valueChain.id)"
+                            class="value-chain-action"
+                            [class.enabled-action]="valueChain.valueChainStatus === 'DISABLED' && !isRegionalAdmin"
+                            [class.disabled-action]="valueChain.valueChainStatus === 'ENABLED' || isRegionalAdmin">
                         Enable
                       </a>
-                      <a i18n="@@valueChainList.tableCol.action.disable"
-                         (click)="disableValueChain(valueChain.id)"
-                         class="value-chain-action"
-                         [class.enabled-action]="valueChain.valueChainStatus === 'ENABLED' && !isRegionalAdmin"
-                         [class.disabled-action]="valueChain.valueChainStatus === 'DISABLED' || isRegionalAdmin">
+                          <a i18n="@@valueChainList.tableCol.action.disable"
+                            (click)="disableValueChain(valueChain.id)"
+                            class="value-chain-action"
+                            [class.enabled-action]="valueChain.valueChainStatus === 'ENABLED' && !isRegionalAdmin"
+                            [class.disabled-action]="valueChain.valueChainStatus === 'DISABLED' || isRegionalAdmin">
                         Disable
                       </a>
-                      <a i18n="@@valueChainList.tableCol.action.delete"
-                         (click)="deleteValueChain(valueChain.id)"
-                         class="value-chain-action enabled-action"
-                         [class.disabled-action]="isRegionalAdmin">
+                          <a i18n="@@valueChainList.tableCol.action.delete"
+                            (click)="deleteValueChain(valueChain.id)"
+                            class="value-chain-action enabled-action"
+                            [class.disabled-action]="isRegionalAdmin">
                         Delete
                       </a>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <ng-template #noItems>
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
               <span>No value chains found</span>
-            </ng-template>
+            }
           </div>
           <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
             <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="valueChains.count"
-                    (pageChange)="onPageChange($event)"
-                    [maxSize]="7"
-                    [rotate]="true">
+              [(page)]="page"
+              [pageSize]="pageSize"
+              [collectionSize]="valueChains.count"
+              (pageChange)="onPageChange($event)"
+              [maxSize]="7"
+              [rotate]="true">
             </ngb-pagination>
           </div>
-        </ng-container>
+        }
 
       </div>
     </div>

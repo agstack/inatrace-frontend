@@ -1,13 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, shareReplay, switchMap, catchError } from 'rxjs/operators';
 import { UserControllerService } from 'src/api/api/userController.service';
 import { of, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-confirm-email',
-  templateUrl: './confirm-email.component.html',
-  styleUrls: ['./confirm-email.component.scss']
+    selector: 'app-confirm-email',
+    templateUrl: './confirm-email.component.html',
+    styleUrls: ['./confirm-email.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ConfirmEmailComponent implements OnInit, OnDestroy {
 

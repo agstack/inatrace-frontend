@@ -1,84 +1,88 @@
 <app-authorised-layout>
-  <div *ngIf="companyProfile != null && stockOrderForm" class="af-layout--authorised">
-
-    <ng-container *ngIf="!orderType">
-      <div class="af-form-wrapper">
-        <single-choice
-                label="Order type is not set for this order. Please set one."
-                i18n-label="@@productLabelStockPurchaseOrdersModal.orderType.select.label"
-                [formControlInput]="orderTypeForm"
-                (onChange)="onSelectedType($event)"
-                [codebookService]="orderTypeCodebook">
-        </single-choice>
-      </div>
-    </ng-container>
-
-    <div class="af-form-wrapper" *ngIf="orderType">
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12 d-flex justify-content-between">
-          <div class="title-page content-element--title">
-            {{ title }}<span style="margin-left: 1rem;">{{ stockOrderForm.get('identifier').value }}</span>
-          </div>
-          <app-last-seen-tag *ngIf="this.update"
-                             [dateFormat]="stockOrderForm.get('updateTimestamp').value"
-                             [identifier]="userLastChanged">
-          </app-last-seen-tag>
+  @if (companyProfile != null && stockOrderForm) {
+    <div class="af-layout--authorised">
+      @if (!orderType) {
+        <div class="af-form-wrapper">
+          <single-choice
+            label="Order type is not set for this order. Please set one."
+            i18n-label="@@productLabelStockPurchaseOrdersModal.orderType.select.label"
+            [formControlInput]="orderTypeForm"
+            (onChange)="onSelectedType($event)"
+            [codebookService]="orderTypeCodebook">
+          </single-choice>
         </div>
-      </div>
-
-      <div class="af-form-row">
-
-        <!-- First block in first row -->
-        <div class="af-form-block--c6">
-
-          <div>
-            <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.basicInfo">Basic information</h2>
+      }
+      @if (orderType) {
+        <div class="af-form-wrapper">
+          <div class="af-form-row">
+            <div class="af-form-block--c12 d-flex justify-content-between">
+              <div class="title-page content-element--title">
+                {{ title }}<span style="margin-left: 1rem;">{{ stockOrderForm.get('identifier').value }}</span>
+              </div>
+              @if (this.update) {
+                <app-last-seen-tag
+                  [dateFormat]="stockOrderForm.get('updateTimestamp').value"
+                  [identifier]="userLastChanged">
+                </app-last-seen-tag>
+              }
+            </div>
           </div>
-
-          <div class="af-form-element">
-            <div class="af-row">
-              <div class="af-c4">
-                <app-datepicker
-                        label="Delivery date"
-                        i18n-label="@@productLabelStockPurchaseOrdersModal.datepicker.date.label"
-                        [form]="stockOrderForm.get('productionDate')"
-                        [invalid]="submitted && stockOrderForm.get('productionDate').invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('productionDate').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.datepicker.date.error">
+          <div class="af-form-row">
+            <!-- First block in first row -->
+            <div class="af-form-block--c6">
+              <div>
+                <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.basicInfo">Basic information</h2>
+              </div>
+              <div class="af-form-element">
+                <div class="af-row">
+                  <div class="af-c4">
+                    <app-datepicker
+                      label="Delivery date"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.datepicker.date.label"
+                      [form]="stockOrderForm.get('productionDate')"
+                      [invalid]="submitted && stockOrderForm.get('productionDate').invalid">
+                      @if (submitted) {
+                        @if (stockOrderForm.get('productionDate').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.datepicker.date.error">
                         Delivery date is required
                       </div>
-                    </div>
-                  </ng-container>
-                </app-datepicker>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c12">
-                <single-choice
-                        label="Farmer"
-                        i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer"
-                        [formControlInput]="searchFarmers"
-                        [codebookService]="farmersCodebook"
-                        (onChange)="setFarmer($event)"
-                        style="min-width: 150px;"
-                        [isInvalidChoice]="submitted && searchFarmers.invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="searchFarmers.errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer.error">
+                            }
+                          </div>
+                        }
+                      }
+                    </app-datepicker>
+                  </div>
+                </div>
+                <div class="af-row">
+                  <div class="af-c12">
+                    <single-choice
+                      label="Farmer"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer"
+                      [formControlInput]="searchFarmers"
+                      [codebookService]="farmersCodebook"
+                      (onChange)="setFarmer($event)"
+                      style="min-width: 150px;"
+                      [isInvalidChoice]="submitted && searchFarmers.invalid">
+                      @if (submitted) {
+                        @if (searchFarmers.errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer.error">
                         Farmer is required
                       </div>
-                    </div>
-                  </ng-container>
-                </single-choice>
-              </div>
-            </div>
-
-            <div class="af-row" *ngIf="showCollector">
-              <div class="af-c12">
-                <single-choice
+                            }
+                          </div>
+                        }
+                      }
+                    </single-choice>
+                  </div>
+                </div>
+                @if (showCollector) {
+                  <div class="af-row">
+                    <div class="af-c12">
+                      <single-choice
                         label="Collector"
                         i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.collector"
                         [formControlInput]="searchCollectors"
@@ -86,291 +90,329 @@
                         (onChange)="setCollector($event)"
                         style="min-width: 150px;"
                         [readonly]="readonlyCollector">
-                </single-choice>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c12">
-                <textinput [form]="facilityNameForm"
-                           label="Facility name"
-                           style="width: 100%"
-                           placeholder="Enter facility name"
-                           i18n-label="@@productLabelStockPurchaseOrdersModal.textinput.facilityName.label"
-                           i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.facilityName.placeholder"
-                           [readOnly]=true>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c12">
-                <single-choice
-                        label="Cooperative employee"
-                        i18n-label="Cooperative employee"
-                        [formControlInput]="employeeForm"
-                        [codebookService]="codebookUsers"
-                        style="min-width: 150px;"
-                        [isInvalidChoice]="submitted && employeeForm.invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="employeeForm.errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer.error">
+                      </single-choice>
+                    </div>
+                  </div>
+                }
+                <div class="af-row">
+                  <div class="af-c12">
+                    <textinput [form]="facilityNameForm"
+                      label="Facility name"
+                      style="width: 100%"
+                      placeholder="Enter facility name"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.textinput.facilityName.label"
+                      i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.facilityName.placeholder"
+                      [readOnly]=true>
+                    </textinput>
+                  </div>
+                </div>
+                <div class="af-row">
+                  <div class="af-c12">
+                    <single-choice
+                      label="Cooperative employee"
+                      i18n-label="Cooperative employee"
+                      [formControlInput]="employeeForm"
+                      [codebookService]="codebookUsers"
+                      style="min-width: 150px;"
+                      [isInvalidChoice]="submitted && employeeForm.invalid">
+                      @if (submitted) {
+                        @if (employeeForm.errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.farmer.error">
                         Cooperative employee is required
                       </div>
-                    </div>
-                  </ng-container>
-                </single-choice>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Second block in first row -->
-        <div class="af-form-block--c6">
-
-          <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.purchaseDetails">Purchase details</h2>
-
-          <div class="af-form-element">
-
-            <div class="af-row">
-              <div class="af-c12">
-                <div class="form-group">
-                  <label class="d-flex mb-0 text-input-label">
-                    <span i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct">Semi-product</span><span>*</span>
-                  </label>
-                  <ng-select bindLabel="name"
-                             bindValue="id"
-                             placeholder="Select semi-product"
-                             (ngModelChange)="semiProductSelected($event)"
-                             i18n-placeholder="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.placeholder"
-                             [items]="options"
-                             [(ngModel)]="modelChoice"
-                             [required]="true"
-                             notFoundText="Nothing found"
-                             i18-notFoundText="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.nothing"
-                             i18-typeToSearchText="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.enterSearchTerm"
-                             typeToSearchText="Enter search term"
-                             class="custom labelPlaceholder"
-                             style="border:none">
-                  </ng-select>
+                            }
+                          </div>
+                        }
+                      }
+                    </single-choice>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="af-row" *ngIf="displayPriceDeterminedLater">
-              <div class="af-c6"></div>
-              <div class="af-c6">
-                <checkbox-input [form]="stockOrderForm.get('priceDeterminedLater')" (onClick)="priceDeterminedLaterChanged()">
-                  <checkbox-input-rich-label i18n="@@productLabelStockPurchaseOrdersModal.checkbox.priceDeterminedLater">Price determined later</checkbox-input-rich-label>
-                </checkbox-input>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c6">
-                <textinput
-                        [form]="stockOrderForm.get('totalGrossQuantity')"
-                        [label]="quantityLabel"
-                        style="width: 100%"
-                        placeholder="Enter quantity"
-                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.quantityDelievered.placeholder"
-                        [isInvalid]="(submitted && stockOrderForm.get('totalGrossQuantity').invalid)">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('totalGrossQuantity').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.quantityDelieveredInKG.textinput.quantityDelieveredInKG.error">
+            <!-- Second block in first row -->
+            <div class="af-form-block--c6">
+              <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.purchaseDetails">Purchase details</h2>
+              <div class="af-form-element">
+                <div class="af-row">
+                  <div class="af-c12">
+                    <div class="form-group">
+                      <label class="d-flex mb-0 text-input-label">
+                        <span i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct">Semi-product</span><span>*</span>
+                      </label>
+                      <ng-select bindLabel="name"
+                        bindValue="id"
+                        placeholder="Select semi-product"
+                        (ngModelChange)="semiProductSelected($event)"
+                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.placeholder"
+                        [items]="options"
+                        [(ngModel)]="modelChoice"
+                        [required]="true"
+                        notFoundText="Nothing found"
+                        i18-notFoundText="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.nothing"
+                        i18-typeToSearchText="@@productLabelStockPurchaseOrdersModal.singleChoice.semiProduct.enterSearchTerm"
+                        typeToSearchText="Enter search term"
+                        class="custom labelPlaceholder"
+                        style="border:none">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                @if (displayPriceDeterminedLater) {
+                  <div class="af-row">
+                    <div class="af-c6"></div>
+                    <div class="af-c6">
+                      <checkbox-input [form]="stockOrderForm.get('priceDeterminedLater')" (onClick)="priceDeterminedLaterChanged()">
+                        <checkbox-input-rich-label i18n="@@productLabelStockPurchaseOrdersModal.checkbox.priceDeterminedLater">Price determined later</checkbox-input-rich-label>
+                      </checkbox-input>
+                    </div>
+                  </div>
+                }
+                <div class="af-row">
+                  <div class="af-c6">
+                    <textinput
+                      [form]="stockOrderForm.get('totalGrossQuantity')"
+                      [label]="quantityLabel"
+                      style="width: 100%"
+                      placeholder="Enter quantity"
+                      i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.quantityDelievered.placeholder"
+                      [isInvalid]="(submitted && stockOrderForm.get('totalGrossQuantity').invalid)">
+                      @if (submitted) {
+                        @if (stockOrderForm.get('totalGrossQuantity').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.quantityDelieveredInKG.textinput.quantityDelieveredInKG.error">
                         Quantity is required
                       </div>
-                    </div>
-                  </ng-container>
-                </textinput>
-              </div>
-
-              <div class="af-c6">
-                <textinput
-                        [form]="stockOrderForm.get('pricePerUnit')"
-                        [label]="pricePerUnitLabel"
-                        [disabled]="stockOrderForm.get('priceDeterminedLater').value"
-                        style="width: 100%"
-                        placeholder="Enter price per unit"
-                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.pricePerUnit.placeholder"
-                        [isInvalid]="submitted && stockOrderForm.get('pricePerUnit').invalid"
-                        [readOnly]="stockOrderForm.get('priceDeterminedLater').value">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('pricePerUnit').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.unityPrice.textinput.unityPrice.error">
+                            }
+                          </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                  <div class="af-c6">
+                    <textinput
+                      [form]="stockOrderForm.get('pricePerUnit')"
+                      [label]="pricePerUnitLabel"
+                      [disabled]="stockOrderForm.get('priceDeterminedLater').value"
+                      style="width: 100%"
+                      placeholder="Enter price per unit"
+                      i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.pricePerUnit.placeholder"
+                      [isInvalid]="submitted && stockOrderForm.get('pricePerUnit').invalid"
+                      [readOnly]="stockOrderForm.get('priceDeterminedLater').value">
+                      @if (submitted) {
+                        @if (stockOrderForm.get('pricePerUnit').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.unityPrice.textinput.unityPrice.error">
                         Price per unit is required
                       </div>
-                    </div>
-                  </ng-container>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row" *ngIf="showTare || showDamagedPriceDeduction">
-              <div class="af-c6">
-                <textinput *ngIf="showTare"
-                    [form]="stockOrderForm.get('tare')"
-                    [label]="tareLabel"
-                    style="width: 100%"
-                    placeholder="Enter tare"
-                    i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.tare.placeholder"
-                    [isInvalid]="(submitted && stockOrderForm.get('tare').invalid) || tareInvalidCheck"
-                    [readOnly]="readonlyTare">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('tare').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.textinput.tare.error">
+                            }
+                          </div>
+                        }
+                      }
+                    </textinput>
+                  </div>
+                </div>
+                @if (showTare || showDamagedPriceDeduction) {
+                  <div class="af-row">
+                    <div class="af-c6">
+                      @if (showTare) {
+                        <textinput
+                          [form]="stockOrderForm.get('tare')"
+                          [label]="tareLabel"
+                          style="width: 100%"
+                          placeholder="Enter tare"
+                          i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.tare.placeholder"
+                          [isInvalid]="(submitted && stockOrderForm.get('tare').invalid) || tareInvalidCheck"
+                          [readOnly]="readonlyTare">
+                          @if (submitted) {
+                            @if (stockOrderForm.get('tare').errors; as errors) {
+                              <div class="sc-invalid-feedback">
+                                @if (errors.required) {
+                                  <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.tare.error">
                         Tare is required
                       </div>
-                    </div>
-                  </ng-container>
-                  <div *ngIf="tareInvalidCheck" class="sc-invalid-feedback">
-                    <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.tareGreaterThanQuantity.error">
+                                }
+                              </div>
+                            }
+                          }
+                          @if (tareInvalidCheck) {
+                            <div class="sc-invalid-feedback">
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.tareGreaterThanQuantity.error">
                       Tare value is larger than quantity value
                     </div>
-                  </div>
-                </textinput>
-              </div>
-              <div class="af-c6">
-                <textinput *ngIf="showDamagedPriceDeduction"
-                        [form]="stockOrderForm.get('damagedPriceDeduction')"
-                        [label]="damagedPriceDeductionLabel"
-                        [disabled]="stockOrderForm.get('priceDeterminedLater').value"
-                        style="width: 100%"
-                        placeholder="Enter damaged price deduction"
-                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.damagedPriceDeduction.placeholder"
-                        [isInvalid]="(submitted && stockOrderForm.get('damagedPriceDeduction').invalid) || damagedPriceDeductionInvalidCheck"
-                        [readOnly]="readonlyDamagedPriceDeduction">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('damagedPriceDeduction').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.textinput.damagedPriceDeduction.error">
+                            </div>
+                          }
+                        </textinput>
+                      }
+                    </div>
+                    <div class="af-c6">
+                      @if (showDamagedPriceDeduction) {
+                        <textinput
+                          [form]="stockOrderForm.get('damagedPriceDeduction')"
+                          [label]="damagedPriceDeductionLabel"
+                          [disabled]="stockOrderForm.get('priceDeterminedLater').value"
+                          style="width: 100%"
+                          placeholder="Enter damaged price deduction"
+                          i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.damagedPriceDeduction.placeholder"
+                          [isInvalid]="(submitted && stockOrderForm.get('damagedPriceDeduction').invalid) || damagedPriceDeductionInvalidCheck"
+                          [readOnly]="readonlyDamagedPriceDeduction">
+                          @if (submitted) {
+                            @if (stockOrderForm.get('damagedPriceDeduction').errors; as errors) {
+                              <div class="sc-invalid-feedback">
+                                @if (errors.required) {
+                                  <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.damagedPriceDeduction.error">
                         Damaged price deduction is required
                       </div>
-                    </div>
-                  </ng-container>
-                  <div *ngIf="damagedPriceDeductionInvalidCheck" class="sc-invalid-feedback">
-                    <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.deductionGreaterThanPrice.error">
+                                }
+                              </div>
+                            }
+                          }
+                          @if (damagedPriceDeductionInvalidCheck) {
+                            <div class="sc-invalid-feedback">
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.deductionGreaterThanPrice.error">
                       Damaged price deduction is larger than price per unit
                     </div>
+                            </div>
+                          }
+                        </textinput>
+                      }
+                    </div>
                   </div>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c6">
-                <textinput *ngIf="showDamagedWeightDeduction"
-                           [form]="stockOrderForm.get('damagedWeightDeduction')"
-                           [label]="damagedWeightDeductionLabel"
-                           style="width: 100%"
-                           placeholder="Enter damaged weight deduction"
-                           i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.placeholder"
-                           [isInvalid]="(submitted && stockOrderForm.get('damagedWeightDeduction').invalid) || damagedWeightDeductionInvalidCheck"
-                           [readOnly]="readonlyDamagedWeightDeduction">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('damagedWeightDeduction').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.error">
+                }
+                <div class="af-row">
+                  <div class="af-c6">
+                    @if (showDamagedWeightDeduction) {
+                      <textinput
+                        [form]="stockOrderForm.get('damagedWeightDeduction')"
+                        [label]="damagedWeightDeductionLabel"
+                        style="width: 100%"
+                        placeholder="Enter damaged weight deduction"
+                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.placeholder"
+                        [isInvalid]="(submitted && stockOrderForm.get('damagedWeightDeduction').invalid) || damagedWeightDeductionInvalidCheck"
+                        [readOnly]="readonlyDamagedWeightDeduction">
+                        @if (submitted) {
+                          @if (stockOrderForm.get('damagedWeightDeduction').errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.required) {
+                                <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.damagedWeightDeduction.error">
                         Damaged weight deduction is required
                       </div>
-                    </div>
-                  </ng-container>
-                  <div *ngIf="damagedWeightDeductionInvalidCheck" class="sc-invalid-feedback">
-                    <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.deductionGreaterThanWeight.error">
+                              }
+                            </div>
+                          }
+                        }
+                        @if (damagedWeightDeductionInvalidCheck) {
+                          <div class="sc-invalid-feedback">
+                            <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.deductionGreaterThanWeight.error">
                       Damaged weight deduction is larger than net weight
                     </div>
+                          </div>
+                        }
+                      </textinput>
+                    }
                   </div>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row" *ngIf="showTare">
-              <div class="af-c6">
-                <textinput [form]="netWeightForm"
-                           [label]="netLabel"
-                           [readOnly]="true"
-                           [value]="netWeight()"
-                           style="width: 100%"
-                           placeholder="Enter net weight"
-                           i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.netWeight.placeholder">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="netWeightForm.errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.textinput.netWeight.error">
+                </div>
+                @if (showTare) {
+                  <div class="af-row">
+                    <div class="af-c6">
+                      <textinput [form]="netWeightForm"
+                        [label]="netLabel"
+                        [readOnly]="true"
+                        [value]="netWeight()"
+                        style="width: 100%"
+                        placeholder="Enter net weight"
+                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.netWeight.placeholder">
+                        @if (submitted) {
+                          @if (netWeightForm.errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.required) {
+                                <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.netWeight.error">
                         Net weight is required
                       </div>
+                              }
+                            </div>
+                          }
+                        }
+                      </textinput>
                     </div>
-                  </ng-container>
-                </textinput>
-              </div>
-              <div class="af-c6">
-                <textinput [form]="finalPriceForm"
-                           [label]="finalPriceLabel"
-                           [readOnly]="true"
-                           [value]="finalPrice()"
-                           style="width: 100%"
-                           [isInvalid]="submitted && finalPriceForm.invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="finalPriceForm.errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.textinput.finalPrice.error">
+                    <div class="af-c6">
+                      <textinput [form]="finalPriceForm"
+                        [label]="finalPriceLabel"
+                        [readOnly]="true"
+                        [value]="finalPrice()"
+                        style="width: 100%"
+                        [isInvalid]="submitted && finalPriceForm.invalid">
+                        @if (submitted) {
+                          @if (finalPriceForm.errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.required) {
+                                <div i18n="@@productLabelStockPurchaseOrdersModal.textinput.finalPrice.error">
                         Final price is required
                       </div>
+                              }
+                            </div>
+                          }
+                        }
+                      </textinput>
                     </div>
-                  </ng-container>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c6">
-                <textinput
-                        [form]="stockOrderForm.get('cost')"
-                        [label]="costLabel"
-                        style="width: 100%"
-                        placeholder="Base payment"
-                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.cost.placeholder"
-                        [value]="setToBePaid()"
-                        [readOnly]=true>
-                </textinput>
-              </div>
-
-              <div class="af-c6">
-                <textinput
-                        [form]="stockOrderForm.get('balance')"
-                        [label]="balanceLabel"
-                        style="width: 100%"
-                        placeholder="Open balance"
-                        i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.balance.placeholder"
-                        [value]="setBalance()"
-                        [readOnly]=true>
-                </textinput>
-              </div>
-            </div>
-
-            <div class="af-row">
-              <div class="af-c12">
-                <single-choice
-                        label="Preferred way of payment"
-                        i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment"
-                        [formControlInput]="stockOrderForm.get('preferredWayOfPayment')"
-                        [codebookService]="codebookPreferredWayOfPayment"
-                        style="min-width: 150px;"
-                        [isInvalidChoice]="submitted && stockOrderForm.get('preferredWayOfPayment').invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('preferredWayOfPayment').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment.error">
+                  </div>
+                }
+                <div class="af-row">
+                  <div class="af-c6">
+                    <textinput
+                      [form]="stockOrderForm.get('cost')"
+                      [label]="costLabel"
+                      style="width: 100%"
+                      placeholder="Base payment"
+                      i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.cost.placeholder"
+                      [value]="setToBePaid()"
+                      [readOnly]=true>
+                    </textinput>
+                  </div>
+                  <div class="af-c6">
+                    <textinput
+                      [form]="stockOrderForm.get('balance')"
+                      [label]="balanceLabel"
+                      style="width: 100%"
+                      placeholder="Open balance"
+                      i18n-placeholder="@@productLabelStockPurchaseOrdersModal.textinput.balance.placeholder"
+                      [value]="setBalance()"
+                      [readOnly]=true>
+                    </textinput>
+                  </div>
+                </div>
+                <div class="af-row">
+                  <div class="af-c12">
+                    <single-choice
+                      label="Preferred way of payment"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment"
+                      [formControlInput]="stockOrderForm.get('preferredWayOfPayment')"
+                      [codebookService]="codebookPreferredWayOfPayment"
+                      style="min-width: 150px;"
+                      [isInvalidChoice]="submitted && stockOrderForm.get('preferredWayOfPayment').invalid">
+                      @if (submitted) {
+                        @if (stockOrderForm.get('preferredWayOfPayment').errors; as errors) {
+                          <div class="sc-invalid-feedback">
+                            @if (errors.required) {
+                              <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.preferredWayOfPayment.error">
                         Preferred way of payment is required
                       </div>
-                    </div>
-                  </ng-container>
-                </single-choice>
-              </div>
-            </div>
-
-            <div class="af-row">
-
-            </div>
-
-            <div class="af-row" *ngIf="showOrganic">
-              <div class="af-c12">
-                <single-choice
+                            }
+                          </div>
+                        }
+                      }
+                    </single-choice>
+                  </div>
+                </div>
+                <div class="af-row">
+                </div>
+                @if (showOrganic) {
+                  <div class="af-row">
+                    <div class="af-c12">
+                      <single-choice
                         label="Organic"
                         i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.organic.label"
                         [formControlInput]="stockOrderForm.get('organic')"
@@ -378,20 +420,25 @@
                         [readonly]="readonlyOrganic"
                         style="min-width: 150px;"
                         [isInvalidChoice]="submitted && stockOrderForm.get('organic').invalid">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="stockOrderForm.get('organic').errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.organic.error">
+                        @if (submitted) {
+                          @if (stockOrderForm.get('organic').errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.required) {
+                                <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.organic.error">
                         Organic is required
                       </div>
+                              }
+                            </div>
+                          }
+                        }
+                      </single-choice>
                     </div>
-                  </ng-container>
-                </single-choice>
-              </div>
-            </div>
-
-            <div class="af-row" *ngIf="showWomensOnly">
-              <div class="af-c12">
-                <single-choice
+                  </div>
+                }
+                @if (showWomensOnly) {
+                  <div class="af-row">
+                    <div class="af-c12">
+                      <single-choice
                         label="Women’s only"
                         i18n-label="@@productLabelStockPurchaseOrdersModal.singleChoice.womensOnly"
                         [formControlInput]="searchWomenCoffeeForm"
@@ -399,69 +446,71 @@
                         style="min-width: 150px;"
                         [isInvalidChoice]="submitted && searchWomenCoffeeForm.invalid"
                         [readonly]="readonlyWomensOnly">
-                  <ng-container *ngIf="submitted">
-                    <div *ngIf="searchWomenCoffeeForm.errors as errors" class="sc-invalid-feedback">
-                      <div *ngIf="errors.required" i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.womensOnly.error">
+                        @if (submitted) {
+                          @if (searchWomenCoffeeForm.errors; as errors) {
+                            <div class="sc-invalid-feedback">
+                              @if (errors.required) {
+                                <div i18n="@@productLabelStockPurchaseOrdersModal.singleChoice.womensOnly.error">
                         Women’s only is required
                       </div>
+                              }
+                            </div>
+                          }
+                        }
+                      </single-choice>
                     </div>
-                  </ng-container>
-                </single-choice>
+                  </div>
+                }
               </div>
             </div>
-
           </div>
-        </div>
-
-      </div>
-
-      <ng-container>
-        <div class="af-form-row">
-          <div class="af-form-block--c12">
-            <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.additionalProofs">Additional proofs</h2>
-
-            <div class="af-form-element">
-              <list-editor *ngIf="additionalProofsListManager"
-                           label="List of additional proofs"
-                           [listEditorManager]="additionalProofsListManager"
-                           addText="Add document"
-                           [canAdd]="true"
-                           i18n-label="@@productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.label"
-                           i18n-addText="@@productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.addText"
-                           [invalid]="submitted && additionalProofsForm?.invalid">
-                <list-editor-items>
-                  <div *ngFor="let item of additionalProofsForm.controls; let i=index;">
-                    <app-additional-proof-item
-                            title=null
-                            [formControlInput]="item"
-                            [isOpen]="additionalProofsListManager.isOpen(i)"
-                            [listEditorManager]="this.additionalProofsListManager"
-                            [listEditorManagerPosition]="i">
-                    </app-additional-proof-item>
-                  </div>
-                </list-editor-items>
-              </list-editor>
+          <ng-container>
+            <div class="af-form-row">
+              <div class="af-form-block--c12">
+                <h2 i18n="@@productLabelStockPurchaseOrdersModal.section.additionalProofs">Additional proofs</h2>
+                <div class="af-form-element">
+                  @if (additionalProofsListManager) {
+                    <list-editor
+                      label="List of additional proofs"
+                      [listEditorManager]="additionalProofsListManager"
+                      addText="Add document"
+                      [canAdd]="true"
+                      i18n-label="@@productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.label"
+                      i18n-addText="@@productLabelStockPurchaseOrdersModal.list-editor.additionalProofs.addText"
+                      [invalid]="submitted && additionalProofsForm?.invalid">
+                      <list-editor-items>
+                        @for (item of additionalProofsForm.controls; track item; let i = $index) {
+                          <div>
+                            <app-additional-proof-item
+                              title=null
+                              [formControlInput]="item"
+                              [isOpen]="additionalProofsListManager.isOpen(i)"
+                              [listEditorManager]="this.additionalProofsListManager"
+                              [listEditorManagerPosition]="i">
+                            </app-additional-proof-item>
+                          </div>
+                        }
+                      </list-editor-items>
+                    </list-editor>
+                  }
+                </div>
+              </div>
             </div>
-
+          </ng-container>
+          <!-- TODO: Payments -->
+          <div class="af-form-row">
+            <div class="af-form-block--c12">
+              <div class="af-bottom-buttons">
+            <button class="btn btn-outlined me-2" data-bs-dismiss="modal" type="button" (click)="dismiss()"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.cancel">Cancel</span></button>
+            <button class="btn me-2" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder(!this.update)"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.save">Save</span></button>
+            @if (this.update) {
+<button class="btn" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder()"><span i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.saveAndClose">Save & Close</span></button>
+}
+          </div>
+            </div>
           </div>
         </div>
-      </ng-container>
-
-      <!-- TODO: Payments -->
-
-      <div class="af-form-row">
-        <div class="af-form-block--c12">
-
-          <div class="af-bottom-buttons" i18n="@@productLabelStockPurchaseOrdersModal.modal.footer.buttons">
-            <button class="btn btn-outlined mr-2" data-dismiss="modal" type="button" (click)="dismiss()"><span>Cancel</span></button>
-            <button class="btn mr-2" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder(!this.update)"><span>Save</span></button>
-            <button *ngIf="this.update" class="btn" type="button" (click)="!this.updatePOInProgress && createOrUpdatePurchaseOrder()"><span>Save & Close</span></button>
-          </div>
-
-        </div>
-      </div>
-
+      }
     </div>
-
-  </div>
+  }
 </app-authorised-layout>

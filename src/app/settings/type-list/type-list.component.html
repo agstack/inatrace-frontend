@@ -1,146 +1,180 @@
-<ng-container *ngIf="types$ | async as types">
+@if (types$ | async; as types) {
   <div class="main-inside-main">
-    <table *ngIf="types && types.items && types.items.length > 0" class="af-table">
-      <thead>
-        <tr *ngIf="type === 'semi-products'"
+    @if (types && types.items && types.items.length > 0) {
+      <table class="af-table">
+        <thead>
+          @if (type === 'semi-products') {
+            <tr
             result-sorter [sortOptions]="sortOptionsSemiProducts" (sortByKey)="changeSort($event)"></tr>
-
-        <tr *ngIf="type === 'processing-evidence-types'"
+          }
+          @if (type === 'processing-evidence-types') {
+            <tr
             result-sorter [sortOptions]="sortOptionsFPQ" (sortByKey)="changeSort($event)"></tr>
-
-        <tr *ngIf="type === 'processing-evidence-fields'"
+          }
+          @if (type === 'processing-evidence-fields') {
+            <tr
             result-sorter [sortOptions]="sortOptionsEvidenceFields" (sortByKey)="changeSort($event)"></tr>
-
-        <tr *ngIf="type === 'product-types'"
+          }
+          @if (type === 'product-types') {
+            <tr
             result-sorter [sortOptions]="sortOptionsProductTypes" (sortByKey)="changeSort($event)"></tr>
-
-        <tr *ngIf="type !== 'semi-products' && type !== 'processing-evidence-types' && type !== 'processing-evidence-fields' && type !== 'product-types'"
+          }
+          @if (type !== 'semi-products' && type !== 'processing-evidence-types' && type !== 'processing-evidence-fields' && type !== 'product-types') {
+            <tr
             result-sorter [sortOptions]="sortOptions" (sortByKey)="changeSort($event)"></tr>
-      </thead>
-      <tbody>
-
-        <ng-container *ngIf="type === 'semi-products'">
-          <tr *ngFor="let type of types.items">
-            <td [attr.data-label]="sortOptionsSemiProducts[0].name"><span>{{ type.name }}</span></td>
-            <td [attr.data-label]="sortOptionsSemiProducts[1].name"><span>{{ type.description }}</span></td>
-            <td [attr.data-label]="sortOptionsSemiProducts[2].name"><span>{{ getBooleanSign(type.buyable) }}</span></td>
-            <td [attr.data-label]="sortOptionsSemiProducts[3].name"><span>{{ getBooleanSign(type.sku) }}</span></td>
-            <td [attr.data-label]="sortOptionsSemiProducts[4].name"><span>{{ getBooleanSign(type.skuendCustomer) }}</span></td>
-            <td [attr.data-label]="sortOptionsSemiProducts[5].name">
-              <span>
-                <a (click)="edit(type)"
-                   class="company-action"
-                   [class.enabled-action]="true">
-                  <span *ngIf="isRegionalAdmin; else editMode" i18n="@@settingsTypes.tableCol.view">View</span>
-                </a>
-                <a i18n="@@settingsTypes.tableCol.delete"
-                   (click)="delete(type)"
-                   class="company-action"
-                   [class.enabled-action]="!isRegionalAdmin"
-                   [class.disabled-action]="isRegionalAdmin">
+          }
+        </thead>
+        <tbody>
+          @if (type === 'semi-products') {
+            @for (type of types.items; track type) {
+              <tr>
+                <td [attr.data-label]="sortOptionsSemiProducts[0].name"><span>{{ type.name }}</span></td>
+                <td [attr.data-label]="sortOptionsSemiProducts[1].name"><span>{{ type.description }}</span></td>
+                <td [attr.data-label]="sortOptionsSemiProducts[2].name"><span>{{ getBooleanSign(type.buyable) }}</span></td>
+                <td [attr.data-label]="sortOptionsSemiProducts[3].name"><span>{{ getBooleanSign(type.sku) }}</span></td>
+                <td [attr.data-label]="sortOptionsSemiProducts[4].name"><span>{{ getBooleanSign(type.skuendCustomer) }}</span></td>
+                <td [attr.data-label]="sortOptionsSemiProducts[5].name">
+                  <span>
+                    <a (click)="edit(type)"
+                      class="company-action"
+                      [class.enabled-action]="true">
+                      @if (isRegionalAdmin) {
+                        <span i18n="@@settingsTypes.tableCol.view">View</span>
+                      } @else {
+                        <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
+                      }
+                    </a>
+                    <a i18n="@@settingsTypes.tableCol.delete"
+                      (click)="delete(type)"
+                      class="company-action"
+                      [class.enabled-action]="!isRegionalAdmin"
+                      [class.disabled-action]="isRegionalAdmin">
                   Delete
                 </a>
-              </span>
-            </td>
-          </tr>
-        </ng-container>
-
-        <ng-container *ngIf="(type === 'processing-evidence-types')">
-          <tr *ngFor="let type of types.items">
-            <td [attr.data-label]="sortOptionsFPQ[0].name"><span>{{ type.code }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[2].name"><span>{{ type.type | formatProcessingEvidenceTypeType }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[3].name" class="align-center"><span>{{ getBooleanSign(type.fairness) }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[4].name" class="align-center"><span>{{ getBooleanSign(type.provenance) }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[5].name" class="align-center"><span>{{ getBooleanSign(type.quality) }}</span></td>
-            <td [attr.data-label]="sortOptionsFPQ[6].name">
-              <span>
-              <a (click)="edit(type)"
-                 class="company-action"
-                 [class.enabled-action]="true">
-                <span *ngIf="isRegionalAdmin; else editMode" i18n="@@settingsTypes.tableCol.view">View</span>
-              </a>
-              <a i18n="@@settingsTypes.tableCol.delete"
-                (click)="delete(type)"
-                class="company-action"
-                [class.enabled-action]="!isRegionalAdmin"
-                 [class.disabled-action]="isRegionalAdmin">
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+          @if ((type === 'processing-evidence-types')) {
+            @for (type of types.items; track type) {
+              <tr>
+                <td [attr.data-label]="sortOptionsFPQ[0].name"><span>{{ type.code }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[2].name"><span>{{ type.type | formatProcessingEvidenceTypeType }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[3].name" class="align-center"><span>{{ getBooleanSign(type.fairness) }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[4].name" class="align-center"><span>{{ getBooleanSign(type.provenance) }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[5].name" class="align-center"><span>{{ getBooleanSign(type.quality) }}</span></td>
+                <td [attr.data-label]="sortOptionsFPQ[6].name">
+                  <span>
+                    <a (click)="edit(type)"
+                      class="company-action"
+                      [class.enabled-action]="true">
+                      @if (isRegionalAdmin) {
+                        <span i18n="@@settingsTypes.tableCol.view">View</span>
+                      } @else {
+                        <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
+                      }
+                    </a>
+                    <a i18n="@@settingsTypes.tableCol.delete"
+                      (click)="delete(type)"
+                      class="company-action"
+                      [class.enabled-action]="!isRegionalAdmin"
+                      [class.disabled-action]="isRegionalAdmin">
                 Delete
               </a>
-            </span>
-            </td>
-          </tr>
-        </ng-container>
-
-        <ng-container *ngIf="(type === 'processing-evidence-fields')">
-          <tr *ngFor="let type of types.items">
-            <td [attr.data-label]="sortOptionsEvidenceFields[0].name"><span>{{ type.fieldName }}</span></td>
-            <td [attr.data-label]="sortOptionsEvidenceFields[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
-            <td [attr.data-label]="sortOptionsEvidenceFields[2].name"><span>{{ type.type | formatProcessingEvidenceFieldType }}</span></td>
-            <td [attr.data-label]="sortOptionsEvidenceFields[3].name">
-              <span>
-              <a (click)="edit(type)"
-                 class="company-action"
-                 [class.enabled-action]="true">
-                <span *ngIf="isRegionalAdmin; else editMode" i18n="@@settingsTypes.tableCol.view">View</span>
-              </a>
-              <a i18n="@@settingsTypes.tableCol.delete"
-                 (click)="delete(type)"
-                 class="company-action"
-                 [class.enabled-action]="!isRegionalAdmin"
-                 [class.disabled-action]="isRegionalAdmin">
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+          @if ((type === 'processing-evidence-fields')) {
+            @for (type of types.items; track type) {
+              <tr>
+                <td [attr.data-label]="sortOptionsEvidenceFields[0].name"><span>{{ type.fieldName }}</span></td>
+                <td [attr.data-label]="sortOptionsEvidenceFields[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
+                <td [attr.data-label]="sortOptionsEvidenceFields[2].name"><span>{{ type.type | formatProcessingEvidenceFieldType }}</span></td>
+                <td [attr.data-label]="sortOptionsEvidenceFields[3].name">
+                  <span>
+                    <a (click)="edit(type)"
+                      class="company-action"
+                      [class.enabled-action]="true">
+                      @if (isRegionalAdmin) {
+                        <span i18n="@@settingsTypes.tableCol.view">View</span>
+                      } @else {
+                        <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
+                      }
+                    </a>
+                    <a i18n="@@settingsTypes.tableCol.delete"
+                      (click)="delete(type)"
+                      class="company-action"
+                      [class.enabled-action]="!isRegionalAdmin"
+                      [class.disabled-action]="isRegionalAdmin">
                 Delete
               </a>
-            </span>
-            </td>
-          </tr>
-        </ng-container>
-
-        <ng-container *ngIf="type === 'product-types'">
-          <tr *ngFor="let type of types.items">
-            <td [attr.data-label]="sortOptionsProductTypes[0].name"><span>{{ type.code }}</span></td>
-            <td [attr.data-label]="sortOptionsProductTypes[1].name"><span>{{ type.name }}</span></td>
-            <td [attr.data-label]="sortOptionsProductTypes[2].name"><span>{{ type.description }}</span></td>
-            <td [attr.data-label]="sortOptionsProductTypes[3].name">
-              <span>
-                <a (click)="edit(type)"
-                   class="company-action"
-                   [class.enabled-action]="true">
-                  <span *ngIf="isRegionalAdmin; else editMode" i18n="@@settingsTypes.tableCol.view">View</span>
-                </a>
-              </span>
-            </td>
-          </tr>
-        </ng-container>
-
-        <ng-container *ngIf="(type !== 'semi-products' &&  type !== 'processing-evidence-types' && type !== 'processing-evidence-fields' && type !== 'product-types')">
-          <tr *ngFor="let type of types.items">
-            <td [attr.data-label]="sortOptions[0].name"><span>{{ type.code }}</span></td>
-            <td [attr.data-label]="sortOptions[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
-            <td [attr.data-label]="sortOptions[2].name">
-              <span>
-              <a (click)="edit(type)"
-                 class="company-action"
-                 [class.enabled-action]="true">
-                <span *ngIf="isRegionalAdmin; else editMode" i18n="@@settingsTypes.tableCol.view">View</span>
-              </a>
-              <a i18n="@@settingsTypes.tableCol.delete"
-                 (click)="delete(type)"
-                 class="company-action"
-                 [class.enabled-action]="!isRegionalAdmin"
-                 [class.disabled-action]="isRegionalAdmin">
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+          @if (type === 'product-types') {
+            @for (type of types.items; track type) {
+              <tr>
+                <td [attr.data-label]="sortOptionsProductTypes[0].name"><span>{{ type.code }}</span></td>
+                <td [attr.data-label]="sortOptionsProductTypes[1].name"><span>{{ type.name }}</span></td>
+                <td [attr.data-label]="sortOptionsProductTypes[2].name"><span>{{ type.description }}</span></td>
+                <td [attr.data-label]="sortOptionsProductTypes[3].name">
+                  <span>
+                    <a (click)="edit(type)"
+                      class="company-action"
+                      [class.enabled-action]="true">
+                      @if (isRegionalAdmin) {
+                        <span i18n="@@settingsTypes.tableCol.view">View</span>
+                      } @else {
+                        <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
+                      }
+                    </a>
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+          @if ((type !== 'semi-products' &&  type !== 'processing-evidence-types' && type !== 'processing-evidence-fields' && type !== 'product-types')) {
+            @for (type of types.items; track type) {
+              <tr>
+                <td [attr.data-label]="sortOptions[0].name"><span>{{ type.code }}</span></td>
+                <td [attr.data-label]="sortOptions[1].name"><span>{{ type | translateCodebook: 'label' }}</span></td>
+                <td [attr.data-label]="sortOptions[2].name">
+                  <span>
+                    <a (click)="edit(type)"
+                      class="company-action"
+                      [class.enabled-action]="true">
+                      @if (isRegionalAdmin) {
+                        <span i18n="@@settingsTypes.tableCol.view">View</span>
+                      } @else {
+                        <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
+                      }
+                    </a>
+                    <a i18n="@@settingsTypes.tableCol.delete"
+                      (click)="delete(type)"
+                      class="company-action"
+                      [class.enabled-action]="!isRegionalAdmin"
+                      [class.disabled-action]="isRegionalAdmin">
                 Delete
               </a>
-            </span>
-            </td>
-          </tr>
-        </ng-container>
-
-      </tbody>
-    </table>
-    <div *ngIf="types && types.items && types.items.length == 0" class="no-list-results" i18n="@@settingsTypes.noTypes">
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+    @if (types && types.items && types.items.length === 0) {
+      <div class="no-list-results" i18n="@@settingsTypes.noTypes">
       No types found
     </div>
+    }
   </div>
   <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
     <ngb-pagination
@@ -152,7 +186,4 @@
       [rotate]="true">
     </ngb-pagination>
   </div>
-  <ng-template #editMode>
-    <span i18n="@@settingsTypes.tableCol.edit">Edit</span>
-  </ng-template>
-</ng-container>
+}

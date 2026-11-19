@@ -4,7 +4,7 @@ import { GeneralCodesService } from './general-codes.service';
 import { PagedSearchResults } from 'src/interfaces/CodebookHelperService';
 import { generateFormFromMetadata, formAssign } from 'src/shared/utils';
 import { Observable } from 'rxjs';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { ApiCountry } from 'src/api/model/apiCountry';
 import { CommonControllerService } from 'src/api/api/commonController.service';
 
@@ -33,13 +33,13 @@ export class CountryService extends GeneralCodesService<ApiCountry> {
     // return ApiCountry.formGenerator
   }
 
-  public addElement(arr: FormArray, el: ApiCountry): void {
-    arr.push(this.formGenerator()(el) as FormGroup);
+  public addElement(arr: UntypedFormArray, el: ApiCountry): void {
+    arr.push(this.formGenerator()(el) as UntypedFormGroup);
     arr.markAsDirty()
   }
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiCountry>> {
-    let lkey = key ? key.toLocaleLowerCase() : null
+    const lkey = key ? key.toLocaleLowerCase() : null
     return this.sifrant$.pipe(
       map((allChoices: PagedSearchResults<ApiCountry>) => {
         return {

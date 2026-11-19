@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { generateFormFromMetadata, defaultEmptyObject } from 'src/shared/utils';
 import { take } from 'rxjs/operators';
 import {
@@ -30,9 +30,11 @@ import { ApiProductType } from '../../../api/model/apiProductType';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-type-detail-modal',
-  templateUrl: './type-detail-modal.component.html',
-  styleUrls: ['./type-detail-modal.component.scss']
+    selector: 'app-type-detail-modal',
+    templateUrl: './type-detail-modal.component.html',
+    styleUrls: ['./type-detail-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TypeDetailModalComponent implements OnInit {
 
@@ -51,7 +53,7 @@ export class TypeDetailModalComponent implements OnInit {
   @Input()
   public saveCallback: () => string;
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   codebookProcessingEvidenceTypeType = EnumSifrant.fromObject(this.processingEvidenceTypeType);
@@ -232,19 +234,19 @@ export class TypeDetailModalComponent implements OnInit {
 
   finalizeForm() {
     if (!this.form.contains('translations')) {
-      this.form.addControl('translations', new FormArray([]));
+      this.form.addControl('translations', new UntypedFormArray([]));
     }
 
     const translations = this.form.get('translations').value;
     this.form.removeControl('translations');
-    this.form.addControl('translations', new FormArray([]));
+    this.form.addControl('translations', new UntypedFormArray([]));
 
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
-      (this.form.get('translations') as FormArray).push(new FormGroup({
-        name: new FormControl(translation ? translation.name : ''),
-        description: new FormControl(translation ? translation.description : ''),
-        language: new FormControl(lang)
+      (this.form.get('translations') as UntypedFormArray).push(new UntypedFormGroup({
+        name: new UntypedFormControl(translation ? translation.name : ''),
+        description: new UntypedFormControl(translation ? translation.description : ''),
+        language: new UntypedFormControl(lang)
       }));
     }
   }
@@ -255,36 +257,36 @@ export class TypeDetailModalComponent implements OnInit {
 
   updateProcessingEvidenceFieldTranslations() {
     if (!this.form.contains('translations')) {
-      this.form.addControl('translations', new FormArray([]));
+      this.form.addControl('translations', new UntypedFormArray([]));
     }
 
     const translations = this.form.get('translations').value;
     this.form.removeControl('translations');
-    this.form.addControl('translations', new FormArray([]));
+    this.form.addControl('translations', new UntypedFormArray([]));
 
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
-      (this.form.get('translations') as FormArray).push(new FormGroup({
-        label: new FormControl(translation ? translation.label : ''),
-        language: new FormControl(lang)
+      (this.form.get('translations') as UntypedFormArray).push(new UntypedFormGroup({
+        label: new UntypedFormControl(translation ? translation.label : ''),
+        language: new UntypedFormControl(lang)
       }));
     }
   }
 
   updateProcessingEvidenceTypeTranslations() {
     if (!this.form.contains('translations')) {
-      this.form.addControl('translations', new FormArray([]));
+      this.form.addControl('translations', new UntypedFormArray([]));
     }
 
     const translations = this.form.get('translations').value;
     this.form.removeControl('translations');
-    this.form.addControl('translations', new FormArray([]));
+    this.form.addControl('translations', new UntypedFormArray([]));
 
     for (const lang of this.languages) {
       const translation = translations.find(t => t.language === lang);
-      (this.form.get('translations') as FormArray).push(new FormGroup({
-        label: new FormControl(translation ? translation.label : ''),
-        language: new FormControl(lang)
+      (this.form.get('translations') as UntypedFormArray).push(new UntypedFormGroup({
+        label: new UntypedFormControl(translation ? translation.label : ''),
+        language: new UntypedFormControl(lang)
       }));
     }
   }

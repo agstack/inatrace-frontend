@@ -80,8 +80,20 @@ export class SelectedUserCompanyService {
 
     const company = await modalRef.result as ApiCompanyListResponse;
     if (company) {
+      const previousCompanyId = localStorage.getItem('selectedUserCompany');
       this.setSelectedCompany(await this.fetchCompanyProfile(company.id));
+
+      // The modal is shown after the application booted, so the page behind it was rendered
+      // with the previous company (or with none). Reload it to let every screen fetch data for
+      // the company that was just selected.
+      if (!previousCompanyId || previousCompanyId !== String(company.id)) {
+        this.reloadCurrentPage();
+      }
     }
+  }
+
+  protected reloadCurrentPage(): void {
+    window.location.reload();
   }
 
   private async fetchCompanyProfile(id: number): Promise<ApiCompanyGet | null> {

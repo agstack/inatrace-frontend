@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'formatCompanyCerts'
+    name: 'formatCompanyCerts',
+    standalone: false
 })
 export class FormatCompanyCertsPipe implements PipeTransform {
 

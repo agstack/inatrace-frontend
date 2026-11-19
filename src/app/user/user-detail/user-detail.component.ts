@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserControllerService } from 'src/api/api/userController.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 import { ComponentCanDeactivate } from '../../shared-services/component-can-deactivate';
 import { take } from 'rxjs/operators';
@@ -13,13 +13,15 @@ import { BeycoTokenService } from '../../shared-services/beyco-token.service';
 import { SelectedUserCompanyService } from '../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-user-detail',
-  templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.scss']
+    selector: 'app-user-detail',
+    templateUrl: './user-detail.component.html',
+    styleUrls: ['./user-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UserDetailComponent extends ComponentCanDeactivate implements OnInit {
 
-  userProfileForm: FormGroup;
+  userProfileForm: UntypedFormGroup;
   submitted = false;
   userId: number;
   showPassReqText = false;
@@ -146,12 +148,12 @@ export class UserDetailComponent extends ComponentCanDeactivate implements OnIni
   }
 
   createUserProfileForm(user: any): void {
-    this.userProfileForm = new FormGroup({
-      name: new FormControl(user.name, [Validators.required]),
-      surname: new FormControl(user.surname, [Validators.required]),
-      email: new FormControl(user.email),
-      language: new FormControl(user.language),
-      role: new FormControl(user.role, [Validators.required])
+    this.userProfileForm = new UntypedFormGroup({
+      name: new UntypedFormControl(user.name, [Validators.required]),
+      surname: new UntypedFormControl(user.surname, [Validators.required]),
+      email: new UntypedFormControl(user.email),
+      language: new UntypedFormControl(user.language),
+      role: new UntypedFormControl(user.role, [Validators.required])
     });
   }
 

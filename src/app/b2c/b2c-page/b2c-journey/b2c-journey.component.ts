@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { B2cPageComponent } from '../b2c-page.component';
 import { ApiBusinessToCustomerSettings } from '../../../../api/model/apiBusinessToCustomerSettings';
 import { Subscription } from 'rxjs';
@@ -8,9 +8,11 @@ import { HistoryTimelineItem } from './model';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
 
 @Component({
-  selector: 'app-b2c-journey',
-  templateUrl: './b2c-journey.component.html',
-  styleUrls: ['./b2c-journey.component.scss']
+    selector: 'app-b2c-journey',
+    templateUrl: './b2c-journey.component.html',
+    styleUrls: ['./b2c-journey.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class B2cJourneyComponent implements OnInit {
 

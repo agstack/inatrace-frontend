@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthorisedLayoutComponent } from '../../../layout/authorised/authorised-layout/authorised-layout.component';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { TabCommunicationService } from '../../../shared/tab-communication.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { setNavigationParameter } from '../../../../shared/utils';
 import { ApiFacility } from '../../../../api/model/apiFacility';
 import { FacilityControllerService } from '../../../../api/api/facilityController.service';
@@ -15,7 +15,9 @@ import { ApiCompanyGet } from '../../../../api/model/apiCompanyGet';
 import CompanyRolesEnum = ApiCompanyGet.CompanyRolesEnum;
 
 @Component({
-  template: ''
+    template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class OrdersTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -40,7 +42,7 @@ export class OrdersTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Controls for the facility dropdown select component
   facilityCodebook: CompanyFacilitiesService;
-  facilityForStockOrderForm = new FormControl(null);
+  facilityForStockOrderForm = new UntypedFormControl(null);
   selectedFacilityId = null;
   selectedFacilityId$ = new BehaviorSubject<number>(null);
 

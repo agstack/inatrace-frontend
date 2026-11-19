@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { GeneralSifrantService } from '../../../../shared-services/general-sifrant.service';
 import { FacilityControllerService } from '../../../../../api/api/facilityController.service';
 import { CompanyFacilitiesService } from '../../../../shared-services/company-facilities.service';
@@ -33,7 +33,9 @@ export interface DeliveryDates {
 }
 
 @Component({
-  template: ''
+    template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockCoreTabComponent implements OnInit, AfterViewInit {
 
@@ -44,13 +46,13 @@ export class StockCoreTabComponent implements OnInit, AfterViewInit {
 
   selectedFacilityId: number;
   facilityIdPing$ = new BehaviorSubject<number>(null);
-  facilityForStockOrderForm = new FormControl(null);
+  facilityForStockOrderForm = new UntypedFormControl(null);
   facilityCodebook: GeneralSifrantService<any>;
 
   openBalanceOnly = false;
   openBalancePing$ = new BehaviorSubject<boolean>(this.openBalanceOnly);
 
-  filterWayOfPayment = new FormControl('');
+  filterWayOfPayment = new UntypedFormControl('');
   wayOfPaymentPing$ = new BehaviorSubject<string>(this.filterWayOfPayment.value);
 
   selectedOrders: ApiStockOrder[];
@@ -59,8 +61,8 @@ export class StockCoreTabComponent implements OnInit, AfterViewInit {
 
   clickAddPaymentsPing$ = new BehaviorSubject<boolean>(false);
 
-  fromFilterDate = new FormControl(null);
-  toFilterDate = new FormControl(null);
+  fromFilterDate = new UntypedFormControl(null);
+  toFilterDate = new UntypedFormControl(null);
   deliveryDatesPing$ = new BehaviorSubject<DeliveryDates>({ from: null, to: null });
 
   isAuthRoleToSeeProcessing = true;

@@ -9,7 +9,7 @@ export interface MessageModalDefinition {
     type: MessageType,
     title?: string,
     message: string,
-    buttons?: Array<MessageResultType>,
+    buttons?: MessageResultType[],
     focusButton?: MessageResultType,
     dismissable?: boolean,
     buttonTitles?: Partial<MessageButtonStringDict>,
@@ -28,9 +28,9 @@ export class MessageModalService {
     }
 
     public open(definition: MessageModalDefinition): Promise<MessageResultType> {
-        let options = Object.assign({}, this.defaultNgbModalOptions, definition.options || {});
-        let inputs = objectSlice(definition, ['type', 'title', 'message', 'buttons', 'focusButton', 'dismissable', 'buttonTitles', 'buttonClasses']);
-        let modalRef = this.ngbModal.open(MessageModalComponent, options, inputs);
+        const options = Object.assign({}, this.defaultNgbModalOptions, definition.options || {});
+        const inputs = objectSlice(definition, ['type', 'title', 'message', 'buttons', 'focusButton', 'dismissable', 'buttonTitles', 'buttonClasses']);
+        const modalRef = this.ngbModal.open(MessageModalComponent, options, inputs);
         return modalRef.result;
     }
 }

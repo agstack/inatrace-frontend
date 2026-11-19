@@ -1,38 +1,40 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ElementRef, ChangeDetectionStrategy, AfterViewInit, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, combineLatest, timer } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, map, merge, startWith, tap, shareReplay } from 'rxjs/operators';
 import { CodebookHelperService, PagedSearchResults } from 'src/interfaces/CodebookHelperService';
 import { SimpleValidationScheme } from 'src/interfaces/Validation';
 import { isRequired, pripraviSifrant } from 'src/shared/utils';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
     selector: 'single-choice',
     templateUrl: './single-choice.component.html',
-    styleUrls: ['./single-choice.component.scss']
+    styleUrls: ['./single-choice.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class SingleChoiceComponent implements OnInit {
+export class SingleChoiceComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input()
     label: string;
 
     @Input() supplierFeedback = false;
 
     @Input()
-    forceAllInLowercase: boolean = false;
+    forceAllInLowercase = false;
 
     @Input()
     markRequired?: boolean;
 
-    private _formControl: FormControl = null;
-    @Input() set formControlInput(value: FormControl) {
+    private _formControl: UntypedFormControl = null;
+    @Input() set formControlInput(value: UntypedFormControl) {
         this._formControl = value;
         if (value) {
             this.resubscribe()
         }
     }
 
-    get formControlInput(): FormControl {
+    get formControlInput(): UntypedFormControl {
         return this._formControl;
     }
 
@@ -60,7 +62,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     @Input()
-    allowMultiple: boolean = false;
+    allowMultiple = false;
 
     @Input()
     enumChoices?: any;
@@ -78,10 +80,10 @@ export class SingleChoiceComponent implements OnInit {
     enumPlaceholder?: string;
 
     @Input()
-    clearable: boolean = true;
+    clearable = true;
 
     @Input()
-    readonly: boolean = false;
+    readonly = false;
 
     @Input()
     headerTemplate?: TemplateRef<any>;
@@ -99,17 +101,28 @@ export class SingleChoiceComponent implements OnInit {
     forbiddenElements: (val: any) => boolean = (val: any) => false
 
     @Input()
-    showPagingInFooter: boolean = false
+    showPagingInFooter = false
 
-    get supplierState$(): Observable<string> {
-        return this.supplierFeedback && this.codebookService
+    supplierState: string = null;
+    notFoundText: string = $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
+    private supplierStateSub: Subscription = null;
+
+    private subscribeSupplierState(): void {
+        if (this.supplierStateSub) {
+            this.supplierStateSub.unsubscribe();
+            this.supplierStateSub = null;
+        }
+        const state$ = this.supplierFeedback && this.codebookService
             ? (this.codebookService as any).supplierState$ : null;
+        if (state$) {
+            this.supplierStateSub = state$.subscribe((value: string) => this.supplierState = value);
+        } else {
+            this.supplierState = null;
+        }
     }
 
     get supplierNotFoundText(): string {
-        const state = this.supplierFeedback && this.codebookService && (this.codebookService as any).supplierState$;
-        if (state && state.value !== 'ready') { return ''; }
-        return $localize`:@@ui.singleChoice.niIzbir.text:Nothing found`;
+        return this.notFoundText;
     }
 
     retrySupplierQuery() {
@@ -144,13 +157,13 @@ export class SingleChoiceComponent implements OnInit {
             });
         }
         if(this.iOS && this.ngSelect && this.ngSelect.element) {
-            let el = this.ngSelect.element.querySelector('.ng-placeholder')
+            const el = this.ngSelect.element.querySelector('.ng-placeholder')
             el.setAttribute('style', 'padding-left: 0.5rem');    // iOS left padding hack
         }
     }
 
     @Input()
-    useSimpleStyle: boolean = false
+    useSimpleStyle = false
 
     @Input()
     skipItemId: number = null;
@@ -159,15 +172,15 @@ export class SingleChoiceComponent implements OnInit {
     organizationId: string = null;
 
     @Input()
-    touchedOnBlur: boolean = false;
+    touchedOnBlur = false;
 
     @Output() onChange = new EventEmitter<any>();
 
     @Output() isActive = new EventEmitter<any>();
 
-    options$: Observable<Array<any>> = null;
-    options: Array<any> = null
-    allOptions: Array<any> = null
+    options$: Observable<any[]> = null;
+    options: any[] = []
+    allOptions: any[] = []
 
     keys$: Observable<string> = null
 
@@ -187,7 +200,7 @@ export class SingleChoiceComponent implements OnInit {
         return this.booleanTrue != null && this.booleanFalse != null;
     }
 
-    valueSelectedObjects$ = new BehaviorSubject<Array<any>>([]);
+    valueSelectedObjects$ = new BehaviorSubject<any[]>([]);
 
     modelChoiceSubscription = null;
     optionsSubscription = null;
@@ -221,7 +234,7 @@ export class SingleChoiceComponent implements OnInit {
             if (this.modelChoiceSubscription) this.modelChoiceSubscription.unsubscribe();
             this.modelChoiceSubscription = this.formControlInput.valueChanges.subscribe(val => {
                 if (this.codebookService.isEnumFormControl()) {
-                    let sub = this.codebookService.enumOptions().subscribe(options => {
+                    const sub = this.codebookService.enumOptions().subscribe(options => {
                         if (options) {
                             this.modelChoice = this.codebookService.enumValueToObject(val, options)
                             // sub.unsubscribe()
@@ -261,7 +274,9 @@ export class SingleChoiceComponent implements OnInit {
 
         this.autocompleteSelection$ = this.codebookService.autocompleteCandidates(
             this.typeahead$.pipe(
-                debounceTime(200),
+                // Empty emissions come from focus, blur, clear and selection: they ask for the
+                // initial list and must not wait for the typing debounce.
+                debounce((key: string) => timer(key == null ? 0 : 200)),
                 distinctUntilChanged()
             ),
             this.selectedObjects$.pipe(map(x => [])),   // Ne odstranjujemo selectanih v single-choice
@@ -279,7 +294,7 @@ export class SingleChoiceComponent implements OnInit {
             this.optionsSubscription.unsubscribe()
         }
         this.optionsSubscription = this.autocompleteSelection$.subscribe((choices) => {
-            this.options = choices;
+            setTimeout(() => this.options = choices);
         })
     }
 
@@ -344,12 +359,12 @@ export class SingleChoiceComponent implements OnInit {
             distinctUntilChanged()
         ).pipe(
             map(key => {
-                let lkey = key ? key.toLocaleLowerCase() : ''
+                const lkey = key ? key.toLocaleLowerCase() : ''
                 return this.allOptions.filter(x => String(x.value).toLocaleLowerCase().indexOf(lkey) >= 0)
             }),
             startWith(this.allOptions)
         ).subscribe((choices) => {
-            this.options = choices;
+            setTimeout(() => this.options = choices);
         })
     }
 
@@ -358,7 +373,7 @@ export class SingleChoiceComponent implements OnInit {
             this.booleanTrue,
             this.booleanFalse
         ]
-        let val = this.formControlInput.value
+        const val = this.formControlInput.value
         if (val === true) {
             this.modelChoice = this.options[0]
         } else if (val === false) {
@@ -381,6 +396,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     resubscribe() {
+        this.subscribeSupplierState();
         if (this.codebookService) {
             this.resubscribeCodebook()
         } else if (this.enumChoices) {
@@ -414,8 +430,8 @@ export class SingleChoiceComponent implements OnInit {
 
     onChangeHandler(event) {
         if (!event) return;   // handled by onClear
-        let lastValueId = this.modelChoice ? this.modelChoice.id : null
-        let newValueId = event ? event.id : null
+        const lastValueId = this.modelChoice ? this.modelChoice.id : null
+        const newValueId = event ? event.id : null
 
         if (this.formControlInput) {
             if (this.enumChoices || this.isBooleanSelector()) {
@@ -484,17 +500,17 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     isPagePrev() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         return tmp && tmp.offset > 0
     }
 
     isPageNext() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         return tmp && tmp.offset + tmp.limit < tmp.totalCount
     }
 
     onPagePrev() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         this.pagingParams$.next(
             {
                 offset: Math.max(0, tmp.offset - tmp.limit),
@@ -504,7 +520,7 @@ export class SingleChoiceComponent implements OnInit {
     }
 
     onPageNext() {
-        let tmp = this.pagingData$.getValue()
+        const tmp = this.pagingData$.getValue()
         this.pagingParams$.next(
             {
                 offset: Math.min(tmp.offset + tmp.limit, tmp.totalCount),

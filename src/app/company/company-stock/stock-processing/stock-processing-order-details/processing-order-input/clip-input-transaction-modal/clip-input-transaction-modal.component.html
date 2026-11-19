@@ -1,43 +1,48 @@
-<div class="modal-container" *ngIf="stockOrder">
-
-  <div class="modal-header">
-    <h4 class="modal-title sp-faq-modal-title"
-        i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.title">Clip input quantity</h4>
-  </div>
-
-  <div class="modal-body">
-    <div class="d-flex-column align-items-center mb-4">
-      <textinput
-              label="Enter the quantity to be used from this transaction"
-              [helpText]="inputHelpText"
-              [form]="selectedQuantityForm"
-              style="width: 100%"
-              i18n-label="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.label"
-              [isInvalid]="submitted && selectedQuantityForm.invalid">
-        <ng-container *ngIf="submitted">
-          <div *ngIf="selectedQuantityForm.errors as errors" class="sc-invalid-feedback">
-            <div *ngIf="errors.required">
-              <span i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.error.required">
+@if (stockOrder) {
+  <div class="modal-container">
+    <div class="modal-header">
+      <h4 class="modal-title sp-faq-modal-title"
+      i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.title">Clip input quantity</h4>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex-column align-items-center mb-4">
+        <textinput
+          label="Enter the quantity to be used from this transaction"
+          [helpText]="inputHelpText"
+          [form]="selectedQuantityForm"
+          style="width: 100%"
+          i18n-label="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.label"
+          [isInvalid]="submitted && selectedQuantityForm.invalid">
+          @if (submitted) {
+            @if (selectedQuantityForm.errors; as errors) {
+              <div class="sc-invalid-feedback">
+                @if (errors.required) {
+                  <div>
+                    <span i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.error.required">
                 Quantity is required
               </span>
-            </div>
-            <div *ngIf="errors.max">
-              <span i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.error.max">
+                  </div>
+                }
+                @if (errors.max) {
+                  <div>
+                    <span i18n="@@productLabelStockProcessingOrderDetail.clipInputModal.inputQuantity.error.max">
                 Selected quantity cannot be greater than the available
               </span>
-            </div>
-          </div>
-        </ng-container>
-      </textinput>
+                  </div>
+                }
+              </div>
+            }
+          }
+        </textinput>
+      </div>
     </div>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outlined" (click)="cancel()" i18n="@@rejectTransaction.modal.button.cancel">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outlined" (click)="cancel()" i18n="@@rejectTransaction.modal.button.cancel">
       <span>Cancel</span>
     </button>
-    <button type="button" class="btn" (click)="confirm()" i18n="@@rejectTransaction.modal.button.confirm">
+      <button type="button" class="btn" (click)="confirm()" i18n="@@rejectTransaction.modal.button.confirm">
       <span>Confirm</span>
     </button>
+    </div>
   </div>
-</div>
+}

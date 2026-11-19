@@ -1,10 +1,11 @@
 <div class="modal-container">
   <div class="modal-header">
     <h4 class="modal-title sp-faq-modal-title">{{title}}</h4>
-    <button *ngIf="dismissable" type="button" class="close" aria-label="Close"
-      (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    @if (dismissable) {
+      <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')">
+      </button>
+    }
   </div>
   <div class="modal-body">
     <textinput
@@ -13,41 +14,55 @@
       style="width: 100%"
       placeholder="Enter batch number"
       [isInvalid]="submitted && form.get('number').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="form.get('number').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required">
-            Batch number is required
+      @if (submitted) {
+        @if (form.get('number').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div>
+                Batch number is required
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
     </textinput>
     <app-datepicker
       label="Production date"
       [form]="form.get('productionDate')"
       [invalid]="submitted && form.get('productionDate').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="form.get('productionDate').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required">
-            Production date is required
+      @if (submitted) {
+        @if (form.get('productionDate').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div>
+                Production date is required
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
     </app-datepicker>
 
     <app-datepicker
       label="Expiry date"
       [form]="form.get('expiryDate')"
       [invalid]="submitted && form.get('expiryDate').invalid">
-      <ng-container *ngIf="submitted">
-        <div *ngIf="form.get('expiryDate').errors as errors" class="sc-invalid-feedback">
-          <div *ngIf="errors.required">
-            Expiry date is required
+      @if (submitted) {
+        @if (form.get('expiryDate').errors; as errors) {
+          <div class="sc-invalid-feedback">
+            @if (errors.required) {
+              <div>
+                Expiry date is required
+              </div>
+            }
+            @if (errors.endBeforeStart) {
+              <div>
+                Expiry date must be later than prodution date
+              </div>
+            }
           </div>
-          <div *ngIf="errors.endBeforeStart">
-            Expiry date must be later than prodution date
-          </div>
-        </div>
-      </ng-container>
+        }
+      }
     </app-datepicker>
 
   </div>

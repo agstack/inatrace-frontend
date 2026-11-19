@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-error-modal',
     templateUrl: './error-modal.component.html',
-    styleUrls: ['./error-modal.component.scss']
+    styleUrls: ['./error-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ErrorModalComponent implements OnInit {
     @Input()

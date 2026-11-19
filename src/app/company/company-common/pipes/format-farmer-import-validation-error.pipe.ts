@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'formatFarmerImportValidationError',
+    name: 'formatFarmerImportValidationError',
+    standalone: false
 })
 export class FormatFarmerImportValidationErrorPipe implements PipeTransform {
 

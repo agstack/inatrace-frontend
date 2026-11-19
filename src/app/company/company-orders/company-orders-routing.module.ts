@@ -7,7 +7,8 @@ import { AddCustomerOrderComponent } from './placed-orders/add-customer-order/ad
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'received-orders'
+    redirectTo: 'received-orders',
+    pathMatch: 'full'
   },
   {
     path: 'received-orders',

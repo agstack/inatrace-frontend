@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbModalImproved } from '../../../core/ngb-modal-improved/ngb-modal-improved.service';
 import { ActivatedRoute } from '@angular/router';
 import { FinalProductDetailModalComponent } from '../final-product-detail-modal/final-product-detail-modal.component';
@@ -8,9 +8,11 @@ import { ApiProductCompany } from '../../../../api/model/apiProductCompany';
 import { SelectedUserCompanyService } from '../../../core/selected-user-company.service';
 
 @Component({
-  selector: 'app-final-product',
-  templateUrl: './final-product.component.html',
-  styleUrls: ['./final-product.component.scss']
+    selector: 'app-final-product',
+    templateUrl: './final-product.component.html',
+    styleUrls: ['./final-product.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FinalProductComponent implements OnInit {
 

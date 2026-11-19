@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { FacilityControllerService } from '../../../api/api/facilityController.service';
 import { ApiFacility } from '../../../api/model/apiFacility';
 import { EChartsOption } from 'echarts';
@@ -24,9 +24,11 @@ import {
 } from '../../shared-services/company-processing-actions-by-status.service';
 
 @Component({
-  selector: 'app-company-dashboard',
-  templateUrl: './company-dashboard.component.html',
-  styleUrls: ['./company-dashboard.component.scss']
+    selector: 'app-company-dashboard',
+    templateUrl: './company-dashboard.component.html',
+    styleUrls: ['./company-dashboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDashboardComponent implements OnInit {
 
@@ -37,7 +39,7 @@ export class CompanyDashboardComponent implements OnInit {
   procActionsCodebook: CompanyProcessingActionsByStatusService;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private facilityController: FacilityControllerService,
     private companyControllerService: CompanyControllerService,
     public valueChainController: ValueChainControllerService,
@@ -54,7 +56,7 @@ export class CompanyDashboardComponent implements OnInit {
   deliveriesGraphTrunked = false;
   procPerformanceGraphTrunked = false;
 
-  companyId: number = Number(localStorage.getItem('selectedUserCompany'));
+  companyId = Number(localStorage.getItem('selectedUserCompany'));
 
   semiProductModelChoice = null;
 
@@ -108,10 +110,10 @@ export class CompanyDashboardComponent implements OnInit {
     }],
   };
 
-  deliveriesMergeOptions: EChartsOption;
+  deliveriesMergeOptions: EChartsOption = {};
 
   // search fields form control
-  deliveriesForm: FormGroup = this.fb.group({
+  deliveriesForm: UntypedFormGroup = this.fb.group({
     from: this.fb.control(new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDay(), 12)),
     to: this.fb.control(new Date()),
     timeUnitGraphType: this.fb.control(undefined),
@@ -189,9 +191,9 @@ export class CompanyDashboardComponent implements OnInit {
     }]
   };
 
-  processingPerformanceMergeOptions: EChartsOption;
+  processingPerformanceMergeOptions: EChartsOption = {};
 
-  processingPerformanceForm: FormGroup = this.fb.group({
+  processingPerformanceForm: UntypedFormGroup = this.fb.group({
     from: this.fb.control(new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDay(), 12)),
     to: this.fb.control(new Date()),
     timeUnitGraphType: this.fb.control(undefined),
@@ -200,40 +202,40 @@ export class CompanyDashboardComponent implements OnInit {
     exportType: this.fb.control('EXCEL')
   });
 
-  get facilityFormControl(): FormControl{
-    return (this.deliveriesForm.get('facility') as FormControl);
+  get facilityFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('facility') as UntypedFormControl);
   }
 
-  get farmerFormControl(): FormControl{
-    return (this.deliveriesForm.get('farmer') as FormControl);
+  get farmerFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('farmer') as UntypedFormControl);
   }
 
-  get collectorFormControl(): FormControl{
-    return (this.deliveriesForm.get('collector') as FormControl);
+  get collectorFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('collector') as UntypedFormControl);
   }
 
-  get organicFormControl(): FormControl{
-    return (this.deliveriesForm.get('organic') as FormControl);
+  get organicFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('organic') as UntypedFormControl);
   }
 
-  get womensOnlyFormControl(): FormControl{
-    return (this.deliveriesForm.get('womenOnly') as FormControl);
+  get womensOnlyFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('womenOnly') as UntypedFormControl);
   }
 
-  get productInDepositFormControl(): FormControl{
-    return (this.deliveriesForm.get('productInDeposit') as FormControl);
+  get productInDepositFormControl(): UntypedFormControl{
+    return (this.deliveriesForm.get('productInDeposit') as UntypedFormControl);
   }
 
-  get processingFacilityFormControl(): FormControl{
-    return (this.processingPerformanceForm.get('facility') as FormControl);
+  get processingFacilityFormControl(): UntypedFormControl{
+    return (this.processingPerformanceForm.get('facility') as UntypedFormControl);
   }
 
-  get processingActionFormControl(): FormControl{
-    return (this.processingPerformanceForm.get('process') as FormControl);
+  get processingActionFormControl(): UntypedFormControl{
+    return (this.processingPerformanceForm.get('process') as UntypedFormControl);
   }
 
   processingEvidenceInputField(name: string) {
-    return (this.processingPerformanceForm.get(name) as FormControl);
+    return (this.processingPerformanceForm.get(name) as UntypedFormControl);
   }
 
   ngOnInit(): void {
@@ -273,8 +275,8 @@ export class CompanyDashboardComponent implements OnInit {
       id: this.companyId
     }).subscribe(next => {
       if (next?.data) {
-        this.processingActions = next.data.items.filter(pa => ['PROCESSING', 'FINAL_PROCESSING'].some(type => type === pa.type));
         setTimeout(() => {
+          this.processingActions = next.data.items.filter(pa => ['PROCESSING', 'FINAL_PROCESSING'].some(type => type === pa.type));
           this.processingPerformanceForm.get('process')?.setValue(this.processingActions[0]);
           this.reloadProcessingFields(this.processingActions[0]);
         });
@@ -357,15 +359,17 @@ export class CompanyDashboardComponent implements OnInit {
                 graphData.push(total.totalQuantity);
             });
 
-            this.deliveriesMergeOptions = {
-              xAxis: {
-                data: labelData
-              },
-              series: [{
-                name: `${this.graphTranslations.quantity} (${this.graphTranslations.in} kg)`,
-                data: graphData
-              }]
-            };
+            setTimeout(() => {
+              this.deliveriesMergeOptions = {
+                xAxis: {
+                  data: labelData
+                },
+                series: [{
+                  name: `${this.graphTranslations.quantity} (${this.graphTranslations.in} kg)`,
+                  data: graphData
+                }]
+              };
+            });
           }
     });
   }
@@ -436,6 +440,7 @@ export class CompanyDashboardComponent implements OnInit {
         // If larger label use only value
         const yAxisLabel = (next.data.measureUnitType.label.length < 5) ? next.data.measureUnitType.label : '';
 
+        setTimeout(() => {
         this.processingPerformanceMergeOptions = {
           xAxis: {
             data: labelData
@@ -456,6 +461,7 @@ export class CompanyDashboardComponent implements OnInit {
               data: ratioData
             }]
         };
+        });
       }
     });
   }

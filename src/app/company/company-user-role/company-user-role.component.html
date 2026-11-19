@@ -6,62 +6,70 @@
   [formControlInput]="originalFormControl"
   [disableDelete]="disableDelete">
   <tag-closed>
-    <div *ngIf="contentObject" class="c-capitalize-first">
-      <div class="tagitem-text-container">
-        <div *ngIf="contentObject.name">
-          {{contentObject.name}} {{contentObject.surname}}  ({{contentObject.email}}), {{contentObject.companyRole}}
+    @if (contentObject) {
+      <div class="c-capitalize-first">
+        <div class="tagitem-text-container">
+          @if (contentObject.name) {
+            <div>
+              {{contentObject.name}} {{contentObject.surname}}  ({{contentObject.email}}), {{contentObject.companyRole}}
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </tag-closed>
   <tag-open>
-    <subform-layout *ngIf="this.form">
-      <subform-form>
-
-        <single-choice
-          label="User"
-          i18n-label="@@companyUserRole.label.user"
-          [formControlInput]="userForm"
-          [codebookService]="userSifrant"
-          [isInvalidChoice]="submitted && userForm.invalid"
-          [readonly]="readonly"
-          (onChange)="setUser($event)">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="userForm.errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@companyUserRole.textinput.user.error">
+    @if (this.form) {
+      <subform-layout>
+        <subform-form>
+          <single-choice
+            label="User"
+            i18n-label="@@companyUserRole.label.user"
+            [formControlInput]="userForm"
+            [codebookService]="userSifrant"
+            [isInvalidChoice]="submitted && userForm.invalid"
+            [readonly]="readonly"
+            (onChange)="setUser($event)">
+            @if (submitted) {
+              @if (userForm.errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@companyUserRole.textinput.user.error">
                 User is required
               </div>
-            </div>
-          </ng-container>
-
-        </single-choice>
-
-        <single-choice
-          label="Company role"
-          i18n-label="@@companyUserRole.label.role"
-          [formControlInput]="$any(form.get('companyRole'))"
-          [codebookService]="codebookRoles"
-          [isInvalidChoice]="submitted && form.get('companyRole').invalid">
-          <ng-container *ngIf="submitted">
-            <div *ngIf="form.get('companyRole').errors as errors" class="sc-invalid-feedback">
-              <div *ngIf="errors.required" i18n="@@companyUserRole.textinput.role.error">
+                  }
+                </div>
+              }
+            }
+          </single-choice>
+          <single-choice
+            label="Company role"
+            i18n-label="@@companyUserRole.label.role"
+            [formControlInput]="$any(form.get('companyRole'))"
+            [codebookService]="codebookRoles"
+            [isInvalidChoice]="submitted && form.get('companyRole').invalid">
+            @if (submitted) {
+              @if (form.get('companyRole').errors; as errors) {
+                <div class="sc-invalid-feedback">
+                  @if (errors.required) {
+                    <div i18n="@@companyUserRole.textinput.role.error">
                 Role is required
               </div>
-            </div>
-          </ng-container>
-        </single-choice>
-
-      </subform-form>
-
-      <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
-        <mini-buttons
-          (onSave)="firstSendToServer()"
-          (onCancel)="cancel()"
-          [error]="submitted && form.invalid">
-        </mini-buttons>
-      </subform-mini-buttons>
-
-    </subform-layout>
+                  }
+                </div>
+              }
+            }
+          </single-choice>
+        </subform-form>
+        <subform-mini-buttons style="width: 100%;" class="d-flex justify-content-end">
+          <mini-buttons
+            (onSave)="firstSendToServer()"
+            (onCancel)="cancel()"
+            [error]="submitted && form.invalid">
+          </mini-buttons>
+        </subform-mini-buttons>
+      </subform-layout>
+    }
 
   </tag-open>
 </smart-tag>

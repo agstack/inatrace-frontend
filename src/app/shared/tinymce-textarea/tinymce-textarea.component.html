@@ -1,25 +1,34 @@
 <div class="tinymce-container" >
-    <label class="sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">{{label}}<span *ngIf="this.isRequired() && !hideRequired">*</span></label>
-    <editor
-        [formControl]="formControlInput"
-        [init]="init"
-        [class.sc-invalid-feedback-border]="invalid"
-        [disabled]="formControlInput.disabled || disabled"
-        [ngClass]="{'tmce-disabled': formControlInput.disabled || disabled}"
-        ></editor>
-    <ng-content></ng-content>
+  <label class="sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">{{label}}@if (this.isRequired() && !hideRequired) {
+    <span>*</span>
+  }</label>
+  <editor
+    [formControl]="formControlInput"
+    [init]="init"
+    [class.sc-invalid-feedback-border]="invalid"
+    [disabled]="formControlInput.disabled || disabled"
+    [ngClass]="{'tmce-disabled': formControlInput.disabled || disabled}"
+  ></editor>
+  <ng-content></ng-content>
 
-    <div class="mt-2 af-overrides-mt-2" *ngIf="counter">
-        <span [class.text-danger]="counter && tooManyCharacters()">
-            <span
-                *ngIf="counter"
-                class="mt-1 pl-1"
-                i18n="char count label|@@ui.textinput.charCount.label">Num. of chars: {{getSteviloZnakov()}}
+  @if (counter) {
+    <div class="mt-2 af-overrides-mt-2">
+      <span [class.text-danger]="counter && tooManyCharacters()">
+        @if (counter) {
+          <span
+            class="mt-1 ps-1"
+            i18n="char count label|@@ui.textinput.charCount.label">Num. of chars: {{getSteviloZnakov()}}
             </span>
-            <span *ngIf="counter && this.getMaxLength()">/ {{this.getMaxLength()}}</span>
-            <span *ngIf="counter && this.getMinLength()"> (vnesti jih morate vsaj {{this.getMinLength()}})</span>
-        </span>
+        }
+        @if (counter && this.getMaxLength()) {
+          <span>/ {{this.getMaxLength()}}</span>
+        }
+        @if (counter && this.getMinLength()) {
+          <span> (vnesti jih morate vsaj {{this.getMinLength()}})</span>
+        }
+      </span>
     </div>
+  }
 </div>
 
 <!-- style="pointer-events: none;" -->

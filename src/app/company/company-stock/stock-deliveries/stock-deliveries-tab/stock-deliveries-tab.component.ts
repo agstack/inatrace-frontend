@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { StockCoreTabComponent } from '../../stock-core/stock-core-tab/stock-core-tab.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilityControllerService } from '../../../../../api/api/facilityController.service';
 import { take } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/auth.service';
 import { CompanyControllerService } from '../../../../../api/api/companyController.service';
@@ -19,9 +19,11 @@ import { SelfOnboardingService } from "../../../../shared-services/self-onboardi
 import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-stock-deliveries-tab',
-  templateUrl: './stock-deliveries-tab.component.html',
-  styleUrls: ['./stock-deliveries-tab.component.scss']
+    selector: 'app-stock-deliveries-tab',
+    templateUrl: './stock-deliveries-tab.component.html',
+    styleUrls: ['./stock-deliveries-tab.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockDeliveriesTabComponent extends StockCoreTabComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -30,15 +32,15 @@ export class StockDeliveriesTabComponent extends StockCoreTabComponent implement
   showedPurchaseOrders = 0;
   allPurchaseOrders = 0;
 
-  filterWomenOnly = new FormControl(null);
+  filterWomenOnly = new UntypedFormControl(null);
   womenOnlyPing$ = new BehaviorSubject<boolean>(this.filterWomenOnly.value);
 
-  searchFarmerNameAndSurname = new FormControl(null);
+  searchFarmerNameAndSurname = new UntypedFormControl(null);
   searchFarmerNameSurnamePing$ = new BehaviorSubject<string>(null);
 
   reloadPurchaseOrdersPing$ = new BehaviorSubject<boolean>(false);
 
-  semiProductFrom = new FormControl(null);
+  semiProductFrom = new UntypedFormControl(null);
   facilitySemiProducts: FacilitySemiProductsCodebookService = null;
 
   semiProductId$: Observable<number> = this.semiProductFrom.valueChanges.pipe(
@@ -95,14 +97,14 @@ export class StockDeliveriesTabComponent extends StockCoreTabComponent implement
     this.subs = this.selfOnboardingService.guidedTourStep$.subscribe(step => {
 
       setTimeout(() => {
-        this.deliveriesTitleTooltip.close();
-        this.addDeliveryButtonTooltip.close();
+        this.deliveriesTitleTooltip?.close();
+        this.addDeliveryButtonTooltip?.close();
       }, 50);
 
       if (step === 2) {
-        setTimeout(() => this.deliveriesTitleTooltip.open(), 50);
+        setTimeout(() => this.deliveriesTitleTooltip?.open(), 50);
       } else if (step === 3) {
-        setTimeout(() => this.addDeliveryButtonTooltip.open(), 50);
+        setTimeout(() => this.addDeliveryButtonTooltip?.open(), 50);
       }
     });
   }

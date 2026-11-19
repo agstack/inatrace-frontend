@@ -6,27 +6,27 @@
       <div class="col nav-buttons-container">
 
         <div class="nav-button"
-             [ngbTooltip]="myStockNavButtonTooltipTemplate"
-             [autoClose]="false"
-             placement="bottom"
-             triggers="manual"
-             tooltipClass="self-onboarding-tooltip-class"
-             #myStockNavButtonTooltip="ngbTooltip">
+          [ngbTooltip]="myStockNavButtonTooltipTemplate"
+          [autoClose]="false"
+          placement="bottom"
+          triggers="manual"
+          tooltipClass="self-onboarding-tooltip-class"
+          #myStockNavButtonTooltip="ngbTooltip">
           <a routerLink="/my-stock">
             <div class="nav-button-inner">
               <img src="../../../assets/icons/icon-my-stock.svg" alt="Warehouse icon">
               <h4 i18n="@@productLabel.sideTitle.stock">My stock</h4>
             </div>
           </a>
-            <ng-template #myStockNavButtonTooltipTemplate>
-                <div>
-                    <div i18n="@@guidedTour.userHomeMyStockSection.title" class="section-title">MY STOCK</div>
-                    <div class="sub-title" i18n="@@guidedTour.userHomeMyStockSection.myStockMenu">This is your 'My stock' menu - Here you document deliveries, processes and payments.
+          <ng-template #myStockNavButtonTooltipTemplate>
+            <div>
+              <div i18n="@@guidedTour.userHomeMyStockSection.title" class="section-title">MY STOCK</div>
+              <div class="sub-title" i18n="@@guidedTour.userHomeMyStockSection.myStockMenu">This is your 'My stock' menu - Here you document deliveries, processes and payments.
                         Click 'OK' to continue the tour.</div>
-                    <button class="btn btn-white" (click)="continueGuidedTourToMyStock()"
-                            i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
-                </div>
-            </ng-template>
+              <button class="btn btn-white" (click)="continueGuidedTourToMyStock()"
+              i18n="@@guidedTour.tooltipStep.ok.button">OK</button>
+            </div>
+          </ng-template>
         </div>
 
         <div class="nav-button">
@@ -38,44 +38,48 @@
           </a>
         </div>
 
-        <div *ngIf="showMyCustomersNavButton" class="nav-button">
-          <a routerLink="/my-customers">
-            <div class="nav-button-inner">
-              <img src="assets/icons/icon-my-customers.svg" alt="Store icon">
-              <h4 i18n="@@userHome.customers.title">My customers</h4>
-            </div>
-          </a>
-        </div>
+        @if (showMyCustomersNavButton) {
+          <div class="nav-button">
+            <a routerLink="/my-customers">
+              <div class="nav-button-inner">
+                <img src="assets/icons/icon-my-customers.svg" alt="Store icon">
+                <h4 i18n="@@userHome.customers.title">My customers</h4>
+              </div>
+            </a>
+          </div>
+        }
 
         <div class="nav-button cursor-pointer"
-             [ngbTooltip]="farmersNavButtonTooltipTemplate"
-             [autoClose]="false"
-             placement="bottom"
-             triggers="manual"
-             tooltipClass="self-onboarding-tooltip-class"
-             #farmersNavButtonTooltip="ngbTooltip">
+          [ngbTooltip]="farmersNavButtonTooltipTemplate"
+          [autoClose]="false"
+          placement="bottom"
+          triggers="manual"
+          tooltipClass="self-onboarding-tooltip-class"
+          #farmersNavButtonTooltip="ngbTooltip">
           <a (click)="openMyFarmers()">
             <div class="nav-button-inner">
               <img src="assets/icons/icon-farmers.svg" alt="Farmer icon">
               <h4 i18n="@@companyLeftPanel.farmers">Farmers</h4>
             </div>
           </a>
-            <ng-template #farmersNavButtonTooltipTemplate>
-                <div>
-                    <h2 class="title" i18n="@@selfOnboarding.checklist.addFarmers.step1">Click here to access the farmers menu.</h2>
-                    <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/3' }}</span></div>
-                </div>
-            </ng-template>
+          <ng-template #farmersNavButtonTooltipTemplate>
+            <div>
+              <h2 class="title" i18n="@@selfOnboarding.checklist.addFarmers.step1">Click here to access the farmers menu.</h2>
+              <div class="step-line"><span i18n="@@selfOnboarding.checklist.item.step">Step {{ '1/3' }}</span></div>
+            </div>
+          </ng-template>
         </div>
 
-        <div *ngIf="showCollectorsNavButton" class="nav-button">
-          <a routerLink="/my-collectors">
-            <div class="nav-button-inner">
-              <img src="assets/icons/icon-collectors.svg" alt="Collector icon">
-              <h4 i18n="@@companyLeftPanel.collectors">Collectors</h4>
-            </div>
-          </a>
-        </div>
+        @if (showCollectorsNavButton) {
+          <div class="nav-button">
+            <a routerLink="/my-collectors">
+              <div class="nav-button-inner">
+                <img src="assets/icons/icon-collectors.svg" alt="Collector icon">
+                <h4 i18n="@@companyLeftPanel.collectors">Collectors</h4>
+              </div>
+            </a>
+          </div>
+        }
 
         <div class="nav-button">
           <a routerLink="/company-dashboard">
@@ -91,46 +95,47 @@
 
     <div class="row">
       <div class="col my-products-container">
-        <ng-container *ngIf="products$ | async as products">
+        @if (products$ | async; as products) {
           <div class="main-inside-top content-element">
             <div class="d-flex justify-content-between content-element--row1">
               <div class="title-page content-element--title" i18n="@@userHome.products.title">My Products</div>
             </div>
           </div>
-
           <div class="row" style="margin-top: 30px;">
-            <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let product of products.items">
-              <app-product-card
-                      [product]= product>
-              </app-product-card>
-            </div>
+            @for (product of products.items; track product) {
+              <div class="col-md-6 col-lg-4 col-xl-3">
+                <app-product-card
+                  [product]= product>
+                </app-product-card>
+              </div>
+            }
           </div>
-
-          <div *ngIf="products && products.items && products.items.length == 0" class="no-list-results" i18n="@@productList.noProducts">
+          @if (products && products.items && products.items.length === 0) {
+            <div class="no-list-results" i18n="@@productList.noProducts">
             No products
           </div>
-
+          }
           <div [style.display]="showPagination() ? 'flex' : 'none'" class="justify-content-end">
             <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="products.count"
-                    (pageChange)="onPageChange($event)"
-                    [maxSize]="7"
-                    [rotate]="true">
+              [(page)]="page"
+              [pageSize]="pageSize"
+              [collectionSize]="products.count"
+              (pageChange)="onPageChange($event)"
+              [maxSize]="7"
+              [rotate]="true">
             </ngb-pagination>
           </div>
-        </ng-container>
+        }
       </div>
     </div>
 
   </div>
 
-    <div class="help-assistant" (click)="openAssistantModal()"></div>
-    <div class="help-tooltip-main cursor-pointer"
-         (click)="openAssistantModal()"
-         i18n="@@selfOnboarding.helpAssistant.tooltipMessage">I'm here to help</div>
-    <div class="help-tooltip-second-ring"></div>
-    <div class="help-tooltip-first-ring"></div>
+  <div class="help-assistant" (click)="openAssistantModal()"></div>
+  <div class="help-tooltip-main cursor-pointer"
+    (click)="openAssistantModal()"
+  i18n="@@selfOnboarding.helpAssistant.tooltipMessage">I'm here to help</div>
+  <div class="help-tooltip-second-ring"></div>
+  <div class="help-tooltip-first-ring"></div>
 
 </app-authorised-layout>

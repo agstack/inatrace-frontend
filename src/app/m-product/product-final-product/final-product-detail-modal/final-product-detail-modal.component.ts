@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { ProductControllerService } from '../../../../api/api/productController.service';
 import { defaultEmptyObject, generateFormFromMetadata } from '../../../../shared/utils';
 import { ApiSemiProductValidationScheme } from '../../../settings/type-detail-modal/validation';
 import { ApiFinalProduct } from '../../../../api/model/apiFinalProduct';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveMeasureUnitTypeService } from '../../../shared-services/active-measure-unit-types.service';
 import { ApiProductLabelBase } from '../../../../api/model/apiProductLabelBase';
@@ -12,9 +12,11 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import ProductLabelsService from '../../../shared-services/product-labels.service';
 
 @Component({
-  selector: 'app-final-product-detail-modal',
-  templateUrl: './final-product-detail-modal.component.html',
-  styleUrls: ['./final-product-detail-modal.component.scss']
+    selector: 'app-final-product-detail-modal',
+    templateUrl: './final-product-detail-modal.component.html',
+    styleUrls: ['./final-product-detail-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FinalProductDetailModalComponent implements OnInit {
 
@@ -34,11 +36,11 @@ export class FinalProductDetailModalComponent implements OnInit {
 
   title: string;
   submitted = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  productLabelForm = new FormControl(null);
+  productLabelForm = new UntypedFormControl(null);
 
-  productLabels: Array<ApiProductLabelBase> = [];
+  productLabels: ApiProductLabelBase[] = [];
   productLabelsCodebook: ProductLabelsService;
 
   constructor(

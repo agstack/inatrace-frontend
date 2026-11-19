@@ -2,77 +2,87 @@
 <!-- <div *ngIf="!isOpen"> -->
 <!-- <div style="min-height: 0px;"> -->
 <div [ngStyle]="{'display': isOpen ? 'none' : ''}"
-    #fullTag
-    [class.hover-pointer]="!readOnly" [class.tagitem]="!readOnly"
-    [@expandCollapse]="isOpen ? 'closed' : 'open'"
-    (click)="!isDisabled() && onEditHandler('fullTag')"
-    (keyup.enter)="!isDisabled() && onEditHandler('fullTag')"
-    [@deleteAnimate]="deleted ? 'deleted' : 'active'"
-    (@deleteAnimate.done)="deleteAfterAnimation($event)"
-    style="overflow-y: hidden"
-    [tabindex]="isDisabled() ? '-1' : '0'">
-    <div class="d-flex flex-row flex-grow-1">
-        <div class="d-flex flex-grow-1">
-            <ng-content select="tag-closed"></ng-content>
-        </div>
-        <div class="d-flex" *ngIf="!readOnly && !viewOnly">
-            <fa-icon
-                *ngIf="!isDisabled() && !disableEdit"
-                #editIcon
-                class="ml-1 mr-2"
-                style="max-height: 2rem;"
-                [icon]="'pen'"
-                transform="shrink-2"
-                tabindex="0"
-                (keyup.enter)="onEditHandler('editIcon'); $event.stopPropagation()"
-                (click)="onEditHandler('editIcon'); $event.stopPropagation()"></fa-icon>
-            <fa-icon
-                *ngIf="!isDisabled() && !disableDelete"
-                #deleteIcon
-                class="ml-1"
-                style="max-height: 2rem;"
-                [icon]="'times'"
-                transform="shrink-2"
-                tabindex="0"
-                (keyup.enter)="deleteTriggered(true); $event.stopPropagation()"
-                (click)="deleteTriggered(true); $event.stopPropagation()"></fa-icon>
-        </div>
-        <div class="d-flex" *ngIf="viewOnly">
-            <fa-icon
-                *ngIf="!isDisabled() && viewOnly"
-                #editIcon
-                class="ml-1 mr-2"
-                style="max-height: 2rem;"
-                [icon]="'eye'"
-                transform="shrink-2"
-                tabindex="0"
-                (keyup.enter)="onEditHandler('viewIcon'); $event.stopPropagation()"
-                (click)="onEditHandler('viewIcon'); $event.stopPropagation()"></fa-icon>
-        </div>
+  #fullTag
+  [class.hover-pointer]="!readOnly" [class.tagitem]="!readOnly"
+  [@expandCollapse]="isOpen ? 'closed' : 'open'"
+  (click)="!isDisabled() && onEditHandler('fullTag')"
+  (keyup.enter)="!isDisabled() && onEditHandler('fullTag')"
+  [@deleteAnimate]="deleted ? 'deleted' : 'active'"
+  (@deleteAnimate.done)="deleteAfterAnimation($event)"
+  style="overflow-y: hidden"
+  [tabindex]="isDisabled() ? '-1' : '0'">
+  <div class="d-flex flex-row flex-grow-1">
+    <div class="d-flex flex-grow-1">
+      <ng-content select="tag-closed"></ng-content>
     </div>
+    @if (!readOnly && !viewOnly) {
+      <div class="d-flex">
+        @if (!isDisabled() && !disableEdit) {
+          <fa-icon
+            #editIcon
+            class="ms-1 me-2"
+            style="max-height: 2rem;"
+            [icon]="'pen'"
+            transform="shrink-2"
+            tabindex="0"
+            (keyup.enter)="onEditHandler('editIcon'); $event.stopPropagation()"
+          (click)="onEditHandler('editIcon'); $event.stopPropagation()"></fa-icon>
+        }
+        @if (!isDisabled() && !disableDelete) {
+          <fa-icon
+            #deleteIcon
+            class="ms-1"
+            style="max-height: 2rem;"
+            [icon]="'times'"
+            transform="shrink-2"
+            tabindex="0"
+            (keyup.enter)="deleteTriggered(true); $event.stopPropagation()"
+          (click)="deleteTriggered(true); $event.stopPropagation()"></fa-icon>
+        }
+      </div>
+    }
+    @if (viewOnly) {
+      <div class="d-flex">
+        @if (!isDisabled() && viewOnly) {
+          <fa-icon
+            #editIcon
+            class="ms-1 me-2"
+            style="max-height: 2rem;"
+            [icon]="'eye'"
+            transform="shrink-2"
+            tabindex="0"
+            (keyup.enter)="onEditHandler('viewIcon'); $event.stopPropagation()"
+          (click)="onEditHandler('viewIcon'); $event.stopPropagation()"></fa-icon>
+        }
+      </div>
+    }
+  </div>
 </div>
 <!-- </div> -->
 <!-- </div> -->
 
-<div class="overlay-backdrop"
-    *ngIf="isOpen" (click)=onBackdrop()></div>
+@if (isOpen) {
+  <div class="overlay-backdrop"
+  (click)=onBackdrop()></div>
+}
 
-<div
+@if (showEditableComponent) {
+  <div
     #editComponent
     class="on-the-overlay"
-    *ngIf="showEditableComponent"
     [@expandCollapse2]="!isOpen ? 'closed' : 'open'"
     (@expandCollapse2.start)="startShowEditableComponentAnimation()"
     (@expandCollapse2.done)="endShowEditableComponentAnimation()">
     <div #target class="flex-grow-1">
-        <span #startTabElementJump tabindex="0" (focus)="onStartFocus()"></span>
-        <span #startTabElementTarget tabindex="0"></span>
-        <ng-content select="tag-open"></ng-content>
-        <span #endTabElementTarget tabindex="0"></span>
-        <span #endTabElementJump tabindex="0" (focus)="onEndFocus()"></span>
+      <span #startTabElementJump tabindex="0" (focus)="onStartFocus()"></span>
+      <span #startTabElementTarget tabindex="0"></span>
+      <ng-content select="tag-open"></ng-content>
+      <span #endTabElementTarget tabindex="0"></span>
+      <span #endTabElementJump tabindex="0" (focus)="onEndFocus()"></span>
     </div>
-</div>
+  </div>
+}
 
 <!-- <div *ngIf="isOpen">
-    <ng-content select="tag-open"></ng-content>
+<ng-content select="tag-open"></ng-content>
 </div> -->

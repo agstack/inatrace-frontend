@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
@@ -11,9 +11,11 @@ import { ApiProcessingAction } from '../../../../../api/model/apiProcessingActio
 import { ApiPaginatedResponseApiProcessingAction } from '../../../../../api/model/apiPaginatedResponseApiProcessingAction';
 
 @Component({
-  selector: 'app-stock-processing-facility-list',
-  templateUrl: './stock-processing-facility-list.component.html',
-  styleUrls: ['./stock-processing-facility-list.component.scss']
+    selector: 'app-stock-processing-facility-list',
+    templateUrl: './stock-processing-facility-list.component.html',
+    styleUrls: ['./stock-processing-facility-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockProcessingFacilityListComponent implements OnInit {
 

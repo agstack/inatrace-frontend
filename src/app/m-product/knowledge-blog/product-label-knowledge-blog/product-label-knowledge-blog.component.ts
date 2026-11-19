@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, Subscription } from 'rxjs';
@@ -13,11 +13,13 @@ import { NgbModalImproved } from 'src/app/core/ngb-modal-improved/ngb-modal-impr
 import { KnowledgeBlogSelectSectionModalComponent } from '../knowledge-blog-select-section-modal/knowledge-blog-select-section-modal.component';
 
 @Component({
-  selector: 'app-product-label-knowledge-blog',
-  templateUrl: './product-label-knowledge-blog.component.html',
-  styleUrls: ['./product-label-knowledge-blog.component.scss']
+    selector: 'app-product-label-knowledge-blog',
+    templateUrl: './product-label-knowledge-blog.component.html',
+    styleUrls: ['./product-label-knowledge-blog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ProductLabelKnowledgeBlogComponent implements OnInit {
+export class ProductLabelKnowledgeBlogComponent implements OnInit, OnDestroy {
 
   faTimes = faTimes;
   faFilter = faFilter;
@@ -26,14 +28,14 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
   pagingParams$ = new BehaviorSubject({})
   sortingParams$ = new BehaviorSubject({ sortBy: 'title', sort: 'ASC' })
   paging$ = new BehaviorSubject<number>(1);
-  page: number = 0;
+  page = 0;
   pageSize = 10;
-  searchName = new FormControl(null)
-  searchStatus = new FormControl("")
+  searchName = new UntypedFormControl(null)
+  searchStatus = new UntypedFormControl("")
   routerSub: Subscription;
 
-  allBlogs: number = 0;
-  showedBlogs: number = 0;
+  allBlogs = 0;
+  showedBlogs = 0;
 
 
   constructor(
@@ -56,7 +58,7 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
 
   async setAllBlogs() {
 
-    let res = await this.productController.getProductKnowledgeBlogs(this.productId, null, 'COUNT').pipe(take(1)).toPromise();
+    const res = await this.productController.getProductKnowledgeBlogs(this.productId, null, 'COUNT').pipe(take(1)).toPromise();
     if (res && res.status === 'OK' && res.data && res.data.count >= 0) {
       this.allBlogs = res.data.count;
     }
@@ -115,7 +117,7 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
   codebookStatus = EnumSifrant.fromObject(this.statusList)
 
   get statusList() {
-    let obj = {}
+    const obj = {}
     obj[""] = $localize`:@@productLabelKnowledgeBlog.type.all:All`
     obj['FAIRNESS'] = $localize`:@@productLabelKnowledgeBlog.type.fairness:Fairness`
     obj['QUALITY'] = $localize`:@@productLabelKnowledgeBlog.type.quality:Quality`
@@ -142,7 +144,7 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
 
           if (resp.data && resp.data.count && (this.pageSize - resp.data.count > 0)) this.showedBlogs = resp.data.count;
           else {
-            let temp = resp.data.count - (this.pageSize * (this.page - 1));
+            const temp = resp.data.count - (this.pageSize * (this.page - 1));
             this.showedBlogs = temp >= this.pageSize ? this.pageSize : temp;
           }
 
@@ -172,7 +174,7 @@ export class ProductLabelKnowledgeBlogComponent implements OnInit {
       title: $localize`:@@productLabelKnowledgeBlog.selectSection.title:Type selection`,
       instructionsHtml: $localize`:@@productLabelKnowledgeBlog.selectSection.instructionsHtml:Select type`,
     })
-    let type = await modalRef.result;
+    const type = await modalRef.result;
     if (type) {
       this.router.navigate(['/', 'product-labels', this.productId, 'knowledge-blog', type.toLowerCase(), 'new'])
     }

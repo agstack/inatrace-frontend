@@ -1,68 +1,77 @@
 <div class="row bottom-buttons">
   <div class="col-3">
-    <button
-        *ngIf="isBack()"
+    @if (isBack()) {
+      <button
         style="width: 80px;"
         class="btn btn-outlined"
         (click)="back()"
         [class.razpis-button-disabled]="!backEnabled()"
         i18n="@@bottomButoms.button.back"><span>Back</span></button>
+      }
     </div>
     <div class="col-9" style="text-align: right">
-    <button
-        *ngIf="isValidate()"
-        style="width: 160px"
-        class="btn btn-outlined mb-1 mr-1"
-        (click)="validate()"
-        [class.razpis-button-disabled-outline]="!validateEnabled()"
-        [class.action-error-outline]="error && lastPress === 'VALIDATE'"
-        [class.action-success-outline]="success && lastPress === 'VALIDATE'"
-        i18n="@@bottomButoms.button.validationCheck"><span>Validation check</span></button>
-    <button
-        *ngIf="isSave()"
-        style="width: 160px"
-        class="btn mb-1"
-        (click)="save()"
-        [class.razpis-button-disabled]="!saveEnabled()"
-        [class.action-error]="!ignoreErrorsOnSave && error && lastPress === 'SAVE'"><span>{{saveButtonLabel}}</span></button>
-    <button
-        *ngIf="isSubmit()"
-        class="btn"
-        (click)="submitEnabled() && submit()"
-        [class.razpis-button-disabled]="!submitEnabled()"
-        [class.action-error]="error && lastPress === 'SUBMIT'"
-        [class.action-success]="submitEnabled() && success && lastPress === 'SUBMIT'">{{submitTitle}}</button>
-    <button
-        *ngIf="isDownload()"
-        class="btn"
-        (click)="downloadEnabled() && download()"
-        [class.razpis-button-disabled]="!downloadEnabled()"
-        i18n="@@bottomButoms.button.donwloadPDF">Download PDF application</button>
-    <button
-        *ngIf="isUpdate()"
-        class="btn"
-        (click)="updateEnabled() && update()"
-        [class.razpis-button-disabled]="!updateEnabled()"
-        [class.action-error]="error && lastPress === 'UPDATE'"
-        i18n="@@bottomButoms.button.completeApplication">Complete the application</button>
+      @if (isValidate()) {
+        <button
+          style="width: 160px"
+          class="btn btn-outlined mb-1 me-1"
+          (click)="validate()"
+          [class.razpis-button-disabled-outline]="!validateEnabled()"
+          [class.action-error-outline]="error && lastPress === 'VALIDATE'"
+          [class.action-success-outline]="success && lastPress === 'VALIDATE'"
+          i18n="@@bottomButoms.button.validationCheck"><span>Validation check</span></button>
+        }
+        @if (isSave()) {
+          <button
+            style="width: 160px"
+            class="btn mb-1"
+            (click)="save()"
+            [class.razpis-button-disabled]="!saveEnabled()"
+            [class.action-error]="!ignoreErrorsOnSave && error && lastPress === 'SAVE'"><span>{{saveButtonLabel}}</span></button>
+          }
+          @if (isSubmit()) {
+            <button
+              class="btn"
+              (click)="submitEnabled() && submit()"
+              [class.razpis-button-disabled]="!submitEnabled()"
+              [class.action-error]="error && lastPress === 'SUBMIT'"
+            [class.action-success]="submitEnabled() && success && lastPress === 'SUBMIT'">{{submitTitle}}</button>
+          }
+          @if (isDownload()) {
+            <button
+              class="btn"
+              (click)="downloadEnabled() && download()"
+              [class.razpis-button-disabled]="!downloadEnabled()"
+            i18n="@@bottomButoms.button.donwloadPDF">Download PDF application</button>
+          }
+          @if (isUpdate()) {
+            <button
+              class="btn"
+              (click)="updateEnabled() && update()"
+              [class.razpis-button-disabled]="!updateEnabled()"
+              [class.action-error]="error && lastPress === 'UPDATE'"
+            i18n="@@bottomButoms.button.completeApplication">Complete the application</button>
+          }
         </div>
-</div>
+      </div>
 
-<div class="floating-save-box" *ngIf="saveEnabled() && floatingSave">
-    <button
-        *ngIf="isSave()"
-        class="btn btn-outlined"
-        style="width: 80px"
-        (click)="save()"
-        [class.razpis-button-disabled-outline]="!saveEnabled()"
-        [class.action-error-outline]="!ignoreErrorsOnSave && error && lastPress === 'SAVE'"><span>{{floatingSaveTitle}}</span></button>
-    <button
-        *ngIf="isValidate() && floatingValidate"
-        class="btn btn-outlined"
-        style="width: 160px"
-        (click)="validate()"
-        [class.razpis-button-disabled-outline]="!validateEnabled()"
-        [class.action-error-outline]="error && lastPress === 'VALIDATE'"
-        [class.action-success-outline]="success && lastPress === 'VALIDATE'"><span>{{floatingValidateTitle}}</span></button>
-
-</div>
+      @if (saveEnabled() && floatingSave) {
+        <div class="floating-save-box">
+          @if (isSave()) {
+            <button
+              class="btn btn-outlined"
+              style="width: 80px"
+              (click)="save()"
+              [class.razpis-button-disabled-outline]="!saveEnabled()"
+              [class.action-error-outline]="!ignoreErrorsOnSave && error && lastPress === 'SAVE'"><span>{{floatingSaveTitle}}</span></button>
+            }
+            @if (isValidate() && floatingValidate) {
+              <button
+                class="btn btn-outlined"
+                style="width: 160px"
+                (click)="validate()"
+                [class.razpis-button-disabled-outline]="!validateEnabled()"
+                [class.action-error-outline]="error && lastPress === 'VALIDATE'"
+                [class.action-success-outline]="success && lastPress === 'VALIDATE'"><span>{{floatingValidateTitle}}</span></button>
+              }
+            </div>
+          }

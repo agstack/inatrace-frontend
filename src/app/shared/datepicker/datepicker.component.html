@@ -1,26 +1,32 @@
 <div class="form-group">
-    <label *ngIf="label" class="mb-0 sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">{{label}}<span *ngIf="this.isRequired()">*</span></label>
-    <div style="position: relative;">
-        <input type="text"
-            ngbDatepicker
-            #d="ngbDatepicker"
-            #dateInput
-            placeholder="D. M. LLLL"
-            i18n-placeholder="@@datepickerDate.input.placeholder"
-            class="form-control sp-textinput"
-            [ngModel]="datepickerDate"
-            (click)="onClick()"
-            (blur)="onBlur()"
-            (ngModelChange)="change($event)"
-            [disabled]="isDisabled()"
-            [class.is-invalid]="invalid"
-            (keydown)="onKeydown($event)"
-            />
-        <div (click)="brisi()" class="clear-button" *ngIf="!isDisabled()">×</div>
-    </div>
-    <div>
-            <ng-content></ng-content>
-    </div>
+  @if (label) {
+    <label class="mb-0 sp-textinput-label" [class.sc-invalid-feedback-label-color]="invalid">{{label}}@if (this.isRequired()) {
+      <span>*</span>
+    }</label>
+  }
+  <div style="position: relative;">
+    <input type="text"
+      ngbDatepicker
+      #d="ngbDatepicker"
+      #dateInput
+      placeholder="D. M. LLLL"
+      i18n-placeholder="@@datepickerDate.input.placeholder"
+      class="form-control sp-textinput"
+      [ngModel]="datepickerDate"
+      (click)="onClick()"
+      (blur)="onBlur()"
+      (ngModelChange)="change($event)"
+      [disabled]="isDisabled()"
+      [class.is-invalid]="invalid"
+      (keydown)="onKeydown($event)"
+      />
+    @if (!isDisabled()) {
+      <div (click)="brisi()" class="clear-button">×</div>
+    }
+  </div>
+  <div>
+    <ng-content></ng-content>
+  </div>
 </div>
 
 <!-- (click)="d.toggle()" -->

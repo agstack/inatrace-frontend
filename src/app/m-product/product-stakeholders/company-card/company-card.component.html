@@ -1,18 +1,22 @@
-<div class="af-stakeholder{{ editable ? '-owner' : '' }}" *ngIf="company?.company" (click)="selectItem(company)">
-  <div class="af-stakeholder-section">
-
-    <div class="af-stakeholder-aside">
-      <div class="af-stakeholder-icon">
-        <span *ngIf="!owner" class="af-stakeholder-icon-shape af-stakeholder-icon-shape--stakeholder-chain"></span>
-        <span *ngIf="owner" class="af-stakeholder-icon-shape af-stakeholder-icon-shape--stakeholder-pair"></span>
+@if (company?.company) {
+  <div class="af-stakeholder{{ editable ? '-owner' : '' }}" (click)="selectItem(company)">
+    <div class="af-stakeholder-section">
+      <div class="af-stakeholder-aside">
+        <div class="af-stakeholder-icon">
+          @if (!owner) {
+            <span class="af-stakeholder-icon-shape af-stakeholder-icon-shape--stakeholder-chain"></span>
+          }
+          @if (owner) {
+            <span class="af-stakeholder-icon-shape af-stakeholder-icon-shape--stakeholder-pair"></span>
+          }
+        </div>
       </div>
-    </div>
-
-    <div class='af-stakeholder-content'>
-      <div class="af-stakeholder-dots">
-        <span class="af-stakeholder-dots-shape af-stakeholder-dots-shape--dots"></span>
+      <div class='af-stakeholder-content'>
+        <div class="af-stakeholder-dots">
+          <span class="af-stakeholder-dots-shape af-stakeholder-dots-shape--dots"></span>
+        </div>
+        <span class="af-stakeholder-title">{{ company.company.name }}</span>
       </div>
-      <span class="af-stakeholder-title">{{ company.company.name }}</span>
     </div>
   </div>
-</div>
+}

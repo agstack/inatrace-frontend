@@ -1,43 +1,46 @@
 <div class="af-card">
 
-    <div class="af-card-section">
-      <div [ngClass]="facilityTypeColor()">
-        <span class="af-card-indicator">&nbsp;</span>
-        <span class="af-card-title">{{ facility.name }}</span>
-        <span class="af-card-subtitle">{{ whereIsIt(facility) }}</span>
-        <div class="af-card-icon">
-          <span [ngClass]="facilityType()"></span>
-        </div>
+  <div class="af-card-section">
+    <div [ngClass]="facilityTypeColor()">
+      <span class="af-card-indicator">&nbsp;</span>
+      <span class="af-card-title">{{ facility.name }}</span>
+      <span class="af-card-subtitle">{{ whereIsIt(facility) }}</span>
+      <div class="af-card-icon">
+        <span [ngClass]="facilityType()"></span>
       </div>
     </div>
+  </div>
 
-    <div class="af-card-section">
-      <div class="af-card-section-content">
-        <span class="af-card-description">{{ description }}</span>
+  <div class="af-card-section">
+    <div class="af-card-section-content">
+      <span class="af-card-description">{{ description }}</span>
 
-        <div *ngIf="menuOptions.length > 0"
-             class="af-card-actions"
-             ngbDropdown
-             placement="bottom-right"
-             container="body">
+      @if (menuOptions.length > 0) {
+        <div
+          class="af-card-actions"
+          ngbDropdown
+          placement="bottom-end"
+          container="body">
           <button type="button"
-                  class="af-card-actions-toggle"
-                  ngbDropdownToggle
-                  i18n="@@stockProcessingFacilityCard.actions">
+            class="af-card-actions-toggle"
+            ngbDropdownToggle
+            i18n="@@stockProcessingFacilityCard.actions">
             Actions
           </button>
-
           <div class="dropdown-menu af-card-actions-menu" ngbDropdownMenu>
-            <button *ngFor="let action of menuOptions"
-                    type="button"
-                    class="dropdown-item"
-                    ngbDropdownItem
-                    (click)="goTo(action.id)">
-              {{ action.name }}
-            </button>
+            @for (action of menuOptions; track action) {
+              <button
+                type="button"
+                class="dropdown-item"
+                ngbDropdownItem
+                (click)="goTo(action.id)">
+                {{ action.name }}
+              </button>
+            }
           </div>
         </div>
-      </div>
+      }
     </div>
+  </div>
 
 </div>

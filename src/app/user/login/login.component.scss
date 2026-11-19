@@ -6,4 +6,14 @@
   img {
     height: 90px;
   }
+
+  // On phones the absolute logo sits on top of the "Welcome back!" title.
+  @media (max-width: 991.98px) {
+    position: static;
+    padding: 1rem 0 0 1rem;
+
+    img {
+      height: 64px;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TabCommunicationService } from 'src/app/shared/tab-communication.service';
 import { AuthorisedLayoutComponent } from 'src/app/layout/authorised/authorised-layout/authorised-layout.component';
@@ -10,9 +10,11 @@ import { ApiCompanyName } from '../../../../api/model/apiCompanyName';
 import { CompanyControllerService } from '../../../../api/api/companyController.service';
 
 @Component({
-  selector: 'app-company-detail-tab-manager',
-  templateUrl: './company-detail-tab-manager.component.html',
-  styleUrls: ['./company-detail-tab-manager.component.scss']
+    selector: 'app-company-detail-tab-manager',
+    templateUrl: './company-detail-tab-manager.component.html',
+    styleUrls: ['./company-detail-tab-manager.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CompanyDetailTabManagerComponent extends ComponentCanDeactivate implements OnInit, OnDestroy, AfterViewInit {
 

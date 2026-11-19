@@ -5,34 +5,37 @@
   <div class="modal-body">
 
     <textinput label="Final product"
-               i18n-label="@@generateQrCodeModal.field.finalProduct.label"
-               [form]="finalProductNameForm"></textinput>
+      i18n-label="@@generateQrCodeModal.field.finalProduct.label"
+    [form]="finalProductNameForm"></textinput>
 
     <single-choice label="Final product label"
-                   i18n-label="@@generateQrCodeModal.field.finalProductLabel.label"
-                   [formControlInput]="finalProductLabelForm"
-                   [codebookService]="finalProductLabelsCodebook">
+      i18n-label="@@generateQrCodeModal.field.finalProductLabel.label"
+      [formControlInput]="finalProductLabelForm"
+      [codebookService]="finalProductLabelsCodebook">
     </single-choice>
 
-    <div *ngIf="finalProductLabelForm.value; else noLabelSelected" class="mb-3">
-      <div class="d-flex justify-content-center mb-1">
-        <qr-code *ngIf="qrCodeString"
-                 [value]="qrCodeString"
-                 [size]="qrCodeSize"
-                 (click)="code.select(); copyToClipboard();">
-        </qr-code>
-        <input #code value="{{ qrCodeString }}" class="offscreen">
+    @if (finalProductLabelForm.value) {
+      <div class="mb-3">
+        <div class="d-flex justify-content-center mb-1">
+          @if (qrCodeString) {
+            <qr-code
+              [value]="qrCodeString"
+              [size]="qrCodeSize"
+              (click)="code.select(); copyToClipboard();">
+            </qr-code>
+          }
+          <input #code value="{{ qrCodeString }}" class="offscreen">
+        </div>
+        <div>
+          <div>URL:</div>
+          <div style="font-size: 12px;">{{ qrCodeString }}</div>
+        </div>
       </div>
-      <div>
-        <div>URL:</div>
-        <div style="font-size: 12px;">{{ qrCodeString }}</div>
-      </div>
-    </div>
-    <ng-template #noLabelSelected>
+    } @else {
       <div style="font-size: 14px; color: #8788AA; line-height: 20px;" class="mb-3">
         <span i18n="@@generateQrCodeModal.message.noLabelSelected">Please select a final product label to view the QR code.</span>
       </div>
-    </ng-template>
+    }
 
     <div class="modal-footer">
       <button type="button" class="btn" (click)="cancel()" i18n="@@generateQRCode.modal.button.close">

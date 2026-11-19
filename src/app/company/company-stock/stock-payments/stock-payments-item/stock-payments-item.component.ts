@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { generateFormFromMetadata } from '../../../../../shared/utils';
 import { GenericEditableItemComponent } from '../../../../shared/generic-editable-item/generic-editable-item.component';
 import { ApiPayment } from '../../../../../api/model/apiPayment';
@@ -14,24 +14,26 @@ import { CompanyControllerService } from '../../../../../api/api/companyControll
 import UserCustomerTypeEnum = ApiUserCustomerCooperative.UserCustomerTypeEnum;
 
 @Component({
-  selector: 'app-stock-payments-item',
-  templateUrl: './stock-payments-item.component.html',
-  styleUrls: ['./stock-payments-item.component.scss']
+    selector: 'app-stock-payments-item',
+    templateUrl: './stock-payments-item.component.html',
+    styleUrls: ['./stock-payments-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StockPaymentsItemComponent extends GenericEditableItemComponent<ApiPayment> implements OnInit {
 
   @Input()
-  paymentForm: FormGroup;
+  paymentForm: UntypedFormGroup;
   @Input()
   disableDelete: boolean;
   @Input()
   formTitle: string;
 
-  payableFromForm = new FormControl(null);
-  searchFarmersForm = new FormControl(null);
-  searchCompaniesForm = new FormControl(null);
-  searchCollectorsForm = new FormControl(null);
-  orderReferenceForm = new FormControl(null);
+  payableFromForm = new UntypedFormControl(null);
+  searchFarmersForm = new UntypedFormControl(null);
+  searchCompaniesForm = new UntypedFormControl(null);
+  searchCollectorsForm = new UntypedFormControl(null);
+  orderReferenceForm = new UntypedFormControl(null);
 
   payment: ApiPayment;
   purchaseOrder: ApiStockOrder;
@@ -75,7 +77,7 @@ export class StockPaymentsItemComponent extends GenericEditableItemComponent<Api
     this.initializeData().then();
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
     return generateFormFromMetadata(ApiPayment.formMetadata(), value, ApiPaymentValidationScheme);
   }
 

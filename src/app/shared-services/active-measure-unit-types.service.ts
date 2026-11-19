@@ -33,7 +33,10 @@ export class ActiveMeasureUnitTypeService extends GeneralSifrantService<ApiMeasu
   }
 
   public textRepresentation(el: ApiMeasureUnitType) {
-    return this.codebookTranslations.translate(el, 'label');
+    const label = this.codebookTranslations.translate(el, 'label');
+    // More than one measure unit can share the same label (for example WEIGHT_KG and KG_COFFEE
+    // are both "kg"), so show the code as well to keep the options distinguishable.
+    return el.code ? `${label} (${el.code})` : label;
   }
 
   public makeQuery(key: string, params?: any): Observable<PagedSearchResults<ApiMeasureUnitType>> {

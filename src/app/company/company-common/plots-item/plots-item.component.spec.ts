@@ -1,12 +1,14 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { ApiPlotCoordinate } from '../../../../api/model/apiPlotCoordinate';
 import { CompanyControllerService } from '../../../../api/api/companyController.service';
 import { CompanyFarmersDetailsComponent } from '../../company-farmers/company-farmers-details/company-farmers-details.component';
 import { PlotsItemComponent } from './plots-item.component';
 import { PlotCoordinateAction } from '../../../shared-services/plot-coordinate-action-enum';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('PlotsItemComponent plot area', () => {
   let component: PlotsItemComponent;
@@ -19,10 +21,10 @@ describe('PlotsItemComponent plot area', () => {
 
   beforeEach(() => {
     component = new PlotsItemComponent({} as any, {} as any);
-    component.tmpFormGroup = new FormGroup({
-      coordinates: new FormArray([]),
-      size: new FormControl(null),
-      unit: new FormControl(null)
+    component.tmpFormGroup = new UntypedFormGroup({
+      coordinates: new UntypedFormArray([]),
+      size: new UntypedFormControl(null),
+      unit: new UntypedFormControl(null)
     });
   });
 
@@ -54,7 +56,7 @@ describe('PlotsItemComponent plot area', () => {
 
   it('keeps a single GPS point without a fabricated area when saved', () => {
     component.plotType = 'single_point';
-    component.originalFormControl = new FormControl({});
+    component.originalFormControl = new UntypedFormControl({});
     component.updateFormCoordinates(rectangle.slice(0, 1));
     component.form.markAsDirty();
     component.save();
@@ -72,7 +74,7 @@ describe('PlotsItemComponent plot area', () => {
   });
 
   it('puts the corrected value and coordinates into the saved form', () => {
-    component.originalFormControl = new FormControl({});
+    component.originalFormControl = new UntypedFormControl({});
     component.updateFormCoordinates(rectangle);
     component.form.markAsDirty();
     component.save();
@@ -85,10 +87,14 @@ describe('PlotsItemComponent plot area', () => {
   });
 
   it('sends the calculated area through the farmer update and reads it back', async () => {
-    TestBed.configureTestingModule({ imports: [HttpClientTestingModule], providers: [CompanyControllerService] });
+    TestBed.configureTestingModule({
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [CompanyControllerService, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     const api = TestBed.inject(CompanyControllerService);
     const http = TestBed.inject(HttpTestingController);
-    const plotControl = new FormControl({});
+    const plotControl = new UntypedFormControl({});
     component.originalFormControl = plotControl;
     component.updateFormCoordinates(rectangle);
     component.form.markAsDirty();
@@ -100,16 +106,16 @@ describe('PlotsItemComponent plot area', () => {
     const farmer = new CompanyFarmersDetailsComponent({} as any, route as any, api, ui as any,
       {} as any, {} as any, {} as any, {} as any, onboarding as any, {} as any);
     farmer.update = true;
-    farmer.farmerForm = new FormGroup({
-      id: new FormControl(42),
-      type: new FormControl(null),
-      hasSmartphone: new FormControl(false),
-      location: new FormGroup({}),
-      farm: new FormGroup({
-        organic: new FormControl(false), areaUnit: new FormControl(null),
-        totalCultivatedArea: new FormControl(null), areaOrganicCertified: new FormControl(null)
+    farmer.farmerForm = new UntypedFormGroup({
+      id: new UntypedFormControl(42),
+      type: new UntypedFormControl(null),
+      hasSmartphone: new UntypedFormControl(false),
+      location: new UntypedFormGroup({}),
+      farm: new UntypedFormGroup({
+        organic: new UntypedFormControl(false), areaUnit: new UntypedFormControl(null),
+        totalCultivatedArea: new UntypedFormControl(null), areaOrganicCertified: new UntypedFormControl(null)
       }),
-      plots: new FormArray([plotControl])
+      plots: new UntypedFormArray([plotControl])
     });
     spyOn(farmer, 'ngOnInit');
     const save = farmer.save(true);
@@ -129,7 +135,7 @@ describe('PlotsItemComponent plot area', () => {
     getRequest.flush({ status: 'OK', data: { id: 42, plots: [storedPlot] } });
     const response = await reload;
     const reopened = new PlotsItemComponent({} as any, {} as any);
-    reopened.formControlInput = new FormControl(response.data.plots[0]);
+    reopened.formControlInput = new UntypedFormControl(response.data.plots[0]);
     reopened.ngOnInit();
     reopened.updateFormCoordinates(response.data.plots[0].coordinates);
     expect(reopened.form.get('size').value).toBe(1.24);
@@ -144,10 +150,10 @@ describe('PlotsItemComponent undo', () => {
 
   beforeEach(() => {
     component = new PlotsItemComponent({} as any, {} as any);
-    component.tmpFormGroup = new FormGroup({
-      coordinates: new FormArray([]),
-      size: new FormControl(2),
-      unit: new FormControl('ha')
+    component.tmpFormGroup = new UntypedFormGroup({
+      coordinates: new UntypedFormArray([]),
+      size: new UntypedFormControl(2),
+      unit: new UntypedFormControl('ha')
     });
   });
 

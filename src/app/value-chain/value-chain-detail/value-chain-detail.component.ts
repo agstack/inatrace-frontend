@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValueChainControllerService } from '../../../api/api/valueChainController.service';
 import { finalize, take } from 'rxjs/operators';
@@ -27,13 +27,15 @@ import { ProductTypesService } from '../../shared-services/product-types.service
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-value-chain-detail',
-  templateUrl: './value-chain-detail.component.html',
-  styleUrls: ['./value-chain-detail.component.scss']
+    selector: 'app-value-chain-detail',
+    templateUrl: './value-chain-detail.component.html',
+    styleUrls: ['./value-chain-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ValueChainDetailComponent implements OnInit {
 
-  valueChainDetailForm: FormGroup;
+  valueChainDetailForm: UntypedFormGroup;
 
   submitted = false;
 
@@ -64,9 +66,9 @@ export class ValueChainDetailComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiFacilityType;
   }
 
-  static ApiVCFacilityTypeEmptyObjectFormFactory(): () => FormControl {
+  static ApiVCFacilityTypeEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ValueChainDetailComponent.ApiVCFacilityTypeCreateEmptyObject(),
+      return new UntypedFormControl(ValueChainDetailComponent.ApiVCFacilityTypeCreateEmptyObject(),
         ApiFacilityTypeValidationScheme.validators);
     };
   }
@@ -77,9 +79,9 @@ export class ValueChainDetailComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiMeasureUnitType;
   }
 
-  static ApiVCMeasureUnitTypeEmptyObjectFormFactory(): () => FormControl {
+  static ApiVCMeasureUnitTypeEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ValueChainDetailComponent.ApiVCMeasureUnitTypeCreateEmptyObject(),
+      return new UntypedFormControl(ValueChainDetailComponent.ApiVCMeasureUnitTypeCreateEmptyObject(),
         ApiVCMeasureUnitTypeValidationScheme.validators);
     };
   }
@@ -90,9 +92,9 @@ export class ValueChainDetailComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiProcessingEvidenceType;
   }
 
-  static ApiVCProcEvidenceTypeEmptyObjectFormFactory(): () => FormControl {
+  static ApiVCProcEvidenceTypeEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ValueChainDetailComponent.ApiVCProcEvidenceTypeCreateEmptyObject(),
+      return new UntypedFormControl(ValueChainDetailComponent.ApiVCProcEvidenceTypeCreateEmptyObject(),
         ApiVCProcessingEvidenceTypeValidationScheme.validators);
     };
   }
@@ -103,9 +105,9 @@ export class ValueChainDetailComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiProcessingEvidenceField;
   }
 
-  static ApiVCProcEvidenceFieldEmptyObjectFormFactory(): () => FormControl {
+  static ApiVCProcEvidenceFieldEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ValueChainDetailComponent.ApiVCProcEvidenceFieldCreateEmptyObject(),
+      return new UntypedFormControl(ValueChainDetailComponent.ApiVCProcEvidenceFieldCreateEmptyObject(),
         ApiVCProcessingEvidenceFieldValidationScheme.validators);
     };
   }
@@ -116,9 +118,9 @@ export class ValueChainDetailComponent implements OnInit {
     return defaultEmptyObject(obj) as ApiSemiProduct;
   }
 
-  static ApiVCSemiProductsEmptyObjectFormFactory(): () => FormControl {
+  static ApiVCSemiProductsEmptyObjectFormFactory(): () => UntypedFormControl {
     return () => {
-      return new FormControl(ValueChainDetailComponent.ApiVCSemiProductsCreateEmptyObject(),
+      return new UntypedFormControl(ValueChainDetailComponent.ApiVCSemiProductsCreateEmptyObject(),
         ApiSemiProductValidationScheme.validators);
     };
   }
@@ -132,24 +134,24 @@ export class ValueChainDetailComponent implements OnInit {
     return this.valueChainDetailForm.dirty;
   }
 
-  get vcFacilityTypes(): FormControl[] {
-    return (this.valueChainDetailForm.get('facilityTypes') as FormArray).controls as FormControl[];
+  get vcFacilityTypes(): UntypedFormControl[] {
+    return (this.valueChainDetailForm.get('facilityTypes') as UntypedFormArray).controls as UntypedFormControl[];
   }
 
-  get vcMeasureUnitTypes(): FormControl[] {
-    return (this.valueChainDetailForm.get('measureUnitTypes') as FormArray).controls as FormControl[];
+  get vcMeasureUnitTypes(): UntypedFormControl[] {
+    return (this.valueChainDetailForm.get('measureUnitTypes') as UntypedFormArray).controls as UntypedFormControl[];
   }
 
-  get vcProcEvidenceTypes(): FormControl[] {
-    return (this.valueChainDetailForm.get('processingEvidenceTypes') as FormArray).controls as FormControl[];
+  get vcProcEvidenceTypes(): UntypedFormControl[] {
+    return (this.valueChainDetailForm.get('processingEvidenceTypes') as UntypedFormArray).controls as UntypedFormControl[];
   }
 
-  get vcProcEvidenceFields(): FormControl[] {
-    return (this.valueChainDetailForm.get('processingEvidenceFields') as FormArray).controls as FormControl[];
+  get vcProcEvidenceFields(): UntypedFormControl[] {
+    return (this.valueChainDetailForm.get('processingEvidenceFields') as UntypedFormArray).controls as UntypedFormControl[];
   }
 
-  get vcSemiProducts(): FormControl[] {
-    return (this.valueChainDetailForm.get('semiProducts') as FormArray).controls as FormControl[];
+  get vcSemiProducts(): UntypedFormControl[] {
+    return (this.valueChainDetailForm.get('semiProducts') as UntypedFormArray).controls as UntypedFormControl[];
   }
 
   ngOnInit(): void {
@@ -173,8 +175,8 @@ export class ValueChainDetailComponent implements OnInit {
     return !this.valueChainDetailForm || !this.valueChainDetailForm.dirty;
   }
 
-  public getProductTypeFromControl(): FormControl {
-    return this.valueChainDetailForm.get('productType') as FormControl;
+  public getProductTypeFromControl(): UntypedFormControl {
+    return this.valueChainDetailForm.get('productType') as UntypedFormControl;
   }
 
   private getValueChain() {
@@ -267,27 +269,27 @@ export class ValueChainDetailComponent implements OnInit {
   private initializeListManagers() {
 
     this.facilityTypeListManager = new ListEditorManager<ApiFacilityType>(
-      this.valueChainDetailForm.get('facilityTypes') as FormArray,
+      this.valueChainDetailForm.get('facilityTypes') as UntypedFormArray,
       ValueChainDetailComponent.ApiVCFacilityTypeEmptyObjectFormFactory(),
       ApiFacilityTypeValidationScheme);
 
     this.measureUnitTypeListManager = new ListEditorManager<ApiMeasureUnitType>(
-      this.valueChainDetailForm.get('measureUnitTypes') as FormArray,
+      this.valueChainDetailForm.get('measureUnitTypes') as UntypedFormArray,
       ValueChainDetailComponent.ApiVCMeasureUnitTypeEmptyObjectFormFactory(),
       ApiVCMeasureUnitTypeValidationScheme);
 
     this.processingEvidenceTypeListManger = new ListEditorManager<ApiProcessingEvidenceType>(
-      this.valueChainDetailForm.get('processingEvidenceTypes') as FormArray,
+      this.valueChainDetailForm.get('processingEvidenceTypes') as UntypedFormArray,
       ValueChainDetailComponent.ApiVCProcEvidenceTypeEmptyObjectFormFactory(),
       ApiVCProcessingEvidenceTypeValidationScheme);
 
     this.processingEvidenceFieldListManger = new ListEditorManager<ApiProcessingEvidenceType>(
-      this.valueChainDetailForm.get('processingEvidenceFields') as FormArray,
+      this.valueChainDetailForm.get('processingEvidenceFields') as UntypedFormArray,
       ValueChainDetailComponent.ApiVCProcEvidenceFieldEmptyObjectFormFactory(),
       ApiVCProcessingEvidenceFieldValidationScheme);
 
     this.semiProductsListManager = new ListEditorManager<ApiSemiProduct>(
-      this.valueChainDetailForm.get('semiProducts') as FormArray,
+      this.valueChainDetailForm.get('semiProducts') as UntypedFormArray,
       ValueChainDetailComponent.ApiVCSemiProductsEmptyObjectFormFactory(),
       ApiSemiProductValidationScheme);
   }

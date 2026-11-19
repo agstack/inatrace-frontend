@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GetValueChainList, ValueChainControllerService } from '../../../api/api/valueChainController.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounceTime, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { SortKeyAndOrder, SortOption, SortOrder } from '../../shared/result-sorter/result-sorter-types';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
@@ -11,16 +11,18 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-value-chain-list',
-  templateUrl: './value-chain-list.component.html',
-  styleUrls: ['./value-chain-list.component.scss']
+    selector: 'app-value-chain-list',
+    templateUrl: './value-chain-list.component.html',
+    styleUrls: ['./value-chain-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ValueChainListComponent implements OnInit {
 
   faTimes = faTimes;
 
-  searchName = new FormControl(null);
-  filterStatus = new FormControl('ENABLED');
+  searchName = new UntypedFormControl(null);
+  filterStatus = new UntypedFormControl('ENABLED');
 
   page = 0;
   pageSize = 10;

@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { take } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class CompanyAdminGuardService implements CanActivate {
+export class CompanyAdminGuardService  {
 
     constructor(
         private router: Router,

@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GenericEditableItemComponent } from '../../../shared/generic-editable-item/generic-editable-item.component';
 import { GlobalEventManagerService } from '../../../core/global-event-manager.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { generateFormFromMetadata } from '../../../../shared/utils';
 import { ApiFacilityType } from '../../../../api/model/apiFacilityType';
 import {
@@ -24,9 +24,11 @@ import { ProcessingEvidenceFieldsService } from '../../../shared-services/proces
 import { ApiProcessingEvidenceField } from '../../../../api/model/apiProcessingEvidenceField';
 
 @Component({
-  selector: 'app-value-chain-config-item',
-  templateUrl: './value-chain-config-item.component.html',
-  styleUrls: ['./value-chain-config-item.component.scss']
+    selector: 'app-value-chain-config-item',
+    templateUrl: './value-chain-config-item.component.html',
+    styleUrls: ['./value-chain-config-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ValueChainConfigItemComponent extends GenericEditableItemComponent<any> implements OnInit {
 
@@ -36,7 +38,7 @@ export class ValueChainConfigItemComponent extends GenericEditableItemComponent<
   @Input()
   readOnly = false;
 
-  configItemForm = new FormControl(null, Validators.required);
+  configItemForm = new UntypedFormControl(null, Validators.required);
 
   procEvidenceTypesCodebook: ProcessingEvidenceTypeService;
   procEvidenceFieldsCodebook: ProcessingEvidenceFieldsService;
@@ -60,7 +62,7 @@ export class ValueChainConfigItemComponent extends GenericEditableItemComponent<
     this.procEvidenceFieldsCodebook = new ProcessingEvidenceFieldsService(this.procEvidenceFieldController, this.codebookTranslations);
   }
 
-  public generateForm(value: any): FormGroup {
+  public generateForm(value: any): UntypedFormGroup {
 
     if (this.configItemType === 'facility-types') {
       return generateFormFromMetadata(ApiFacilityType.formMetadata(), value, ApiFacilityTypeValidationScheme);
@@ -146,7 +148,7 @@ export class ValueChainConfigItemComponent extends GenericEditableItemComponent<
     const listEditorManager: ListEditorManager<any> = this.listEditorManager;
     let existing = false;
 
-    const formControls: FormControl[] = listEditorManager.formArray?.controls as FormControl[];
+    const formControls: UntypedFormControl[] = listEditorManager.formArray?.controls as UntypedFormControl[];
     if (formControls) {
       for (const formControl of formControls) {
         existing = selectedValue.id === formControl.value.id;

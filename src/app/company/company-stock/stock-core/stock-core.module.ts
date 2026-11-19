@@ -13,7 +13,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AdditionalProofItemComponent } from './additional-proof-item/additional-proof-item.component';
 import { StockBulkDeliveryDetailsComponent } from './stock-bulk-delivery-details/stock-bulk-delivery-details.component';
 import { BatchHistoryComponent } from './batch-history/batch-history.component';
-import { QRCodeModule } from 'angular2-qrcode';
 import { GroupStockUnitListComponent } from './group-stock-unit-list/group-stock-unit-list.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FieldOrDocInfoComponent } from './batch-history/field-or-doc-info/field-or-doc-info.component';
@@ -35,7 +34,6 @@ import { FieldOrDocInfoComponent } from './batch-history/field-or-doc-info/field
         LayoutModule,
         FontAwesomeModule,
         SharedModule,
-        QRCodeModule,
         FormsModule,
         ReactiveFormsModule,
         NgSelectModule,

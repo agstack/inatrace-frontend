@@ -1,9 +1,9 @@
 <app-authorised-layout class="af-layout--system">
 
   <app-system-left-panel
-          [isAdmin]="true"
-          i18n="@@settingsPage.navTitle"
-          title="System">
+    [isAdmin]="true"
+    i18n="@@settingsPage.navTitle"
+    title="System">
   </app-system-left-panel>
 
   <div class="main">
@@ -20,31 +20,35 @@
         <div class="af-form-block--c12">
           <div class="af-form-element">
 
-            <div *ngIf="labelsHelperLink" class="d-flex align-items-end">
-              <textinput
-                [form]="labelsHelperLink"
-                label="Additional information for QR multiple labels (URL)"
-                style="width: 100%;"
-                placeholder="Enter URL"
-                hideAsterisk="true"
-                i18n-label="@@settingsPage.labelsHelperLink.label"
-                i18n-placeholder="@@settingsPage.labelsHelperLink.placeholder">
-              </textinput>
-            </div>
+            @if (labelsHelperLink) {
+              <div class="d-flex align-items-end">
+                <textinput
+                  [form]="labelsHelperLink"
+                  label="Additional information for QR multiple labels (URL)"
+                  style="width: 100%;"
+                  placeholder="Enter URL"
+                  hideAsterisk="true"
+                  i18n-label="@@settingsPage.labelsHelperLink.label"
+                  i18n-placeholder="@@settingsPage.labelsHelperLink.placeholder">
+                </textinput>
+              </div>
+            }
 
 
-            <div *ngIf="unpublishedProductLabelText" class="d-flex align-items-end">
-              <textinput
-                [form]="unpublishedProductLabelText"
-                label="Unpublished product labels text"
-                placeholder="Enter text"
-                style="width: 100%;"
-                hideAsterisk="true"
-                [textarea]="true"
-                i18n-label="@@settingsPage.unpublishedProductLabelText.label"
-                i18n-placeholder="@@settingsPage.unpublishedProductLabelText.placeholder">
-              </textinput>
-            </div>
+            @if (unpublishedProductLabelText) {
+              <div class="d-flex align-items-end">
+                <textinput
+                  [form]="unpublishedProductLabelText"
+                  label="Unpublished product labels text"
+                  placeholder="Enter text"
+                  style="width: 100%;"
+                  hideAsterisk="true"
+                  [textarea]="true"
+                  i18n-label="@@settingsPage.unpublishedProductLabelText.label"
+                  i18n-placeholder="@@settingsPage.unpublishedProductLabelText.placeholder">
+                </textinput>
+              </div>
+            }
 
           </div>
         </div>
@@ -54,10 +58,10 @@
         <div class="af-form-block--c12">
           <div class="af-bottom-buttons">
             <button class="btn btn-solid round"
-                    (click)="save()"
-                    [class.button-disabled]="!saveEnabled()"
-                    i18n="@@settingsPage.unpublishedProductLabelText.save"
-                    [disabled]="isRegionalAdmin">
+              (click)="save()"
+              [class.button-disabled]="!saveEnabled()"
+              i18n="@@settingsPage.unpublishedProductLabelText.save"
+              [disabled]="isRegionalAdmin">
               <span>Save</span>
             </button>
           </div>
