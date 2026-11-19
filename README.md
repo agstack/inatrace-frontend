@@ -30,6 +30,18 @@ npm run dev               # http://localhost:4200
 `environment.dev.ts`. Both are covered in
 [docs/getting-started.md](docs/getting-started.md).
 
+Generate the farmer import confirmation client from the reviewed backend contract with:
+
+```bash
+node scripts/generate-farmer-import-api.js ../inatrace-backend/docs/api-contract/openapi.json
+node scripts/generate-farmer-import-api.js --check ../inatrace-backend/docs/api-contract/openapi.json
+node scripts/test-farmer-import-api.js ../inatrace-backend/docs/api-contract/openapi.json
+```
+
+This focused generator extracts the import and two confirmation operations and produces their
+service and the affected import models without rewriting unrelated legacy client files. Review
+the outputs when the backend contract changes.
+
 ## Documentation
 
 | Page | What it covers |
