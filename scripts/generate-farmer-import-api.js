@@ -45,5 +45,5 @@ try {
     }
   }
 } finally {
-  fs.rmdirSync(temporary, { recursive: true });
+  fs.rmSync(temporary, { recursive: true, force: true });
 }
