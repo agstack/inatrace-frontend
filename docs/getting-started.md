@@ -3,12 +3,10 @@
 Running the INATrace web frontend against a local backend.
 
 ## Requirements
-* Node 14.x. Later majors do not work: the Angular 10 development server stops at startup with
-  `An unhandled exception occurred: No such module: http_parser`. Node 14 is past end of life, so
-  install it next to your usual version with a version manager (nvm, asdf, volta) rather than
-  system-wide. `.nvmrc` pins it, so `nvm use` in the project picks it.
+* Node 26, the version `.nvmrc` pins (`package.json` requires 26 or later), so `nvm use` in the
+  project picks it. A version manager (nvm, asdf, volta) keeps it next to your usual version.
 * Chrome or Chromium, for the unit tests.
-* Angular 10 comes from `npm install`; there is nothing to install separately, and the commands
+* Angular 22 comes from `npm install`; there is nothing to install separately, and the commands
   below use the project's own CLI.
 * WebStorm or VS Code (recommended)
 * VS Code pluggins:

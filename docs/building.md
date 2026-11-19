@@ -2,7 +2,7 @@
 
 Producing a production build and a Docker image.
 
-The production build is `npm run build:prod`, with Node 14. It writes the static site to
+The production build is `npm run build:prod`, with Node 26. It writes the static site to
 `dist/`. The version shown in the app comes from `src/environments/version.ts`, `dev` by
 default; CI sets it from the release tag.
 
