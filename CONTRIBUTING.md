@@ -7,7 +7,7 @@ Report security problems privately, as described in [SECURITY.md](SECURITY.md).
 
 ## Setup
 
-You need Node 14 (pinned in `.nvmrc`, so `nvm use` picks it), npm, and Chrome or
+You need Node 26 (pinned in `.nvmrc`, so `nvm use` picks it), npm, and Chrome or
 Chromium for the tests. [docs/getting-started.md](docs/getting-started.md) covers
 running the frontend locally against a backend.
 

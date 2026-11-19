@@ -20,7 +20,7 @@ manage farmers.
 ## Quick start
 
 ```bash
-nvm use                   # Node 14, from .nvmrc
+nvm use                   # Node 26, from .nvmrc
 npm install
 npm run generate-api      # generates the API client from the Java backend
 npm run dev               # http://localhost:4200

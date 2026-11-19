@@ -5,14 +5,14 @@ apply; `README.md` and `docs/` are the place to start.
 
 ## What this is
 
-The INATrace web frontend: Angular 10, TypeScript 3.9, npm, **Node 14** (pinned in
-`.nvmrc`; later majors stop the dev server at startup). It talks to the Java backend
+The INATrace web frontend: Angular 22, TypeScript 6, npm, **Node 26** (pinned in
+`.nvmrc`). It talks to the Java backend
 (`inatrace-backend`) at `/api` on the same host. Read `docs/` before changing behaviour.
 
 ## Build and test
 
 ```bash
-nvm use                      # Node 14, from .nvmrc
+nvm use                      # Node 26, from .nvmrc
 npm ci
 npm run test:ci              # unit tests once, headless Chrome, as CI runs them
 npm run build:prod           # production build into dist/
