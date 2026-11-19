@@ -19,6 +19,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
     ],
     exports: [
         MessageModalComponent,
+        PageNotFoundComponent,
     ]
 })
 export class CoreModule { }
