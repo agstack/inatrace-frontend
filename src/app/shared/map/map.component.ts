@@ -11,6 +11,10 @@ import { Subject } from 'rxjs/internal/Subject';
 import { CompanyControllerService } from '../../../api/api/companyController.service';
 import { UntypedFormControl } from '@angular/forms';
 
+const NEUTRAL_MAP_CENTER: [number, number] = [0, 0];
+const NEUTRAL_MAP_ZOOM = 2;
+const INITIAL_MAP_ZOOM = 10;
+
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -85,6 +89,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Set once the style has loaded. Before that, an error means the map could not start at all.
   private styleLoaded = false;
+
+  // A late geolocation answer must not move the map after the user has started drawing.
+  private drawingStarted = false;
 
   constructor(private globalEventsManager: GlobalEventManagerService,
               private companyControllerService: CompanyControllerService,
@@ -270,8 +277,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   flyToCurrentPosition(): void {
     navigator.geolocation.getCurrentPosition( position => {
-      // The position arrives asynchronously, by which time the map may have failed or been torn down.
-      if (!this.map) {
+      // The position arrives asynchronously, by which time the map may have failed, been torn
+      // down, or the user may have started drawing. Do not move the map in those cases.
+      if (!this.map || this.drawingStarted) {
         return;
       }
       this.map.flyTo({
@@ -284,13 +292,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // letting the failure escape ngAfterViewInit and abort the rest of the view's initialisation.
   buildMap(): boolean {
 
+    const hasInitialLocation = this.initialLat != null && this.initialLng != null;
+    const center: [number, number] = hasInitialLocation
+      ? [this.initialLng, this.initialLat]
+      : NEUTRAL_MAP_CENTER;
+
     try {
       this.map = this.createMap({
         accessToken: environment.mapboxAccessToken,
         container: this.mapId, // id of div that holds the map
         style: `${this.MAPBOX_STYLE_BASE_PATH}${this.mapStyle.value}`,
-        zoom: 10,
-        center: [this.initialLng ?? 14.995463, this.initialLat ?? 46.151241],
+        zoom: hasInitialLocation ? INITIAL_MAP_ZOOM : NEUTRAL_MAP_ZOOM,
+        center,
         cooperativeGestures: true
       });
     } catch (error) {
@@ -513,6 +526,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.editMode) {
 
+      this.drawingStarted = true;
       this.showPlotSubject.next(false);
 
       const lng = e.lngLat.wrap()['lng'];
@@ -541,7 +555,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.plots && this.plots.length > 0) {
           this.setExistingPlots(this.plots);
         } else {
-         if (this.pin?.latitude && this.pin?.longitude) {
+         if (this.pin?.latitude != null && this.pin?.longitude != null) {
           this.setPin(this.pin);
           this.map.fitBounds(this.getInitialMapExtremes(this.plotCoordinates));
          }
@@ -579,7 +593,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.plotCoordinates = [];
 
     this.placeMarkerOnMap(pin.latitude, pin.longitude, null, true);
-    this.plotCoordinatesChange.emit(this.plotCoordinates);
   }
 
   showPlot(name: string, coordinates: number[][]) {

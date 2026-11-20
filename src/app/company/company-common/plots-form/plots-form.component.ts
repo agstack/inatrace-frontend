@@ -79,33 +79,27 @@ export class PlotsFormComponent implements OnInit {
 
     this.plots = this.form.get('plots').value;
 
-    this.pin = {
-      latitude: this.form.get('location').value.latitude,
-      longitude: this.form.get('location').value.latitude,
-    };
+    const location = this.form.get('location')?.value;
+    const country = location?.address?.country;
+    const hasLocationCoordinates = location?.latitude != null && location?.longitude != null;
+    const hasCountryCoordinates = country?.latitude != null && country?.longitude != null;
 
-    this.initialLat = this.form.get('location')?.get('address')?.get('country')?.value?.latitude;
-    this.initialLng = this.form.get('location')?.get('address')?.get('country')?.value?.longitude;
+    this.pin = hasLocationCoordinates
+      ? { latitude: location.latitude, longitude: location.longitude }
+      : undefined;
+
+    if (hasLocationCoordinates) {
+      this.initialLat = location.latitude;
+      this.initialLng = location.longitude;
+    } else if (hasCountryCoordinates) {
+      this.initialLat = country.latitude;
+      this.initialLng = country.longitude;
+    } else {
+      this.initialLat = undefined;
+      this.initialLng = undefined;
+    }
 
     this.initializeListManager();
-    this.initializeMarker();
-  }
-
-  initializeMarker() {
-
-    if (!this.form.get('latitude') || !this.form.get('longitude')) {
-      return;
-    }
-    const lat = this.form.get('latitude').value;
-    const lng = this.form.get('longitude').value;
-    if (lng == null || lat == null) {
-      return;
-    }
-
-    this.pin = {
-      latitude: lat,
-      longitude: lng
-    };
   }
 
   initializeListManager() {
@@ -114,18 +108,6 @@ export class PlotsFormComponent implements OnInit {
       PlotsFormComponent.ApiPlotEmptyObjectFormFactory(),
       ApiPlotValidationScheme
     );
-  }
-
-  updateLonLat(coordinates: ApiPlotCoordinate[]) {
-    if (coordinates) {
-      this.form.get('location.latitude').setValue(coordinates[0].latitude);
-      this.form.get('location.longitude').setValue(coordinates[0].longitude);
-    } else {
-      this.form.get('location.latitude').setValue(null);
-      this.form.get('location.longitude').setValue(null);
-    }
-    this.form.get('location.latitude').markAsDirty();
-    this.form.get('location.longitude').markAsDirty();
   }
 
   drawPlot() {
