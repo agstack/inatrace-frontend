@@ -32,7 +32,7 @@
               </td>
               <td [attr.data-label]="sortOptions[7].name">{{ order.unitLabel }}</td>
               <td [attr.data-label]="sortOptions[8].name">{{ formatDate(order.deliveryTime) }}</td>
-              <td [attr.data-label]="sortOptions[9].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</td>
+              <td [attr.data-label]="sortOptions[9].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd HH:mm' }}</td>
               <td [attr.data-label]="sortOptions[10].name">{{ order.available | formatAvailability }}</td>
               <td [attr.data-label]="sortOptions[11].name">
                 @if (order.noOfSacs <= 1) {

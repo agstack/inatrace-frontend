@@ -77,7 +77,7 @@
                 <td [attr.data-label]="sortOptions[10].name">{{ formatDate(order.deliveryTime) }}</td>
               }
               @if (!sortOptions[11].hide) {
-                <td [attr.data-label]="sortOptions[11].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd hh:mm' }}</td>
+                <td [attr.data-label]="sortOptions[11].name">{{ order.updateTimestamp | date: 'yyyy-MM-dd HH:mm' }}</td>
               }
               @if (!sortOptions[12].hide) {
                 <td [attr.data-label]="sortOptions[12].name">{{ order.isAvailable | formatAvailability }}</td>
