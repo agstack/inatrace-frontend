@@ -11,6 +11,22 @@ import { Subject } from 'rxjs/internal/Subject';
 import { CompanyControllerService } from '../../../api/api/companyController.service';
 import { UntypedFormControl } from '@angular/forms';
 
+// A double-click and the second click of a double-click arrive close together. Mapbox's touch
+// recognizer uses 500 ms and 30 px; the mouse values only guard the fallback for browsers that do
+// not expose MouseEvent.detail. The gesture timeout keeps a single click confirmable long enough
+// to cover slower double-clicks without ever touching older points.
+const DOUBLE_CLICK_INTERVAL_MS = 1000;
+const DOUBLE_TAP_INTERVAL_MS = 500;
+const DOUBLE_CLICK_DISTANCE_PX = 30;
+const CLICK_GESTURE_TIMEOUT_MS = 1500;
+
+interface RecentPlotPoint {
+  coordinate: ApiPlotCoordinate;
+  marker: mapboxgl.Marker;
+  timestamp: number;
+  point?: { x: number; y: number };
+}
+
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -75,6 +91,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   
   subscriptions: Subscription = new Subscription();
   markers: mapboxgl.Marker[] = [];
+
+  // Points added by clicks that may still turn out to be part of a double-click/double-tap.
+  // Only these points are eligible for rollback; saved points and earlier single clicks are never
+  // touched.
+  private recentClickPoints: RecentPlotPoint[] = [];
+  private clickGestureTimer: any = null;
 
   mapStyle: UntypedFormControl = new UntypedFormControl('satellite-streets-v12');
 
@@ -142,6 +164,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setExistingPlots(plots: ApiPlot[]) {
 
+    this.clearClickGesture();
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
     this.plotCoordinates = [];
@@ -187,6 +210,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setExistingPlotCoordinates(coordinates: ApiPlotCoordinate[]) {
+    this.clearClickGesture();
     if (this.markers.length > 0) {
       this.deletePlot();
     }
@@ -196,6 +220,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   undoLastPlotCoordinate() {
+
+    this.clearClickGesture();
 
     if (!this.plotCoordinates || this.plotCoordinates.length === 0) {
       return;
@@ -217,6 +243,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deletePlot(plotId?: string) {
 
+    this.clearClickGesture();
+
     if (plotId) {
       this.hidePlot(plotId);
     } else {
@@ -232,6 +260,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addPlotCoordinateCurrentLocation() {
+    this.clearClickGesture();
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
@@ -306,6 +335,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map.touchZoomRotate.disableRotation();
 
     this.map.on('click', e => this.mapClicked(e));
+    this.map.on('dblclick', e => this.mapDoubleClicked(e));
+    this.map.on('zoomstart', e => this.mapZoomStarted(e));
     this.map.on('load', () => this.mapLoaded());
     this.map.on('style.load', () => this.styleLoaded = true);
     this.map.on('error', event => this.mapError(event));
@@ -347,6 +378,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // Frees the WebGL context and the SDK's listeners, and clears the reference so that callbacks
   // arriving later (geolocation, style changes) find no map and return.
   private releaseMap(): void {
+    this.clearClickGesture();
     if (!this.map) {
       return;
     }
@@ -507,22 +539,158 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // when the map is clicked, we add the plot-coordinate to the coordinates
   mapClicked(e) {
 
-    if (!this.editable) {
+    if (!this.editable || !this.editMode) {
       return;
     }
 
-    if (this.editMode) {
+    const detail = e?.originalEvent?.detail;
 
-      this.showPlotSubject.next(false);
+    // Every click in a multi-click sequence must be ignored: the first click adds a point, the
+    // second (detail=2) would add another one before the double-click event arrives, and repeated
+    // double-clicks to zoom keep incrementing detail. For browsers that do not expose detail, a
+    // click close to the previous one in time and space is treated the same way.
+    // map.on('dblclick') is an additional safeguard.
+    if (detail > 1 || (detail == null && this.isNearLastClick(e))) {
+      this.discardClickGesture();
+      return;
+    }
 
-      const lng = e.lngLat.wrap()['lng'];
-      const lat = e.lngLat.wrap()['lat'];
-      this.placeMarkerOnMap(lat, lng);
-      this.plotCoordinatesChange.emit(this.plotCoordinates);
+    // A new single click confirms the previous point and starts a new gesture.
+    this.clearClickGesture();
 
-      setTimeout(() => {
-        this.showPlotSubject.next(true);
-      }, 200);
+    this.showPlotSubject?.next(false);
+
+    const lngLat = e.lngLat.wrap();
+    this.placeMarkerOnMap(lngLat.lat, lngLat.lng);
+    this.plotCoordinatesChange.emit(this.plotCoordinates);
+
+    const marker = this.markers[this.markers.length - 1];
+    const coordinate = this.plotCoordinates[this.plotCoordinates.length - 1];
+    if (marker && coordinate) {
+      this.recentClickPoints.push({
+        coordinate,
+        marker,
+        timestamp: Date.now(),
+        point: this.getClientPoint(e)
+      });
+    }
+
+    // After this timeout the point is treated as a confirmed single click and is no longer
+    // eligible for rollback.
+    this.clickGestureTimer = setTimeout(() => this.clearClickGesture(), CLICK_GESTURE_TIMEOUT_MS);
+
+    setTimeout(() => {
+      if (this.map) {
+        this.showPlotSubject?.next(true);
+      }
+    }, 200);
+  }
+
+  // A double-click zooms the map. Remove the point added by its first click.
+  mapDoubleClicked(e) {
+    if (!this.editable || !this.editMode) {
+      return;
+    }
+    this.discardClickGesture();
+  }
+
+  // Mapbox's touch double-tap zooms without emitting dblclick. It reports the gesture as a
+  // zoomstart whose original event is the second touchend.
+  mapZoomStarted(e) {
+    if (!this.editable || !this.editMode) {
+      return;
+    }
+    if (e?.originalEvent?.type !== 'touchend') {
+      return;
+    }
+    if (!this.isDoubleTapOnLastClick(e)) {
+      return;
+    }
+    this.discardClickGesture();
+  }
+
+  private isNearLastClick(e: any): boolean {
+    const last = this.recentClickPoints[this.recentClickPoints.length - 1];
+    if (!last || Date.now() - last.timestamp > DOUBLE_CLICK_INTERVAL_MS) {
+      return false;
+    }
+    const point = this.getClientPoint(e);
+    if (!point || !last.point) {
+      return true;
+    }
+    return this.distance(point, last.point) <= DOUBLE_CLICK_DISTANCE_PX;
+  }
+
+  private isDoubleTapOnLastClick(e: any): boolean {
+    const last = this.recentClickPoints[this.recentClickPoints.length - 1];
+    if (!last || Date.now() - last.timestamp > DOUBLE_TAP_INTERVAL_MS) {
+      return false;
+    }
+    const point = this.getClientPoint(e);
+    if (!point || !last.point) {
+      return true;
+    }
+    return this.distance(point, last.point) <= DOUBLE_CLICK_DISTANCE_PX;
+  }
+
+  private getClientPoint(e: any): { x: number; y: number } | undefined {
+    const original = e?.originalEvent;
+    if (original && typeof original.clientX === 'number' && typeof original.clientY === 'number') {
+      return { x: original.clientX, y: original.clientY };
+    }
+    const touch = original?.changedTouches?.[0];
+    if (touch && typeof touch.clientX === 'number' && typeof touch.clientY === 'number') {
+      return { x: touch.clientX, y: touch.clientY };
+    }
+    return undefined;
+  }
+
+  private distance(a: { x: number; y: number }, b: { x: number; y: number }): number {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  private discardClickGesture(): void {
+    const points = this.recentClickPoints;
+    this.recentClickPoints = [];
+    this.clearClickGestureTimer();
+
+    if (points.length === 0) {
+      return;
+    }
+
+    this.showPlotSubject?.next(false);
+
+    points.forEach(point => {
+      const markerIndex = this.markers.indexOf(point.marker);
+      if (markerIndex >= 0) {
+        this.markers.splice(markerIndex, 1);
+        point.marker.remove();
+      }
+
+      const coordinateIndex = this.plotCoordinates.indexOf(point.coordinate);
+      if (coordinateIndex >= 0) {
+        this.plotCoordinates.splice(coordinateIndex, 1);
+      }
+    });
+
+    this.plotCoordinatesChange.emit(this.plotCoordinates);
+
+    setTimeout(() => {
+      if (this.map) {
+        this.showPlotSubject?.next(true);
+      }
+    }, 200);
+  }
+
+  private clearClickGesture(): void {
+    this.recentClickPoints = [];
+    this.clearClickGestureTimer();
+  }
+
+  private clearClickGestureTimer(): void {
+    if (this.clickGestureTimer != null) {
+      clearTimeout(this.clickGestureTimer);
+      this.clickGestureTimer = null;
     }
   }
 
@@ -573,6 +741,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setPin(pin: ApiPlotCoordinate) {
+    this.clearClickGesture();
     // remove all previous markers
     this.markers.forEach(m => m.remove());
     this.markers = [];

@@ -226,4 +226,180 @@ describe('MapComponent', () => {
       expect(flyTo).not.toHaveBeenCalled();
     });
   });
+
+  describe('plot drawing gestures', () => {
+    let emit: jasmine.Spy;
+
+    function clickEvent(lat: number, lng: number, detail?: number, clientX = 100, clientY = 100) {
+      const originalEvent: any = { clientX, clientY };
+      if (detail !== undefined) {
+        originalEvent.detail = detail;
+      }
+      return {
+        lngLat: { wrap: () => ({ lat, lng }) },
+        originalEvent
+      };
+    }
+
+    function touchZoomStart(clientX: number, clientY: number) {
+      return {
+        originalEvent: {
+          type: 'touchend',
+          changedTouches: [{ clientX, clientY }]
+        }
+      };
+    }
+
+    beforeEach(() => {
+      environment.mapboxAccessToken = 'pk.test';
+      component.editable = true;
+      component.editMode = true;
+      component.plotCoordinates = [];
+      component.markers = [];
+      component.showPlotSubject = new Subject<boolean>();
+      spyOn(component, 'placeMarkerOnMap').and.callFake((lat: number, lng: number) => {
+        const marker = { remove: jasmine.createSpy('remove') };
+        component.markers.push(marker as any);
+        component.plotCoordinates.push({ latitude: lat, longitude: lng });
+      });
+      emit = spyOn(component.plotCoordinatesChange, 'emit').and.callThrough();
+      fixture.detectChanges();
+    });
+
+    it('adds exactly one point for a single click', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1));
+
+      expect(component.plotCoordinates).toEqual([{ latitude: 10, longitude: 20 }]);
+      expect(component.markers.length).toBe(1);
+      expect(emit).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not add points for a mouse double-click', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      const firstMarker = component.markers[0] as any;
+
+      fakeMap.fire('click', clickEvent(10, 20, 2, 102, 101));
+      fakeMap.fire('dblclick', clickEvent(10, 20, 2, 102, 101));
+
+      expect(component.plotCoordinates).toEqual([]);
+      expect(component.markers).toEqual([]);
+      expect(firstMarker.remove).toHaveBeenCalled();
+      expect(emit).toHaveBeenCalledTimes(2);
+      expect(emit.calls.mostRecent().args[0]).toEqual([]);
+    });
+
+    it('ignores the extra clicks of repeated double-clicks used to zoom', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('click', clickEvent(10, 20, 2, 102, 101));
+      fakeMap.fire('dblclick', clickEvent(10, 20, 2, 102, 101));
+      fakeMap.fire('click', clickEvent(10, 20, 3, 103, 102));
+      fakeMap.fire('click', clickEvent(10, 20, 4, 104, 103));
+
+      expect(component.plotCoordinates).toEqual([]);
+      expect(component.markers).toEqual([]);
+      expect(emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('keeps existing points when a double-click is used to zoom', () => {
+      component.plotCoordinates = [
+        { latitude: 1, longitude: 1 },
+        { latitude: 2, longitude: 2 }
+      ];
+      const existingMarkers = [
+        { remove: jasmine.createSpy('remove') },
+        { remove: jasmine.createSpy('remove') }
+      ];
+      component.markers = existingMarkers as any;
+
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('click', clickEvent(10, 20, 2, 102, 101));
+      fakeMap.fire('dblclick', clickEvent(10, 20, 2, 102, 101));
+
+      expect(component.plotCoordinates).toEqual([
+        { latitude: 1, longitude: 1 },
+        { latitude: 2, longitude: 2 }
+      ]);
+      expect(component.markers).toEqual(existingMarkers as any);
+      expect(existingMarkers[0].remove).not.toHaveBeenCalled();
+      expect(existingMarkers[1].remove).not.toHaveBeenCalled();
+    });
+
+    it('keeps rapid single clicks at different positions', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('click', clickEvent(11, 21, 1, 200, 200));
+
+      expect(component.plotCoordinates.length).toBe(2);
+      expect(component.markers.length).toBe(2);
+      expect(emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('treats a nearby second click without MouseEvent.detail as a double-click', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('click', clickEvent(10, 20, undefined, 102, 101));
+
+      expect(component.plotCoordinates).toEqual([]);
+      expect(emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('keeps a second click without MouseEvent.detail when it is far away', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('click', clickEvent(11, 21, undefined, 300, 300));
+
+      expect(component.plotCoordinates.length).toBe(2);
+    });
+
+    it('does not add points for a touch double-tap', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      const marker = component.markers[0] as any;
+
+      fakeMap.fire('zoomstart', touchZoomStart(102, 101));
+
+      expect(component.plotCoordinates).toEqual([]);
+      expect(component.markers).toEqual([]);
+      expect(marker.remove).toHaveBeenCalled();
+      expect(emit.calls.mostRecent().args[0]).toEqual([]);
+    });
+
+    it('keeps the point when zoom starts from a non-double-tap gesture', () => {
+      fakeMap.fire('click', clickEvent(10, 20, 1, 100, 100));
+      fakeMap.fire('zoomstart', { originalEvent: { type: 'touchstart' } });
+      fakeMap.fire('zoomstart', touchZoomStart(500, 500));
+
+      expect(component.plotCoordinates.length).toBe(1);
+    });
+
+    it('does not add points when the map is not editable', () => {
+      component.editable = false;
+      fakeMap.fire('click', clickEvent(10, 20, 1));
+
+      expect(component.plotCoordinates).toEqual([]);
+      expect(emit).not.toHaveBeenCalled();
+    });
+
+    it('does not add points outside edit mode', () => {
+      component.editMode = false;
+      fakeMap.fire('click', clickEvent(10, 20, 1));
+
+      expect(component.plotCoordinates).toEqual([]);
+    });
+
+    it('confirms a single click after the gesture timeout', fakeAsync(() => {
+      fakeMap.fire('click', clickEvent(10, 20, 1));
+      tick(2000);
+
+      fakeMap.fire('dblclick', clickEvent(10, 20, 2));
+
+      expect(component.plotCoordinates.length).toBe(1);
+    }));
+
+    it('does not roll back a click after the map is destroyed', fakeAsync(() => {
+      fakeMap.fire('click', clickEvent(10, 20, 1));
+      fixture.destroy();
+
+      fakeMap.fire('dblclick', clickEvent(10, 20, 2));
+      tick(2000);
+
+      expect(component.plotCoordinates.length).toBe(1);
+    }));
+  });
 });
