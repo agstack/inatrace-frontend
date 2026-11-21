@@ -584,11 +584,15 @@
         }
         <map-info-window>{{gInfoWindowText}}</map-info-window>
       </google-map>
+      <small i18n="@@productLabel.origin.helpText">
+        Double click on the map to drop a pin and mark the locations of farmers / suppliers. Indicate the number of farmers / suppliers you work with directly or indirectly at each location. You can also name each location.
+      </small>
+    } @else {
+      <div class="sc-invalid-feedback" i18n="@@productLabel.origin.mapUnavailable">
+        Google Maps is not available. New origin pins cannot be set until an administrator configures the Google Maps API key. Existing origin locations remain editable.
+      </div>
     }
-    <small i18n="@@productLabel.origin.helpText">
-      Double click on the map to drop a pin and mark the locations of farmers / suppliers. Indicate the number of farmers / suppliers you work with directly or indirectly at each location. You can also name each location.
-    </small>
-    @if (submitted) {
+    @if (submitted && isGoogleMapsLoaded) {
       @if (productForm.get('origin.locations').errors; as errors) {
         <div class="sc-invalid-feedback">
           @if (errors.required) {
@@ -603,9 +607,11 @@
     }
     <div class="spacer-between-fields"></div>
 
-    <button class="tool-button tool-button-right prefill-button" [attr.disabled]="!canEdit() ? true : null" (click)="resetMap()" i18n="@@productLabel.button.resetMap">
-      Reset map
-    </button>
+    @if (isGoogleMapsLoaded) {
+      <button class="tool-button tool-button-right prefill-button" [attr.disabled]="!canEdit() ? true : null" (click)="resetMap()" i18n="@@productLabel.button.resetMap">
+        Reset map
+      </button>
+    }
 
     @for (loc of $any(productForm.get('origin.locations'))?.controls; track loc; let idx = $index) {
       <div>
