@@ -354,6 +354,7 @@
     "productLabel.textinput.origin.label": "Ursprung",
     "productLabel.textinput.originText.helpText": "Beschreiben Sie kurz, woher das Produkt oder seine Inhaltsstoffe stammen",
     "productLabel.origin.helpText": "Doppelklicken Sie auf die Karte, um eine Stecknadel zu setzen und die Standorte der Produzent*innen / Lieferant*innen zu markieren. Geben Sie die Anzahl der Landwirt*innen / Lieferant*innen an, mit denen Sie direkt oder indirekt an jedem Standort zusammenarbeiten. Sie können auch jeden Ort benennen.",
+    "productLabel.origin.mapUnavailable": "Google Maps is not available. New origin pins cannot be set until an administrator configures the Google Maps API key. Existing origin locations remain editable.",
     "productLabel.button.resetMap": "Karte zurücksetzen",
     "productLabel.textinput.originText.error": "{$START_TAG_SPAN} Ein Ursprung wird benötigt {$CLOSE_TAG_SPAN}",
     "productLabel.origin.error": "{$START_TAG_SPAN} Ein Ursprung wird benötigt {$CLOSE_TAG_SPAN}",
