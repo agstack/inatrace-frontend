@@ -575,7 +575,13 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
 
   setToBePaid() {
 
-    if (this.stockOrderForm && this.stockOrderForm.get('totalGrossQuantity').value && this.stockOrderForm.get('pricePerUnit').value) {
+    if (!this.stockOrderForm) {
+      return;
+    }
+
+    let cost: string | null = null;
+
+    if (this.stockOrderForm.get('totalGrossQuantity').value && this.stockOrderForm.get('pricePerUnit').value) {
       let netWeight = this.stockOrderForm.get('totalGrossQuantity').value;
       let finalPrice = this.stockOrderForm.get('pricePerUnit').value;
 
@@ -599,20 +605,16 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
         finalPrice = 0.00;
       }
 
-      this.stockOrderForm.get('cost').setValue(Number(netWeight * finalPrice).toFixed(2));
-    } else {
-
-      this.stockOrderForm.get('cost').setValue(null);
+      cost = Number(netWeight * finalPrice).toFixed(2);
     }
-  }
 
-  setBalance() {
+    this.stockOrderForm.get('cost').setValue(cost);
 
-    if (this.stockOrderForm && this.stockOrderForm.get('cost').value !== null && this.stockOrderForm.get('cost').value !== undefined) {
-        this.stockOrderForm.get('balance').setValue(this.stockOrderForm.get('cost').value);
-    } else {
-
-      this.stockOrderForm.get('balance').setValue(null);
+    // Existing deliveries load their balance from the API; it already accounts
+    // for registered payments and must not be replaced by the full cost. A new
+    // delivery has no payments yet, so the base payment is its initial balance.
+    if (!this.update || cost === null) {
+      this.stockOrderForm.get('balance').setValue(cost);
     }
   }
 
