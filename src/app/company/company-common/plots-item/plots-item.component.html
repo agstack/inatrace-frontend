@@ -128,7 +128,7 @@
                 </app-datepicker>
                 <label class="pt-2 pe-2" i18n="@@collectorDetail.textinput.lastUpdate.label">Last update:</label>
                 @if ($any(this.form.get('lastUpdated'))) {
-                  <label class="pt-2">{{ this.form.get('lastUpdated').value | date: 'yyyy-MM-dd hh:mm' }}</label>
+                  <label class="pt-2">{{ this.form.get('lastUpdated').value | date: 'yyyy-MM-dd HH:mm' }}</label>
                 } @else {
                   <label>/</label>
                 }
