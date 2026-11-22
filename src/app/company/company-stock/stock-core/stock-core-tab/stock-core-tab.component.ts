@@ -106,6 +106,16 @@ export class StockCoreTabComponent implements OnInit, AfterViewInit {
     return this.route.snapshot.data.mode as StockOrderListingPageMode;
   }
 
+  /**
+   * Only the Deliveries tab preselects the single collecting facility. The
+   * facility selector is also a filter on the other tabs, so changing their
+   * initial scope is a separate product decision.
+   */
+  protected readonly shouldPreselectSingleFacility: boolean = false;
+
+  /** Tabs that actually render the facility selector. */
+  protected readonly usesFacilitySelector: boolean = false;
+
   get tabCommunicationService(): TabCommunicationService {
     return this.authorizedLayout ? this.authorizedLayout.tabCommunicationService : null;
   }
@@ -126,6 +136,48 @@ export class StockCoreTabComponent implements OnInit, AfterViewInit {
       this.companyId = cp.id;
       this.isAuthorisedCompanyRole().then();
       this.initFacilityCodebook();
+      if (this.usesFacilitySelector) {
+        await this.restoreFacilitySelection();
+      }
+    }
+  }
+
+  /**
+   * Restores the facility encoded in the URL. The delivery form writes the
+   * selected facility to the query string; without reading it back, a reload
+   * or a return to the tab lost the selection and disabled the action buttons.
+   */
+  private async restoreFacilitySelection(): Promise<void> {
+    if (!this.facilityCodebook) {
+      return;
+    }
+
+    const requestedId = this.route.snapshot.queryParams['facilityId'];
+    const hasRequestedId = requestedId !== undefined && requestedId !== null && requestedId !== '';
+
+    let facilities: any[] = [];
+    try {
+      facilities = (await this.facilityCodebook.getAllCandidates().pipe(take(1)).toPromise()) ?? [];
+    } catch (error) {
+      console.error('Failed to load facilities for the selected facility', error);
+      return;
+    }
+
+    let selected: any = null;
+    if (hasRequestedId) {
+      selected = facilities.find(facility => String(facility.id) === String(requestedId)) ?? null;
+    } else if (this.shouldPreselectSingleFacility && facilities.length === 1) {
+      selected = facilities[0];
+    }
+
+    if (selected) {
+      this.facilityForStockOrderForm.setValue(selected);
+      this.facilityForStockOrderForm.updateValueAndValidity();
+      this.facilityForStockOrderChanged(selected);
+    } else if (hasRequestedId) {
+      // Drop a stale id so the URL does not keep advertising a facility that
+      // the user can no longer select.
+      setNavigationParameter(this.router, this.route, 'facilityId', '');
     }
   }
 
