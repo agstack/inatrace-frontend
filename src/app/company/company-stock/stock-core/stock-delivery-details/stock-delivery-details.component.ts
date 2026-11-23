@@ -51,6 +51,7 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
   userLastChanged = null;
 
   submitted = false;
+  validationErrors: string[] = [];
 
   codebookPreferredWayOfPayment: EnumSifrant;
 
@@ -460,11 +461,21 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     this.stockOrderForm.get('womenShare').setValue(this.searchWomenCoffeeForm.value === 'YES');
 
     // Validate forms
-    if (this.cannotUpdatePO()) {
+    const validationErrors = this.purchaseOrderValidationErrors();
+    if (validationErrors.length > 0) {
+      this.validationErrors = validationErrors;
       this.updatePOInProgress = false;
       this.globalEventsManager.showLoading(false);
+      this.showValidationErrors(validationErrors);
+      setTimeout(() => {
+        document.querySelector('.delivery-validation-summary')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 0);
       return;
     }
+    this.validationErrors = [];
 
     // Set the identifier if we are creating new purchase order
     if (!this.update) {
@@ -498,11 +509,66 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private cannotUpdatePO() {
+  private purchaseOrderValidationErrors(): string[] {
     this.prepareData();
-    return (this.stockOrderForm.invalid || this.searchFarmers.invalid ||
-      this.employeeForm.invalid || !this.modelChoice || this.searchWomenCoffeeForm.invalid ||
-      this.tareInvalidCheck || this.damagedPriceDeductionInvalidCheck);
+    if (this.orderType === 'PURCHASE_ORDER') {
+      this.updateValidators();
+    }
+
+    const form = this.stockOrderForm;
+    const errors: string[] = [];
+
+    if (this.orderType === 'PURCHASE_ORDER') {
+      if (this.selectedCurrency === '-' || form.get('currency').invalid) {
+        errors.push($localize`:@@productLabelStock.delivery.validation.currency:Company currency`);
+      }
+      if (this.employeeForm.invalid || form.get('creatorId').invalid) {
+        errors.push($localize`:@@productLabelStock.delivery.validation.employee:Cooperative employee`);
+      }
+      if (this.searchWomenCoffeeForm.invalid || form.get('womenShare').invalid) {
+        errors.push($localize`:@@productLabelStock.delivery.validation.women:Women’s only`);
+      }
+    }
+
+    if (this.searchFarmers.invalid || form.get('producerUserCustomer').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.farmer:Farmer`);
+    }
+    if (!this.modelChoice || form.get('semiProduct').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.semiProduct:Semi-product`);
+    }
+    if (form.get('productionDate').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.date:Delivery date`);
+    }
+    if (form.get('totalGrossQuantity').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.quantity:Quantity`);
+    }
+    if (form.get('pricePerUnit').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.price:Price per unit`);
+    }
+    if (form.get('preferredWayOfPayment').invalid) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.payment:Preferred way of payment`);
+    }
+    if (this.tareInvalidCheck) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.tare:Tare`);
+    }
+    if (this.damagedPriceDeductionInvalidCheck) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.deduction:Damage deduction`);
+    }
+    if (form.invalid && errors.length === 0) {
+      errors.push($localize`:@@productLabelStock.delivery.validation.other:Other required fields`);
+    }
+
+    return [...new Set(errors)];
+  }
+
+  private showValidationErrors(errors: string[]): void {
+    const title = $localize`:@@productLabelStock.delivery.validation.title:Delivery could not be saved`;
+    const message = $localize`:@@productLabelStock.delivery.validation.summary:Check the following fields before saving:`;
+    this.globalEventsManager.push({
+      notificationType: 'error',
+      title,
+      message: `${message} ${errors.join(', ')}`
+    });
   }
 
   onSelectedType(type: StockOrderType) {
@@ -733,13 +799,12 @@ export class StockDeliveryDetailsComponent implements OnInit, OnDestroy {
             [Validators.required] : []
     );
     this.stockOrderForm.get('damagedWeightDeduction').updateValueAndValidity();
-    this.searchWomenCoffeeForm.setValidators(
-        this.orderType === 'PURCHASE_ORDER' &&
-        this.facility &&
-        this.facility.displayWomenOnly ?
-            [Validators.required] : []
-    );
+    const womenShareRequired = this.orderType === 'PURCHASE_ORDER' &&
+        this.facility && this.facility.displayWomenOnly;
+    this.searchWomenCoffeeForm.setValidators(womenShareRequired ? [Validators.required] : []);
     this.searchWomenCoffeeForm.updateValueAndValidity();
+    this.stockOrderForm.get('womenShare').setValidators(womenShareRequired ? [Validators.required] : []);
+    this.stockOrderForm.get('womenShare').updateValueAndValidity();
   }
 
   get tareInvalidCheck() {
