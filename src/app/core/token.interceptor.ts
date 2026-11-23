@@ -28,6 +28,10 @@ export class TokenInterceptor implements HttpInterceptor {
         // global toast must not duplicate that message (except for expired sessions, handled below).
         const supplierFacilitiesFailure = err instanceof HttpErrorResponse &&
             /\/chain\/facility\/list\/company\/\d+\/available-selling/.test(request.url);
+        // The farmer geo-data upload owns its 400 message so it can explain the
+        // coordinate/file problem and keep the edit form open.
+        const farmerGeoDataUploadValidationFailure = err instanceof HttpErrorResponse &&
+            err.status === 400 && /\/userCustomers\/\d+\/uploadGeoData$/.test(request.url);
         if (err instanceof HttpErrorResponse) {
           try {
             if (beycoProviderFailure) {
@@ -54,7 +58,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 this.toasterService.error(message, title);
               }
             } else if (err.status === 400) {
-              if (!supplierFacilitiesFailure) {
+              if (!supplierFacilitiesFailure && !farmerGeoDataUploadValidationFailure) {
                 const message = err.error && err.error.errorMessage
                     ? err.error.errorMessage
                     : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;

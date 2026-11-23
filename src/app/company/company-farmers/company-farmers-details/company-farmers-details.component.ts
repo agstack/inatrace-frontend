@@ -445,22 +445,53 @@ export class CompanyFarmersDetailsComponent implements OnInit, OnDestroy {
     }
 
     const fileInput: HTMLInputElement = $event.target as HTMLInputElement;
-    const file = fileInput.files[0];
+    const file = fileInput.files?.[0];
+    if (!file) {
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', file);
 
     this.globalEventsManager.showLoading(true);
+    let uploaded = false;
     try {
-      await this.httpClient.post(
-          `${ this.companyService.configuration.basePath }/api/company/userCustomers/${ this.farmer.id }/uploadGeoData`, formData, {observe: 'response'})
+      const response: any = await this.httpClient.post(
+          `${ this.companyService.configuration.basePath }/api/company/userCustomers/${ this.farmer.id }/uploadGeoData`, formData)
           .pipe(take(1))
           .toPromise();
 
-      this.ngOnInit();
+      if (this.isInterceptedHttpFailure(response)) {
+        if (response.status === 400) {
+          this.showUploadError();
+        }
+      } else if (response?.status === 'OK') {
+        uploaded = true;
+      } else {
+        this.showUploadError();
+      }
+    } catch (error) {
+      this.showUploadError();
     } finally {
       this.globalEventsManager.showLoading(false);
+      fileInput.value = '';
     }
+
+    if (uploaded) {
+      this.ngOnInit();
+    }
+  }
+
+  private isInterceptedHttpFailure(response: any): boolean {
+    return response && response.ok === false && typeof response.status === 'number';
+  }
+
+  private showUploadError(): void {
+    this.globalEventsManager.push({
+      notificationType: 'error',
+      title: $localize`:@@collectorDetail.plots.uploadError.title:Could not upload geo-data`,
+      message: $localize`:@@collectorDetail.plots.uploadError.message:Check the file and try again.`
+    });
   }
 
   async exportGeoData() {
