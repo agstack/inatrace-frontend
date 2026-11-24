@@ -3178,6 +3178,8 @@
     "map.modal.crop.title": "Cultivo:",
     "map.modal.size.title": "Área:",
     "map.modal.geoId.title": "Geo-ID:",
+    "map.modal.geoId.loading": "Generando Geo-ID…",
+    "map.modal.geoId.error": "No se pudo generar el Geo-ID. Inténtalo de nuevo.",
     "map.modal.openInWhisp.title": "Open in Whisp",
     "map.modal.certification.title": "Certificación:",
     "map.modal.eu.organic.title": "EU Organic",

@@ -32,6 +32,9 @@ export class TokenInterceptor implements HttpInterceptor {
         // coordinate/file problem and keep the edit form open.
         const farmerGeoDataUploadValidationFailure = err instanceof HttpErrorResponse &&
             err.status === 400 && /\/userCustomers\/\d+\/uploadGeoData$/.test(request.url);
+        // The plot popup reports Geo-ID refresh failures in its own inline status.
+        const geoIdRefreshFailure = err instanceof HttpErrorResponse &&
+            /\/userCustomers\/\d+\/plots\/\d+\/updateGeoID$/.test(request.url);
         if (err instanceof HttpErrorResponse) {
           try {
             if (beycoProviderFailure) {
@@ -52,13 +55,14 @@ export class TokenInterceptor implements HttpInterceptor {
                 this.toasterService.error(message, title);
               }
             } else if (err.status === 403) {
-              if (!supplierFacilitiesFailure) {
+              if (!supplierFacilitiesFailure && !geoIdRefreshFailure) {
                 const message = $localize`:@@tokenInterceptor.403.message:Unauthorized access`;
                 const title = $localize`:@@tokenInterceptor.403.title:Error`;
                 this.toasterService.error(message, title);
               }
             } else if (err.status === 400) {
-              if (!supplierFacilitiesFailure && !farmerGeoDataUploadValidationFailure) {
+              if (!supplierFacilitiesFailure && !farmerGeoDataUploadValidationFailure
+                  && !geoIdRefreshFailure) {
                 const message = err.error && err.error.errorMessage
                     ? err.error.errorMessage
                     : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;
@@ -66,7 +70,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 this.toasterService.error(message, title);
               }
             } else {
-              if (!supplierFacilitiesFailure) {
+              if (!supplierFacilitiesFailure && !geoIdRefreshFailure) {
                 const message = $localize`:@@tokenInterceptor.other.message:Please reload the page.`;
                 const title = $localize`:@@tokenInterceptor.other.title:Communication error!`;
                 this.toasterService.error(message, title);

@@ -70,6 +70,12 @@ describe('TokenInterceptor', () => {
     expect(toaster.error.calls.mostRecent().args[0]).toContain('Please reload the page.');
   });
 
+  it('does not add a global toast for a Geo-ID refresh failure handled in the popup', () => {
+    interceptError(500, '/api/company/userCustomers/3/plots/21/updateGeoID');
+
+    expect(toaster.error).not.toHaveBeenCalled();
+  });
+
   it('reports wrong credentials without ending the session', () => {
     interceptError(401, '/api/login');
 

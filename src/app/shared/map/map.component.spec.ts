@@ -1,4 +1,5 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -633,5 +634,145 @@ describe('MapComponent', () => {
 
       expect(component.plotCoordinates.length).toBe(1);
     }));
+  });
+
+  describe('Geo-ID refresh', () => {
+    const buttonId = 'refresh-geo-btn-test';
+    const longGeoId = '5e4bd484c168b99160d734633e2b2a0f9c1d7e3b6a4f8c2d1e0b7a9c5d3e1f2a';
+    let container: HTMLElement | null = null;
+
+    function mountGeoIdRow(): HTMLElement {
+      container = document.createElement('div');
+      container.innerHTML = `<div class="marker-popup">
+        <div class="marker-popup-row">
+          <div class="row-right">
+            <div class="geoid-value"><b><button id="${buttonId}" class="btn btn-sm popup-button">Refresh</button></b></div>
+            <div class="geoid-status" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>`;
+      document.body.appendChild(container);
+      return container;
+    }
+
+    function refreshResult(): { subject: Subject<any>, service: jasmine.Spy } {
+      const subject = new Subject<any>();
+      const service = jasmine.createSpy('refreshGeoIDForUserCustomerPlot')
+        .and.returnValue(subject.asObservable());
+      (component as any).companyControllerService = { refreshGeoIDForUserCustomerPlot: service };
+      return { subject, service };
+    }
+
+    afterEach(() => {
+      container?.remove();
+      container = null;
+    });
+
+    it('shows a loading state and renders the refreshed Geo-ID', () => {
+      const plot: any = { id: 2, plotName: 'TST-BSB' };
+      const { subject, service } = refreshResult();
+      const row = mountGeoIdRow();
+      const button = row.querySelector('#' + buttonId) as HTMLButtonElement;
+      const status = row.querySelector('.geoid-status') as HTMLElement;
+      const emit = spyOn(component.geoIdOpenChange, 'emit');
+
+      component.refreshGeoId(1, plot, buttonId);
+
+      expect(service).toHaveBeenCalledWith(1, 2, undefined, 'events');
+      expect(button.disabled).toBeTrue();
+      expect(button.getAttribute('aria-busy')).toBe('true');
+      expect(button.textContent).toContain('Generating Geo-ID');
+      expect(status.textContent).toContain('Generating Geo-ID');
+
+      subject.next(new HttpResponse({
+        status: 200,
+        body: { data: { id: 2, geoId: longGeoId }, status: 'OK' }
+      }));
+      subject.complete();
+
+      const value = row.querySelector('.geoid-value') as HTMLElement;
+      const content = value.querySelector('.geoid-content') as HTMLElement;
+      const openButton = value.querySelector('button') as HTMLButtonElement;
+      expect(plot.geoId).toBe(longGeoId);
+      expect(content.getAttribute('title')).toBe(longGeoId);
+      expect(content.textContent).toBe(longGeoId);
+      expect(value.textContent).toContain('Open in Whisp');
+      expect(status.textContent).toBe('');
+      expect(openButton).not.toBeNull();
+
+      openButton.click();
+      expect(emit).toHaveBeenCalledWith(longGeoId);
+    });
+
+    it('shows an error when the refresh returns no Geo-ID', () => {
+      const plot: any = { id: 2, plotName: 'TST-BSB' };
+      const { subject } = refreshResult();
+      const row = mountGeoIdRow();
+      const button = row.querySelector('#' + buttonId) as HTMLButtonElement;
+      const status = row.querySelector('.geoid-status') as HTMLElement;
+
+      component.refreshGeoId(1, plot, buttonId);
+      subject.next(new HttpResponse({
+        status: 200,
+        body: { data: { id: 2 }, status: 'OK' }
+      }));
+      subject.complete();
+
+      expect(button.disabled).toBeFalse();
+      expect(button.textContent).toContain('Refresh');
+      expect(status.textContent).toContain('could not be generated');
+      expect(plot.geoId).toBeUndefined();
+    });
+
+    it('shows an error when the refresh request fails', () => {
+      const plot: any = { id: 2, plotName: 'TST-BSB' };
+      const { subject } = refreshResult();
+      const row = mountGeoIdRow();
+      const button = row.querySelector('#' + buttonId) as HTMLButtonElement;
+      const status = row.querySelector('.geoid-status') as HTMLElement;
+
+      component.refreshGeoId(1, plot, buttonId);
+      subject.error(new Error('synthetic'));
+
+      expect(button.disabled).toBeFalse();
+      expect(button.textContent).toContain('Refresh');
+      expect(status.textContent).toContain('could not be generated');
+    });
+
+    it('shows an error when the interceptor emits an HttpErrorResponse', () => {
+      const plot: any = { id: 2, plotName: 'TST-BSB' };
+      const { subject } = refreshResult();
+      const row = mountGeoIdRow();
+      const button = row.querySelector('#' + buttonId) as HTMLButtonElement;
+      const status = row.querySelector('.geoid-status') as HTMLElement;
+
+      component.refreshGeoId(1, plot, buttonId);
+      subject.next(new HttpErrorResponse({ status: 500 }));
+      subject.complete();
+
+      expect(button.disabled).toBeFalse();
+      expect(button.textContent).toContain('Refresh');
+      expect(status.textContent).toContain('could not be generated');
+    });
+
+    it('does not start a second request while the first is running', () => {
+      const plot: any = { id: 2, plotName: 'TST-BSB' };
+      const { subject, service } = refreshResult();
+      mountGeoIdRow();
+
+      component.refreshGeoId(1, plot, buttonId);
+      component.refreshGeoId(1, plot, buttonId);
+
+      expect(service).toHaveBeenCalledTimes(1);
+      subject.complete();
+    });
+
+    it('keeps the full Geo-ID in the title and escapes it', () => {
+      const html = (component as any).geoIdValueHtml('abc"<&');
+
+      expect(html).toContain('class="geoid-content"');
+      expect(html).toContain('title="abc&quot;&lt;&amp;"');
+      expect(html).toContain('>abc&quot;&lt;&amp;</span>');
+    });
   });
 });

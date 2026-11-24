@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import { Observable, Subscription } from 'rxjs';
@@ -494,7 +495,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       const cropLabel = $localize`:@@map.modal.crop.title:Crop:`;
       const sizeLabel = $localize`:@@map.modal.size.title:Size:`;
       const geoIdLabel = $localize`:@@map.modal.geoId.title:Geo-ID:`;
-      const openInGeoIdLabel = $localize`:@@map.modal.openInWhisp.title:Open in Whisp`;
       const certificationLabel = $localize`:@@map.modal.certification.title:Certification:`;
       let euOrganic = $localize`:@@map.modal.eu.organic.title:EU Organic`;
       const name = plot.plotName;
@@ -512,22 +512,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       const buttonId = 'refresh-geo-btn-' + idx;
-      let geoId = plot.geoId;
-      if (geoId === undefined) {
-        const refreshText = $localize`:@@map.modal.button.refresh.title:Refresh`;
-        geoId = `<button id="${buttonId}" class="btn btn-sm popup-button">${refreshText}</button>`;
-      } else {
-        geoId = `<span class="geoid-content">${geoId}</span>`;
-      }
-      
       const buttonOpenGeoIdLink = 'open-whisp-a-' + idx;
-      let openGeoIdLinkHtml = '';
-      if (plot.geoId !== undefined) {
-        openGeoIdLinkHtml = `<div class="pt-2">
-                                <button id="${buttonOpenGeoIdLink}" class="btn btn-sm popup-button">${openInGeoIdLabel}</button>
-                             </div>`;
-      }
-      
+      const geoId = plot.geoId;
+      const refreshText = $localize`:@@map.modal.button.refresh.title:Refresh`;
+      const geoIdValue = geoId
+        ? `<b>${this.geoIdValueHtml(geoId)}</b>${this.openInWhispButtonHtml(buttonOpenGeoIdLink)}`
+        : `<b><button id="${buttonId}" class="btn btn-sm popup-button">${refreshText}</button></b>`;
+
       const isCertified = plot.organicStartOfTransition !== undefined;
       if (!isCertified) {
         euOrganic = '/';
@@ -544,8 +535,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                                   </div>
                                   <div class="marker-popup-row">
                                     <div class="row-left align-content-center geoid-label">${geoIdLabel}</div>
-                                    <div class="row-right"><b>${geoId}</b>
-                                      ${openGeoIdLinkHtml}
+                                    <div class="row-right">
+                                      <div class="geoid-value">${geoIdValue}</div>
+                                      <div class="geoid-status" role="status" aria-live="polite"></div>
                                     </div>
                                   </div>
                                   <div class="marker-popup-row">
@@ -562,23 +554,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ).setHTML(popupHtml);
 
-      if (plot.geoId === undefined) {
-        const farmerId = this.farmerId ?? plot['farmerId'];
-
-        popup.on('open', () => {
-          // popup opened so we fire an event
-          document.getElementById(buttonId).addEventListener('click', () => {
-            this.refreshGeoId(farmerId, plot, buttonId);
-          });
-        });
-      } else {
-        popup.on('open', () => {
-          // popup open when geoId exist
-          document.getElementById(buttonOpenGeoIdLink).addEventListener('click', () => {
-            this.emitGeoIdOpenInWhispClick(plot.geoId);
-          });
-        });
-      }
+      popup.on('open', () => {
+        if (geoId) {
+          const openButton = document.getElementById(buttonOpenGeoIdLink) as HTMLButtonElement;
+          if (openButton) {
+            openButton.onclick = () => this.emitGeoIdOpenInWhispClick(geoId);
+          }
+        } else {
+          const farmerId = this.farmerId ?? plot['farmerId'];
+          const refreshButton = document.getElementById(buttonId) as HTMLButtonElement;
+          if (refreshButton) {
+            refreshButton.onclick = () => this.refreshGeoId(farmerId, plot, buttonId);
+          }
+        }
+      });
 
       // make a marker for each feature and add it to the map
       const marker = new mapboxgl.Marker(el)
@@ -609,17 +598,91 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   refreshGeoId(farmerId: number, plot: ApiPlot, buttonId: string) {
 
-    this.companyControllerService.refreshGeoIDForUserCustomerPlot(farmerId, plot.id).subscribe(res => {
-      const data = res.data;
+    const button = document.getElementById(buttonId) as HTMLButtonElement;
+    if (!button || button.disabled) {
+      return;
+    }
+    const row = button.closest('.marker-popup-row');
+    const value = row?.querySelector('.geoid-value');
+    const status = row?.querySelector('.geoid-status');
+    if (!value || !status) {
+      return;
+    }
 
-      const dataGeoId = data.geoId;
+    const loadingText = $localize`:@@map.modal.geoId.loading:Generating Geo-ID…`;
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.textContent = loadingText;
+    status.textContent = loadingText;
+    status.classList.add('is-loading');
+    status.classList.remove('is-error');
 
-      if (data.geoId) {
-        document.getElementById(buttonId).outerHTML = `<div style="text-align: end;"><b>${dataGeoId}</b></div>`;
-      }
+    // The global TokenInterceptor turns HTTP failures into a value. Asking for the raw events
+    // lets this component see that HttpErrorResponse instead of completing without a value.
+    this.companyControllerService
+      .refreshGeoIDForUserCustomerPlot(farmerId, plot.id, undefined, 'events')
+      .subscribe({
+        next: event => {
+          if (event instanceof HttpErrorResponse) {
+            this.finishGeoIdRefresh(button, status);
+            return;
+          }
+          if (!(event instanceof HttpResponse)) {
+            return;
+          }
+          const data = event.body?.data;
+          if (data?.geoId) {
+            plot.geoId = data.geoId;
+            value.innerHTML = `<b>${this.geoIdValueHtml(data.geoId)}</b>${this.openInWhispButtonHtml()}`;
+            const openButton = value.querySelector('button') as HTMLButtonElement;
+            if (openButton) {
+              openButton.onclick = () => this.emitGeoIdOpenInWhispClick(data.geoId);
+            }
+            this.clearGeoIdStatus(status);
+            this.emitRefreshedData(data);
+          } else {
+            this.finishGeoIdRefresh(button, status);
+          }
+        },
+        error: error => {
+          console.error('Geo-ID refresh failed', error);
+          this.finishGeoIdRefresh(button, status);
+        }
+      });
+  }
 
-      this.emitRefreshedData(data);
-    });
+  private finishGeoIdRefresh(button: HTMLButtonElement, status: Element): void {
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    button.textContent = $localize`:@@map.modal.button.refresh.title:Refresh`;
+    status.textContent = $localize`:@@map.modal.geoId.error:Geo-ID could not be generated. Please try again.`;
+    status.classList.remove('is-loading');
+    status.classList.add('is-error');
+  }
+
+  private clearGeoIdStatus(status: Element): void {
+    status.textContent = '';
+    status.classList.remove('is-loading', 'is-error');
+  }
+
+  private geoIdValueHtml(geoId: string): string {
+    const escaped = this.escapeHtml(geoId);
+    return `<span class="geoid-content" title="${escaped}">${escaped}</span>`;
+  }
+
+  private openInWhispButtonHtml(buttonId?: string): string {
+    const id = buttonId ? ` id="${buttonId}"` : '';
+    const label = $localize`:@@map.modal.openInWhisp.title:Open in Whisp`;
+    return `<div class="pt-2"><button${id} class="btn btn-sm popup-button">${label}</button></div>`;
+  }
+
+  private escapeHtml(value: string): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   emitRefreshedData(plot: ApiPlot) {
