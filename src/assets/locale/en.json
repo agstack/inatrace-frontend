@@ -3230,6 +3230,7 @@
     "map.modal.button.refresh.title": "Refresh",
     "map.view.default": "Default view",
     "map.view.satellite": "Satellite view",
+    "map.plots.hidden.message": "Some plots could not be displayed because their coordinates are missing or invalid.",
     "productLabelPurchaseOrder.tableCol.exportGeoData": "Export Geo Data",
     "orderList.export.geojson.noDataAvailable": "There is no Geo data available for this order",
     "selfOnboarding.welcomeModal.header": "Welcome on board {$INTERPOLATION}!",

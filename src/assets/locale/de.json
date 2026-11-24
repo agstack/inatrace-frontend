@@ -3233,6 +3233,7 @@
     "map.modal.button.refresh.title": "Aktualisierung",
     "map.view.default": "Standardansicht",
     "map.view.satellite": "Satellitenansicht",
+    "map.plots.hidden.message": "Einige Parzellen konnten nicht angezeigt werden, weil ihre Koordinaten fehlen oder ungültig sind.",
     "productLabelPurchaseOrder.tableCol.exportGeoData": "Export Geo Data",
     "orderList.export.geojson.noDataAvailable": "Für diese Bestellung sind keine Geodaten verfügbar"
   }

@@ -26,5 +26,10 @@
         <label class="form-check-label" for="defaultStyle" i18n="@@map.view.default">Default view</label>
       </div>
     </div>
+    @if (hiddenPlotsCount > 0) {
+      <div class="map-hidden-plots-message" role="status" i18n="@@map.plots.hidden.message">
+        Some plots could not be displayed because their coordinates are missing or invalid.
+      </div>
+    }
   }
 </div>
