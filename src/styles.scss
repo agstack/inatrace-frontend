@@ -4198,6 +4198,7 @@ input.toggle-switch-checkbox:checked + label.toggle-switch-label:after {
 
       .row-right {
         opacity: 1;
+        min-width: 0;
       }
 
       .geoid-label {
@@ -4209,12 +4210,40 @@ input.toggle-switch-checkbox:checked + label.toggle-switch-label:after {
         line-height: normal;
       }
 
+      .popup-button:disabled {
+        cursor: wait;
+        opacity: .65;
+      }
+
     }
   }
 }
 
+.geoid-value {
+  max-width: 100%;
+}
+
 .geoid-content {
-  word-break: break-all;
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.geoid-status {
+  margin-top: 0.25rem;
+  color: #b02a37;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.geoid-status:empty {
+  display: none;
+}
+
+.geoid-status.is-loading {
+  color: #6c757d;
 }
 
 

@@ -3227,6 +3227,8 @@
     "map.modal.crop.title": "Crop:",
     "map.modal.size.title": "Size:",
     "map.modal.geoId.title": "Geo-ID:",
+    "map.modal.geoId.loading": "Geo-ID wird erstellt…",
+    "map.modal.geoId.error": "Der Geo-ID konnte nicht erstellt werden. Bitte erneut versuchen.",
     "map.modal.openInWhisp.title": "Open in Whisp",
     "map.modal.certification.title": "Certification:",
     "map.modal.eu.organic.title": "EU Organic",
