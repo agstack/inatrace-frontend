@@ -3144,6 +3144,8 @@
     "plotsItem.action.undoLastPoint": "Deshacer último punto",
     "plotsItem.action.deletePlot": "Borrar parcela",
     "collectorDetail.plots.button.uploadGeo": "Subir geodatos",
+    "collectorDetail.plots.uploadError.title": "No se pudieron cargar los geodatos",
+    "collectorDetail.plots.uploadError.message": "Revise el archivo e inténtelo de nuevo.",
     "collectorDetail.plots.button.drawPlot": "Dibujar parcela",
     "collectorDetail.plots.button.exportGeo": "Exportar geodatos",
     "collectorDetail.textinput.plotName.label": "Nombre de parcela",

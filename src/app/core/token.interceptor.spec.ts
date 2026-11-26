@@ -47,6 +47,15 @@ describe('TokenInterceptor', () => {
     expect(toaster.error.calls.mostRecent().args[0]).toContain('Request could not be completed');
   });
 
+  it('leaves the farmer geo-data upload 400 message to the component', () => {
+    interceptError(400, '/api/company/userCustomers/17/uploadGeoData', {
+      status: 'INVALID_REQUEST',
+      errorMessage: 'Invalid GeoJSON coordinates'
+    });
+
+    expect(toaster.error).not.toHaveBeenCalled();
+  });
+
   it('shows one authorization notification for a 403 response', () => {
     interceptError(403, '/api/chain/stock-order/list');
 

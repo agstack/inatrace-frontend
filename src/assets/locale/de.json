@@ -3193,6 +3193,8 @@
     "plotsItem.action.undoLastPoint": "Undo last point",
     "plotsItem.action.deletePlot": "Delete plot",
     "collectorDetail.plots.button.uploadGeo": "Upload geo-data",
+    "collectorDetail.plots.uploadError.title": "Geo-Daten konnten nicht hochgeladen werden",
+    "collectorDetail.plots.uploadError.message": "Prüfen Sie die Datei und versuchen Sie es erneut.",
     "collectorDetail.plots.button.drawPlot": "Draw plot",
     "collectorDetail.plots.button.exportGeo": "Export geo-data",
     "collectorDetail.textinput.plotName.label": "Plot name",
