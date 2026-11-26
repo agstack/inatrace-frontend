@@ -3184,6 +3184,7 @@
     "map.modal.button.refresh.title": "Actualizar",
     "map.view.default": "Vista predeterminada",
     "map.view.satellite": "Vista satelital",
+    "map.plots.hidden.message": "Algunas parcelas no se pudieron mostrar porque sus coordenadas faltan o no son válidas.",
     "productLabelPurchaseOrder.tableCol.exportGeoData": "Exportar geodatos",
     "orderList.export.geojson.noDataAvailable": "No hay geodatos disponibles para este pedido",
     "selfOnboarding.welcomeModal.header": "¡Bienvenida a bordo {$INTERPOLATION}!",

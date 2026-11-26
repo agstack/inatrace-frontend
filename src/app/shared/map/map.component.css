@@ -33,3 +33,17 @@
   padding-bottom: 0.3rem;
   border-bottom-right-radius: 0.5rem;
 }
+
+.map-hidden-plots-message {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  max-width: 28rem;
+  padding: 0.35rem 0.5rem;
+  background-color: rgba(255, 248, 225, 0.95);
+  border: 1px solid #e0c36a;
+  border-radius: 0.25rem;
+  color: #664d03;
+  font-size: 0.875rem;
+  z-index: 1;
+}

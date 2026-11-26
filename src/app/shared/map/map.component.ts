@@ -96,6 +96,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Subscription = new Subscription();
   markers: mapboxgl.Marker[] = [];
 
+  // Plots from the last `plots` input that are not on the map because their coordinates are
+  // missing, out of range or could not be handled by Mapbox. The template uses this to explain
+  // why the map shows fewer plots than the table.
+  hiddenPlotsCount = 0;
+
+  // The plots whose layers are currently on the map, so a later call can remove the ones that
+  // disappeared even when the input array has already been replaced.
+  private renderedPlots: ApiPlot[] = [];
+
   // Points added by clicks that may still turn out to be part of a double-click/double-tap.
   // Only these points are eligible for rollback; saved points and earlier single clicks are never
   // touched.
@@ -152,21 +161,77 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getInitialMapExtremes(coordinates: ApiPlotCoordinate[]): [[number, number], [number, number]] {
+  private isValidCoordinate(coordinate: ApiPlotCoordinate): boolean {
+    if (coordinate == null) {
+      return false;
+    }
+    const latitude = coordinate.latitude;
+    const longitude = coordinate.longitude;
+    return typeof latitude === 'number' && Number.isFinite(latitude)
+      && typeof longitude === 'number' && Number.isFinite(longitude)
+      && latitude >= -90 && latitude <= 90
+      && longitude >= -180 && longitude <= 180;
+  }
 
-    let latMin = coordinates[0].latitude;
-    let latMax = coordinates[0].latitude;
-    let lngMin = coordinates[0].longitude;
-    let lngMax = coordinates[0].longitude;
+  // A plot is displayable only when its whole geometry is usable. Filtering individual points
+  // would draw a different polygon than the one stored, with a different shape and area.
+  private displayableCoordinates(plot: ApiPlot): ApiPlotCoordinate[] | null {
+    const coordinates = plot?.coordinates;
+    if (!coordinates || coordinates.length === 0) {
+      return null;
+    }
+    return coordinates.every(coordinate => this.isValidCoordinate(coordinate)) ? coordinates : null;
+  }
 
-    coordinates.forEach(v => {
+  private clamp(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  // Plot names are not unique, so layers are keyed by the database id. The index is only a
+  // fallback for a plot that has not been saved yet.
+  private plotLayerId(plot: ApiPlot, index: number): string {
+    const identity = plot?.id != null ? `id_${plot.id}` : `index_${index}`;
+    return `existingPlot_${identity}`;
+  }
+
+  private removePlotLayers(layerId: string): void {
+    if (this.map.getLayer(layerId)) {
+      this.map.removeLayer(layerId);
+    }
+    const borderId = layerId + 'Border';
+    if (this.map.getLayer(borderId)) {
+      this.map.removeLayer(borderId);
+    }
+    if (this.map.getSource(this.MAPBOX_SOURCE_PREFIX + layerId)) {
+      this.map.removeSource(this.MAPBOX_SOURCE_PREFIX + layerId);
+    }
+  }
+
+  getInitialMapExtremes(coordinates: ApiPlotCoordinate[]): [[number, number], [number, number]] | null {
+
+    const validCoordinates = (coordinates ?? []).filter(coordinate => this.isValidCoordinate(coordinate));
+    if (validCoordinates.length === 0) {
+      return null;
+    }
+
+    let latMin = validCoordinates[0].latitude;
+    let latMax = validCoordinates[0].latitude;
+    let lngMin = validCoordinates[0].longitude;
+    let lngMax = validCoordinates[0].longitude;
+
+    validCoordinates.forEach(v => {
       if (latMax < v.latitude) { latMax = v.latitude; }
       if (latMin > v.latitude) { latMin = v.latitude; }
       if (lngMax < v.longitude) { lngMax = v.longitude; }
       if (lngMin > v.longitude) { lngMin = v.longitude; }
     });
+    // The margin must not push a valid border coordinate past Mapbox's limits: a plot at
+    // latitude 90 or -90 would otherwise raise "Invalid LngLat latitude value".
     const offset = 0.02;
-    return [[lngMin - offset, latMin - offset], [lngMax + offset, latMax + offset]];
+    return [
+      [this.clamp(lngMin - offset, -180, 180), this.clamp(latMin - offset, -90, 90)],
+      [this.clamp(lngMax + offset, -180, 180), this.clamp(latMax + offset, -90, 90)]
+    ];
   }
 
   setExistingPlots(plots: ApiPlot[]) {
@@ -175,45 +240,58 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
     this.plotCoordinates = [];
+    this.hiddenPlotsCount = 0;
 
-    // Find the plots that shall be removed
-    const plotsToRemove: ApiPlot[] = [];
-    this.plots.forEach(plot => {
-      const existingPlot = plots.find(p => plot.plotName === p.plotName);
-      if (existingPlot == null) {
-        plotsToRemove.push(plot);
+    const incomingPlots = plots ?? [];
+
+    // Remove layers of plots that are no longer present. Plot names are not unique, so the layer
+    // id comes from the database id; the list index is only a fallback for unsaved plots.
+    const incomingLayerIds = new Set(incomingPlots.map((plot, index) => this.plotLayerId(plot, index)));
+    this.renderedPlots.forEach((plot, index) => {
+      const layerId = this.plotLayerId(plot, index);
+      if (!incomingLayerIds.has(layerId)) {
+        this.removePlotLayers(layerId);
       }
     });
 
-    // Remove layers of plots that are removed
-    plotsToRemove.forEach((plot) => {
-
-      if (this.map.getLayer(plot.plotName)) {
-        this.map.removeLayer(plot.plotName);
-      }
-      const borderName = plot.plotName + 'Border';
-      if (this.map.getLayer(borderName)) {
-        this.map.removeLayer(borderName);
-      }
-
-      if (this.map.getSource(this.MAPBOX_SOURCE_PREFIX + plot.plotName)) {
-        this.map.removeSource(this.MAPBOX_SOURCE_PREFIX + plot.plotName);
+    // A plot is drawn only when every coordinate is usable. Drawing the valid points of a
+    // malformed polygon would silently change its shape and area.
+    const displayablePlots: Array<{ plot: ApiPlot, index: number, coordinates: ApiPlotCoordinate[] }> = [];
+    incomingPlots.forEach((plot, index) => {
+      const coordinates = this.displayableCoordinates(plot);
+      if (coordinates != null) {
+        displayablePlots.push({ plot, index, coordinates });
       }
     });
+    this.hiddenPlotsCount = incomingPlots.length - displayablePlots.length;
 
-    const allPlotsCoordinates = [];
-    plots.forEach(plot => {
-      allPlotsCoordinates.push(...plot.coordinates);
-    });
-
-    if (allPlotsCoordinates.length > 0) {
-      this.map.fitBounds(this.getInitialMapExtremes(allPlotsCoordinates));
-
-      plots.forEach(plot => {
-        this.showPlot(plot.plotName, this.getCoordinatesArray(plot.coordinates));
-        this.setPlotCenterMarker(plot);
-      });
+    const allPlotsCoordinates = displayablePlots.reduce<ApiPlotCoordinate[]>(
+      (all, entry) => all.concat(entry.coordinates), []);
+    const bounds = this.getInitialMapExtremes(allPlotsCoordinates);
+    if (bounds != null) {
+      this.map.fitBounds(bounds);
     }
+
+    displayablePlots.forEach(entry => {
+      const layerId = this.plotLayerId(entry.plot, entry.index);
+      try {
+        // One valid point, or two, still gets a marker; a polygon needs at least three points.
+        if (entry.coordinates.length >= 3) {
+          this.showPlot(layerId, this.getCoordinatesArray(entry.coordinates));
+        }
+        this.setPlotCenterMarker(entry.plot, entry.coordinates);
+      } catch (error) {
+        // One malformed geometry must not stop the remaining plots from being drawn.
+        this.removePlotLayers(layerId);
+        this.hiddenPlotsCount++;
+        console.error('Plot could not be displayed:', entry.plot?.id ?? entry.plot?.plotName, error);
+      }
+    });
+
+    this.renderedPlots = incomingPlots.slice();
+    // The map 'load' event runs outside the component's usual input change, so make the warning
+    // visible without waiting for an unrelated change detection cycle.
+    this.changeDetectorRef.detectChanges();
   }
 
   setExistingPlotCoordinates(coordinates: ApiPlotCoordinate[]) {
@@ -222,7 +300,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.deletePlot();
     }
     coordinates.forEach(v => this.placeMarkerOnMap(v.latitude, v.longitude));
-    this.map.fitBounds(this.getInitialMapExtremes(this.plotCoordinates));
+    const bounds = this.getInitialMapExtremes(this.plotCoordinates);
+    if (bounds != null) {
+      this.map.fitBounds(bounds);
+    }
     this.plotCoordinatesChange.emit(this.plotCoordinates);
   }
 
@@ -726,7 +807,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
          if (this.pin?.latitude != null && this.pin?.longitude != null) {
           this.setPin(this.pin);
-          this.map.fitBounds(this.getInitialMapExtremes(this.plotCoordinates));
+          const bounds = this.getInitialMapExtremes(this.plotCoordinates);
+          if (bounds != null) {
+            this.map.fitBounds(bounds);
+          }
          }
         }
       } else {
@@ -865,15 +949,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return coords;
   }
 
-  private setPlotCenterMarker(plot: ApiPlot) {
+  private setPlotCenterMarker(plot: ApiPlot, coordinates: ApiPlotCoordinate[]) {
 
-    const plotCoordinates: ApiPlotCoordinate[] = plot.coordinates;
+    if (coordinates.length === 0) {
+      return;
+    }
 
-    let lonCenter = plotCoordinates.reduce( (sum, element) => sum += element.longitude , 0);
-    lonCenter = lonCenter / plotCoordinates.length;
+    let lonCenter = coordinates.reduce( (sum, element) => sum += element.longitude , 0);
+    lonCenter = lonCenter / coordinates.length;
 
-    let latCenter = plotCoordinates.reduce( (sum, element) => sum += element.latitude , 0);
-    latCenter = latCenter / plotCoordinates.length;
+    let latCenter = coordinates.reduce( (sum, element) => sum += element.latitude , 0);
+    latCenter = latCenter / coordinates.length;
 
     this.placeMarkerOnMap(latCenter, lonCenter, plot);
   }

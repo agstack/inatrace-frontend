@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment';
 import { MapComponent } from './map.component';
 import { GlobalEventManagerService } from '../../core/global-event-manager.service';
 import { CompanyControllerService } from '../../../api/api/companyController.service';
+import { ApiPlot } from '../../../api/model/apiPlot';
+import { ApiPlotCoordinate } from '../../../api/model/apiPlotCoordinate';
 
 /**
  * Stands in for mapboxgl.Map: records the listeners the component registers so a test can replay
@@ -16,6 +18,10 @@ class FakeMap {
   removed = false;
   dragRotate = { disable: () => {} };
   touchZoomRotate = { disableRotation: () => {} };
+  layers = new Set<string>();
+  sources = new Set<string>();
+  fitBoundsCalls: any[] = [];
+  failSource: string | null = null;
   private listeners: Record<string, ((event?: any) => void)[]> = {};
 
   on(type: string, listener: (event?: any) => void) {
@@ -31,7 +37,18 @@ class FakeMap {
   setStyle() {}
   resize() {}
   flyTo() {}
-  fitBounds() {}
+  fitBounds(bounds: any) { this.fitBoundsCalls.push(bounds); }
+  getLayer(id: string) { return this.layers.has(id) ? { id } : undefined; }
+  addLayer(layer: any) { this.layers.add(layer.id); }
+  removeLayer(id: string) { this.layers.delete(id); }
+  getSource(id: string) { return this.sources.has(id) ? { id } : undefined; }
+  addSource(id: string) {
+    if (this.failSource === id) {
+      throw new Error('synthetic Mapbox failure');
+    }
+    this.sources.add(id);
+  }
+  removeSource(id: string) { this.sources.delete(id); }
 }
 
 describe('MapComponent', () => {
@@ -70,6 +87,10 @@ describe('MapComponent', () => {
 
   function mapFrame(): HTMLElement | null {
     return fixture.nativeElement.querySelector('#map');
+  }
+
+  function hiddenPlotsMessage(): HTMLElement | null {
+    return fixture.nativeElement.querySelector('.map-hidden-plots-message');
   }
 
   it('undoes every coordinate and ignores another undo at zero', fakeAsync(() => {
@@ -282,6 +303,160 @@ describe('MapComponent', () => {
       expect(flyTo).not.toHaveBeenCalled();
       tick(200);
     }));
+  });
+
+  describe('existing plots', () => {
+    const polygon: ApiPlotCoordinate[] = [
+      { latitude: -14.30, longitude: -54.43 },
+      { latitude: -14.30, longitude: -54.42 },
+      { latitude: -14.29, longitude: -54.42 },
+      { latitude: -14.29, longitude: -54.43 }
+    ];
+
+    function plot(id: number, name: string, coordinates: ApiPlotCoordinate[]): ApiPlot {
+      return { id, plotName: name, coordinates };
+    }
+
+    function shiftedPolygon(delta: number): ApiPlotCoordinate[] {
+      return polygon.map(coordinate => ({
+        latitude: coordinate.latitude + delta,
+        longitude: coordinate.longitude + delta
+      }));
+    }
+
+    function loadPlots(plots: ApiPlot[]) {
+      component.plots = plots;
+      fixture.detectChanges();
+      fakeMap.fire('load');
+      fixture.detectChanges();
+    }
+
+    beforeEach(() => {
+      environment.mapboxAccessToken = 'pk.test';
+      spyOn(component, 'placeMarkerOnMap');
+    });
+
+    it('draws the plots with usable coordinates and ignores the rest', () => {
+      loadPlots([
+        plot(1, 'Polygon', polygon),
+        plot(2, 'Point', [{ latitude: -14.28, longitude: -54.41 }]),
+        plot(3, 'Empty', []),
+        plot(4, 'Out of range', [{ latitude: 200, longitude: 300 }])
+      ]);
+
+      expect(fakeMap.fitBoundsCalls.length).toBe(1);
+      const [[west, south], [east, north]] = fakeMap.fitBoundsCalls[0];
+      expect(west).toBeCloseTo(-54.45, 5);
+      expect(south).toBeCloseTo(-14.32, 5);
+      expect(east).toBeCloseTo(-54.39, 5);
+      expect(north).toBeCloseTo(-14.26, 5);
+
+      expect(fakeMap.layers.has('existingPlot_id_1')).toBeTrue();
+      expect(fakeMap.layers.has('existingPlot_id_2')).toBeFalse();
+      expect(fakeMap.layers.has('existingPlot_id_3')).toBeFalse();
+      expect(fakeMap.layers.has('existingPlot_id_4')).toBeFalse();
+      expect(component.placeMarkerOnMap).toHaveBeenCalledTimes(2);
+      expect(component.hiddenPlotsCount).toBe(2);
+      expect(hiddenPlotsMessage()).not.toBeNull();
+    });
+
+    it('keeps the initial framing when no plot can be displayed', () => {
+      loadPlots([
+        plot(1, 'Empty', []),
+        plot(2, 'Out of range', [{ latitude: 200, longitude: 300 }])
+      ]);
+
+      expect(fakeMap.fitBoundsCalls.length).toBe(0);
+      expect(fakeMap.layers.size).toBe(0);
+      expect(component.placeMarkerOnMap).not.toHaveBeenCalled();
+      expect(component.hiddenPlotsCount).toBe(2);
+      expect(hiddenPlotsMessage()).not.toBeNull();
+    });
+
+    it('does not warn when every plot is displayed', () => {
+      loadPlots([plot(1, 'Polygon', polygon)]);
+
+      expect(component.hiddenPlotsCount).toBe(0);
+      expect(hiddenPlotsMessage()).toBeNull();
+    });
+
+    it('does not draw part of a polygon when one point is unusable', () => {
+      loadPlots([plot(1, 'Partial', [
+        polygon[0],
+        { latitude: 200, longitude: -54.42 },
+        polygon[1]
+      ])]);
+
+      expect(fakeMap.layers.size).toBe(0);
+      expect(component.placeMarkerOnMap).not.toHaveBeenCalled();
+      expect(component.hiddenPlotsCount).toBe(1);
+    });
+
+    it('shows a marker but no polygon for two usable points', () => {
+      loadPlots([plot(1, 'Two points', [polygon[0], polygon[1]])]);
+
+      expect(fakeMap.layers.size).toBe(0);
+      expect(component.placeMarkerOnMap).toHaveBeenCalledTimes(1);
+      expect(component.hiddenPlotsCount).toBe(0);
+    });
+
+    it('keeps same-named plots in separate layers', () => {
+      loadPlots([
+        plot(11, 'Point 1', polygon),
+        plot(12, 'Point 1', shiftedPolygon(0.01))
+      ]);
+
+      expect(fakeMap.layers.has('existingPlot_id_11')).toBeTrue();
+      expect(fakeMap.layers.has('existingPlot_id_12')).toBeTrue();
+      expect(component.placeMarkerOnMap).toHaveBeenCalledTimes(2);
+    });
+
+    it('accepts zero and the coordinate limits', () => {
+      loadPlots([
+        plot(1, 'Zero', [{ latitude: 0, longitude: 0 }]),
+        plot(2, 'Border', [{ latitude: 90, longitude: 180 }])
+      ]);
+
+      expect(component.hiddenPlotsCount).toBe(0);
+      expect(component.placeMarkerOnMap).toHaveBeenCalledTimes(2);
+      expect(fakeMap.fitBoundsCalls.length).toBe(1);
+    });
+
+    it('keeps the margin inside the Mapbox coordinate limits', () => {
+      expect(component.getInitialMapExtremes([{ latitude: 90, longitude: 180 }]))
+        .toEqual([[179.98, 89.98], [180, 90]]);
+      expect(component.getInitialMapExtremes([{ latitude: -90, longitude: -180 }]))
+        .toEqual([[-180, -90], [-179.98, -89.98]]);
+      expect(component.getInitialMapExtremes([])).toBeNull();
+      expect(component.getInitialMapExtremes([{ latitude: 200, longitude: 300 }])).toBeNull();
+    });
+
+    it('removes the layer of a plot that is no longer in the input', () => {
+      const first = plot(1, 'First', polygon);
+      const second = plot(2, 'Second', shiftedPolygon(0.01));
+      loadPlots([first, second]);
+
+      component.plots = [first];
+      component.setExistingPlots([first]);
+
+      expect(fakeMap.layers.has('existingPlot_id_1')).toBeTrue();
+      expect(fakeMap.layers.has('existingPlot_id_2')).toBeFalse();
+      expect(fakeMap.sources.has('ina_plot_existingPlot_id_2')).toBeFalse();
+    });
+
+    it('draws the other plots when Mapbox rejects one geometry', () => {
+      fakeMap.failSource = 'ina_plot_existingPlot_id_1';
+
+      loadPlots([
+        plot(1, 'Rejected', polygon),
+        plot(2, 'Accepted', shiftedPolygon(0.01))
+      ]);
+
+      expect(fakeMap.layers.has('existingPlot_id_1')).toBeFalse();
+      expect(fakeMap.layers.has('existingPlot_id_2')).toBeTrue();
+      expect(component.hiddenPlotsCount).toBe(1);
+      expect(console.error).toHaveBeenCalled();
+    });
   });
 
   describe('plot drawing gestures', () => {
