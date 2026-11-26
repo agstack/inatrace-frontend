@@ -31,6 +31,7 @@ class FakeMap {
   setStyle() {}
   resize() {}
   flyTo() {}
+  fitBounds() {}
 }
 
 describe('MapComponent', () => {
@@ -225,6 +226,62 @@ describe('MapComponent', () => {
       positionCallback({ coords: { latitude: 1, longitude: 2 } });
       expect(flyTo).not.toHaveBeenCalled();
     });
+
+    it('uses a neutral center and zoom when no initial location is available', () => {
+      fixture.detectChanges();
+
+      const options = (component.createMap as jasmine.Spy).calls.mostRecent().args[0];
+      expect(options.center).toEqual([0, 0]);
+      expect(options.zoom).toBe(2);
+    });
+
+    it('uses the supplied initial location and zoom', () => {
+      component.initialLat = 9.0765;
+      component.initialLng = 7.3986;
+
+      fixture.detectChanges();
+
+      const options = (component.createMap as jasmine.Spy).calls.mostRecent().args[0];
+      expect(options.center).toEqual([7.3986, 9.0765]);
+      expect(options.zoom).toBe(10);
+    });
+
+    it('shows a zero-value pin without emitting an initial location change', () => {
+      component.editMode = false;
+      component.plots = [];
+      component.plotCoordinates = [];
+      component.pin = { latitude: 0, longitude: 0 };
+      spyOn(component, 'placeMarkerOnMap').and.callFake((lat: number, lng: number) => {
+        component.plotCoordinates.push({ latitude: lat, longitude: lng });
+      });
+      const emit = spyOn(component.plotCoordinatesChange, 'emit');
+
+      fixture.detectChanges();
+      fakeMap.fire('load');
+
+      expect(component.placeMarkerOnMap).toHaveBeenCalledWith(0, 0, null, true);
+      expect(emit).not.toHaveBeenCalled();
+    });
+
+    it('does not move the map when geolocation answers after drawing starts', fakeAsync(() => {
+      component.editMode = true;
+      component.editable = true;
+      component.plotCoordinates = [];
+      component.showPlotSubject = new Subject<boolean>();
+      spyOn(component, 'placeMarkerOnMap').and.callFake((lat: number, lng: number) => {
+        component.plotCoordinates.push({ latitude: lat, longitude: lng });
+      });
+
+      fixture.detectChanges();
+      const positionCallback = (navigator.geolocation.getCurrentPosition as jasmine.Spy).calls.mostRecent().args[0];
+      const flyTo = spyOn(fakeMap, 'flyTo');
+
+      component.mapClicked({ lngLat: { wrap: () => ({ lat: 1, lng: 2 }) } });
+      positionCallback({ coords: { latitude: 3, longitude: 4 } });
+
+      expect(flyTo).not.toHaveBeenCalled();
+      tick(200);
+    }));
   });
 
   describe('plot drawing gestures', () => {
