@@ -352,6 +352,7 @@
     "productLabel.textinput.origin.label": "Inkomoko",
     "productLabel.textinput.originText.helpText": "Sobanura muri make aho igicuruzwa cyangwa ibigikoze bituruka",
     "productLabel.origin.helpText": "Kanda inshuro ebyiri ku ikarita kugira ngo ushyire akamenyetso kandi werekane aho abahinzi/abagemura umusaruro baherereye. Erekana umubare w'abahinzi/abagemura umusaruro mukorana nabo mu buryo butaziguye cyangwa buziguye kuri buri hantu. Ushobora kandi gutanga n'amazina ya buri hantu",
+    "productLabel.origin.mapUnavailable": "Google Maps is not available. New origin pins cannot be set until an administrator configures the Google Maps API key. Existing origin locations remain editable.",
     "productLabel.button.resetMap": "Ongera ushyireho ikarita",
     "productLabel.textinput.originText.error": "{$START_TAG_SPAN} Inkomoko ini ngombwa {$CLOSE_TAG_SPAN}",
     "productLabel.origin.error": "{$START_TAG_SPAN} Inkomoko ni ngombwa{$CLOSE_TAG_SPAN}",

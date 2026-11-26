@@ -583,6 +583,7 @@
     "productLabel.textinput.origin.label": "Origen",
     "productLabel.textinput.originText.helpText": "Describa en breve el origen del producto o de sus ingredientes.",
     "productLabel.origin.helpText": "Haga doble clic en el mapa para colocar un pin y marcar las ubicaciones de los agricultores / proveedores. Indique el número de agricultores / proveedores con los que trabaja directamente o indirectamente en cada lugar. También puede nombrar cada ubicación.",
+    "productLabel.origin.mapUnavailable": "Google Maps is not available. New origin pins cannot be set until an administrator configures the Google Maps API key. Existing origin locations remain editable.",
     "productLabel.button.resetMap": "Restablecer mapa",
     "productLabel.textinput.originText.error": "{$START_TAG_SPAN} Se requiere el origen {$CLOSE_TAG_SPAN}",
     "productLabel.origin.error": "{$START_TAG_SPAN} Se requiere el origen {$CLOSE_TAG_SPAN}",
