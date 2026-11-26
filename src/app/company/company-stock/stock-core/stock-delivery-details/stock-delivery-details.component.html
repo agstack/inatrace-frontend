@@ -27,6 +27,30 @@
               }
             </div>
           </div>
+          @if (submitted && validationErrors.length > 0) {
+            <div class="af-form-row delivery-validation-summary">
+              <div class="af-form-block--c12">
+                <div class="alert alert-danger" role="alert">
+                  <div class="fw-bold" i18n="@@productLabelStock.delivery.validation.title">Delivery could not be saved</div>
+                  <div i18n="@@productLabelStock.delivery.validation.summary">Check the following fields before saving:</div>
+                  <ul class="mb-0">
+                    @for (error of validationErrors; track error) {
+                      <li>{{ error }}</li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          }
+          @if (orderType === 'PURCHASE_ORDER' && selectedCurrency === '-') {
+            <div class="af-form-row">
+              <div class="af-form-block--c12">
+                <div class="alert alert-warning" role="alert" i18n="@@productLabelStock.delivery.validation.currencyMissing">
+                  The company has no base currency configured. Set one in Company profile before creating a delivery.
+                </div>
+              </div>
+            </div>
+          }
           <div class="af-form-row">
             <!-- First block in first row -->
             <div class="af-form-block--c6">
