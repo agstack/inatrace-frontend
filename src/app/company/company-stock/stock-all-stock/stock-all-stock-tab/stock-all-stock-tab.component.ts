@@ -29,6 +29,8 @@ export class StockAllStockTabComponent extends StockCoreTabComponent implements 
   showGroupView = true;
   rootTab = 3;
 
+  protected readonly usesFacilitySelector: boolean = true;
+
   isBeycoAuthorized = false;
   isAuthRoleToExportToBeyco = false;
 

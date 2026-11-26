@@ -29,6 +29,10 @@ export class StockDeliveriesTabComponent extends StockCoreTabComponent implement
 
   rootTab = 0;
 
+  protected readonly shouldPreselectSingleFacility: boolean = true;
+
+  protected readonly usesFacilitySelector: boolean = true;
+
   showedPurchaseOrders = 0;
   allPurchaseOrders = 0;
 
