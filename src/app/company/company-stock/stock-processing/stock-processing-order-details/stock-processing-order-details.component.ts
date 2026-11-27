@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalEventManagerService } from '../../../../core/global-event-manager.service';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -9,6 +10,7 @@ import { ProcessingActionType } from '../../../../../shared/types';
 import { Location } from '@angular/common';
 import { ListEditorManager } from '../../../../shared/list-editor/list-editor-manager';
 import { ApiActivityProof } from '../../../../../api/model/apiActivityProof';
+import { ApiError } from '../../../../../api/model/apiError';
 import { ApiActivityProofValidationScheme } from '../../stock-core/additional-proof-item/validation';
 import { dateISOString, deleteNullFields, generateFormFromMetadata } from '../../../../../shared/utils';
 import { CompanyFacilitiesForStockUnitProductService } from '../../../../shared-services/company-facilities-for-stock-unit-product.service';
@@ -17,12 +19,13 @@ import { StockOrderControllerService } from '../../../../../api/api/stockOrderCo
 import { FacilityControllerService } from '../../../../../api/api/facilityController.service';
 import { Subscription } from 'rxjs';
 import { ApiStockOrder } from '../../../../../api/model/apiStockOrder';
-import { take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { ApiSemiProduct } from '../../../../../api/model/apiSemiProduct';
 import { ApiFinalProduct } from '../../../../../api/model/apiFinalProduct';
 import { ApiTransaction } from '../../../../../api/model/apiTransaction';
 import { ApiCompanyGet } from '../../../../../api/model/apiCompanyGet';
+import { ApiUserGet } from '../../../../../api/model/apiUserGet';
 import { AuthService } from '../../../../core/auth.service';
 import { ProcessingOrderControllerService } from '../../../../../api/api/processingOrderController.service';
 import { ApiProcessingOrder } from '../../../../../api/model/apiProcessingOrder';
@@ -40,6 +43,12 @@ type PageMode = 'create' | 'edit';
 
 interface RepackedTargetStockOrder extends ApiStockOrder {
   repackedOutputsArray: ApiStockOrder[];
+}
+
+interface ProductAssociationError {
+  companyId: number | null;
+  companyName: string | null;
+  canManage: boolean;
 }
 
 @Component({
@@ -62,6 +71,12 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   // Holds the current company profile which executes the processing action
   companyProfile: ApiCompanyGet;
+
+  // Holds the current user profile, used to decide whether the Products link can be offered
+  currentUserProfile: ApiUserGet;
+
+  // Set when the backend reports that the input company has no product association
+  productAssociationError: ProductAssociationError = null;
 
   // Holds the input facility ID provided as path param in the route (can be null)
   facilityIdPathParam: number | null = null;
@@ -287,6 +302,25 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     return this.companyProfile.id;
   }
 
+  get productAssociationCompanyLabel(): string | null {
+
+    if (!this.productAssociationError) {
+      return null;
+    }
+
+    const { companyId, companyName } = this.productAssociationError;
+    if (companyName && companyId != null) {
+      return `${companyName} (ID ${companyId})`;
+    }
+    if (companyName) {
+      return companyName;
+    }
+    if (companyId != null) {
+      return `ID ${companyId}`;
+    }
+    return null;
+  }
+
   get inputTransactionsArray(): UntypedFormArray {
     return this.procOrderGroup.get('inputTransactions') as UntypedFormArray;
   }
@@ -320,6 +354,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
   private async processingActionUpdated(procAction: ApiProcessingAction) {
 
     this.submitted = false;
+    this.productAssociationError = null;
 
     StockProcessingOrderDetailsHelper.setRequiredProcessingEvidence(procAction, this.requiredProcessingEvidenceArray).then();
     this.input?.clearInputPropsAndControls();
@@ -369,6 +404,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     }
 
     this.submitted = true;
+    this.productAssociationError = null;
 
     if (this.procOrderGroup.invalid || this.input.oneInputStockOrderRequired) {
       return;
@@ -426,23 +462,37 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
       // Add common shared data (processing evidences, comments, etc.) to all target output Stock order
       this.enrichTargetStockOrders(processingOrder.targetStockOrders);
 
-      const res = await this.processingOrderController
-        .createOrUpdateProcessingOrder(processingOrder).pipe(take(1)).toPromise();
+      // Consume the request as events: TokenInterceptor turns HTTP failures into
+      // emitted values, and HttpClient's body/response modes would drop them.
+      const responseEvent = await this.processingOrderController
+        .createOrUpdateProcessingOrder(processingOrder, undefined, 'events')
+        .pipe(
+          filter(event => event instanceof HttpResponse || event instanceof HttpErrorResponse),
+          take(1)
+        ).toPromise();
 
-      if (!res || res.status !== 'OK') {
-        // TokenInterceptor presents HTTP failures as values so existing consumers can keep
-        // their observable contract. It has already shown the user-facing notification.
-        // A non-HTTP response still needs a local fallback and must never navigate away.
-        if (!this.isInterceptedHttpFailure(res)) {
+      if (responseEvent instanceof HttpErrorResponse) {
+        // The product-association error is rendered inline with a permission-aware
+        // Products link. TokenInterceptor does not show a toast for this status,
+        // so the message is not duplicated.
+        if (!this.handleProductAssociationError(responseEvent) && !this.isInterceptedHttpFailure(responseEvent)) {
           this.showSaveFailure();
         }
+      } else if (responseEvent instanceof HttpResponse) {
+        if (!responseEvent.body || responseEvent.body.status !== 'OK') {
+          this.showSaveFailure();
+        } else {
+          this.dismiss();
+        }
       } else {
-        this.dismiss();
+        this.showSaveFailure();
       }
 
     } catch (error) {
       // This covers callers and tests that do not use TokenInterceptor.
-      this.showSaveFailure();
+      if (!this.handleProductAssociationError(error)) {
+        this.showSaveFailure();
+      }
     } finally {
       this.saveInProgress = false;
       this.globalEventsManager.showLoading(false);
@@ -455,6 +505,64 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
 
   private isInterceptedHttpFailure(response: any): boolean {
     return response && response.ok === false && typeof response.status === 'number';
+  }
+
+  private handleProductAssociationError(response: any): boolean {
+
+    const apiError = response?.error as ApiError;
+    if (!response || response.status !== 400 ||
+        apiError?.status !== ApiError.StatusEnum.PRODUCTASSOCIATIONREQUIRED) {
+      return false;
+    }
+
+    const rawCompanyId = apiError.errorDetails;
+    const parsedCompanyId = rawCompanyId != null && rawCompanyId !== '' ? Number(rawCompanyId) : null;
+    const companyId = Number.isInteger(parsedCompanyId) && parsedCompanyId > 0 ? parsedCompanyId : null;
+
+    this.productAssociationError = {
+      companyId,
+      companyName: companyId != null ? this.resolveProductAssociationCompanyName(companyId) : null,
+      canManage: companyId != null && this.canManageProductAssociation(companyId)
+    };
+    return true;
+  }
+
+  private resolveProductAssociationCompanyName(companyId: number): string | null {
+
+    if (this.companyProfile?.id === companyId && this.companyProfile.name) {
+      return this.companyProfile.name;
+    }
+
+    const transactionCompany = this.inputTransactions
+      .map(transaction => transaction.company)
+      .find(company => company?.id === companyId && company.name);
+    if (transactionCompany?.name) {
+      return transactionCompany.name;
+    }
+
+    const facilityCompany = this.inputFacilityControl?.value?.company;
+    if (facilityCompany?.id === companyId && facilityCompany.name) {
+      return facilityCompany.name;
+    }
+
+    const selectedCompany = this.input?.selectedInputStockOrders
+      ?.map(stockOrder => stockOrder.company)
+      .find(company => company?.id === companyId && company.name);
+    return selectedCompany?.name ?? null;
+  }
+
+  private canManageProductAssociation(companyId: number): boolean {
+
+    const profile = this.currentUserProfile;
+    if (!profile) {
+      return false;
+    }
+
+    if (profile.role === ApiUserGet.RoleEnum.SYSTEMADMIN) {
+      return true;
+    }
+
+    return Array.isArray(profile.companyIdsAdmin) && profile.companyIdsAdmin.includes(companyId);
   }
 
   private showSaveFailure() {
@@ -474,7 +582,7 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     }
 
     // Load and set current user that is doing the processing
-    this.loadProcessingUser();
+    await this.loadProcessingUser();
 
     // Get the current user selected company from the local storage and load company profile
     await this.loadCompanyProfile();
@@ -522,8 +630,10 @@ export class StockProcessingOrderDetailsComponent implements OnInit, AfterViewIn
     this.setFormControlsDisabledState();
   }
 
-  private loadProcessingUser() {
-    this.authService.userProfile$.pipe(take(1)).toPromise().then(profile => this.processingUserId = profile.id);
+  private async loadProcessingUser() {
+    const profile = await this.authService.userProfile$.pipe(take(1)).toPromise();
+    this.currentUserProfile = profile;
+    this.processingUserId = profile.id;
   }
 
   private async loadCompanyProfile() {

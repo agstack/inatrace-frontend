@@ -345,6 +345,34 @@
             </div>
           </div>
         </div>
+        <!-- PRODUCT ASSOCIATION ERROR -->
+        @if (productAssociationError) {
+          <div class="af-form-row">
+            <div class="af-form-block--c12">
+              <div class="alert alert-warning" role="alert">
+                <div class="fw-bold"
+                  i18n="@@productLabelStockProcessingOrderDetail.productAssociation.title">Product association required</div>
+                @if (productAssociationCompanyLabel) {
+                  <div>
+                    <span i18n="@@productLabelStockProcessingOrderDetail.productAssociation.companyLabel">Company:</span>
+                    <span class="fw-bold">{{ productAssociationCompanyLabel }}</span>
+                  </div>
+                }
+                <div
+                  i18n="@@productLabelStockProcessingOrderDetail.productAssociation.message">This company has no product association, so it cannot process stock yet.</div>
+                @if (productAssociationError.canManage) {
+                  <div
+                    i18n="@@productLabelStockProcessingOrderDetail.productAssociation.manageGuidance">In the new Products tab, select this company and add a product association before processing.</div>
+                  <a class="alert-link" routerLink="/product-labels" target="_blank" rel="noopener noreferrer"
+                    i18n="@@productLabelStockProcessingOrderDetail.productAssociation.manageLink">Open Products in a new tab</a>
+                } @else {
+                  <div
+                    i18n="@@productLabelStockProcessingOrderDetail.productAssociation.contactAdmin">Ask a company administrator to add a product association for this company in Products before processing.</div>
+                }
+              </div>
+            </div>
+          </div>
+        }
         <!-- CONTROL BUTTONS -->
         <div class="af-form-row">
           <div class="af-form-block--c12">
