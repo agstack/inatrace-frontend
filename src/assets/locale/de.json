@@ -2,7 +2,8 @@
   "locale": "de",
   "translations": {
     "supplierFacility.loading": "Lieferantenstandorte werden geladen…",
-    "supplierFacility.empty": "Keine geeigneten Lieferantenstandorte verfügbar. Bitten Sie Ihre Administration, Unternehmensrollen, Partner und die öffentliche, aktive Freigabe für das gewählte Produkt zu prüfen.",
+    "supplierFacility.empty": "Keine geeigneten Lieferantenstandorte gefunden. Prüfen Sie, ob Ihr Unternehmen und der Lieferant passende Rollen für dasselbe Produkt haben: Ihr Unternehmen BUYER und der Lieferant EXPORTER oder Ihr Unternehmen EXPORTER und der Lieferant PRODUCER. Prüfen Sie außerdem, ob der Lieferantenstandort öffentlich, aktiv und – falls zutreffend – für den ausgewählten Artikel konfiguriert ist.",
+    "supplierFacility.contactAdmin": "Bitten Sie Ihre Administration, die Produkt-Stakeholder-Rollen zu prüfen.",
     "supplierFacility.error": "Lieferantenstandorte konnten nicht geladen werden.",
     "supplierFacility.retry": "Erneut versuchen",
     "supplierFacility.forbidden": "Sie haben keine Berechtigung, Lieferantenstandorte anzuzeigen.",

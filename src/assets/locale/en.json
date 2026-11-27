@@ -2,7 +2,8 @@
   "locale": "en",
   "translations": {
     "supplierFacility.loading": "Loading supplier facilities…",
-    "supplierFacility.empty": "No eligible supplier facilities are available. Ask your administrator to check company roles, partners and whether supplier facilities are public, active and support the selected product.",
+    "supplierFacility.empty": "No eligible supplier facilities were found. Check that your company and the supplier have matching roles on the same product: your company BUYER and the supplier EXPORTER, or your company EXPORTER and the supplier PRODUCER. Also check that the supplier facility is public, active and supports the selected item when applicable.",
+    "supplierFacility.contactAdmin": "Ask your administrator to check the product stakeholder roles.",
     "supplierFacility.error": "Supplier facilities could not be loaded.",
     "supplierFacility.retry": "Try again",
     "supplierFacility.forbidden": "You do not have permission to view supplier facilities.",
