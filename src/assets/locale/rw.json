@@ -2,7 +2,8 @@
   "locale": "rw",
   "translations": {
     "supplierFacility.loading": "Ibigo by’abatanga ibicuruzwa birimo gutwarwa…",
-    "supplierFacility.empty": "Nta bigo by’abatanga ibicuruzwa byujuje ibisabwa bihari. Saba umuyobozi kugenzura inshingano z’ibigo, abafatanyabikorwa n’uko ibigo bigaragara, bikora kandi byakira igicuruzwa cyatoranyijwe.",
+    "supplierFacility.empty": "Nta bigo by’abatanga ibicuruzwa bihari byujuje ibisabwa. Reba ko ikigo cyawe n’umutanga ibicuruzwa bafite inshingano zihuye ku gicuruzwa kimwe: ikigo cyawe BUYER n’umutanga EXPORTER, cyangwa ikigo cyawe EXPORTER n’umutanga PRODUCER. Reba kandi ko ikigo cy’umutanga kiri ahagaragara, gikora, kandi iyo bikwiriye gishyigikira igicuruzwa cyatoranyijwe.",
+    "supplierFacility.contactAdmin": "Saba umuyobozi w’ikigo kugenzura inshingano z’abafatanyabikorwa b’igicuruzwa.",
     "supplierFacility.error": "Ntibyashobotse kuzana ibigo by’abatanga ibicuruzwa.",
     "supplierFacility.retry": "Ongera ugerageze",
     "supplierFacility.forbidden": "Nta burenganzira ufite bwo kubona ibigo by’abatanga ibicuruzwa.",

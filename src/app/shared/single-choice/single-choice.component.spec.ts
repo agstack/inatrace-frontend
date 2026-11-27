@@ -158,4 +158,38 @@ describe('SingleChoiceComponent', () => {
     localFixture.destroy();
     flush();
   }));
+
+  it('shows both supplier role pairs and administrator guidance in the empty state', () => {
+    setSupplierState('empty');
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('BUYER');
+    expect(text).toContain('EXPORTER');
+    expect(text).toContain('PRODUCER');
+    expect(text).toContain('when applicable');
+    expect(text).toContain('Ask your administrator');
+    expect(fixture.nativeElement.querySelector('a')).toBeNull();
+  });
+
+  it('does not show the supplier guidance outside the empty state', () => {
+    setSupplierState('error');
+
+    expect(fixture.nativeElement.textContent).not.toContain('Ask your administrator');
+  });
+
+  function setSupplierState(state: string): void {
+    component.supplierFeedback = true;
+    component.codebookService = {
+      supplierState$: new BehaviorSubject(state),
+      placeholder: () => '',
+      autocompleteCandidates: () => of({ results: [], offset: 0, limit: 10, totalCount: 0 }),
+      formatter: () => (item: any) => item,
+      isEnumFormControl: () => false,
+      canAddNew: () => false,
+      getAllCandidates: () => of([])
+    } as any;
+    component.supplierState = state;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+  }
 });
