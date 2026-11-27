@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { ApiError } from '../../api/model/apiError';
 import { Observable, of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
@@ -32,6 +33,13 @@ export class TokenInterceptor implements HttpInterceptor {
         // coordinate/file problem and keep the edit form open.
         const farmerGeoDataUploadValidationFailure = err instanceof HttpErrorResponse &&
             err.status === 400 && /\/userCustomers\/\d+\/uploadGeoData$/.test(request.url);
+        // The processing order screen owns this 400 so it can explain the missing
+        // product association and offer a link to Products without a duplicate toast.
+        // Keep the exception scoped to the request that implements that behavior.
+        const productAssociationFailure = err instanceof HttpErrorResponse &&
+            err.status === 400 && request.method === 'PUT' &&
+            /\/chain\/processing-order$/.test(request.url) &&
+            (err.error as ApiError)?.status === ApiError.StatusEnum.PRODUCTASSOCIATIONREQUIRED;
         if (err instanceof HttpErrorResponse) {
           try {
             if (beycoProviderFailure) {
@@ -58,7 +66,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 this.toasterService.error(message, title);
               }
             } else if (err.status === 400) {
-              if (!supplierFacilitiesFailure && !farmerGeoDataUploadValidationFailure) {
+              if (!supplierFacilitiesFailure && !farmerGeoDataUploadValidationFailure && !productAssociationFailure) {
                 const message = err.error && err.error.errorMessage
                     ? err.error.errorMessage
                     : $localize`:@@tokenInterceptor.400.message:Request could not be completed. Please review the entered data and try again.`;

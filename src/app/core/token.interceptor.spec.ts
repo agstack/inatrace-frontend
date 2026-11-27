@@ -26,8 +26,8 @@ describe('TokenInterceptor', () => {
     );
   });
 
-  function interceptError(status: number, url: string, error: any = null) {
-    const request = new HttpRequest('GET', url);
+  function interceptError(status: number, url: string, error: any = null, method: 'GET' | 'PUT' = 'GET') {
+    const request = method === 'PUT' ? new HttpRequest('PUT', url, null) : new HttpRequest('GET', url);
     const response = new HttpErrorResponse({ status, url, error });
     const handler = {
       handle: () => throwError(response)
@@ -54,6 +54,39 @@ describe('TokenInterceptor', () => {
     });
 
     expect(toaster.error).not.toHaveBeenCalled();
+  });
+
+  it('leaves the product-association 400 message to the processing order screen', () => {
+    interceptError(400, '/api/chain/processing-order', {
+      status: 'PRODUCT_ASSOCIATION_REQUIRED',
+      errorMessage: 'The company has no product association. Add a product association before processing.',
+      errorDetails: '3'
+    }, 'PUT');
+
+    expect(toaster.error).not.toHaveBeenCalled();
+    expect(auth.logout).not.toHaveBeenCalled();
+  });
+
+  it('keeps the product-association notification for another method', () => {
+    interceptError(400, '/api/chain/processing-order', {
+      status: 'PRODUCT_ASSOCIATION_REQUIRED',
+      errorMessage: 'The company has no product association. Add a product association before processing.',
+      errorDetails: '3'
+    }, 'GET');
+
+    expect(toaster.error).toHaveBeenCalledTimes(1);
+    expect(toaster.error.calls.mostRecent().args[0]).toContain('The company has no product association');
+  });
+
+  it('keeps the product-association notification for another endpoint', () => {
+    interceptError(400, '/api/chain/other-endpoint', {
+      status: 'PRODUCT_ASSOCIATION_REQUIRED',
+      errorMessage: 'The company has no product association. Add a product association before processing.',
+      errorDetails: '3'
+    }, 'PUT');
+
+    expect(toaster.error).toHaveBeenCalledTimes(1);
+    expect(toaster.error.calls.mostRecent().args[0]).toContain('The company has no product association');
   });
 
   it('shows one authorization notification for a 403 response', () => {

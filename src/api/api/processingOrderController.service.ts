@@ -29,6 +29,7 @@ import { Observable }                                        from 'rxjs';
 import { catchError }                                        from 'rxjs/operators';
 
 import { ApiDefaultResponse } from '../model/apiDefaultResponse';
+import { ApiError } from '../model/apiError';
 import { ApiProcessingOrder } from '../model/apiProcessingOrder';
 import { ApiResponseApiBaseEntity } from '../model/apiResponseApiBaseEntity';
 import { ApiResponseApiProcessingOrder } from '../model/apiResponseApiProcessingOrder';
